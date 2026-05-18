@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/config/prod_env.dart';
 import 'core/config/env.dart';
 
-
-import 'features/splash/splash_page.dart';
+import 'core/routing/app_router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // LOAD PROD ENV
+  // LOAD DEV ENV
   ProdEnv.load();
 
   // INIT SUPABASE
@@ -28,14 +27,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Boulder Competition PROD',
+    return MaterialApp.router(
+      title: 'Boulder Competition Prod',
+
       debugShowCheckedModeBanner: false,
+
+      routerConfig: appRouter,
+
       theme: ThemeData(
         useMaterial3: true,
-        colorSchemeSeed: Colors.deepPurple,
+        colorSchemeSeed: Colors.blue,
       ),
-      home: const SplashPage(),
     );
   }
 }
