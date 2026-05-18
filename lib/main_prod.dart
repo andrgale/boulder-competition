@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'core/config/env.dart';
-import 'core/config/prod_env.dart';
 
-void main() async {
+import 'core/config/prod_env.dart';
+import 'core/config/env.dart';
+
+
+import 'features/splash/splash_page.dart';
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // LOAD PROD ENV
   ProdEnv.load();
 
+  // INIT SUPABASE
   await Supabase.initialize(
     url: Env.supabaseUrl,
     anonKey: Env.supabaseAnonKey,
@@ -23,15 +29,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Boulder Competition DEV',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('DEV Environment'),
-        ),
-        body: const Center(
-          child: Text('Supabase DEV connected'),
-        ),
+      title: 'Boulder Competition PROD',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: Colors.deepPurple,
       ),
+      home: const SplashPage(),
     );
   }
 }
