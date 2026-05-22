@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-
 import 'package:intl/intl.dart';
-
 import 'package:go_router/go_router.dart';
 
 import '../../../shared/widgets/base_page.dart';
-
-import '../../../shared/dialogs/app_confirm_dialog.dart';
+//import '../../../shared/dialogs/app_confirm_dialog.dart';
 
 import '../data/competition_service.dart';
-
 import '../models/competition_model.dart';
 
 class CompetitionsPage extends StatefulWidget {
@@ -88,10 +84,6 @@ class _CompetitionsPageState
       return matchSearch && matchOpen;
     }).toList();
 
-    // =====================================================
-    // SORTING
-    // =====================================================
-
     filtered.sort((a, b) {
       dynamic valueA;
       dynamic valueB;
@@ -131,21 +123,43 @@ class _CompetitionsPageState
   // =======================================================
   // DELETE
   // =======================================================
-
   Future<void> deleteCompetition(
     CompetitionModel competition,
   ) async {
-    final confirm =
-        await AppConfirmDialog.showDelete(
+    final confirm = await showDialog<bool>(
       context: context,
-
-      title: 'Elimina competizione',
-
-      message:
-          'Vuoi eliminare "${competition.descrizione}"?',
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text(
+            'Elimina competizione',
+          ),
+          content: Text(
+            'Vuoi eliminare "${competition.descrizione}"?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop(false);
+              },
+              child: const Text('Annulla'),
+            ),
+            FilledButton.icon(
+              icon: const Icon(Icons.delete),
+              label: const Text('Elimina'),
+              style: FilledButton.styleFrom(
+                backgroundColor: Colors.red,
+              ),
+              onPressed: () {
+                Navigator.of(dialogContext).pop(true);
+              },
+            ),
+          ],
+        );
+      },
     );
 
-    if (!confirm) return;
+    if (confirm != true) return;
 
     try {
       await service.deleteCompetition(
@@ -154,23 +168,28 @@ class _CompetitionsPageState
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content:
-              Text('Competizione eliminata'),
+          content: Text(
+            'Competizione eliminata',
+          ),
         ),
       );
+
+      loadRealtime(); // ← refresh elenco
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString()),
+          content: Text(
+            'Errore eliminazione: $e',
+          ),
         ),
       );
     }
   }
-
+  
   // =======================================================
   // SORT
   // =======================================================
@@ -181,7 +200,6 @@ class _CompetitionsPageState
         sortAsc = !sortAsc;
       } else {
         sortColumn = column;
-
         sortAsc = true;
       }
 
@@ -189,59 +207,90 @@ class _CompetitionsPageState
     });
   }
 
+  // =======================================================
+  // REFRESH
+  // =======================================================
+
+  Future<void> refreshData() async {
+    final rows =
+        await service.getCompetitions();
+
+    if (!mounted) return;
+
+    allCompetitions = rows;
+
+    applyFilters();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isMobile =
+        MediaQuery.of(context).size.width <
+            700;
+
     return BasePage(
       title: 'Competizioni',
 
-      floatingActionButton:
-          MediaQuery.of(context)
-                      .size
-                      .width <
-                  900
-              ? FloatingActionButton.extended(
-                  onPressed: () async {
+      floatingActionButton: isMobile
+          ? FloatingActionButton.extended(
+              onPressed: () async {
+                final result =
                     await context.push(
-                      '/competitions/new',
-                    );
-                  },
+                  '/competitions/new',
+                );
 
-                  icon: const Icon(Icons.add),
-
-                  label:
-                      const Text('Nuova'),
-                )
-              : null,
+                if (result == true) {
+                  await refreshData();
+                }
+              },
+              icon: const Icon(Icons.add),
+              label: const Text('Nuova'),
+            )
+          : null,
 
       actions: [
         FilledButton.icon(
           onPressed: () async {
-            await context.push(
+            final result =
+                await context.push(
               '/competitions/new',
             );
+
+            if (result == true) {
+              await refreshData();
+            }
           },
-
           icon: const Icon(Icons.add),
-
           label: const Text(
             'Nuova Gara',
           ),
         ),
       ],
 
-      child: Column(
-        children: [
-          // =================================================
-          // FILTER BAR
-          // =================================================
+      // ===================================================
+      // FIXED LAYOUT
+      // ===================================================
 
-          Row(
+      child: Column(
+        crossAxisAlignment:
+            CrossAxisAlignment.start,
+        children: [
+          // =============================================
+          // FILTER BAR
+          // =============================================
+
+          Wrap(
+            spacing: 16,
+            runSpacing: 16,
+            crossAxisAlignment:
+                WrapCrossAlignment.center,
             children: [
-              Expanded(
+              SizedBox(
+                width:
+                    isMobile ? 320 : 420,
                 child: TextField(
                   controller:
                       searchController,
-
                   decoration:
                       const InputDecoration(
                     hintText:
@@ -249,21 +298,16 @@ class _CompetitionsPageState
                     prefixIcon:
                         Icon(Icons.search),
                   ),
-
                   onChanged: (_) {
                     applyFilters();
                   },
                 ),
               ),
 
-              const SizedBox(width: 16),
-
               FilterChip(
                 label:
                     const Text('Solo aperte'),
-
                 selected: showOnlyOpen,
-
                 onSelected: (value) {
                   showOnlyOpen = value;
 
@@ -275,9 +319,9 @@ class _CompetitionsPageState
 
           const SizedBox(height: 24),
 
-          // =================================================
+          // =============================================
           // TABLE
-          // =================================================
+          // =============================================
 
           Expanded(
             child: loading
@@ -309,30 +353,37 @@ class _CompetitionsPageState
         MediaQuery.of(context).size.width <
             700;
 
+    // =====================================================
+    // MOBILE
+    // =====================================================
+
     if (isMobile) {
       return ListView.separated(
         itemCount: competitions.length,
-
         separatorBuilder:
             (_, __) =>
                 const SizedBox(height: 12),
-
         itemBuilder: (context, index) {
           final c = competitions[index];
 
           return Card(
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(16),
+              side: const BorderSide(
+                color: Color(0xFFE5E7EB),
+              ),
+            ),
             child: Padding(
               padding:
-                  const EdgeInsets.all(16),
-
+                  const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment:
                     CrossAxisAlignment.start,
-
                 children: [
                   Text(
                     c.descrizione,
-
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight:
@@ -364,11 +415,15 @@ class _CompetitionsPageState
                     children: [
                       IconButton(
                         onPressed: () async {
-                          await context.push(
+                          final result =
+                              await context.push(
                             '/competitions/edit/${c.id}',
                           );
-                        },
 
+                          if (result == true) {
+                            await refreshData();
+                          }
+                        },
                         icon:
                             const Icon(Icons.edit),
                       ),
@@ -377,7 +432,6 @@ class _CompetitionsPageState
                         onPressed: () {
                           deleteCompetition(c);
                         },
-
                         icon: const Icon(
                           Icons.delete,
                         ),
@@ -392,99 +446,138 @@ class _CompetitionsPageState
       );
     }
 
+    // =====================================================
+    // DESKTOP TABLE FULL WIDTH
+    // =====================================================
+
     return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.circular(20),
+        side: const BorderSide(
+          color: Color(0xFFE5E7EB),
+        ),
+      ),
       clipBehavior: Clip.antiAlias,
-
       child: SingleChildScrollView(
-        child: DataTable(
-          sortAscending: sortAsc,
+        scrollDirection: Axis.horizontal,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minWidth:
+                MediaQuery.of(context)
+                        .size
+                        .width -
+                    360,
+          ),
+          child: DataTable(
+            columnSpacing: 48,
+            horizontalMargin: 32,
+            dataRowMinHeight: 72,
+            dataRowMaxHeight: 72,
+            headingRowHeight: 64,
+            sortAscending: sortAsc,
 
-          columns: [
-            DataColumn(
-              label: const Text(
-                'Descrizione',
+            columns: [
+              DataColumn(
+                label: const Text(
+                  'Descrizione',
+                ),
+                onSort: (_, __) {
+                  updateSort(
+                    'descrizione',
+                  );
+                },
               ),
 
-              onSort: (_, __) {
-                updateSort(
-                  'descrizione',
-                );
-              },
-            ),
+              DataColumn(
+                label:
+                    const Text('Data Gara'),
+                onSort: (_, __) {
+                  updateSort('dt_gara');
+                },
+              ),
 
-            DataColumn(
-              label:
-                  const Text('Data Gara'),
+              const DataColumn(
+                label: Text('Stato'),
+              ),
 
-              onSort: (_, __) {
-                updateSort('dt_gara');
-              },
-            ),
+              const DataColumn(
+                label: Text('Azioni'),
+              ),
+            ],
 
-            const DataColumn(
-              label: Text('Stato'),
-            ),
-
-            const DataColumn(
-              label: Text('Azioni'),
-            ),
-          ],
-
-          rows: competitions.map((c) {
-            return DataRow(
-              cells: [
-                DataCell(
-                  Text(c.descrizione),
-                ),
-
-                DataCell(
-                  Text(
-                    DateFormat(
-                      'dd/MM/yyyy',
-                    ).format(c.dtGara),
-                  ),
-                ),
-
-                DataCell(
-                  Chip(
-                    label: Text(
-                      c.flGaraChiusa
-                          ? 'Chiusa'
-                          : 'Aperta',
+            rows: competitions.map((c) {
+              return DataRow(
+                cells: [
+                  DataCell(
+                    SizedBox(
+                      width: 500,
+                      child: Text(
+                        c.descrizione,
+                        overflow:
+                            TextOverflow.ellipsis,
+                      ),
                     ),
                   ),
-                ),
 
-                DataCell(
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () async {
-                          await context.push(
-                            '/competitions/edit/${c.id}',
-                          );
-                        },
-
-                        icon: const Icon(
-                          Icons.edit,
-                        ),
-                      ),
-
-                      IconButton(
-                        onPressed: () {
-                          deleteCompetition(c);
-                        },
-
-                        icon: const Icon(
-                          Icons.delete,
-                        ),
-                      ),
-                    ],
+                  DataCell(
+                    Text(
+                      DateFormat(
+                        'dd/MM/yyyy',
+                      ).format(c.dtGara),
+                    ),
                   ),
-                ),
-              ],
-            );
-          }).toList(),
+
+                  DataCell(
+                    Chip(
+                      label: Text(
+                        c.flGaraChiusa
+                            ? 'Chiusa'
+                            : 'Aperta',
+                      ),
+                    ),
+                  ),
+
+                  DataCell(
+                    Row(
+                      mainAxisSize:
+                          MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          onPressed: () async {
+                            final result =
+                                await context.push(
+                              '/competitions/edit/${c.id}',
+                            );
+
+                            if (result ==
+                                true) {
+                              await refreshData();
+                            }
+                          },
+                          icon: const Icon(
+                            Icons.edit,
+                          ),
+                        ),
+
+                        IconButton(
+                          onPressed: () {
+                            deleteCompetition(
+                              c,
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.delete,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }).toList(),
+          ),
         ),
       ),
     );

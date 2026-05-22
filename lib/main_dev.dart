@@ -7,6 +7,8 @@ import 'core/config/env.dart';
 
 import 'core/routing/app_router.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -28,6 +30,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+
+      supportedLocales: const [
+        Locale('it'),
+        Locale('en'),
+      ],
       title: 'Boulder Competition DEV',
 
       debugShowCheckedModeBanner: false,

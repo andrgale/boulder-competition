@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'package:go_router/go_router.dart';
 
 import '../../core/models/app_menu.dart';
-
 import '../../core/services/menu_service.dart';
-
 import '../../core/ui/responsive.dart';
 
 class AppShell extends StatefulWidget {
@@ -30,7 +27,6 @@ class _AppShellState extends State<AppShell> {
   @override
   void initState() {
     super.initState();
-
     loadMenus();
   }
 
@@ -43,7 +39,6 @@ class _AppShellState extends State<AppShell> {
 
       setState(() {
         menus = loadedMenus;
-
         loading = false;
       });
     } catch (e) {
@@ -70,16 +65,15 @@ class _AppShellState extends State<AppShell> {
     final isDesktop =
         Responsive.isDesktop(context);
 
-    final isTablet =
-        Responsive.isTablet(context);
-
     final isMobile =
         Responsive.isMobile(context);
 
     return Scaffold(
-      drawer: (isDesktop || isTablet)
-          ? null
-          : Drawer(
+      backgroundColor:
+          const Color(0xFFF6F8FB),
+
+      drawer: isMobile
+          ? Drawer(
               child: SafeArea(
                 child: Column(
                   children: [
@@ -87,6 +81,8 @@ class _AppShellState extends State<AppShell> {
 
                     Expanded(
                       child: ListView(
+                        padding:
+                            const EdgeInsets.all(12),
                         children:
                             buildMenuTiles(context),
                       ),
@@ -94,29 +90,24 @@ class _AppShellState extends State<AppShell> {
                   ],
                 ),
               ),
-            ),
+            )
+          : null,
 
       body: Row(
         children: [
           // =================================================
-          // DESKTOP / TABLET SIDEBAR
+          // SIDEBAR
           // =================================================
 
-          if (isDesktop || isTablet)
+          if (!isMobile)
             Container(
-              width: isDesktop ? 280 : 220,
+              width: isDesktop ? 280 : 230,
 
-              decoration: BoxDecoration(
-                color:
-                    Theme.of(context)
-                        .colorScheme
-                        .surfaceContainerLowest,
-
+              decoration: const BoxDecoration(
+                color: Colors.white,
                 border: Border(
                   right: BorderSide(
-                    color:
-                        Theme.of(context)
-                            .dividerColor,
+                    color: Color(0xFFE5E7EB),
                   ),
                 ),
               ),
@@ -128,8 +119,72 @@ class _AppShellState extends State<AppShell> {
 
                     Expanded(
                       child: ListView(
+                        padding:
+                            const EdgeInsets.all(12),
                         children:
                             buildMenuTiles(context),
+                      ),
+                    ),
+
+                    const Divider(height: 1),
+
+                    Padding(
+                      padding:
+                          const EdgeInsets.all(16),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 18,
+                            backgroundColor:
+                                Colors.blue.shade100,
+                            child: Text(
+                              currentUserInitials(),
+                              style: TextStyle(
+                                color:
+                                    Colors.blue.shade900,
+                                fontWeight:
+                                    FontWeight.bold,
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(width: 12),
+
+                          const Expanded(
+                            child: Column(
+                              crossAxisAlignment:
+                                  CrossAxisAlignment
+                                      .start,
+                              mainAxisSize:
+                                  MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Andrea Galeazzo',
+                                  overflow:
+                                      TextOverflow
+                                          .ellipsis,
+                                  style: TextStyle(
+                                    fontWeight:
+                                        FontWeight
+                                            .w600,
+                                  ),
+                                ),
+                                SizedBox(height: 2),
+                                Text(
+                                  'Administrator',
+                                  overflow:
+                                      TextOverflow
+                                          .ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color:
+                                        Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -138,7 +193,7 @@ class _AppShellState extends State<AppShell> {
             ),
 
           // =================================================
-          // CONTENT
+          // MAIN CONTENT
           // =================================================
 
           Expanded(
@@ -149,24 +204,18 @@ class _AppShellState extends State<AppShell> {
                 // =============================================
 
                 Container(
-                  height: 64,
+                  height: 72,
 
                   padding:
                       const EdgeInsets.symmetric(
                     horizontal: 24,
                   ),
 
-                  decoration: BoxDecoration(
-                    color:
-                        Theme.of(context)
-                            .colorScheme
-                            .surface,
-
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
                     border: Border(
                       bottom: BorderSide(
-                        color:
-                            Theme.of(context)
-                                .dividerColor,
+                        color: Color(0xFFE5E7EB),
                       ),
                     ),
                   ),
@@ -192,32 +241,84 @@ class _AppShellState extends State<AppShell> {
                       if (isMobile)
                         const SizedBox(width: 12),
 
-                      Text(
-                        currentPageTitle(),
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight:
-                              FontWeight.bold,
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment:
+                              MainAxisAlignment
+                                  .center,
+                          crossAxisAlignment:
+                              CrossAxisAlignment
+                                  .start,
+                          children: [
+                            Text(
+                              currentPageTitle(),
+                              overflow:
+                                  TextOverflow
+                                      .ellipsis,
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight:
+                                    FontWeight.bold,
+                              ),
+                            ),
+
+                            const SizedBox(height: 4),
+
+                            const Text(
+                              'Boulder Competition Management',
+                              overflow:
+                                  TextOverflow
+                                      .ellipsis,
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
 
-                      const Spacer(),
+                      if (!isMobile) ...[
+                        const SizedBox(width: 24),
 
-                      IconButton(
-                        onPressed: () {},
+                        SizedBox(
+                          width: 300,
+                          height: 42,
 
-                        icon: const Icon(
-                          Icons.notifications,
+                          child: TextField(
+                            decoration:
+                                InputDecoration(
+                              hintText:
+                                  'Search...',
+                              filled: true,
+                              fillColor:
+                                  const Color(
+                                0xFFF3F4F6,
+                              ),
+                              border:
+                                  OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.circular(
+                                  12,
+                                ),
+                                borderSide:
+                                    BorderSide.none,
+                              ),
+                              prefixIcon:
+                                  const Icon(
+                                Icons.search,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
 
                       const SizedBox(width: 12),
 
-                      CircleAvatar(
-                        radius: 18,
-
-                        child: Text(
-                          currentUserInitials(),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.notifications_none,
                         ),
                       ),
                     ],
@@ -225,47 +326,46 @@ class _AppShellState extends State<AppShell> {
                 ),
 
                 // =============================================
-                // PAGE CONTENT
+                // CONTENT
                 // =============================================
 
                 Expanded(
-                  child: Center(
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        maxWidth:
-                            Responsive.contentWidth(
-                          context,
+                  child: Container(
+                    width: double.infinity,
+
+                    padding:
+                        EdgeInsets.symmetric(
+                      horizontal:
+                          isDesktop ? 40 : 20,
+                      vertical: 32,
+                    ),
+
+                    child: Column(
+                      crossAxisAlignment:
+                          CrossAxisAlignment
+                              .start,
+
+                      children: [
+                        AppBreadcrumb(
+                          current:
+                              currentPageTitle(),
                         ),
-                      ),
 
-                      child: Padding(
-                        padding:
-                            Responsive.pagePadding(
-                          context,
+                        const SizedBox(height: 24),
+
+                        // IMPORTANTISSIMO:
+                        // niente Expanded qui
+
+                        Flexible(
+                          child: widget.child,
                         ),
-
-                        child: Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start,
-
-                          children: [
-                            AppBreadcrumb(
-                              current:
-                                  currentPageTitle(),
-                            ),
-
-                            Expanded(
-                              child: widget.child,
-                            ),
-                          ],
-                        ),
-                      ),
+                      ],
                     ),
                   ),
                 ),
 
                 // =============================================
-                // MOBILE BOTTOM NAVIGATION
+                // MOBILE NAVIGATION
                 // =============================================
 
                 if (isMobile)
@@ -286,19 +386,16 @@ class _AppShellState extends State<AppShell> {
                             Icon(Icons.dashboard),
                         label: 'Dashboard',
                       ),
-
                       NavigationDestination(
                         icon:
                             Icon(Icons.groups),
                         label: 'Iscritti',
                       ),
-
                       NavigationDestination(
                         icon:
                             Icon(Icons.terrain),
                         label: 'Boulder',
                       ),
-
                       NavigationDestination(
                         icon:
                             Icon(Icons.leaderboard),
@@ -314,10 +411,6 @@ class _AppShellState extends State<AppShell> {
     );
   }
 
-  // =======================================================
-  // MENU TILES
-  // =======================================================
-
   List<Widget> buildMenuTiles(
     BuildContext context,
   ) {
@@ -326,28 +419,31 @@ class _AppShellState extends State<AppShell> {
           GoRouterState.of(context).uri.path ==
               menu.route;
 
-      return ListTile(
-        leading: buildMenuIcon(menu.icon),
-
-        title: Text(menu.label),
-
-        selected: selected,
-
-        shape: RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.circular(12),
+      return Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 4,
         ),
-
-        onTap: () {
-          context.go(menu.route);
-        },
+        child: Material(
+          color: selected
+              ? Colors.blue.shade50
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(14),
+          child: ListTile(
+            leading: buildMenuIcon(menu.icon),
+            title: Text(menu.label),
+            selected: selected,
+            selectedColor: Colors.blue.shade700,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+            onTap: () {
+              context.go(menu.route);
+            },
+          ),
+        ),
       );
     }).toList();
   }
-
-  // =======================================================
-  // MENU ICONS
-  // =======================================================
 
   Widget buildMenuIcon(String? iconName) {
     switch (iconName) {
@@ -385,10 +481,6 @@ class _AppShellState extends State<AppShell> {
     }
   }
 
-  // =======================================================
-  // PAGE TITLE
-  // =======================================================
-
   String currentPageTitle() {
     final route =
         GoRouter.of(context)
@@ -408,17 +500,9 @@ class _AppShellState extends State<AppShell> {
     return menu.first.label;
   }
 
-  // =======================================================
-  // USER INITIALS
-  // =======================================================
-
   String currentUserInitials() {
-    return 'GC';
+    return 'AG';
   }
-
-  // =======================================================
-  // MOBILE NAVIGATION
-  // =======================================================
 
   final mobileRoutes = [
     '/dashboard',
@@ -446,38 +530,44 @@ class _AppShellState extends State<AppShell> {
   }
 }
 
-// =========================================================
-// SIDEBAR HEADER
-// =========================================================
-
 class _SidebarHeader extends StatelessWidget {
   const _SidebarHeader();
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 72,
-
+      height: 80,
       alignment: Alignment.centerLeft,
-
-      padding: const EdgeInsets.symmetric(
+      padding:
+          const EdgeInsets.symmetric(
         horizontal: 24,
       ),
-
-      child: const Text(
-        'Boulder Admin',
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ),
+      child: const Column(
+        mainAxisAlignment:
+            MainAxisAlignment.center,
+        crossAxisAlignment:
+            CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Boulder Admin',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 4),
+          Text(
+            'Competition Platform',
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 12,
+            ),
+          ),
+        ],
       ),
     );
   }
 }
-
-// =========================================================
-// DRAWER HEADER
-// =========================================================
 
 class _DrawerHeader extends StatelessWidget {
   const _DrawerHeader();
@@ -486,13 +576,11 @@ class _DrawerHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 72,
-
       alignment: Alignment.centerLeft,
-
-      padding: const EdgeInsets.symmetric(
+      padding:
+          const EdgeInsets.symmetric(
         horizontal: 24,
       ),
-
       child: const Text(
         'MENU',
         style: TextStyle(
@@ -504,10 +592,6 @@ class _DrawerHeader extends StatelessWidget {
   }
 }
 
-// =========================================================
-// BREADCRUMB
-// =========================================================
-
 class AppBreadcrumb extends StatelessWidget {
   final String current;
 
@@ -518,35 +602,37 @@ class AppBreadcrumb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding:
-          const EdgeInsets.only(bottom: 24),
-
-      child: Row(
-        children: [
-          Text(
-            'Home',
-
-            style: TextStyle(
-              color:
-                  Theme.of(context)
-                      .colorScheme
-                      .primary,
+    return Row(
+      children: [
+        Text(
+          'Home',
+          style: TextStyle(
+            color: Colors.blue.shade700,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const Padding(
+          padding:
+              EdgeInsets.symmetric(
+            horizontal: 8,
+          ),
+          child: Icon(
+            Icons.chevron_right,
+            size: 18,
+            color: Colors.grey,
+          ),
+        ),
+        Flexible(
+          child: Text(
+            current,
+            overflow:
+                TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: Colors.grey,
             ),
           ),
-
-          const Padding(
-            padding:
-                EdgeInsets.symmetric(
-              horizontal: 8,
-            ),
-
-            child: Text('/'),
-          ),
-
-          Text(current),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

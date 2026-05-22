@@ -8,6 +8,7 @@ import '../data/competition_service.dart';
 
 import '../models/competition_model.dart';
 
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 class CompetitionFormPage
     extends StatefulWidget {
   final CompetitionModel? competition;
@@ -44,7 +45,7 @@ class _CompetitionFormPageState
       TextEditingController();
 
   final noteController =
-      TextEditingController();
+      TextEditingController();    
 
   DateTime? dtGara;
 
@@ -59,6 +60,13 @@ class _CompetitionFormPageState
   bool flGestioneOmaggi = false;
 
   bool saving = false;
+
+  final currencyFormatter =
+      CurrencyTextInputFormatter.currency(
+    locale: 'it',
+    symbol: '€ ',
+    decimalDigits: 2,
+  );
 
   bool get isEdit =>
       widget.competition != null;
@@ -91,7 +99,9 @@ class _CompetitionFormPageState
         c.nrBoulder.toString();
 
     quotaController.text =
-        c.quotaIscrizione.toString();
+        currencyFormatter.formatString(
+      c.quotaIscrizione.toString(),
+    );
 
     nrFinalistiController.text =
         c.nrFinalisti.toString();
@@ -190,10 +200,9 @@ class _CompetitionFormPageState
                   0,
 
           quotaIscrizione:
-              double.tryParse(
-                    quotaController.text,
-                  ) ??
-                  0,
+              currencyFormatter
+                  .getUnformattedValue()
+                  .toDouble(),
 
           nrFinalisti:
               int.tryParse(
@@ -234,10 +243,9 @@ class _CompetitionFormPageState
                   0,
 
           quotaIscrizione:
-              double.tryParse(
-                    quotaController.text,
-                  ) ??
-                  0,
+              currencyFormatter
+                  .getUnformattedValue()
+                  .toDouble(),
 
           nrFinalisti:
               int.tryParse(
@@ -322,13 +330,14 @@ class _CompetitionFormPageState
         ),
       ],
 
-      child: Center(
-        child: ConstrainedBox(
-          constraints:
-              const BoxConstraints(
-            maxWidth: 900,
-          ),
-
+      // child: Center(
+      //   child: ConstrainedBox(
+      //     constraints:
+      //         const BoxConstraints(
+      //       maxWidth: 900,
+      //     ),
+        child: SizedBox(
+          width: double.infinity,
           child: Card(
             child: Padding(
               padding:
@@ -400,6 +409,15 @@ class _CompetitionFormPageState
                               labelText:
                                   'Nr Boulder',
                             ),
+                            validator: (value) {
+                              if (value == null ||
+                                  value
+                                      .trim()
+                                      .isEmpty) {
+                                return 'Campo obbligatorio';
+                              }
+                                return null;
+                            },
                           ),
                         ),
 
@@ -427,18 +445,24 @@ class _CompetitionFormPageState
                     const SizedBox(height: 24),
 
                     TextFormField(
-                      controller:
-                          quotaController,
+                      controller: quotaController,
 
                       keyboardType:
-                          TextInputType.number,
+                          const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
 
-                      decoration:
-                          const InputDecoration(
-                        labelText:
-                            'Quota Iscrizione',
+                      inputFormatters: [
+                        currencyFormatter,
+                      ],
+
+                      decoration: const InputDecoration(
+                        labelText: 'Quota Iscrizione',
+
+                        prefixIcon: Icon(Icons.euro),
                       ),
                     ),
+
 
                     const SizedBox(height: 24),
 
@@ -539,7 +563,7 @@ class _CompetitionFormPageState
               ),
             ),
           ),
-        ),
+ //       ),
       ),
     );
   }
