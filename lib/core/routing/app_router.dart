@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth/login_page.dart';
 
+import '../../features/competitions/models/competition_model.dart';
 import '../../features/dashboard/dashboard_page.dart';
 
 import '../../features/competitions/pages/competitions_page.dart';
@@ -23,6 +24,10 @@ import 'route_guard.dart';
 import '../../features/competitions/pages/competition_form_page.dart';
 
 import '../../features/competitions/pages/competition_form_loader_page.dart';
+
+import '../../features/categories/pages/categories_page.dart';
+
+import '../../features/categories/pages/category_form_page.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/dashboard',
@@ -134,6 +139,42 @@ final GoRouter appRouter = GoRouter(
 
             return CompetitionFormLoaderPage(
               competitionId: id,
+            );
+          },
+        ),
+        GoRoute(
+          path: '/competitions/:id/categories',
+          builder: (context, state) {
+            final competitionId = state.pathParameters['id']!;
+            final competition = state.extra as CompetitionModel?;
+
+            return CategoriesPage(
+              competitionId: competitionId,
+              competitionName: competition?.descrizione ?? '',
+            );
+          },
+        ),
+        GoRoute(
+          path: '/categories/new',
+          name: 'category_create',
+          builder: (context, state) {
+            final competitionId = state.extra as String;
+
+            return CategoryFormPage(
+              competitionId: competitionId,
+            );
+          },
+        ),
+
+        GoRoute(
+          path: '/categories/edit',
+          name: 'category_edit',
+          builder: (context, state) {
+            final data = state.extra as Map;
+
+            return CategoryFormPage(
+              competitionId: data['competitionId'],
+              category: data['category'],
             );
           },
         ),
