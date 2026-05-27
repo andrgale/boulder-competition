@@ -9,8 +9,6 @@ import '../../features/competitions/pages/competitions_page.dart';
 
 import '../../features/registrations/registrations_page.dart';
 
-import '../../features/boulders/boulders_page.dart';
-
 import '../../features/rankings/rankings_page.dart';
 
 import '../../features/administration/administration_page.dart';
@@ -28,6 +26,12 @@ import '../../features/competitions/pages/competition_form_loader_page.dart';
 import '../../features/categories/pages/categories_page.dart';
 
 import '../../features/categories/pages/category_form_page.dart';
+
+import '../../features/boulders/pages/boulders_page.dart';
+
+import '../../features/boulders/pages/boulder_form_page.dart';
+
+
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/dashboard',
@@ -100,12 +104,19 @@ final GoRouter appRouter = GoRouter(
         ),
 
         GoRoute(
-          path: '/boulders',
-
+          path: '/competitions/:id/boulders',
           builder: (context, state) {
-            return const BouldersPage();
+            final competition =
+                state.extra as CompetitionModel;
+
+            return BouldersPage(
+              competitionId: competition.id,
+              competitionName:
+                  competition.descrizione,
+            );
           },
         ),
+
 
         GoRoute(
           path: '/rankings',
@@ -178,6 +189,35 @@ final GoRouter appRouter = GoRouter(
             );
           },
         ),
+// ======================================================
+// BOULDERS
+// ======================================================
+
+        GoRoute(
+          path: '/boulders/new',
+          name: 'boulder_create',
+          builder: (context, state) {
+            final competitionId = state.extra as String;
+
+            return BoulderFormPage(
+              competitionId: competitionId,
+            );
+          },
+        ),
+
+        GoRoute(
+          path: '/boulders/edit',
+          name: 'boulder_edit',
+          builder: (context, state) {
+            final data = state.extra as Map;
+
+            return BoulderFormPage(
+              competitionId: data['competitionId'],
+              boulder: data['boulder'],
+            );
+          },
+        ),
+
       ],
     ),
   ],
