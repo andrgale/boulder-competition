@@ -27,11 +27,9 @@ class _BoulderFormPageState
 
   late TextEditingController numeroCtrl;
 
-  late TextEditingController
-      difficoltaCtrl;
+  double difficolta = 1;
 
-  late TextEditingController
-      coloreCtrl;
+  String? colore;
 
   late TextEditingController
       valoreCtrl;
@@ -40,6 +38,8 @@ class _BoulderFormPageState
 
   bool get isEdit =>
       widget.boulder != null;
+
+  late TextEditingController boulderDaCreareCtrl;
 
   @override
   void initState() {
@@ -51,16 +51,16 @@ class _BoulderFormPageState
       text: b?.numero.toString() ?? '',
     );
 
-    difficoltaCtrl = TextEditingController(
-      text: b?.difficolta.toString() ?? '',
-    );
-
-    coloreCtrl = TextEditingController(
-      text: b?.colore ?? '',
-    );
+    difficolta = (b?.difficolta ?? 1).toDouble();
+    
+    colore = b?.colore;
 
     valoreCtrl = TextEditingController(
       text: b?.valoreTeorico.toString() ?? '1000',
+    );
+
+    boulderDaCreareCtrl = TextEditingController(
+      text: '1',
     );
 
     // AUTO NUMERO SOLO IN CREATE
@@ -82,9 +82,8 @@ class _BoulderFormPageState
   @override
   void dispose() {
     numeroCtrl.dispose();
-    difficoltaCtrl.dispose();
-    coloreCtrl.dispose();
     valoreCtrl.dispose();
+    boulderDaCreareCtrl.dispose();
 
     super.dispose();
   }
@@ -108,16 +107,6 @@ class _BoulderFormPageState
         numeroCtrl.text,
       );
 
-      final difficolta =
-          int.parse(
-        difficoltaCtrl.text,
-      );
-
-      final colore =
-          coloreCtrl.text.trim().isEmpty
-              ? null
-              : coloreCtrl.text.trim();
-
       final valore = double.parse(
         valoreCtrl.text.replaceAll(
           ',',
@@ -129,19 +118,34 @@ class _BoulderFormPageState
         await service.updateBoulder(
           id: widget.boulder!.id,
           numero: numero,
-          difficolta: difficolta,
+          difficolta:
+              difficolta.toInt(),
           colore: colore,
           valoreTeorico: valore,
         );
       } else {
-        await service.createBoulder(
-          competitionId:
-              widget.competitionId,
-          numero: numero,
-          difficolta: difficolta,
-          colore: colore,
-          valoreTeorico: valore,
+        final totale =
+            int.parse(
+          boulderDaCreareCtrl.text,
         );
+
+        for (int i = 0;
+            i < totale;
+            i++) {
+          await service.createBoulder(
+            competitionId:
+                widget.competitionId,
+
+            numero: numero + i,
+
+            difficolta:
+                difficolta.toInt(),
+
+            colore: colore,
+
+            valoreTeorico: valore,
+          );
+        }
       }
 
       if (mounted) {
@@ -169,7 +173,6 @@ class _BoulderFormPageState
       }
     }
   }
-
   // =====================================================
   // UI
   // =====================================================
@@ -221,42 +224,120 @@ class _BoulderFormPageState
               // DIFFICOLTA
               // =========================================
 
-              TextFormField(
-                controller:
-                    difficoltaCtrl,
-                decoration:
-                    const InputDecoration(
-                  labelText:
-                      'Difficoltà',
-                ),
-                keyboardType:
-                    TextInputType.number,
-                validator: (v) {
-                  if (v == null ||
-                      v.isEmpty) {
-                    return 'Obbligatorio';
-                  }
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Difficoltà',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
 
-                  return null;
-                },
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius:
+                              BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          difficolta.toInt().toString(),
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue.shade700,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  Slider(
+                    value: difficolta,
+                    min: 1,
+                    max: 10,
+                    divisions: 9,
+                    label: difficolta.toInt().toString(),
+                    onChanged: (value) {
+                      setState(() {
+                        difficolta = value;
+                      });
+                    },
+                  ),
+
+                  Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text('Facile'),
+                      Text('Difficile'),
+                    ],
+                  ),
+                ],
               ),
-
-              const SizedBox(height: 16),
 
               // =========================================
               // COLORE
               // =========================================
-
-              TextFormField(
-                controller: coloreCtrl,
-                decoration:
-                    const InputDecoration(
+              DropdownButtonFormField<String>(
+                value: colore,
+                decoration: const InputDecoration(
                   labelText: 'Colore',
                 ),
+                items: const [
+                  DropdownMenuItem(
+                    value: null,
+                    child: Text('Nessun colore'),
+                  ),
+
+                  DropdownMenuItem(
+                    value: 'Bianco',
+                    child: Text('⚪ Bianco'),
+                  ),
+
+                  DropdownMenuItem(
+                    value: 'Giallo',
+                    child: Text('🟡 Giallo'),
+                  ),
+
+                  DropdownMenuItem(
+                    value: 'Verde',
+                    child: Text('🟢 Verde'),
+                  ),
+
+                  DropdownMenuItem(
+                    value: 'Blu',
+                    child: Text('🔵 Blu'),
+                  ),
+
+                  DropdownMenuItem(
+                    value: 'Rosso',
+                    child: Text('🔴 Rosso'),
+                  ),
+
+                  DropdownMenuItem(
+                    value: 'Nero',
+                    child: Text('⚫ Nero'),
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    colore = value;
+                  });
+                },
               ),
-
               const SizedBox(height: 16),
-
               // =========================================
               // VALORE
               // =========================================
@@ -283,6 +364,38 @@ class _BoulderFormPageState
               ),
 
               const SizedBox(height: 32),
+
+              // =========================================
+              // MULTI CREATE
+              // =========================================
+
+              if (!isEdit) ...[
+                TextFormField(
+                  controller: boulderDaCreareCtrl,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: 'Boulder da creare',
+                    helperText: 'Valori ammessi da 1 a 20',
+                  ),
+
+                  validator: (value) {
+                    final n = int.tryParse(value ?? '');
+
+                    if (n == null) {
+                      return 'Inserire un numero';
+                    }
+
+                    if (n < 1 || n > 20) {
+                      return 'Valore ammesso: 1-20';
+                    }
+
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 24),
+              ],
+
 
               // =========================================
               // SAVE BUTTON

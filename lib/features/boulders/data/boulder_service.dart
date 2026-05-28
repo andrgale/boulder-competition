@@ -55,7 +55,7 @@ class BoulderService {
           'competition_id',
           competitionId,
         )
-        .order('numero');
+        .order('numero',ascending: true);
 
     return (data as List)
         .map(
