@@ -7,7 +7,9 @@ import '../../features/dashboard/dashboard_page.dart';
 
 import '../../features/competitions/pages/competitions_page.dart';
 
-import '../../features/registrations/registrations_page.dart';
+import '../../features/registrations/pages/registrations_page.dart';
+
+import '../../features/registrations/pages/registration_form_page.dart';
 
 import '../../features/rankings/rankings_page.dart';
 
@@ -92,14 +94,6 @@ final GoRouter appRouter = GoRouter(
 
           builder: (context, state) {
             return const CompetitionsPage();
-          },
-        ),
-
-        GoRoute(
-          path: '/registrations',
-
-          builder: (context, state) {
-            return const RegistrationsPage();
           },
         ),
 
@@ -214,6 +208,45 @@ final GoRouter appRouter = GoRouter(
             return BoulderFormPage(
               competitionId: data['competitionId'],
               boulder: data['boulder'],
+            );
+          },
+        ),
+
+        GoRoute(
+          path: '/competitions/:id/registrations',
+          name: 'registrations_list',
+          builder: (context, state) {
+            final competitionId = state.pathParameters['id']!;
+            final competition = state.extra as CompetitionModel?;
+
+            return RegistrationsPage(
+              competitionId: competitionId,
+              competitionName: competition?.descrizione ?? '',
+            );
+          },
+        ),
+
+        GoRoute(
+          path: '/registrations/new',
+          name: 'registration_create',
+          builder: (context, state) {
+            final competitionId = state.extra as String;
+
+            return RegistrationFormPage(
+              competitionId: competitionId,
+            );
+          },
+        ),
+
+        GoRoute(
+          path: '/registrations/edit',
+          name: 'registration_edit',
+          builder: (context, state) {
+            final data = state.extra as Map;
+
+            return RegistrationFormPage(
+              competitionId: data['competitionId'],
+              registration: data['registration'],
             );
           },
         ),

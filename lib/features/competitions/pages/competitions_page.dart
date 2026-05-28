@@ -256,6 +256,15 @@ class _CompetitionsPageState
     );
   }
 
+  Future<void> openRegistrations(
+    CompetitionModel competition,
+  ) async {
+    await context.push(
+      '/competitions/${competition.id}/registrations',
+      extra: competition,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isMobile =
@@ -443,6 +452,15 @@ class _CompetitionsPageState
 
                   Row(
                     children: [
+
+                      IconButton(
+                        tooltip: 'Iscritti',
+                        onPressed: () {
+                          openRegistrations(c);
+                        },
+                        icon: const Icon(Icons.how_to_reg),
+                      ),
+
                       IconButton(
                         tooltip: 'Categorie',
                         onPressed: () {
@@ -594,6 +612,16 @@ class _CompetitionsPageState
                       mainAxisSize:
                           MainAxisSize.min,
                       children: [
+                        IconButton(
+                          tooltip: 'Iscritti',
+                          onPressed: () {
+                            openRegistrations(c);
+                          },
+                          icon: const Icon(
+                            Icons.how_to_reg,
+                          ),
+                        ),
+
                         IconButton(
                           tooltip: 'Categorie',
                           onPressed: () {
