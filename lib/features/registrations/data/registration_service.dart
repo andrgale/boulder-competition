@@ -69,6 +69,7 @@ class RegistrationService {
   // =====================================================
   Future<void> createRegistration({
     required String competitionId,
+    String? profileId,
     required String cognome,
     required String nome,
     required String email,
@@ -94,6 +95,7 @@ class RegistrationService {
       'fl_presente': flPresente,
       'fl_pagato': flPagato,
       'fl_omaggio': flOmaggio,
+      'profile_id': profileId,
     });
   }
 
@@ -132,4 +134,58 @@ class RegistrationService {
   Future<void> deleteRegistration(String id) async {
     await _db.delete().eq('id', id);
   }
+
+  // =====================================================
+// CHECK EMAIL EXISTS
+// =====================================================
+
+  Future<bool> emailExists({
+    required String competitionId,
+    required String email,
+    String? excludeId,
+  }) async {
+    var query = Supabase.instance.client
+        .from('registrations')
+        .select('id')
+        .eq('competition_id', competitionId)
+        .eq('email', email);
+
+    // In edit escludo il record corrente
+    if (excludeId != null) {
+      query = query.neq('id', excludeId);
+    }
+
+    final result = await query.limit(1);
+
+    return result.isNotEmpty;
+  }
+
+// =====================================================
+// CREATE ATHLETE USER
+// =====================================================
+
+  Future<String?> createAthleteUser({
+    required String email,
+    required String nome,
+    required String cognome,
+  }) async {
+    final response =
+        await Supabase.instance.client.functions.invoke(
+      'create-athlete-user',
+      body: {
+        'email': email,
+        'nome': nome,
+        'cognome': cognome,
+      },
+    );
+
+    if (response.status != 200) {
+      throw Exception(
+        response.data['error'],
+      );
+    }
+
+    return response.data['profile_id'];
+  }
+
 }

@@ -94,36 +94,126 @@ class _RegistrationFormPageState
     super.dispose();
   }
 
-  // =====================================================
-  // SAVE
-  // =====================================================
+// =====================================================
+// SAVE
+// =====================================================
 
   Future<void> save() async {
-    if (!formKey.currentState!.validate()) return;
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
 
-    setState(() => loading = true);
+    final email = emailCtrl.text.trim();
+
+    // ===================================================
+    // CHECK EMAIL FORMAT
+    // ===================================================
+
+    final emailRegex = RegExp(
+      r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
+    );
+
+    if (!emailRegex.hasMatch(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Email non valida',
+          ),
+        ),
+      );
+
+      return;
+    }
+
+    setState(() {
+      loading = true;
+    });
 
     try {
-      final pettorale = pettoraleCtrl.text.isEmpty
-          ? null
-          : int.parse(pettoraleCtrl.text);
+      // =================================================
+      // CHECK EMAIL DUPLICATA
+      // =================================================
+
+      final exists =
+          await service.emailExists(
+        competitionId: widget.competitionId,
+        email: email,
+        excludeId:
+            isEdit
+                ? widget.registration!.id
+                : null,
+      );
+
+      if (exists) {
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(context)
+            .showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Email già presente in questa competizione',
+            ),
+          ),
+        );
+
+        setState(() {
+          loading = false;
+        });
+
+        return;
+      }
+
+      final pettorale =
+          pettoraleCtrl.text.isEmpty
+              ? null
+              : int.parse(
+                  pettoraleCtrl.text,
+                );
+
+      // ===============================================
+      // UPDATE
+      // ===============================================
 
       if (isEdit) {
         await service.updateRegistration(
           id: widget.registration!.id,
-          cognome: cognomeCtrl.text.trim(),
+          cognome:
+              cognomeCtrl.text.trim(),
           nome: nomeCtrl.text.trim(),
-          email: emailCtrl.text.trim(),
-          societa: societaCtrl.text.trim(),
+          email: email,
+          societa:
+              societaCtrl.text.trim(),
           pettorale: pettorale,
           sesso: sesso,
           flPresente: flPresente,
           flPagato: flPagato,
           flOmaggio: flOmaggio,
         );
-      } else {
+      }
+
+      // ===============================================
+      // CREATE
+      // ===============================================
+
+      else {
+        // ============================================
+        // CREATE AUTH USER + PROFILE
+        // ============================================
+
+        final profileId =
+            await service.createAthleteUser(
+          email: emailCtrl.text.trim(),
+          nome: nomeCtrl.text.trim(),
+          cognome: cognomeCtrl.text.trim(),
+        );
+
+        // ============================================
+        // CREATE REGISTRATION
+        // ============================================
+
         await service.createRegistration(
           competitionId: widget.competitionId,
+          profileId: profileId,
           cognome: cognomeCtrl.text.trim(),
           nome: nomeCtrl.text.trim(),
           email: emailCtrl.text.trim(),
@@ -136,17 +226,49 @@ class _RegistrationFormPageState
         );
       }
 
-      if (mounted) Navigator.pop(context, true);
-    } catch (e) {
-      if (!mounted) return;
+      if (mounted) {
+        Navigator.pop(
+          context,
+          true,
+        );
+      }
+    } 
+    catch (e) {
+     if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Errore: $e')),
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+        SnackBar(
+          content: Text(
+            'Errore: $e',
+          ),
+        ),
       );
+                // catch (e, stack) {
+                //   debugPrint('ERROR CREATE ATHLETE: $e');
+                //   debugPrintStack(stackTrace: stack);
+
+                //   if (!mounted) return;
+
+                //   showDialog(
+                //     context: context,
+                //     builder: (_) => AlertDialog(
+                //       title: const Text('Errore'),
+                //       content: SingleChildScrollView(
+                //         child: Text(e.toString()),
+                //       ),
+                //     ),
+                //   );
+                // }
     } finally {
-      if (mounted) setState(() => loading = false);
+      if (mounted) {
+        setState(() {
+          loading = false;
+        });
+      }
     }
   }
+
 
   // =====================================================
   // UI
@@ -195,8 +317,25 @@ class _RegistrationFormPageState
                 decoration: const InputDecoration(
                   labelText: 'Email',
                 ),
-              ),
+                keyboardType: TextInputType.emailAddress,
+                validator: (value) {
+                  final email = value?.trim() ?? '';
 
+                  if (email.isEmpty) {
+                    return 'Email obbligatoria';
+                  }
+
+                  final emailRegex = RegExp(
+                    r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
+                  );
+
+                  if (!emailRegex.hasMatch(email)) {
+                    return 'Formato email non valido';
+                  }
+
+                  return null;
+                },
+              ),
               TextFormField(
                 controller: societaCtrl,
                 decoration: const InputDecoration(
