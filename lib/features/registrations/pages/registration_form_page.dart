@@ -358,7 +358,7 @@ class _RegistrationFormPageState
               const SizedBox(height: 12),
 
               DropdownButtonFormField<String>(
-                value: sesso,
+                initialValue: sesso,
                 items: const [
                   DropdownMenuItem(
                       value: 'M', child: Text('M')),

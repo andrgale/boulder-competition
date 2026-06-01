@@ -4,6 +4,10 @@ import 'package:go_router/go_router.dart';
 import '../data/registration_service.dart';
 import '../models/registration_model.dart';
 
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 class RegistrationsPage extends StatefulWidget {
   final String competitionId;
   final String competitionName;
@@ -32,6 +36,99 @@ class _RegistrationsPageState
     super.initState();
 
     loadRealtime();
+  }
+
+// =====================================================
+// IMPORT CSV
+// =====================================================
+
+  Future<void> importCsv() async {
+    try {
+      final result =
+          await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['csv'],
+      );
+
+      if (result == null) return;
+
+      final path =
+          result.files.single.path;
+
+      if (path == null) return;
+
+      final file = File(path);
+
+      final csvContent =
+          await file.readAsString();
+
+      if (!mounted) return;
+
+      setState(() {
+        loading = true;
+      });
+
+      debugPrint(
+        'IMPORT CSV competitionId=${widget.competitionId}',
+      );
+
+      final response =
+          await Supabase.instance.client.functions
+              .invoke(
+        'import_competition_csv',
+        body: {
+          'competition_id':
+              widget.competitionId,
+          'csv_content': csvContent,
+        },
+      );
+
+      debugPrint('STATUS: ${response.status}');
+      debugPrint('DATA: ${response.data}');
+      debugPrint('TYPE: ${response.data.runtimeType}');
+
+      if (!mounted) return;
+
+      debugPrint(response.data.toString());
+
+      if (response.data != null) {
+        final inserted =
+            response.data['inserted'] ?? 0;
+
+        final discarded =
+            response.data['discarded'] ?? 0;
+
+        ScaffoldMessenger.of(context)
+            .showSnackBar(
+          SnackBar(
+            content: Text(
+              'Import completato - '
+              'Inseriti: $inserted '
+              'Scartati: $discarded',
+            ),
+          ),
+        );
+
+        await refreshData();
+      }
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+        SnackBar(
+          content: Text(
+            'Errore import CSV: $e',
+          ),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          loading = false;
+        });
+      }
+    }
   }
 
   // =====================================================
@@ -155,8 +252,18 @@ class _RegistrationsPageState
         title: Text(
           'Iscrizioni - ${widget.competitionName}',
         ),
+
         actions: [
           IconButton(
+            tooltip: 'Importa CSV',
+            icon: const Icon(
+              Icons.upload_file,
+            ),
+            onPressed: importCsv,
+          ),
+
+          IconButton(
+            tooltip: 'Nuova iscrizione',
             icon: const Icon(Icons.add),
             onPressed: openCreate,
           ),

@@ -113,7 +113,7 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
               ),
 
               DropdownButtonFormField<String>(
-                value: sesso,
+                initialValue: sesso,
                 items: const [
                   DropdownMenuItem(value: 'M', child: Text('M')),
                   DropdownMenuItem(value: 'F', child: Text('F')),

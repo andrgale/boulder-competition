@@ -291,7 +291,7 @@ class _BoulderFormPageState
               // COLORE
               // =========================================
               DropdownButtonFormField<String>(
-                value: colore,
+                initialValue: colore,
                 decoration: const InputDecoration(
                   labelText: 'Colore',
                 ),

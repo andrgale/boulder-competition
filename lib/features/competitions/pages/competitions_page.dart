@@ -400,7 +400,7 @@ class _CompetitionsPageState
       return ListView.separated(
         itemCount: competitions.length,
         separatorBuilder:
-            (_, __) =>
+            (_, _) =>
                 const SizedBox(height: 12),
         itemBuilder: (context, index) {
           final c = competitions[index];
@@ -551,7 +551,7 @@ class _CompetitionsPageState
                 label: const Text(
                   'Descrizione',
                 ),
-                onSort: (_, __) {
+                onSort: (_, _) {
                   updateSort(
                     'descrizione',
                   );
@@ -561,7 +561,7 @@ class _CompetitionsPageState
               DataColumn(
                 label:
                     const Text('Data Gara'),
-                onSort: (_, __) {
+                onSort: (_, _) {
                   updateSort('dt_gara');
                 },
               ),
