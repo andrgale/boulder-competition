@@ -33,6 +33,12 @@ import '../../features/boulders/pages/boulders_page.dart';
 
 import '../../features/boulders/pages/boulder_form_page.dart';
 
+import '../../features/import_jobs/pages/importjobrow_page.dart';
+
+import '../../features/import_jobs/pages/importjobs_page.dart';
+
+import '../../features/import_jobs/models/import_job_model.dart';
+
 
 
 final GoRouter appRouter = GoRouter(
@@ -247,6 +253,25 @@ final GoRouter appRouter = GoRouter(
             return RegistrationFormPage(
               competitionId: data['competitionId'],
               registration: data['registration'],
+            );
+          },
+        ),
+
+        GoRoute(
+          path: '/import-jobs',
+          builder: (context, state) {
+            return const ImportJobsPage();
+          },
+        ),
+
+        GoRoute(
+          path: '/import-job-rows',
+          builder: (context, state) {
+            final job =
+                state.extra as ImportJobModel;
+
+            return ImportJobRowsPage(
+              job: job,
             );
           },
         ),

@@ -1,0 +1,262 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../data/import_job_service.dart';
+import '../models/import_job_model.dart';
+
+class ImportJobsPage extends StatefulWidget {
+  const ImportJobsPage({
+    super.key,
+  });
+
+  @override
+  State<ImportJobsPage> createState() =>
+      _ImportJobsPageState();
+}
+
+class _ImportJobsPageState
+    extends State<ImportJobsPage> {
+  final service = ImportJobService();
+
+  List<ImportJobModel> jobs = [];
+
+  bool loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadRealtime();
+  }
+
+  // =====================================================
+  // REFRESH
+  // =====================================================
+
+  Future<void> refreshData() async {
+    final rows =
+        await service.getImportJobs();
+
+    if (!mounted) return;
+
+    setState(() {
+      jobs = rows;
+      loading = false;
+    });
+  }
+
+  // =====================================================
+  // REALTIME
+  // =====================================================
+
+  void loadRealtime() {
+    service.watchImportJobs().listen(
+      (rows) {
+        if (!mounted) return;
+
+        setState(() {
+          jobs = rows;
+          loading = false;
+        });
+      },
+    );
+  }
+
+  // =====================================================
+  // DETAIL
+  // =====================================================
+
+  Future<void> openDetail(
+    ImportJobModel job,
+  ) async {
+    await context.push(
+      '/import-job-rows',
+      extra: job,
+    );
+  }
+
+  // =====================================================
+  // STATUS COLOR
+  // =====================================================
+
+  Color getStatusColor(
+    String status,
+  ) {
+    switch (status) {
+      case 'Completata':
+        return Colors.green;
+
+      case 'In corso':
+        return Colors.orange;
+
+      case 'Errore':
+        return Colors.red;
+
+      default:
+        return Colors.grey;
+    }
+  }
+
+  // =====================================================
+  // DATE FORMAT
+  // =====================================================
+
+  String formatDate(
+    DateTime dt,
+  ) {
+    return
+        '${dt.day.toString().padLeft(2, '0')}/'
+        '${dt.month.toString().padLeft(2, '0')}/'
+        '${dt.year} '
+        '${dt.hour.toString().padLeft(2, '0')}:'
+        '${dt.minute.toString().padLeft(2, '0')}';
+  }
+
+  // =====================================================
+  // UI
+  // =====================================================
+
+  @override
+  Widget build(
+    BuildContext context,
+  ) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Importazioni CSV',
+        ),
+      ),
+      body: loading
+          ? const Center(
+              child:
+                  CircularProgressIndicator(),
+            )
+          : jobs.isEmpty
+              ? const Center(
+                  child: Text(
+                    'Nessuna importazione trovata',
+                  ),
+                )
+              : SingleChildScrollView(
+                  scrollDirection:
+                      Axis.horizontal,
+                  child: DataTable(
+                    columns: const [
+                      DataColumn(
+                        label: Text(
+                          'Data import',
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Gara',
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'File',
+                        ),
+                      ),
+                      DataColumn(
+                        numeric: true,
+                        label: Text(
+                          'Totali',
+                        ),
+                      ),
+                      DataColumn(
+                        numeric: true,
+                        label: Text(
+                          'Inseriti',
+                        ),
+                      ),
+                      DataColumn(
+                        numeric: true,
+                        label: Text(
+                          'Scartati',
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Stato',
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Dettaglio',
+                        ),
+                      ),
+                    ],
+                    rows: jobs.map(
+                      (job) {
+                        return DataRow(
+                          cells: [
+                            DataCell(
+                              Text(
+                                formatDate(
+                                  job.startedAt,
+                                ),
+                              ),
+                            ),
+                            DataCell(
+                              Text(
+                                job.competitionDescription ?? '-',
+                              ),
+                            ),
+                            DataCell(
+                              Text(
+                                job.fileName,
+                              ),
+                            ),
+                            DataCell(
+                              Text(
+                                job.totalRows
+                                    .toString(),
+                              ),
+                            ),
+                            DataCell(
+                              Text(
+                                job.insertedRows
+                                    .toString(),
+                              ),
+                            ),
+                            DataCell(
+                              Text(
+                                job.discardedRows
+                                    .toString(),
+                              ),
+                            ),
+                            DataCell(
+                              Chip(
+                                label: Text(
+                                  job.status,
+                                ),
+                                backgroundColor:
+                                    getStatusColor(
+                                  job.status,
+                                ),
+                              ),
+                            ),
+                            DataCell(
+                              IconButton(
+                                icon:
+                                    const Icon(
+                                  Icons
+                                      .visibility,
+                                ),
+                                tooltip:
+                                    'Dettaglio',
+                                onPressed:
+                                    () =>
+                                        openDetail(
+                                  job,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ).toList(),
+                  ),
+                ),
+    );
+  }
+}

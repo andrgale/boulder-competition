@@ -14,66 +14,111 @@ class PermissionService {
   // LOAD USER PERMISSIONS
   // =======================================================
 
-  static Future<List<String>>
-      loadPermissions() async {
+  static Future<List<String>> loadPermissions() async {
     try {
-      // ===============================================
-      // CACHE
-      // ===============================================
-
       if (_cachedPermissions != null) {
         return _cachedPermissions!;
       }
 
-      final user =
-          supabase.auth.currentUser;
+      final user = supabase.auth.currentUser;
+      if (user == null) return [];
 
-      if (user == null) {
-        return [];
-      }
+      // 1. profile
+      final profile = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('auth_user_id', user.id)
+          .single();
 
-      // ===============================================
-      // PROFILE
-      // ===============================================
+      final profileId = profile['id'];
 
-      final profile =
-          await supabase
-              .from('profiles')
-              .select('role_id')
-              .eq(
-                'auth_user_id',
-                user.id,
-              )
-              .single();
+      // 2. roles via user_roles
+      final roles = await supabase
+          .from('user_roles')
+          .select('role_id')
+          .eq('profile_id', profileId);
 
-      final roleId = profile['role_id'];
+      final roleIds =
+          roles.map((e) => e['role_id']).toList();
 
-      // ===============================================
-      // ROLE PERMISSIONS
-      // ===============================================
-
+      // 3. permissions via roles
       final rows = await supabase
           .from('role_permissions')
           .select('permissions(permission_code)')
-          .eq('role_id', roleId);
+          .inFilter('role_id', roleIds);
 
-      final permissions =
-          rows.map<String>((row) {
-        return row['permissions']
-            ['permission_code'] as String;
+      final permissions = rows.map<String>((row) {
+        return row['permissions']['permission_code'] as String;
       }).toList();
 
-      // ===============================================
-      // CACHE
-      // ===============================================
-
       _cachedPermissions = permissions;
-
       return permissions;
     } catch (e) {
       return [];
     }
   }
+
+
+  // static Future<List<String>>
+  //     loadPermissions() async {
+  //   try {
+  //     // ===============================================
+  //     // CACHE
+  //     // ===============================================
+
+  //     if (_cachedPermissions != null) {
+  //       return _cachedPermissions!;
+  //     }
+
+  //     final user =
+  //         supabase.auth.currentUser;
+
+  //     if (user == null) {
+  //       return [];
+  //     }
+
+  //     // ===============================================
+  //     // PROFILE
+  //     // ===============================================
+
+  //     final profile =
+  //         await supabase
+  //             .from('profiles')
+  //             .select('role_id')
+  //             .eq(
+  //               'auth_user_id',
+  //               user.id,
+  //             )
+  //             .single();
+
+  //     final roleId = profile['role_id'];
+
+  //     // ===============================================
+  //     // ROLE PERMISSIONS
+  //     // ===============================================
+
+  //     final rows = await supabase
+  //         .from('role_permissions')
+  //         .select('permissions(permission_code)')
+  //         .eq('role_id', roleId);
+
+  //     final permissions =
+  //         rows.map<String>((row) {
+  //       return row['permissions']
+  //           ['permission_code'] as String;
+  //     }).toList();
+
+  //     // ===============================================
+  //     // CACHE
+  //     // ===============================================
+
+  //     _cachedPermissions = permissions;
+
+  //     return permissions;
+  //   } catch (e) {
+  //     return [];
+  //   }
+  // }
 
   // =======================================================
   // HAS PERMISSION
