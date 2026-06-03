@@ -1,8 +1,5 @@
 import 'package:go_router/go_router.dart';
-
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../services/menu_service.dart';
 
 import '../services/permission_service.dart';
 
@@ -32,7 +29,6 @@ class RouteGuard {
     '/competitions/new':
         'competition.write',
 
-    // dynamic edit route
     '/competitions/edit':
         'competition.write',
 
@@ -71,18 +67,26 @@ class RouteGuard {
 
     '/rankings':
         'ranking.read',
+
     // =====================================================
     // IMPORT CSV
     // =====================================================
 
-    '/import-jobs': 'admin.panel',
-    '/import-job-rows': 'admin.panel',
+    // '/import-jobs':
+    //     'admin.panel',
+
+    // '/import-job-rows':
+    //     'admin.panel',
+
+    '/import-jobs': 'import.read',
+    '/import-job-rows': 'import.read',
 
     // =====================================================
     // ADMIN
     // =====================================================
 
-    '/admin': 'admin.panel',
+    '/admin':
+        'admin.panel',
   };
 
   // =======================================================
@@ -126,15 +130,16 @@ class RouteGuard {
     }
 
     // =====================================================
-    // CHECK ROUTE PERMISSIONS
+    // CHECK PERMISSIONS
     // =====================================================
 
-   // final allowed =
-   //     await hasRoutePermission(location);
-    final baseRoute = _extractBaseRoute(location);
+    final baseRoute =
+        _extractBaseRoute(location);
 
     final allowed =
-        await hasRoutePermission(baseRoute);
+        await hasRoutePermission(
+      baseRoute,
+    );
 
     if (!allowed) {
       return '/forbidden';
@@ -151,44 +156,24 @@ class RouteGuard {
     String route,
   ) async {
     try {
-      // ===================================================
-      // DYNAMIC ROUTES NORMALIZATION
-      // ===================================================
-
       final normalizedRoute =
           normalizeRoute(route);
-
-      // ===================================================
-      // MENU ROUTES
-      // ===================================================
-
-      final menus =
-          await MenuService().getMenus();
-
-      final allowedRoutes =
-          menus.map((m) => m.route).toList();
-
-      // ===================================================
-      // ROUTE EXISTS IN MENU
-      // ===================================================
-
-      if (allowedRoutes.contains(
-        normalizedRoute,
-      )) {
-        return true;
-      }
-
-      // ===================================================
-      // PERMISSION-BASED ROUTES
-      // ===================================================
 
       final permission =
           routePermissions[
               normalizedRoute];
 
+      // ===================================================
+      // ROUTE NON PROTETTA
+      // ===================================================
+
       if (permission == null) {
-        return false;
+        return true;
       }
+
+      // ===================================================
+      // ROUTE PROTETTA
+      // ===================================================
 
       return await PermissionService
           .hasPermission(permission);
@@ -205,7 +190,7 @@ class RouteGuard {
     String route,
   ) {
     // =====================================================
-    // COMPETITIONS EDIT
+    // COMPETITIONS
     // =====================================================
 
     if (route.startsWith(
@@ -215,7 +200,7 @@ class RouteGuard {
     }
 
     // =====================================================
-    // REGISTRATIONS EDIT
+    // REGISTRATIONS
     // =====================================================
 
     if (route.startsWith(
@@ -225,7 +210,7 @@ class RouteGuard {
     }
 
     // =====================================================
-    // BOULDERS EDIT
+    // BOULDERS
     // =====================================================
 
     if (route.startsWith(
@@ -236,12 +221,21 @@ class RouteGuard {
 
     return route;
   }
-  static String _extractBaseRoute(String route) {
-    final segments = Uri.parse(route).pathSegments;
 
-    if (segments.isEmpty) return route;
+  // =======================================================
+  // BASE ROUTE
+  // =======================================================
+
+  static String _extractBaseRoute(
+    String route,
+  ) {
+    final segments =
+        Uri.parse(route).pathSegments;
+
+    if (segments.isEmpty) {
+      return route;
+    }
 
     return '/${segments.first}';
   }
-
 }

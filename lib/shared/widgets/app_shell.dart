@@ -32,8 +32,20 @@ class _AppShellState extends State<AppShell> {
 
   Future<void> loadMenus() async {
     try {
-      final loadedMenus =
+      var loadedMenus =
           await menuService.getMenus();
+
+      loadedMenus = loadedMenus.where((m) {
+        if (!m.visible) {
+          return false;
+        }
+
+        if (Responsive.isMobile(context)) {
+          return m.mobile;
+        }
+
+        return m.desktop;
+      }).toList();
 
       if (!mounted) return;
 
