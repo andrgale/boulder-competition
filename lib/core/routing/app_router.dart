@@ -39,10 +39,16 @@ import '../../features/import_jobs/pages/importjobs_page.dart';
 
 import '../../features/import_jobs/models/import_job_model.dart';
 
-
+import '../../features/athlete/pages/athlete_login_page.dart';
+import '../../features/athlete/pages/athlete_change_password_page.dart';
+import '../../features/athlete/pages/athlete_boulders_page.dart';
+import '../../config/app_mode.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/dashboard',
+ // initialLocation: '/dashboard',
+    initialLocation: AppConfig.isAthlete
+        ? '/athlete-login'
+        : '/dashboard',
 
   redirect: (context, state) async {
     return await RouteGuard.redirect(
@@ -62,7 +68,6 @@ final GoRouter appRouter = GoRouter(
         return const LoginPage();
       },
     ),
-
     // =====================================================
     // FORBIDDEN
     // =====================================================
@@ -72,6 +77,42 @@ final GoRouter appRouter = GoRouter(
 
       builder: (context, state) {
         return const ForbiddenPage();
+      },
+    ),
+
+    // =====================================================
+    // ATHLETE LOGIN
+    // =====================================================
+
+    GoRoute(
+      path: '/athlete-login',
+      name: 'athlete_login',
+      builder: (context, state) {
+        return const AthleteLoginPage();
+      },
+    ),
+
+    // =====================================================
+    // ATHLETE CHANGE PASSWORD
+    // =====================================================
+
+    GoRoute(
+      path: '/athlete-change-password',
+      name: 'athlete_change_password',
+      builder: (context, state) {
+        return const AthleteChangePasswordPage();
+      },
+    ),
+
+    // =====================================================
+    // ATHLETE BOULDERS
+    // =====================================================
+
+    GoRoute(
+      path: '/athlete-boulders',
+      name: 'athlete_boulders',
+      builder: (context, state) {
+        return const AthleteBouldersPage();
       },
     ),
 
@@ -217,6 +258,9 @@ final GoRouter appRouter = GoRouter(
             );
           },
         ),
+// ======================================================
+// REGISTRATIONS
+// ======================================================
 
         GoRoute(
           path: '/competitions/:id/registrations',
@@ -256,6 +300,9 @@ final GoRouter appRouter = GoRouter(
             );
           },
         ),
+// ======================================================
+// RISULTATI IMPORT
+// =====================================================
 
         GoRoute(
           path: '/import-jobs',
@@ -275,7 +322,6 @@ final GoRouter appRouter = GoRouter(
             );
           },
         ),
-
       ],
     ),
   ],
