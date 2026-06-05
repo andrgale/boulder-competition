@@ -95,6 +95,19 @@ class _AthleteChangePasswordPageState
 
       if (!mounted) return;
 
+      final user = Supabase.instance.client.auth.currentUser;
+
+      if (user == null) {
+        throw Exception('Utente non autenticato');
+      }
+
+      await supabase
+          .from('profiles')
+          .update({
+            'password_changed': true,
+          })
+          .eq('auth_user_id', user.id);
+
       ScaffoldMessenger.of(context)
           .showSnackBar(
         const SnackBar(

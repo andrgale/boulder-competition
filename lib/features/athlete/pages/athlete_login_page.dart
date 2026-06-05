@@ -5,6 +5,7 @@ import '../../../core/services/auth_service.dart';
 //import '../pages/athlete_boulders_page.dart';
 //import '../pages/athlete_change_password_page.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AthleteLoginPage extends StatefulWidget {
   const AthleteLoginPage({super.key});
@@ -37,17 +38,23 @@ class _AthleteLoginPageState
         password: passwordController.text.trim(),
       );
 
+      final user =
+          Supabase.instance.client.auth.currentUser!;
+
+      final profile =
+          await Supabase.instance.client
+              .from('profiles')
+              .select('password_changed')
+              .eq('auth_user_id', user.id)
+              .single();
+
       if (!mounted) return;
 
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (_) =>
-      //         const AthleteBouldersPage(),
-      //   ),
-      // );
-
-      context.go('/athlete-boulders');
+      if (profile['password_changed'] == false) {
+        context.go('/athlete-change-password');
+      } else {
+        context.go('/athlete-boulders');
+      }
 
     } catch (e) {
       if (!mounted) return;
@@ -249,7 +256,8 @@ class _AthleteLoginPageState
                       ),
 
                       const Text(
-                        'Password iniziale fornita dall\'organizzazione',
+ //                       'Password iniziale fornita dall\'organizzazione',
+                           '', 
                         textAlign:
                             TextAlign.center,
                         style: TextStyle(
