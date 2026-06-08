@@ -31,11 +31,52 @@ class _RegistrationsPageState
 
   bool loading = true;
 
+  final searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
 
     loadRealtime();
+  }
+
+  List<RegistrationModel> filteredRegistrations() {
+    final query =
+        searchController.text
+            .trim()
+            .toLowerCase();
+
+    if (query.isEmpty) {
+      return registrations;
+    }
+
+    return registrations.where((r) {
+      final nome =
+          r.nome.toLowerCase();
+
+      final cognome =
+          r.cognome.toLowerCase();
+
+      final pettorale =
+          (r.pettorale ?? '')
+              .toString()
+              .toLowerCase();
+
+      final societa =
+          (r.societa ?? '')
+              .toLowerCase();
+
+      return nome.contains(query) ||
+          cognome.contains(query) ||
+          pettorale.contains(query) ||
+          societa.contains(query);
+    }).toList();
   }
 
 // =====================================================
@@ -247,6 +288,9 @@ class _RegistrationsPageState
         MediaQuery.of(context).size.width <
             700;
 
+    final filtered =
+    filteredRegistrations();        
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -277,25 +321,85 @@ class _RegistrationsPageState
             )
           : null,
 
-      body: loading
-          ? const Center(
-              child:
-                  CircularProgressIndicator(),
-            )
-          : registrations.isEmpty
+      // body: loading
+      //     ? const Center(
+      //         child:
+      //             CircularProgressIndicator(),
+      //       )
+      //     : registrations.isEmpty
+
+    body: loading
+        ? const Center(
+            child:
+                CircularProgressIndicator(),
+          )
+        : Column(
+            children: [
+
+              Padding(
+                padding:
+                    const EdgeInsets.all(12),
+                child: TextField(
+                  controller:
+                      searchController,
+                  decoration:
+                      InputDecoration(
+                    hintText:
+                        'Cerca pettorale, cognome o nome...',
+                    prefixIcon:
+                        const Icon(
+                      Icons.search,
+                    ),
+                    suffixIcon:
+                        searchController
+                                .text
+                                .isNotEmpty
+                            ? IconButton(
+                                icon:
+                                    const Icon(
+                                  Icons.clear,
+                                ),
+                                onPressed: () {
+                                  searchController
+                                      .clear();
+
+                                  setState(() {});
+                                },
+                              )
+                            : null,
+                    border:
+                        OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.circular(
+                        12,
+                      ),
+                    ),
+                  ),
+                  onChanged: (_) {
+                    setState(() {});
+                  },
+                ),
+              ),
+
+              Expanded(
+                child: filtered.isEmpty
+
               ? const Center(
                   child: Text(
                     'Nessuna iscrizione',
                   ),
                 )
               : ListView.builder(
+                  // itemCount:
+                  //     registrations.length,
                   itemCount:
-                      registrations.length,
+                    filtered.length,
                   itemBuilder:
                       (context, index) {
+//                    final r =
+//                        registrations[index];
                     final r =
-                        registrations[index];
-
+                        filtered[index];
                     return ListTile(
                       leading: CircleAvatar(
                         child: Text(
@@ -344,6 +448,22 @@ class _RegistrationsPageState
                               ),
                             ),
 
+                            IconButton(
+                              icon: const Icon(Icons.terrain),
+                              tooltip: 'Boulder',
+                              onPressed: () {
+                                context.push(
+                                  '/ascents-boulders',
+                                  extra: {
+                                    'registrationId': r.id,
+                                    'athleteName':
+                                        '${r.cognome} ${r.nome}',
+                                  },
+                                );
+                              },
+                            ),
+
+
                           IconButton(
                             icon: const Icon(
                               Icons.edit,
@@ -369,6 +489,9 @@ class _RegistrationsPageState
                     );
                   },
                 ),
+          ),
+        ],
+      ),
     );
   }
 }

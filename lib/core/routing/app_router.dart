@@ -44,6 +44,8 @@ import '../../features/athlete/pages/athlete_change_password_page.dart';
 import '../../features/athlete/pages/athlete_boulders_page.dart';
 import '../../config/app_mode.dart';
 
+import '../../features/ascents/pages/ascents_boulders_page.dart';
+
 final GoRouter appRouter = GoRouter(
  // initialLocation: '/dashboard',
     initialLocation: AppConfig.isAthlete
@@ -297,6 +299,26 @@ final GoRouter appRouter = GoRouter(
             return RegistrationFormPage(
               competitionId: data['competitionId'],
               registration: data['registration'],
+            );
+          },
+        ),
+
+// ======================================================
+// REALIZZAZIONI BOULDER
+// =====================================================
+
+        GoRoute(
+          path: '/ascents-boulders',
+          name: 'ascents_boulders',
+          builder: (context, state) {
+            final data =
+                state.extra as Map<String, dynamic>;
+
+            return AscentsBouldersPage(
+              registrationId:
+                  data['registrationId'],
+              athleteName:
+                  data['athleteName'],
             );
           },
         ),
