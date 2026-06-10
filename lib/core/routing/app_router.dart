@@ -46,6 +46,22 @@ import '../../config/app_mode.dart';
 
 import '../../features/ascents/pages/ascents_boulders_page.dart';
 
+import '../../features/security/pages/security_dashboard_page.dart';
+import '../../features/security/pages/roles/roles_list_page.dart';
+import '../../features/security/pages/roles/role_form_page.dart';
+import '../../features/security/pages/roles/role_manage_page.dart';
+import '../../features/security/pages/permissions/permissions_list_page.dart';
+import '../../features/security/pages/permissions/permission_form_page.dart';
+import '../../features/security/pages/menus/menus_list_page.dart';
+import '../../features/security/pages/menus/menu_form_page.dart';
+import '../../features/security/pages/profiles/profiles_list_page.dart';
+import '../../features/security/pages/profiles/profile_roles_page.dart';
+import '../../features/security/models/role_model.dart';
+import '../../features/security/models/permission_model.dart';
+import '../../features/security/models/menu_model.dart';
+import '../../features/security/models/security_profile_model.dart';
+
+
 final GoRouter appRouter = GoRouter(
  // initialLocation: '/dashboard',
     initialLocation: AppConfig.isAthlete
@@ -341,6 +357,110 @@ final GoRouter appRouter = GoRouter(
 
             return ImportJobRowsPage(
               job: job,
+            );
+          },
+        ),
+        // ======================================================
+        // SECURITY
+        // ======================================================
+
+        GoRoute(
+          path: '/security',
+          builder: (context, state) {
+            return const SecurityDashboardPage();
+          },
+        ),
+
+        GoRoute(
+          path: '/security/roles',
+          builder: (context, state) {
+            return const RolesListPage();
+          },
+        ),
+
+        GoRoute(
+          path: '/security/roles/new',
+          builder: (context, state) {
+            return const RoleFormPage();
+          },
+        ),
+
+        GoRoute(
+          path: '/security/roles/edit',
+          builder: (context, state) {
+            final role = state.extra as RoleModel;
+            return RoleFormPage(role: role);
+          },
+        ),
+
+        GoRoute(
+          path: '/security/roles/manage',
+          builder: (context, state) {
+            final role = state.extra as RoleModel;
+            return RoleManagePage(role: role);
+          },
+        ),
+
+        GoRoute(
+          path: '/security/permissions',
+          builder: (context, state) {
+            return const PermissionsListPage();
+          },
+        ),
+
+        GoRoute(
+          path: '/security/permissions/new',
+          builder: (context, state) {
+            return const PermissionFormPage();
+          },
+        ),
+
+        GoRoute(
+          path: '/security/permissions/edit',
+          builder: (context, state) {
+            final permission = state.extra as PermissionModel;
+            return PermissionFormPage(permission: permission);
+          },
+        ),
+
+        GoRoute(
+          path: '/security/menus',
+          builder: (context, state) {
+            return const MenusListPage();
+          },
+        ),
+
+        GoRoute(
+          path: '/security/menus/new',
+          builder: (context, state) {
+            // extra può essere null (radice) o String (parentId)
+            final parentId = state.extra as String?;
+            return MenuFormPage(parentId: parentId);
+          },
+        ),
+
+        GoRoute(
+          path: '/security/menus/edit',
+          builder: (context, state) {
+            final menu = state.extra as MenuModel;
+            return MenuFormPage(menu: menu);
+          },
+        ),
+
+        GoRoute(
+          path: '/security/profiles',
+          builder: (context, state) {
+            return const ProfilesListPage();
+          },
+        ),
+
+        GoRoute(
+          path: '/security/profiles/roles',
+          builder: (context, state) {
+            final data = state.extra as Map<String, dynamic>;
+            return ProfileRolesPage(
+              profile: data['profile'] as SecurityProfileModel,
+              roles: data['roles'] as List<RoleModel>,
             );
           },
         ),

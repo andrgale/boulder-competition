@@ -72,15 +72,24 @@ class AscentsBouldersService {
     // ASCENTS
     // ===============================
 
+    // final ascents = await supabase
+    //     .from('ascents')
+    //     .select(
+    //       'boulder_id, top',
+    //     )
+    //     .eq(
+    //       'registration_id',
+    //       registrationId,
+    //     );
+
     final ascents = await supabase
         .from('ascents')
-        .select(
-          'boulder_id, top',
-        )
+        .select()
         .eq(
           'registration_id',
           registrationId,
         );
+
 
     final Map<String, bool> ascentMap = {
       for (final ascent in ascents)

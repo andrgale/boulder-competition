@@ -68,6 +68,24 @@ class RouteGuard {
     // =====================================================
 
     '/admin': 'admin.panel',
+
+    // =====================================================
+    // SECURITY
+    // =====================================================
+    '/security':                    'security.admin',
+    '/security/roles':              'security.admin',
+    '/security/roles/new':          'security.admin',
+    '/security/roles/edit':         'security.admin',
+    '/security/roles/manage':       'security.admin',
+    '/security/permissions':        'security.admin',
+    '/security/permissions/new':    'security.admin',
+    '/security/permissions/edit':   'security.admin',
+    '/security/menus':              'security.admin',
+    '/security/menus/new':          'security.admin',
+    '/security/menus/edit':         'security.admin',
+    '/security/profiles':           'security.admin',
+    '/security/profiles/roles':     'security.admin',
+
   };
 
   // =======================================================
@@ -239,6 +257,11 @@ class RouteGuard {
       '/boulders/edit/',
     )) {
       return '/boulders/edit';
+    }
+    // Security routes con segmenti dinamici (attualmente nessuno,
+    // ma pronti per future estensioni)
+    if (route.startsWith('/security/')) {
+      return route; // già normalizzata, nessun id dinamico
     }
 
     return route;
