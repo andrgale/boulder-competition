@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/registration_model.dart';
 
@@ -13,6 +14,10 @@ class RegistrationService {
     return Supabase.instance.client
         .from('registrations')
         .stream(primaryKey: ['id'])
+        .handleError((error) {
+          // Connessione Realtime persa temporaneamente, verrà riconnessa automaticamente
+          debugPrint('Realtime stream error (ignorato): $error');
+        })
         .map((data) {
       final filtered = data
           .where((e) =>

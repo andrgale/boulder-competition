@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/import_job_model.dart';
 
@@ -13,6 +14,10 @@ class ImportJobService {
         .from('import_jobs')
         .stream(primaryKey: ['id'])
         .order('created_at')
+        .handleError((error) {
+          // Connessione Realtime persa temporaneamente, verrà riconnessa automaticamente
+          debugPrint('Realtime stream error (ignorato): $error');
+        })
         .map((data) {
       return data
           .map((e) => ImportJobModel.fromJson(e))

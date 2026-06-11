@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/competition_model.dart';
@@ -17,6 +18,10 @@ class CompetitionService {
           primaryKey: ['id'],
         )
         .order('dt_gara')
+        .handleError((error) {
+          // Connessione Realtime persa temporaneamente, verrà riconnessa automaticamente
+          debugPrint('Realtime stream error (ignorato): $error');
+        })
         .map(
           (rows) => rows
               .map(

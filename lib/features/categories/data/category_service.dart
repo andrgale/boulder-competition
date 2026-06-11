@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/category_model.dart';
 
@@ -9,6 +10,10 @@ class CategoryService {
     return Supabase.instance.client
         .from('categories')
         .stream(primaryKey: ['id'])
+        .handleError((error) {
+          // Connessione Realtime persa temporaneamente, verrà riconnessa automaticamente
+          debugPrint('Realtime stream error (ignorato): $error');
+        })
         .map((data) {
       final filtered = data
           .where((e) => e['competition_id'] == competitionId)
