@@ -193,6 +193,20 @@ final GoRouter appRouter = GoRouter(
           },
         ),
 
+        // =====================================================
+        // FORZO LOGIN DA MENU
+        // =====================================================
+
+        GoRoute(
+          path: '/login',
+
+          builder: (context, state) {
+            return const LoginPage();
+          },
+        ),
+
+
+
         GoRoute(
           path: '/competitions/new',
 

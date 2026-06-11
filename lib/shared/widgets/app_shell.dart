@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../core/models/app_menu.dart';
 import '../../core/services/menu_service.dart';
 import '../../core/ui/responsive.dart';
-import 'search_overlay.dart'; // ← unica aggiunta agli import
+import 'search_overlay.dart';
 
 class AppShell extends StatefulWidget {
   final Widget child;
@@ -307,11 +308,20 @@ class _AppShellState extends State<AppShell> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(14),
             ),
-            onTap: () => context.go(menu.route),
+            onTap: () => _handleMenuTap(context, menu.route),
           ),
         ),
       );
     }).toList();
+  }
+
+  /// Naviga alla rotta del menu. Se la rotta è '/login' esegue prima
+  /// il signOut di Supabase, così il RouteGuard non reindirizza alla dashboard.
+  Future<void> _handleMenuTap(BuildContext context, String route) async {
+    if (route == '/login') {
+      await Supabase.instance.client.auth.signOut();
+    }
+    if (context.mounted) context.go(route);
   }
 
   Widget buildMenuIcon(String? iconName) {
