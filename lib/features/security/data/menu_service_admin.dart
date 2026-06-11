@@ -30,7 +30,7 @@ class MenuServiceAdmin {
       'route': route.trim(),
       if (icon != null && icon.isNotEmpty) 'icon': icon.trim(),
       'display_order': displayOrder,
-      if (parentId != null) 'parent_id': parentId,
+      'parent_id': ?parentId,
       'visible': visible,
       'mobile': mobile,
       'desktop': desktop,

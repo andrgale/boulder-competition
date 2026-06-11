@@ -194,7 +194,7 @@ class _MenuFormPageState extends State<MenuFormPage> {
                       Expanded(
                         flex: 3,
                         child: DropdownButtonFormField<String>(
-                          value: iconController.text.isEmpty
+                          initialValue: iconController.text.isEmpty
                               ? null
                               : iconController.text,
                           decoration: const InputDecoration(labelText: 'Icona'),
@@ -227,7 +227,7 @@ class _MenuFormPageState extends State<MenuFormPage> {
                   // ── Parent ─────────────────────────────
                   if (!loadingMenus)
                     DropdownButtonFormField<String?>(
-                      value: parentId,
+                      initialValue: parentId,
                       decoration: const InputDecoration(
                         labelText: 'Voce parent',
                         helperText: 'Lascia vuoto per voce di primo livello',

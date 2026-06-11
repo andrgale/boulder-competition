@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/models/app_menu.dart';
 import '../../core/services/menu_service.dart';
 import '../../core/ui/responsive.dart';
+import 'search_overlay.dart'; // ← unica aggiunta agli import
 
 class AppShell extends StatefulWidget {
   final Widget child;
@@ -32,18 +33,11 @@ class _AppShellState extends State<AppShell> {
 
   Future<void> loadMenus() async {
     try {
-      var loadedMenus =
-          await menuService.getMenus();
+      var loadedMenus = await menuService.getMenus();
 
       loadedMenus = loadedMenus.where((m) {
-        if (!m.visible) {
-          return false;
-        }
-
-        if (Responsive.isMobile(context)) {
-          return m.mobile;
-        }
-
+        if (!m.visible) return false;
+        if (Responsive.isMobile(context)) return m.mobile;
         return m.desktop;
       }).toList();
 
@@ -55,12 +49,8 @@ class _AppShellState extends State<AppShell> {
       });
     } catch (e) {
       debugPrint(e.toString());
-
       if (!mounted) return;
-
-      setState(() {
-        loading = false;
-      });
+      setState(() => loading = false);
     }
   }
 
@@ -68,21 +58,15 @@ class _AppShellState extends State<AppShell> {
   Widget build(BuildContext context) {
     if (loading) {
       return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
+        body: Center(child: CircularProgressIndicator()),
       );
     }
 
-    final isDesktop =
-        Responsive.isDesktop(context);
-
-    final isMobile =
-        Responsive.isMobile(context);
+    final isDesktop = Responsive.isDesktop(context);
+    final isMobile = Responsive.isMobile(context);
 
     return Scaffold(
-      backgroundColor:
-          const Color(0xFFF6F8FB),
+      backgroundColor: const Color(0xFFF6F8FB),
 
       drawer: isMobile
           ? Drawer(
@@ -90,13 +74,10 @@ class _AppShellState extends State<AppShell> {
                 child: Column(
                   children: [
                     const _DrawerHeader(),
-
                     Expanded(
                       child: ListView(
-                        padding:
-                            const EdgeInsets.all(12),
-                        children:
-                            buildMenuTiles(context),
+                        padding: const EdgeInsets.all(12),
+                        children: buildMenuTiles(context),
                       ),
                     ),
                   ],
@@ -114,83 +95,56 @@ class _AppShellState extends State<AppShell> {
           if (!isMobile)
             Container(
               width: isDesktop ? 280 : 230,
-
               decoration: const BoxDecoration(
                 color: Colors.white,
                 border: Border(
-                  right: BorderSide(
-                    color: Color(0xFFE5E7EB),
-                  ),
+                  right: BorderSide(color: Color(0xFFE5E7EB)),
                 ),
               ),
-
               child: SafeArea(
                 child: Column(
                   children: [
                     const _SidebarHeader(),
-
                     Expanded(
                       child: ListView(
-                        padding:
-                            const EdgeInsets.all(12),
-                        children:
-                            buildMenuTiles(context),
+                        padding: const EdgeInsets.all(12),
+                        children: buildMenuTiles(context),
                       ),
                     ),
-
                     const Divider(height: 1),
-
                     Padding(
-                      padding:
-                          const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
                       child: Row(
                         children: [
                           CircleAvatar(
                             radius: 18,
-                            backgroundColor:
-                                Colors.blue.shade100,
+                            backgroundColor: Colors.blue.shade100,
                             child: Text(
                               currentUserInitials(),
                               style: TextStyle(
-                                color:
-                                    Colors.blue.shade900,
-                                fontWeight:
-                                    FontWeight.bold,
+                                color: Colors.blue.shade900,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
-
                           const SizedBox(width: 12),
-
                           const Expanded(
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment
-                                      .start,
-                              mainAxisSize:
-                                  MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
                                   'Andrea Galeazzo',
-                                  overflow:
-                                      TextOverflow
-                                          .ellipsis,
-                                  style: TextStyle(
-                                    fontWeight:
-                                        FontWeight
-                                            .w600,
-                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(fontWeight: FontWeight.w600),
                                 ),
                                 SizedBox(height: 2),
                                 Text(
                                   'Administrator',
-                                  overflow:
-                                      TextOverflow
-                                          .ellipsis,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color:
-                                        Colors.grey,
+                                    color: Colors.grey,
                                   ),
                                 ),
                               ],
@@ -217,121 +171,60 @@ class _AppShellState extends State<AppShell> {
 
                 Container(
                   height: 72,
-
-                  padding:
-                      const EdgeInsets.symmetric(
-                    horizontal: 24,
-                  ),
-
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     border: Border(
-                      bottom: BorderSide(
-                        color: Color(0xFFE5E7EB),
-                      ),
+                      bottom: BorderSide(color: Color(0xFFE5E7EB)),
                     ),
                   ),
-
                   child: Row(
                     children: [
                       if (isMobile)
                         Builder(
-                          builder: (context) {
-                            return IconButton(
-                              onPressed: () {
-                                Scaffold.of(
-                                  context,
-                                ).openDrawer();
-                              },
-                              icon: const Icon(
-                                Icons.menu,
-                              ),
-                            );
-                          },
+                          builder: (context) => IconButton(
+                            onPressed: () => Scaffold.of(context).openDrawer(),
+                            icon: const Icon(Icons.menu),
+                          ),
                         ),
 
-                      if (isMobile)
-                        const SizedBox(width: 12),
+                      if (isMobile) const SizedBox(width: 12),
 
                       Expanded(
                         child: Column(
-                          mainAxisAlignment:
-                              MainAxisAlignment
-                                  .center,
-                          crossAxisAlignment:
-                              CrossAxisAlignment
-                                  .start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               currentPageTitle(),
-                              overflow:
-                                  TextOverflow
-                                      .ellipsis,
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontSize: 24,
-                                fontWeight:
-                                    FontWeight.bold,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-
                             const SizedBox(height: 4),
-
                             const Text(
                               'Boulder Competition Management',
-                              overflow:
-                                  TextOverflow
-                                      .ellipsis,
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 13,
-                              ),
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: Colors.grey, fontSize: 13),
                             ),
                           ],
                         ),
                       ),
 
+                      // ── SEARCH BAR ── unica modifica al top bar ──────────
                       if (!isMobile) ...[
                         const SizedBox(width: 24),
-
-                        SizedBox(
-                          width: 300,
-                          height: 42,
-
-                          child: TextField(
-                            decoration:
-                                InputDecoration(
-                              hintText:
-                                  'Search...',
-                              filled: true,
-                              fillColor:
-                                  const Color(
-                                0xFFF3F4F6,
-                              ),
-                              border:
-                                  OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.circular(
-                                  12,
-                                ),
-                                borderSide:
-                                    BorderSide.none,
-                              ),
-                              prefixIcon:
-                                  const Icon(
-                                Icons.search,
-                              ),
-                            ),
-                          ),
-                        ),
+                        const GlobalSearchBar(width: 300, height: 42),
                       ],
+                      // ─────────────────────────────────────────────────────
 
                       const SizedBox(width: 12),
 
                       IconButton(
                         onPressed: () {},
-                        icon: const Icon(
-                          Icons.notifications_none,
-                        ),
+                        icon: const Icon(Icons.notifications_none),
                       ),
                     ],
                   ),
@@ -344,33 +237,16 @@ class _AppShellState extends State<AppShell> {
                 Expanded(
                   child: Container(
                     width: double.infinity,
-
-                    padding:
-                        EdgeInsets.symmetric(
-                      horizontal:
-                          isDesktop ? 40 : 20,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isDesktop ? 40 : 20,
                       vertical: 32,
                     ),
-
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment
-                              .start,
-
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        AppBreadcrumb(
-                          current:
-                              currentPageTitle(),
-                        ),
-
+                        AppBreadcrumb(current: currentPageTitle()),
                         const SizedBox(height: 24),
-
-                        // IMPORTANTISSIMO:
-                        // niente Expanded qui
-
-                        Flexible(
-                          child: widget.child,
-                        ),
+                        Flexible(child: widget.child),
                       ],
                     ),
                   ),
@@ -382,35 +258,25 @@ class _AppShellState extends State<AppShell> {
 
                 if (isMobile)
                   NavigationBar(
-                    selectedIndex:
-                        currentBottomIndex(),
-
-                    onDestinationSelected:
-                        (index) {
-                      context.go(
-                        mobileRoutes[index],
-                      );
+                    selectedIndex: currentBottomIndex(),
+                    onDestinationSelected: (index) {
+                      context.go(mobileRoutes[index]);
                     },
-
                     destinations: const [
                       NavigationDestination(
-                        icon:
-                            Icon(Icons.dashboard),
+                        icon: Icon(Icons.dashboard),
                         label: 'Dashboard',
                       ),
                       NavigationDestination(
-                        icon:
-                            Icon(Icons.groups),
+                        icon: Icon(Icons.groups),
                         label: 'Iscritti',
                       ),
                       NavigationDestination(
-                        icon:
-                            Icon(Icons.terrain),
+                        icon: Icon(Icons.terrain),
                         label: 'Boulder',
                       ),
                       NavigationDestination(
-                        icon:
-                            Icon(Icons.leaderboard),
+                        icon: Icon(Icons.leaderboard),
                         label: 'Ranking',
                       ),
                     ],
@@ -423,22 +289,15 @@ class _AppShellState extends State<AppShell> {
     );
   }
 
-  List<Widget> buildMenuTiles(
-    BuildContext context,
-  ) {
+  List<Widget> buildMenuTiles(BuildContext context) {
     return menus.map((menu) {
       final selected =
-          GoRouterState.of(context).uri.path ==
-              menu.route;
+          GoRouterState.of(context).uri.path == menu.route;
 
       return Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 4,
-        ),
+        padding: const EdgeInsets.symmetric(vertical: 4),
         child: Material(
-          color: selected
-              ? Colors.blue.shade50
-              : Colors.transparent,
+          color: selected ? Colors.blue.shade50 : Colors.transparent,
           borderRadius: BorderRadius.circular(14),
           child: ListTile(
             leading: buildMenuIcon(menu.icon),
@@ -448,9 +307,7 @@ class _AppShellState extends State<AppShell> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(14),
             ),
-            onTap: () {
-              context.go(menu.route);
-            },
+            onTap: () => context.go(menu.route),
           ),
         ),
       );
@@ -461,60 +318,40 @@ class _AppShellState extends State<AppShell> {
     switch (iconName) {
       case 'dashboard':
         return const Icon(Icons.dashboard);
-
       case 'groups':
         return const Icon(Icons.groups);
-
       case 'terrain':
         return const Icon(Icons.terrain);
-
       case 'leaderboard':
         return const Icon(Icons.leaderboard);
-
       case 'sports_score':
         return const Icon(Icons.sports_score);
-
       case 'emoji_events':
         return const Icon(Icons.emoji_events);
-
       case 'admin_panel_settings':
-        return const Icon(
-          Icons.admin_panel_settings,
-        );
-
+        return const Icon(Icons.admin_panel_settings);
       case 'category':
         return const Icon(Icons.category);
-
       case 'person':
         return const Icon(Icons.person);
-
       default:
         return const Icon(Icons.circle);
     }
   }
 
   String currentPageTitle() {
-    final route =
-        GoRouter.of(context)
-            .routeInformationProvider
-            .value
-            .uri
-            .path;
+    final route = GoRouter.of(context)
+        .routeInformationProvider
+        .value
+        .uri
+        .path;
 
-    final menu = menus.where(
-      (m) => m.route == route,
-    );
-
-    if (menu.isEmpty) {
-      return 'Boulder Competition';
-    }
-
+    final menu = menus.where((m) => m.route == route);
+    if (menu.isEmpty) return 'Boulder Competition';
     return menu.first.label;
   }
 
-  String currentUserInitials() {
-    return 'AG';
-  }
+  String currentUserInitials() => 'AG';
 
   final mobileRoutes = [
     '/dashboard',
@@ -524,23 +361,20 @@ class _AppShellState extends State<AppShell> {
   ];
 
   int currentBottomIndex() {
-    final current =
-        GoRouter.of(context)
-            .routeInformationProvider
-            .value
-            .uri
-            .path;
+    final current = GoRouter.of(context)
+        .routeInformationProvider
+        .value
+        .uri
+        .path;
 
-    final index =
-        mobileRoutes.indexOf(current);
-
-    if (index < 0) {
-      return 0;
-    }
-
-    return index;
+    final index = mobileRoutes.indexOf(current);
+    return index < 0 ? 0 : index;
   }
 }
+
+// =============================================================================
+// Widgets invariati
+// =============================================================================
 
 class _SidebarHeader extends StatelessWidget {
   const _SidebarHeader();
@@ -550,30 +384,19 @@ class _SidebarHeader extends StatelessWidget {
     return Container(
       height: 80,
       alignment: Alignment.centerLeft,
-      padding:
-          const EdgeInsets.symmetric(
-        horizontal: 24,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: const Column(
-        mainAxisAlignment:
-            MainAxisAlignment.center,
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Boulder Admin',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 4),
           Text(
             'Competition Platform',
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 12,
-            ),
+            style: TextStyle(color: Colors.grey, fontSize: 12),
           ),
         ],
       ),
@@ -589,16 +412,10 @@ class _DrawerHeader extends StatelessWidget {
     return Container(
       height: 72,
       alignment: Alignment.centerLeft,
-      padding:
-          const EdgeInsets.symmetric(
-        horizontal: 24,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: const Text(
         'MENU',
-        style: TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-        ),
+        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -607,10 +424,7 @@ class _DrawerHeader extends StatelessWidget {
 class AppBreadcrumb extends StatelessWidget {
   final String current;
 
-  const AppBreadcrumb({
-    super.key,
-    required this.current,
-  });
+  const AppBreadcrumb({super.key, required this.current});
 
   @override
   Widget build(BuildContext context) {
@@ -623,25 +437,15 @@ class AppBreadcrumb extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        const Padding(
-          padding:
-              EdgeInsets.symmetric(
-            horizontal: 8,
-          ),
-          child: Icon(
-            Icons.chevron_right,
-            size: 18,
-            color: Colors.grey,
-          ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Icon(Icons.chevron_right, size: 18, color: Colors.grey),
         ),
         Flexible(
           child: Text(
             current,
-            overflow:
-                TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: Colors.grey,
-            ),
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(color: Colors.grey),
           ),
         ),
       ],

@@ -156,6 +156,10 @@ class AthleteBoulderService {
                         as String
                   ] ??
                   false,
+          zone: boulder['zone'] ?? false,
+          tentativiTop: boulder['tentativi_top'] ?? 0,
+          tentativiZone: boulder['tentativi_zone'] ?? 0,
+        
         );
       },
     ).toList();

@@ -89,7 +89,7 @@ class _RolesListPageState extends State<RolesListPage> {
     if (isMobile) {
       return ListView.separated(
         itemCount: roles.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 12),
+        separatorBuilder: (_, _) => const SizedBox(height: 12),
         itemBuilder: (_, i) => _RoleMobileCard(
           role: roles[i],
           onEdit: () async {

@@ -1,168 +1,135 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../athlete/models/athlete_boulder_model.dart';
-import '../../athlete/models/athlete_boulders_page_data.dart';
-import '../../athlete/models/athlete_competition_model.dart';
+
+// modello già esistente che usi nella pagina lista
+class AscentsPageData {
+  final dynamic competition;
+  final List<AthleteBoulderModel> boulders;
+
+  AscentsPageData({required this.competition, required this.boulders});
+}
 
 class AscentsBouldersService {
   final supabase = Supabase.instance.client;
 
-  // =====================================================
-  // LOAD PAGINA PER REGISTRATION
-  // =====================================================
+  // =========================================================
+  // LOAD PAGE BY REGISTRATION
+  // =========================================================
 
-  Future<AthleteBouldersPageData>
-      loadPageByRegistration(
+  Future<AscentsPageData> loadPageByRegistration(
     String registrationId,
   ) async {
-    // ===============================
-    // REGISTRAZIONE
-    // ===============================
+    // registrazione + competizione
+    final reg = await supabase
+        .from('registrations')
+        .select('competition_id, competitions(id, descrizione)')
+        .eq('id', registrationId)
+        .single();
 
-    final registration =
-        await supabase
-            .from('registrations')
-            .select()
-            .eq(
-              'id',
-              registrationId,
-            )
-            .single();
+    final competitionId = reg['competition_id'] as String;
+    final competition = reg['competitions'];
 
-    final competitionId =
-        registration['competition_id']
-            as String;
-
-    // ===============================
-    // COMPETIZIONE
-    // ===============================
-
-    final competitionRow =
-        await supabase
-            .from('competitions')
-            .select()
-            .eq(
-              'id',
-              competitionId,
-            )
-            .single();
-
-    final competition =
-        AthleteCompetitionModel.fromMap(
-      competitionRow,
-    );
-
-    // ===============================
-    // BOULDERS
-    // ===============================
-
-    final boulders = await supabase
+    // boulder della competizione
+    final bouldersRaw = await supabase
         .from('boulders')
         .select()
-        .eq(
-          'competition_id',
-          competitionId,
-        )
-        .order(
-          'numero',
-          ascending: true,
-        );
+        .eq('competition_id', competitionId)
+        .order('numero', ascending: true);
 
-    // ===============================
-    // ASCENTS
-    // ===============================
-
-    // final ascents = await supabase
-    //     .from('ascents')
-    //     .select(
-    //       'boulder_id, top',
-    //     )
-    //     .eq(
-    //       'registration_id',
-    //       registrationId,
-    //     );
-
-    final ascents = await supabase
+    // ascents dell'atleta
+    final ascentsRaw = await supabase
         .from('ascents')
         .select()
-        .eq(
-          'registration_id',
-          registrationId,
-        );
+        .eq('registration_id', registrationId);
 
+    final ascentMap = <String, Map<String, dynamic>>{};
+    for (final a in ascentsRaw) {
+      ascentMap[a['boulder_id'] as String] = a;
+    }
 
-    final Map<String, bool> ascentMap = {
-      for (final ascent in ascents)
-        ascent['boulder_id'] as String:
-            ascent['top'] == true,
-    };
+    final boulders = bouldersRaw.map<AthleteBoulderModel>((b) {
+      final a = ascentMap[b['id']];
+      return AthleteBoulderModel(
+        boulderId: b['id'],
+        numero: b['numero'] ?? 0,
+        difficolta: b['difficolta'] ?? 0,
+        colore: b['colore'],
+        top: a?['top'] ?? false,
+        zone: a?['zone'] ?? false,
+        tentativiTop: a?['tentativi_top'] ?? 0,
+        tentativiZone: a?['tentativi_zone'] ?? 0,
+      );
+    }).toList();
 
-    // ===============================
-    // MODEL
-    // ===============================
+    return AscentsPageData(competition: competition, boulders: boulders);
+  }
 
-    final List<AthleteBoulderModel>
-        items =
-        boulders.map<
-            AthleteBoulderModel>(
-      (boulder) {
-        return AthleteBoulderModel(
-          boulderId:
-              boulder['id'] as String,
-          numero:
-              boulder['numero'] ?? 0,
-          difficolta:
-              boulder['difficolta'] ?? 0,
-          colore:
-              boulder['colore'],
-          top:
-              ascentMap[
-                    boulder['id']
-                        as String
-                  ] ??
-                  false,
-        );
+  // =========================================================
+  // GET SINGLE ASCENT (per pre-popolare il form)
+  // =========================================================
+
+  Future<Map<String, dynamic>?> getAscent({
+    required String registrationId,
+    required String boulderId,
+  }) async {
+    final result = await supabase
+        .from('ascents')
+        .select()
+        .eq('registration_id', registrationId)
+        .eq('boulder_id', boulderId)
+        .maybeSingle();
+
+    return result;
+  }
+
+  // =========================================================
+  // UPSERT ASCENT (insert o update)
+  // =========================================================
+
+  Future<void> upsertAscent({
+    required String registrationId,
+    required String boulderId,
+    required bool top,
+    required bool zone,
+    required int tentativiTop,
+    required int tentativiZone,
+  }) async {
+    await supabase.from('ascents').upsert(
+      {
+        'registration_id': registrationId,
+        'boulder_id': boulderId,
+        'top': top,
+        'zone': zone,
+        'tentativi_top': tentativiTop,
+        'tentativi_zone': tentativiZone,
+        'updated_at': DateTime.now().toIso8601String(),
       },
-    ).toList();
-
-    final completedBoulders =
-        items
-            .where((b) => b.top)
-            .length;
-
-    return AthleteBouldersPageData(
-      competition: competition,
-      registrationId: registrationId,
-      boulders: items,
-      completedBoulders:
-          completedBoulders,
+      onConflict: 'registration_id,boulder_id',
     );
   }
 
-  // =====================================================
-  // INSERIMENTO TOP
-  // =====================================================
+  // =========================================================
+  // MARK AS DONE (metodo semplice esistente)
+  // =========================================================
 
   Future<void> markAsDone({
     required String registrationId,
     required String boulderId,
   }) async {
-    await supabase
-        .from('ascents')
-        .upsert({
-      'registration_id':
-          registrationId,
-      'boulder_id': boulderId,
-      'top': true,
-      'zone': true,
-      'tentativi_top': 1,
-      'tentativi_zone': 1,
-    });
+    await upsertAscent(
+      registrationId: registrationId,
+      boulderId: boulderId,
+      top: true,
+      zone: true,
+      tentativiTop: 1,
+      tentativiZone: 1,
+    );
   }
 
-  // =====================================================
-  // ELIMINAZIONE TOP
-  // =====================================================
+  // =========================================================
+  // REMOVE ASCENT
+  // =========================================================
 
   Future<void> removeAscent({
     required String registrationId,
@@ -171,13 +138,7 @@ class AscentsBouldersService {
     await supabase
         .from('ascents')
         .delete()
-        .eq(
-          'registration_id',
-          registrationId,
-        )
-        .eq(
-          'boulder_id',
-          boulderId,
-        );
+        .eq('registration_id', registrationId)
+        .eq('boulder_id', boulderId);
   }
 }
