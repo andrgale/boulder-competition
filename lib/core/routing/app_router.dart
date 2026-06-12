@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/login_page.dart';
+import '../../features/auth/change_password_page.dart';
 
 import '../../features/competitions/models/competition_model.dart';
 import '../../features/dashboard/dashboard_page.dart';
@@ -85,6 +86,11 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) {
         return const LoginPage();
       },
+    ),
+
+    GoRoute(
+      path: '/change-password',
+      builder: (context, state) => const ChangePasswordPage(),
     ),
     // =====================================================
     // FORBIDDEN

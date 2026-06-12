@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../core/services/auth_service.dart';
-import '../home/home_page.dart';
+//import '../home/home_page.dart';
+
+import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -29,14 +33,32 @@ class _LoginPageState extends State<LoginPage> {
         password: passwordController.text.trim(),
       );
 
+      final user =
+          Supabase.instance.client.auth.currentUser!;
+
+      final profile =
+          await Supabase.instance.client
+              .from('profiles')
+              .select('password_changed')
+              .eq('auth_user_id', user.id)
+              .single();
+
+
       if (!mounted) return;
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-         builder: (_) => const HomePage(),
-        ),
-      );
+      if (profile['password_changed'] == false) {
+        context.go('/change-password');
+      } else {
+        context.go('/dashboard');
+      }
+
+
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(
+      //    builder: (_) => const HomePage(),
+      //   ),
+      // );
     } catch (e) {
       if (!mounted) return;
 

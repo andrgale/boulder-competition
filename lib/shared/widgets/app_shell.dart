@@ -6,6 +6,7 @@ import '../../core/models/app_menu.dart';
 import '../../core/services/menu_service.dart';
 import '../../core/ui/responsive.dart';
 import 'search_overlay.dart';
+import 'shell_user_service.dart';
 
 class AppShell extends StatefulWidget {
   final Widget child;
@@ -21,10 +22,11 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   final menuService = MenuService();
+  final shellUserService = ShellUserService();
 
   bool loading = true;
-
   List<AppMenu> menus = [];
+  ShellUser shellUser = ShellUser.fallback();
 
   @override
   void initState() {
@@ -34,7 +36,13 @@ class _AppShellState extends State<AppShell> {
 
   Future<void> loadMenus() async {
     try {
-      var loadedMenus = await menuService.getMenus();
+      final results = await Future.wait([
+        menuService.getMenus(),
+        shellUserService.fetchCurrentUser(),
+      ]);
+
+      var loadedMenus = results[0] as List<AppMenu>;
+      final loadedUser = results[1] as ShellUser;
 
       loadedMenus = loadedMenus.where((m) {
         if (!m.visible) return false;
@@ -46,6 +54,7 @@ class _AppShellState extends State<AppShell> {
 
       setState(() {
         menus = loadedMenus;
+        shellUser = loadedUser;
         loading = false;
       });
     } catch (e) {
@@ -121,7 +130,7 @@ class _AppShellState extends State<AppShell> {
                             radius: 18,
                             backgroundColor: Colors.blue.shade100,
                             child: Text(
-                              currentUserInitials(),
+                              shellUser.iniziali,
                               style: TextStyle(
                                 color: Colors.blue.shade900,
                                 fontWeight: FontWeight.bold,
@@ -129,25 +138,27 @@ class _AppShellState extends State<AppShell> {
                             ),
                           ),
                           const SizedBox(width: 12),
-                          const Expanded(
+                          Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  'Andrea Galeazzo',
+                                  shellUser.nomeCompleto,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                  style: const TextStyle(fontWeight: FontWeight.w600),
                                 ),
-                                SizedBox(height: 2),
-                                Text(
-                                  'Administrator',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey,
+                                if (shellUser.ruolo.isNotEmpty) ...[
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    shellUser.ruolo,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
                                   ),
-                                ),
+                                ],
                               ],
                             ),
                           ),
@@ -360,8 +371,6 @@ class _AppShellState extends State<AppShell> {
     if (menu.isEmpty) return 'Boulder Competition';
     return menu.first.label;
   }
-
-  String currentUserInitials() => 'AG';
 
   final mobileRoutes = [
     '/dashboard',
