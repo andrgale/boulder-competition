@@ -61,6 +61,8 @@ import '../../features/security/models/role_model.dart';
 import '../../features/security/models/permission_model.dart';
 import '../../features/security/models/menu_model.dart';
 import '../../features/security/models/security_profile_model.dart';
+import '../../features/checkin/pages/checkin_competitions_page.dart';
+
 
 
 final GoRouter appRouter = GoRouter(
@@ -268,6 +270,18 @@ final GoRouter appRouter = GoRouter(
             );
           },
         ),
+
+// ======================================================
+// CHECK-IN COMPETIZIONI
+// ======================================================
+
+        GoRoute(
+          path: '/check-in',
+          builder: (context, state) {
+            return const CheckinCompetitionsPage();
+          },
+        ),
+
 // ======================================================
 // BOULDERS
 // ======================================================
