@@ -11,6 +11,7 @@ class BoulderModel {
 
   final DateTime createdAt;
   final DateTime updatedAt;
+  final bool isFinale;
 
   BoulderModel({
     required this.id,
@@ -21,6 +22,7 @@ class BoulderModel {
     required this.valoreTeorico,
     required this.createdAt,
     required this.updatedAt,
+    required this.isFinale,
   });
 
   factory BoulderModel.fromJson(
@@ -50,6 +52,8 @@ class BoulderModel {
       updatedAt: DateTime.parse(
         json['updated_at'],
       ),
+
+      isFinale: json['is_finale'] ?? false,
     );
   }
 
@@ -79,6 +83,7 @@ class BoulderModel {
       'valore_teorico': valoreTeorico,
       'updated_at':
           DateTime.now().toIso8601String(),
+      'is_finale': isFinale,    
     };
   }
 }

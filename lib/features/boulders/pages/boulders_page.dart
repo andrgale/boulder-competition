@@ -25,6 +25,8 @@ class _BouldersPageState
 
   List<BoulderModel> boulders = [];
 
+  bool showOnlyFinals = false;
+
   bool loading = true;
 
   @override
@@ -148,6 +150,14 @@ class _BouldersPageState
 
   @override
   Widget build(BuildContext context) {
+
+    final filteredBoulders =
+    showOnlyFinals
+        ? boulders
+            .where((b) => b.isFinale)
+            .toList()
+        : boulders;
+
     final isMobile =
         MediaQuery.of(context).size.width <
             700;
@@ -172,70 +182,128 @@ class _BouldersPageState
             )
           : null,
 
-      body: loading
-          ? const Center(
-              child:
-                  CircularProgressIndicator(),
-            )
-          : boulders.isEmpty
-              ? const Center(
-                  child: Text(
-                    'Nessun boulder',
-                  ),
-                )
-              : ListView.builder(
-                  itemCount: boulders.length,
-                  itemBuilder:
-                      (context, index) {
-                    final b =
-                        boulders[index];
-
-                    return ListTile(
-                      leading: CircleAvatar(
-                        child: Text(
-                          b.numero.toString(),
-                        ),
-                      ),
-
-                      title: Text(
-                        'Boulder ${b.numero}',
-                      ),
-
-                      subtitle: Text(
-                        'Diff: ${b.difficolta} | '
-                        'Colore: ${b.colore ?? "-"} | '
-                        'Valore: ${b.valoreTeorico.toStringAsFixed(2)}',
-                      ),
-
-                      trailing: Row(
-                        mainAxisSize:
-                            MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.edit,
-                            ),
-                            onPressed:
-                                () => openEdit(
-                                  b,
-                                ),
-                          ),
-
-                          IconButton(
-                            icon: const Icon(
-                              Icons.delete,
-                            ),
-                            onPressed:
-                                () =>
-                                    deleteBoulder(
-                                      b.id,
-                                    ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+    body: loading
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
                 ),
+                child: Row(
+                  children: [
+                    FilterChip(
+                      label: const Text(
+                        'Solo finale',
+                      ),
+                      selected: showOnlyFinals,
+                      onSelected: (value) {
+                        setState(() {
+                          showOnlyFinals = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
+              Expanded(
+                child: filteredBoulders.isEmpty
+                    ? const Center(
+                        child: Text(
+                          'Nessun boulder',
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount:
+                            filteredBoulders.length,
+                        itemBuilder:
+                            (context, index) {
+                          final b =
+                              filteredBoulders[index];
+
+                          return ListTile(
+                            leading: CircleAvatar(
+                              child: Text(
+                                b.numero.toString(),
+                              ),
+                            ),
+                            title: Row(
+                              children: [
+                                Text(
+                                  'Boulder ${b.numero}',
+                                ),
+                                if (b.isFinale)
+                                  Container(
+                                    margin:
+                                        const EdgeInsets.only(
+                                      left: 8,
+                                    ),
+                                    padding:
+                                        const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 2,
+                                    ),
+                                    decoration:
+                                        BoxDecoration(
+                                      color: Colors
+                                          .orange
+                                          .shade100,
+                                      borderRadius:
+                                          BorderRadius.circular(
+                                        12,
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'FINALE',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight:
+                                            FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            subtitle: Text(
+                              'Diff: ${b.difficolta} | '
+                              'Colore: ${b.colore ?? "-"} | '
+                              'Valore: ${b.valoreTeorico.toStringAsFixed(2)}',
+                            ),
+                            trailing: Row(
+                              mainAxisSize:
+                                  MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.edit,
+                                  ),
+                                  onPressed:
+                                      () => openEdit(
+                                    b,
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.delete,
+                                  ),
+                                  onPressed:
+                                      () => deleteBoulder(
+                                    b.id,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+              ),
+            ],
+          ),
     );
   }
 }
+ 

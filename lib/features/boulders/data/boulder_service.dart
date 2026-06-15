@@ -79,6 +79,7 @@ class BoulderService {
     required int difficolta,
     String? colore,
     required double valoreTeorico,
+    required bool isfinale
   }) async {
     await _db.insert({
       'competition_id': competitionId,
@@ -86,6 +87,7 @@ class BoulderService {
       'difficolta': difficolta,
       'colore': colore,
       'valore_teorico': valoreTeorico,
+        'is_finale': isfinale, 
     });
   }
 
@@ -99,6 +101,7 @@ class BoulderService {
     required int difficolta,
     String? colore,
     required double valoreTeorico,
+    required bool isfinale
   }) async {
     await _db
         .update({
@@ -109,6 +112,7 @@ class BoulderService {
               valoreTeorico,
           'updated_at': DateTime.now()
               .toIso8601String(),
+          'is_finale': isfinale,    
         })
         .eq('id', id);
   }

@@ -33,7 +33,7 @@ class _BoulderFormPageState
 
   late TextEditingController
       valoreCtrl;
-
+  bool isFinale = false;
   bool loading = false;
 
   bool get isEdit =>
@@ -62,6 +62,8 @@ class _BoulderFormPageState
     boulderDaCreareCtrl = TextEditingController(
       text: '1',
     );
+
+    isFinale = b?.isFinale ?? false;
 
     // AUTO NUMERO SOLO IN CREATE
     if (!isEdit) {
@@ -122,6 +124,7 @@ class _BoulderFormPageState
               difficolta.toInt(),
           colore: colore,
           valoreTeorico: valore,
+          isfinale: isFinale,
         );
       } else {
         final totale =
@@ -144,6 +147,8 @@ class _BoulderFormPageState
             colore: colore,
 
             valoreTeorico: valore,
+
+            isfinale: isFinale,
           );
         }
       }
@@ -338,6 +343,36 @@ class _BoulderFormPageState
                 },
               ),
               const SizedBox(height: 16),
+
+              const SizedBox(height: 16),
+
+              // =========================================
+              // SOLO FINALE
+              // =========================================
+
+              SwitchListTile(
+                value: isFinale,
+
+                title: const Text(
+                  'Solo finale',
+                ),
+
+                subtitle: const Text(
+                  'Il boulder sarà disponibile solo nella fase finale',
+                ),
+
+                contentPadding: EdgeInsets.zero,
+
+                onChanged: (value) {
+                  setState(() {
+                    isFinale = value;
+                  });
+                },
+              ),
+
+              const SizedBox(height: 16),
+
+
               // =========================================
               // VALORE
               // =========================================
