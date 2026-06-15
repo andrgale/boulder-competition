@@ -249,7 +249,7 @@ class _CheckinCompetitionsPageState
   Widget _buildMobileList() {
     return ListView.separated(
       itemCount: competitions.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
+      separatorBuilder: (_, _) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
         final c = competitions[index];
         return Card(
@@ -293,6 +293,10 @@ class _CheckinCompetitionsPageState
                             builder: (_) => CheckinRegistrationsPage(
                               competitionId: c.id,
                               competitionName: c.descrizione,
+                              quotaIscrizione: c.quotaIscrizione,
+                              flGestionePresenze: c.flGestionePresenze,
+                              flGestionePagamenti: c.flGestionePagamenti,
+                              flGestioneOmaggi: c.flGestioneOmaggi,
                             ),
                           ),
                         ),              
@@ -343,11 +347,11 @@ class _CheckinCompetitionsPageState
                 columns: [
                   DataColumn(
                     label: const Text('Descrizione'),
-                    onSort: (_, __) => updateSort('descrizione'),
+                    onSort: (_, _) => updateSort('descrizione'),
                   ),
                   DataColumn(
                     label: const Text('Data Gara'),
-                    onSort: (_, __) => updateSort('dt_gara'),
+                    onSort: (_, _) => updateSort('dt_gara'),
                   ),
                   const DataColumn(label: Text('Stato')),
                   // i tre flag come colonne dedicate
@@ -466,6 +470,10 @@ class _CheckinCompetitionsPageState
                 builder: (_) => CheckinRegistrationsPage(
                   competitionId: c.id,
                   competitionName: c.descrizione,
+                  quotaIscrizione: c.quotaIscrizione,
+                  flGestionePresenze: c.flGestionePresenze,
+                  flGestionePagamenti: c.flGestionePagamenti,
+                  flGestioneOmaggi: c.flGestioneOmaggi,
                 ),
               ),
             ),
@@ -509,12 +517,12 @@ class _FlagToggleButton extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: value
-                ? activeColor.withOpacity(0.12)
+                ? activeColor.withValues(alpha: 0.12)
                 : Colors.grey.shade100,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: value
-                  ? activeColor.withOpacity(0.4)
+                  ? activeColor.withValues(alpha: 0.4)
                   : Colors.grey.shade300,
             ),
           ),

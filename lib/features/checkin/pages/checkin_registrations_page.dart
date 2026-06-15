@@ -7,10 +7,20 @@ class CheckinRegistrationsPage extends StatefulWidget {
   final String competitionId;
   final String competitionName;
 
+  // ── nuovi parametri dalla competition ─────────────────────
+  final double quotaIscrizione;
+  final bool flGestionePresenze;
+  final bool flGestionePagamenti;
+  final bool flGestioneOmaggi;
+
   const CheckinRegistrationsPage({
     super.key,
     required this.competitionId,
     required this.competitionName,
+    this.quotaIscrizione = 0,
+    this.flGestionePresenze = false,
+    this.flGestionePagamenti = false,
+    this.flGestioneOmaggi = false,
   });
 
   @override
@@ -26,7 +36,7 @@ class _CheckinRegistrationsPageState
   List<CheckinRegistrationModel> registrations = [];
   bool loading = true;
 
-  // ── statistiche calcolate in tempo reale ─────────────────
+  // ── statistiche calcolate in tempo reale ──────────────────
   int get totaleIscritti => registrations.length;
   int get totalePresenti =>
       registrations.where((r) => r.flPresente).length;
@@ -34,6 +44,10 @@ class _CheckinRegistrationsPageState
       registrations.where((r) => r.flPagato).length;
   int get totaleOmaggi =>
       registrations.where((r) => r.flOmaggio).length;
+
+  /// Importo incassato = n° pagati × quota iscrizione
+  double get importoIncassato =>
+      totalePagati * widget.quotaIscrizione;
 
   @override
   void initState() {
@@ -86,44 +100,33 @@ class _CheckinRegistrationsPageState
 
   Future<void> _toggleFlag({
     required CheckinRegistrationModel reg,
-    required String flag, // 'presente' | 'pagato' | 'omaggio'
+    required String flag,
   }) async {
     final idx = registrations.indexWhere((r) => r.id == reg.id);
     if (idx < 0) return;
 
     final updated = switch (flag) {
-      'presente' =>
-        reg.copyWith(flPresente: !reg.flPresente),
-      'pagato' =>
-        reg.copyWith(flPagato: !reg.flPagato),
-      'omaggio' =>
-        reg.copyWith(flOmaggio: !reg.flOmaggio),
-      _ => reg,
+      'presente' => reg.copyWith(flPresente: !reg.flPresente),
+      'pagato'   => reg.copyWith(flPagato: !reg.flPagato),
+      'omaggio'  => reg.copyWith(flOmaggio: !reg.flOmaggio),
+      _          => reg,
     };
 
-    // aggiorna subito la UI
     setState(() => registrations[idx] = updated);
 
     try {
       switch (flag) {
         case 'presente':
           await service.togglePresente(
-            id: reg.id,
-            currentValue: reg.flPresente,
-          );
+            id: reg.id, currentValue: reg.flPresente);
         case 'pagato':
           await service.togglePagato(
-            id: reg.id,
-            currentValue: reg.flPagato,
-          );
+            id: reg.id, currentValue: reg.flPagato);
         case 'omaggio':
           await service.toggleOmaggio(
-            id: reg.id,
-            currentValue: reg.flOmaggio,
-          );
+            id: reg.id, currentValue: reg.flOmaggio);
       }
     } catch (e) {
-      // rollback in caso di errore
       setState(() => registrations[idx] = reg);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -155,6 +158,7 @@ class _CheckinRegistrationsPageState
                   presenti: totalePresenti,
                   pagati: totalePagati,
                   omaggi: totaleOmaggi,
+                  importoIncassato: importoIncassato,
                 ),
 
                 // ── ricerca ───────────────────────────────
@@ -163,8 +167,7 @@ class _CheckinRegistrationsPageState
                   child: TextField(
                     controller: searchController,
                     decoration: InputDecoration(
-                      hintText:
-                          'Cerca pettorale, cognome, nome...',
+                      hintText: 'Cerca pettorale, cognome, nome...',
                       prefixIcon: const Icon(Icons.search),
                       suffixIcon: searchController.text.isNotEmpty
                           ? IconButton(
@@ -184,7 +187,11 @@ class _CheckinRegistrationsPageState
                 ),
 
                 // ── legenda ───────────────────────────────
-                const _CheckinLegend(),
+                _CheckinLegend(
+                  showPresente: widget.flGestionePresenze,
+                  showPagato: widget.flGestionePagamenti,
+                  showOmaggio: widget.flGestioneOmaggi,
+                ),
 
                 // ── lista ─────────────────────────────────
                 Expanded(
@@ -194,10 +201,12 @@ class _CheckinRegistrationsPageState
                         )
                       : ListView.builder(
                           itemCount: filtered.length,
-                          itemBuilder: (_, i) =>
-                              _RegistrationTile(
+                          itemBuilder: (_, i) => _RegistrationTile(
                             registration: filtered[i],
                             onToggle: _toggleFlag,
+                            enablePresente: widget.flGestionePresenze,
+                            enablePagato: widget.flGestionePagamenti,
+                            enableOmaggio: widget.flGestioneOmaggi,
                           ),
                         ),
                 ),
@@ -216,23 +225,34 @@ class _StatsBar extends StatelessWidget {
   final int presenti;
   final int pagati;
   final int omaggi;
+  final double importoIncassato;
 
   const _StatsBar({
     required this.totale,
     required this.presenti,
     required this.pagati,
     required this.omaggi,
+    required this.importoIncassato,
   });
+
+  /// Formatta il doppio come valuta italiana: € 1.250,00
+  String _formatEuro(double value) {
+    // Separiamo interi e decimali manualmente per non richiedere intl.
+    final intPart = value.truncate();
+    final decPart = ((value - intPart) * 100).round().abs();
+    final intStr = intPart.toString().replaceAllMapped(
+      RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
+      (m) => '${m[1]}.',
+    );
+    return '€ $intStr,${decPart.toString().padLeft(2, '0')}';
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.all(12),
-      padding: const EdgeInsets.symmetric(
-        vertical: 16,
-        horizontal: 20,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
       decoration: BoxDecoration(
         color: Colors.blue.shade50,
         borderRadius: BorderRadius.circular(16),
@@ -248,7 +268,7 @@ class _StatsBar extends StatelessWidget {
               icon: Icons.people,
             ),
           ),
-          _Divider(),
+          _VerticalDivider(),
           Expanded(
             child: _StatItem(
               label: 'Presenti',
@@ -260,16 +280,20 @@ class _StatsBar extends StatelessWidget {
                   : '0%',
             ),
           ),
-          _Divider(),
+          _VerticalDivider(),
+          // ── Pagati + importo incassato ───────────────────
           Expanded(
             child: _StatItem(
               label: 'Pagati',
               value: pagati,
               color: Colors.teal.shade700,
               icon: Icons.payments,
+              suffix: importoIncassato > 0
+                  ? _formatEuro(importoIncassato)
+                  : null,
             ),
           ),
-          _Divider(),
+          _VerticalDivider(),
           Expanded(
             child: _StatItem(
               label: 'Omaggi',
@@ -306,34 +330,28 @@ class _StatItem extends StatelessWidget {
       children: [
         Icon(icon, color: color, size: 20),
         const SizedBox(height: 4),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '$value',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-            ),
-            if (suffix != null) ...[
-              const SizedBox(width: 4),
-              Text(
-                suffix!,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: color.withOpacity(0.7),
-                ),
-              ),
-            ],
-          ],
+        Text(
+          '$value',
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
         ),
+        if (suffix != null)
+          Text(
+            suffix!,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: color.withValues(alpha: 0.8),
+            ),
+          ),
         Text(
           label,
           style: TextStyle(
             fontSize: 12,
-            color: color.withOpacity(0.8),
+            color: color.withValues(alpha: 0.8),
           ),
         ),
       ],
@@ -341,7 +359,7 @@ class _StatItem extends StatelessWidget {
   }
 }
 
-class _Divider extends StatelessWidget {
+class _VerticalDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -354,30 +372,48 @@ class _Divider extends StatelessWidget {
 }
 
 // ──────────────────────────────────────────────────────────────
-// LEGENDA
+// LEGENDA — mostra solo le icone abilitate dalla competition
 // ──────────────────────────────────────────────────────────────
 
 class _CheckinLegend extends StatelessWidget {
-  const _CheckinLegend();
+  final bool showPresente;
+  final bool showPagato;
+  final bool showOmaggio;
+
+  const _CheckinLegend({
+    required this.showPresente,
+    required this.showPagato,
+    required this.showOmaggio,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final hasAny = showPresente || showPagato || showOmaggio;
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
       child: Row(
         children: [
           const Icon(Icons.touch_app, size: 14, color: Colors.grey),
           const SizedBox(width: 4),
-          const Text(
-            'Tocca le icone per aggiornare: ',
-            style: TextStyle(fontSize: 12, color: Colors.grey),
+          Text(
+            hasAny
+                ? 'Tocca le icone per aggiornare: '
+                : 'Gestione check-in disabilitata per questa gara',
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
           ),
-          const SizedBox(width: 8),
-          _LegendDot(color: Colors.green.shade600, label: 'Presente'),
-          const SizedBox(width: 8),
-          _LegendDot(color: Colors.teal.shade600, label: 'Pagato'),
-          const SizedBox(width: 8),
-          _LegendDot(color: Colors.orange.shade600, label: 'Omaggio'),
+          if (showPresente) ...[
+            const SizedBox(width: 8),
+            _LegendDot(color: Colors.green.shade600, label: 'Presente'),
+          ],
+          if (showPagato) ...[
+            const SizedBox(width: 8),
+            _LegendDot(color: Colors.teal.shade600, label: 'Pagato'),
+          ],
+          if (showOmaggio) ...[
+            const SizedBox(width: 8),
+            _LegendDot(color: Colors.orange.shade600, label: 'Omaggio'),
+          ],
         ],
       ),
     );
@@ -398,16 +434,10 @@ class _LegendDot extends StatelessWidget {
         Container(
           width: 8,
           height: 8,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 4),
-        Text(
-          label,
-          style: TextStyle(fontSize: 11, color: color),
-        ),
+        Text(label, style: TextStyle(fontSize: 11, color: color)),
       ],
     );
   }
@@ -424,9 +454,17 @@ class _RegistrationTile extends StatelessWidget {
     required String flag,
   }) onToggle;
 
+  // ── flag abilitazione dalla competition ───────────────────
+  final bool enablePresente;
+  final bool enablePagato;
+  final bool enableOmaggio;
+
   const _RegistrationTile({
     required this.registration,
     required this.onToggle,
+    required this.enablePresente,
+    required this.enablePagato,
+    required this.enableOmaggio,
   });
 
   @override
@@ -434,15 +472,11 @@ class _RegistrationTile extends StatelessWidget {
     final r = registration;
 
     return Card(
-      margin: const EdgeInsets.symmetric(
-        horizontal: 12,
-        vertical: 5,
-      ),
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          // bordo verde se già presente, grigio altrimenti
           color: r.flPresente
               ? Colors.green.shade200
               : const Color(0xFFE5E7EB),
@@ -450,13 +484,10 @@ class _RegistrationTile extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 10,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Row(
           children: [
-            // ── pettorale ───────────────────────────────
+            // ── pettorale ─────────────────────────────────
             CircleAvatar(
               radius: 20,
               backgroundColor: r.flPresente
@@ -476,7 +507,7 @@ class _RegistrationTile extends StatelessWidget {
 
             const SizedBox(width: 12),
 
-            // ── dati atleta ─────────────────────────────
+            // ── dati atleta ───────────────────────────────
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -496,10 +527,7 @@ class _RegistrationTile extends StatelessWidget {
                         r.societa!,
                       if (r.sesso != null) r.sesso!,
                     ].join(' · '),
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
@@ -508,38 +536,53 @@ class _RegistrationTile extends StatelessWidget {
 
             const SizedBox(width: 8),
 
-            // ── toggle presenze ─────────────────────────
+            // ── toggle presenze ───────────────────────────
             _CheckinToggle(
               value: r.flPresente,
+              enabled: enablePresente,
               activeIcon: Icons.person_pin,
               inactiveIcon: Icons.person_pin_outlined,
               activeColor: Colors.green,
-              tooltip: r.flPresente ? 'Rimuovi presenza' : 'Segna presente',
-              onTap: () => onToggle(reg: r, flag: 'presente'),
+              tooltip: enablePresente
+                  ? (r.flPresente ? 'Rimuovi presenza' : 'Segna presente')
+                  : 'Gestione presenze non abilitata',
+              onTap: enablePresente
+                  ? () => onToggle(reg: r, flag: 'presente')
+                  : null,
             ),
 
             const SizedBox(width: 4),
 
-            // ── toggle pagamenti ────────────────────────
+            // ── toggle pagamenti ──────────────────────────
             _CheckinToggle(
               value: r.flPagato,
+              enabled: enablePagato,
               activeIcon: Icons.payments,
               inactiveIcon: Icons.payments_outlined,
               activeColor: Colors.teal,
-              tooltip: r.flPagato ? 'Annulla pagamento' : 'Segna pagato',
-              onTap: () => onToggle(reg: r, flag: 'pagato'),
+              tooltip: enablePagato
+                  ? (r.flPagato ? 'Annulla pagamento' : 'Segna pagato')
+                  : 'Gestione pagamenti non abilitata',
+              onTap: enablePagato
+                  ? () => onToggle(reg: r, flag: 'pagato')
+                  : null,
             ),
 
             const SizedBox(width: 4),
 
-            // ── toggle omaggi ───────────────────────────
+            // ── toggle omaggi ─────────────────────────────
             _CheckinToggle(
               value: r.flOmaggio,
+              enabled: enableOmaggio,
               activeIcon: Icons.card_giftcard,
               inactiveIcon: Icons.card_giftcard_outlined,
               activeColor: Colors.orange,
-              tooltip: r.flOmaggio ? 'Annulla omaggio' : 'Segna omaggio',
-              onTap: () => onToggle(reg: r, flag: 'omaggio'),
+              tooltip: enableOmaggio
+                  ? (r.flOmaggio ? 'Annulla omaggio' : 'Segna omaggio')
+                  : 'Gestione omaggi non abilitata',
+              onTap: enableOmaggio
+                  ? () => onToggle(reg: r, flag: 'omaggio')
+                  : null,
             ),
           ],
         ),
@@ -554,14 +597,16 @@ class _RegistrationTile extends StatelessWidget {
 
 class _CheckinToggle extends StatelessWidget {
   final bool value;
+  final bool enabled;          // ← nuovo: false = sola lettura
   final IconData activeIcon;
   final IconData inactiveIcon;
   final Color activeColor;
   final String tooltip;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;  // ← nullable: null se disabilitato
 
   const _CheckinToggle({
     required this.value,
+    required this.enabled,
     required this.activeIcon,
     required this.inactiveIcon,
     required this.activeColor,
@@ -571,29 +616,36 @@ class _CheckinToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Colori dimmerizzati quando disabilitato
+    final effectiveColor = enabled ? activeColor : Colors.grey.shade400;
+    final effectiveBg = enabled
+        ? (value
+            ? activeColor.withValues(alpha: 0.12)
+            : Colors.grey.shade50)
+        : Colors.grey.shade100;
+    final effectiveBorder = enabled
+        ? (value
+            ? activeColor.withValues(alpha: 0.5)
+            : Colors.grey.shade300)
+        : Colors.grey.shade200;
+
     return Tooltip(
       message: tooltip,
       child: InkWell(
-        onTap: onTap,
+        onTap: onTap, // null disabilita automaticamente InkWell
         borderRadius: BorderRadius.circular(8),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: value
-                ? activeColor.withOpacity(0.12)
-                : Colors.grey.shade50,
+            color: effectiveBg,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: value
-                  ? activeColor.withOpacity(0.5)
-                  : Colors.grey.shade300,
-            ),
+            border: Border.all(color: effectiveBorder),
           ),
           child: Icon(
             value ? activeIcon : inactiveIcon,
             size: 22,
-            color: value ? activeColor : Colors.grey.shade400,
+            color: value && enabled ? effectiveColor : Colors.grey.shade400,
           ),
         ),
       ),

@@ -3,6 +3,7 @@ class CheckinCompetitionModel {
   final String descrizione;
   final DateTime dtGara;
   final int nrBoulder;
+  final double quotaIscrizione; // ← aggiunto
   final int nrFinalisti;
   final bool flIscrizioniChiuse;
   final bool flGaraChiusa;
@@ -18,6 +19,7 @@ class CheckinCompetitionModel {
     required this.descrizione,
     required this.dtGara,
     required this.nrBoulder,
+    required this.quotaIscrizione, // ← aggiunto
     required this.nrFinalisti,
     required this.flIscrizioniChiuse,
     required this.flGaraChiusa,
@@ -29,32 +31,26 @@ class CheckinCompetitionModel {
     required this.updatedAt,
   });
 
-  factory CheckinCompetitionModel.fromMap(
-    Map<String, dynamic> map,
-  ) {
+  factory CheckinCompetitionModel.fromMap(Map<String, dynamic> map) {
     return CheckinCompetitionModel(
       id: map['id'] as String,
       descrizione: map['descrizione'] as String,
       dtGara: DateTime.parse(map['dt_gara'] as String),
       nrBoulder: map['nr_boulder'] as int? ?? 0,
+      // ← aggiunto: gestisce sia int che double restituiti da Supabase
+      quotaIscrizione: (map['quota_iscrizione'] as num?)?.toDouble() ?? 0.0,
       nrFinalisti: map['nr_finalisti'] as int? ?? 0,
-      flIscrizioniChiuse:
-          map['fl_iscrizioni_chiuse'] as bool? ?? false,
-      flGaraChiusa:
-          map['fl_gara_chiusa'] as bool? ?? false,
-      flGestionePresenze:
-          map['fl_gestione_presenze'] as bool? ?? false,
-      flGestionePagamenti:
-          map['fl_gestione_pagamenti'] as bool? ?? false,
-      flGestioneOmaggi:
-          map['fl_gestione_omaggi'] as bool? ?? false,
+      flIscrizioniChiuse: map['fl_iscrizioni_chiuse'] as bool? ?? false,
+      flGaraChiusa: map['fl_gara_chiusa'] as bool? ?? false,
+      flGestionePresenze: map['fl_gestione_presenze'] as bool? ?? false,
+      flGestionePagamenti: map['fl_gestione_pagamenti'] as bool? ?? false,
+      flGestioneOmaggi: map['fl_gestione_omaggi'] as bool? ?? false,
       note: map['note'] as String?,
       createdAt: DateTime.parse(map['created_at'] as String),
       updatedAt: DateTime.parse(map['updated_at'] as String),
     );
   }
 
-  /// Crea una copia con i campi flag aggiornati
   CheckinCompetitionModel copyWith({
     bool? flGestionePresenze,
     bool? flGestionePagamenti,
@@ -65,15 +61,13 @@ class CheckinCompetitionModel {
       descrizione: descrizione,
       dtGara: dtGara,
       nrBoulder: nrBoulder,
+      quotaIscrizione: quotaIscrizione, // ← propagato
       nrFinalisti: nrFinalisti,
       flIscrizioniChiuse: flIscrizioniChiuse,
       flGaraChiusa: flGaraChiusa,
-      flGestionePresenze:
-          flGestionePresenze ?? this.flGestionePresenze,
-      flGestionePagamenti:
-          flGestionePagamenti ?? this.flGestionePagamenti,
-      flGestioneOmaggi:
-          flGestioneOmaggi ?? this.flGestioneOmaggi,
+      flGestionePresenze: flGestionePresenze ?? this.flGestionePresenze,
+      flGestionePagamenti: flGestionePagamenti ?? this.flGestionePagamenti,
+      flGestioneOmaggi: flGestioneOmaggi ?? this.flGestioneOmaggi,
       note: note,
       createdAt: createdAt,
       updatedAt: updatedAt,
