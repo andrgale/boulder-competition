@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../data/checkin_registration_service.dart';
 import '../models/checkin_registration_model.dart';
+import 'checkin_pdf_export.dart';
 
 class CheckinRegistrationsPage extends StatefulWidget {
   final String competitionId;
@@ -35,6 +36,7 @@ class _CheckinRegistrationsPageState
 
   List<CheckinRegistrationModel> registrations = [];
   bool loading = true;
+  bool _exporting = false;
 
   // ── statistiche calcolate in tempo reale ──────────────────
   int get totaleIscritti => registrations.length;
@@ -139,6 +141,34 @@ class _CheckinRegistrationsPageState
   }
 
   // =========================================================
+  // EXPORT PDF
+  // =========================================================
+
+  Future<void> _exportPdf() async {
+    if (_exporting) return;
+    setState(() => _exporting = true);
+
+    try {
+      await CheckinPdfExport.exportAndShare(
+        competitionName: widget.competitionName,
+        dtGara: DateTime.now(), // sostituisci con c.dtGara se disponibile
+        registrations: registrations,
+        quotaIscrizione: widget.quotaIscrizione,
+        showPresente: widget.flGestionePresenze,
+        showPagato: widget.flGestionePagamenti,
+        showOmaggio: widget.flGestioneOmaggi,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Errore esportazione PDF: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _exporting = false);
+    }
+  }
+
+  // =========================================================
   // BUILD
   // =========================================================
 
@@ -147,6 +177,26 @@ class _CheckinRegistrationsPageState
     return Scaffold(
       appBar: AppBar(
         title: Text('Check-in — ${widget.competitionName}'),
+        actions: [
+          if (!loading)
+            _exporting
+                ? const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                : IconButton(
+                    tooltip: 'Esporta PDF',
+                    icon: const Icon(Icons.picture_as_pdf),
+                    onPressed: _exportPdf,
+                  ),
+        ],
       ),
       body: loading
           ? const Center(child: CircularProgressIndicator())
