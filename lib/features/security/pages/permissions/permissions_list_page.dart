@@ -18,6 +18,9 @@ class _PermissionsListPageState extends State<PermissionsListPage> {
   final service = PermissionService();
   final searchController = TextEditingController();
 
+  // controller condiviso tra Scrollbar e SingleChildScrollView
+  final _verticalScrollController = ScrollController();
+
   List<PermissionModel> all = [];
   List<PermissionModel> filtered = [];
   bool loading = true;
@@ -28,13 +31,20 @@ class _PermissionsListPageState extends State<PermissionsListPage> {
     loadPermissions();
   }
 
+  @override
+  void dispose() {
+    searchController.dispose();
+    _verticalScrollController.dispose();
+    super.dispose();
+  }
+
   Future<void> loadPermissions() async {
     try {
       final data = await service.getPermissions();
       if (!mounted) return;
       setState(() {
         all = data;
-        filtered = data;
+        filtered = List.from(data);
         loading = false;
       });
     } catch (e) {
@@ -48,7 +58,8 @@ class _PermissionsListPageState extends State<PermissionsListPage> {
     final q = searchController.text.trim().toLowerCase();
     setState(() {
       filtered = all.where((p) {
-        return p.permissionCode.contains(q) || p.activity.toLowerCase().contains(q);
+        return p.permissionCode.toLowerCase().contains(q) ||
+            p.activity.toLowerCase().contains(q);
       }).toList();
     });
   }
@@ -92,6 +103,7 @@ class _PermissionsListPageState extends State<PermissionsListPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // ── ricerca ─────────────────────────────────────
           SizedBox(
             width: 360,
             child: TextField(
@@ -103,7 +115,10 @@ class _PermissionsListPageState extends State<PermissionsListPage> {
               onChanged: (_) => applyFilter(),
             ),
           ),
+
           const SizedBox(height: 24),
+
+          // ── tabella ──────────────────────────────────────
           Expanded(child: _buildTable()),
         ],
       ),
@@ -118,51 +133,86 @@ class _PermissionsListPageState extends State<PermissionsListPage> {
         side: const BorderSide(color: Color(0xFFE5E7EB)),
       ),
       clipBehavior: Clip.antiAlias,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-              minWidth: MediaQuery.of(context).size.width - 360),
-          child: DataTable(
-            columnSpacing: 48,
-            horizontalMargin: 32,
-            dataRowMinHeight: 60,
-            dataRowMaxHeight: 60,
-            headingRowHeight: 56,
-            columns: const [
-              DataColumn(label: Text('Codice Permesso')),
-              DataColumn(label: Text('Attività')),
-              DataColumn(label: Text('Azioni')),
-            ],
-            rows: filtered.map((p) {
-              return DataRow(cells: [
-                DataCell(Text(p.permissionCode,
-                    style: const TextStyle(fontFamily: 'monospace'))),
-                DataCell(SizedBox(width: 400, child: Text(p.activity))),
-                DataCell(Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      tooltip: 'Modifica',
-                      icon: const Icon(Icons.edit),
-                      onPressed: () async {
-                        await context.push('/security/permissions/edit',
-                            extra: p);
-                        await loadPermissions();
-                      },
-                    ),
-                    IconButton(
-                      tooltip: 'Elimina',
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => deletePermission(p),
-                    ),
-                  ],
-                )),
-              ]);
-            }).toList(),
+      child: Scrollbar(
+        controller: _verticalScrollController,
+        thumbVisibility: true,      // barra sempre visibile
+        child: SingleChildScrollView(
+          controller: _verticalScrollController,
+          scrollDirection: Axis.vertical,
+          child: SingleChildScrollView(
+            // scroll orizzontale per code lunghi
+            scrollDirection: Axis.horizontal,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minWidth: MediaQuery.of(context).size.width - 360,
+              ),
+              child: DataTable(
+                columnSpacing: 48,
+                horizontalMargin: 32,
+                dataRowMinHeight: 60,
+                dataRowMaxHeight: 60,
+                headingRowHeight: 56,
+                columns: const [
+                  DataColumn(label: Text('Codice Permesso')),
+                  DataColumn(label: Text('Attività')),
+                  DataColumn(label: Text('Azioni')),
+                ],
+                rows: filtered.map((p) => _buildRow(p)).toList(),
+              ),
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  DataRow _buildRow(PermissionModel p) {
+    return DataRow(
+      cells: [
+        // ── codice ──────────────────────────────────────
+        DataCell(
+          Text(
+            p.permissionCode,
+            style: const TextStyle(fontFamily: 'monospace'),
+          ),
+        ),
+
+        // ── attività ────────────────────────────────────
+        DataCell(
+          SizedBox(
+            width: 460,
+            child: Text(
+              p.activity,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ),
+
+        // ── azioni ──────────────────────────────────────
+        DataCell(
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                tooltip: 'Modifica',
+                icon: const Icon(Icons.edit),
+                onPressed: () async {
+                  await context.push(
+                    '/security/permissions/edit',
+                    extra: p,
+                  );
+                  await loadPermissions();
+                },
+              ),
+              IconButton(
+                tooltip: 'Elimina',
+                icon: const Icon(Icons.delete),
+                onPressed: () => deletePermission(p),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

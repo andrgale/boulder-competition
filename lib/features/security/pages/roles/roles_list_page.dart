@@ -16,6 +16,7 @@ class RolesListPage extends StatefulWidget {
 
 class _RolesListPageState extends State<RolesListPage> {
   final service = RoleService();
+  final _scrollController = ScrollController();
 
   List<RoleModel> roles = [];
   bool loading = true;
@@ -24,6 +25,12 @@ class _RolesListPageState extends State<RolesListPage> {
   void initState() {
     super.initState();
     loadRoles();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   Future<void> loadRoles() async {
@@ -89,7 +96,7 @@ class _RolesListPageState extends State<RolesListPage> {
     if (isMobile) {
       return ListView.separated(
         itemCount: roles.length,
-        separatorBuilder: (_, _) => const SizedBox(height: 12),
+        separatorBuilder: (_, __) => const SizedBox(height: 12),
         itemBuilder: (_, i) => _RoleMobileCard(
           role: roles[i],
           onEdit: () async {
@@ -105,6 +112,7 @@ class _RolesListPageState extends State<RolesListPage> {
       );
     }
 
+    // ── Desktop: card con scroll verticale e larghezza piena ──
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -112,55 +120,171 @@ class _RolesListPageState extends State<RolesListPage> {
         side: const BorderSide(color: Color(0xFFE5E7EB)),
       ),
       clipBehavior: Clip.antiAlias,
-      child: DataTable(
-        columnSpacing: 48,
-        horizontalMargin: 32,
-        dataRowMinHeight: 64,
-        dataRowMaxHeight: 64,
-        headingRowHeight: 56,
-        columns: const [
-          DataColumn(label: Text('Codice')),
-          DataColumn(label: Text('Nome')),
-          DataColumn(label: Text('Azioni')),
-        ],
-        rows: roles.map((role) {
-          return DataRow(cells: [
-            DataCell(Text(role.code,
-                style: const TextStyle(fontFamily: 'monospace'))),
-            DataCell(Text(role.name)),
-            DataCell(Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  tooltip: 'Menu & Permessi',
-                  icon: const Icon(Icons.tune),
-                  onPressed: () async {
-                    await context.push('/security/roles/manage',
-                        extra: role);
-                    await loadRoles();
-                  },
+      child: Scrollbar(
+        controller: _scrollController,
+        thumbVisibility: true,
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: ConstrainedBox(
+            // Occupa almeno tutta la larghezza disponibile
+            constraints: BoxConstraints(
+              minWidth: MediaQuery.of(context).size.width,
+            ),
+            child: DataTable(
+              // Spaziatura generosa per desktop
+              columnSpacing: 48,
+              horizontalMargin: 32,
+              dataRowMinHeight: 64,
+              dataRowMaxHeight: 64,
+              headingRowHeight: 60,
+              headingTextStyle: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
+                color: Color(0xFF374151),
+              ),
+              dividerThickness: 1,
+              columns: const [
+                DataColumn(
+                  label: Text('Codice'),
                 ),
-                IconButton(
-                  tooltip: 'Modifica',
-                  icon: const Icon(Icons.edit),
-                  onPressed: () async {
-                    await context.push('/security/roles/edit', extra: role);
-                    await loadRoles();
-                  },
+                DataColumn(
+                  label: Text('Nome'),
                 ),
-                IconButton(
-                  tooltip: 'Elimina',
-                  icon: const Icon(Icons.delete),
-                  onPressed: () => deleteRole(role),
+                DataColumn(
+                  label: Text('Azioni'),
                 ),
               ],
-            )),
-          ]);
-        }).toList(),
+              rows: roles.map((role) {
+                return DataRow(
+                  cells: [
+                    // ── Codice ─────────────────────────────
+                    DataCell(
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF3F4F6),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          role.code,
+                          style: const TextStyle(
+                            fontFamily: 'monospace',
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF1D4ED8),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // ── Nome ───────────────────────────────
+                    DataCell(
+                      Text(
+                        role.name,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+
+                    // ── Azioni ─────────────────────────────
+                    DataCell(
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _ActionButton(
+                            tooltip: 'Menu & Permessi',
+                            icon: Icons.tune,
+                            color: Colors.blue.shade700,
+                            onPressed: () async {
+                              await context.push(
+                                '/security/roles/manage',
+                                extra: role,
+                              );
+                              await loadRoles();
+                            },
+                          ),
+                          const SizedBox(width: 4),
+                          _ActionButton(
+                            tooltip: 'Modifica',
+                            icon: Icons.edit_outlined,
+                            color: Colors.green.shade700,
+                            onPressed: () async {
+                              await context.push(
+                                '/security/roles/edit',
+                                extra: role,
+                              );
+                              await loadRoles();
+                            },
+                          ),
+                          const SizedBox(width: 4),
+                          _ActionButton(
+                            tooltip: 'Elimina',
+                            icon: Icons.delete_outline,
+                            color: Colors.red.shade700,
+                            onPressed: () => deleteRole(role),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
+        ),
       ),
     );
   }
 }
+
+// ──────────────────────────────────────────────────────────────
+// ACTION BUTTON — icona con colore e hover
+// ──────────────────────────────────────────────────────────────
+
+class _ActionButton extends StatelessWidget {
+  final String tooltip;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onPressed;
+
+  const _ActionButton({
+    required this.tooltip,
+    required this.icon,
+    required this.color,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: color.withValues(alpha: 0.2),
+            ),
+          ),
+          child: Icon(icon, size: 18, color: color),
+        ),
+      ),
+    );
+  }
+}
+
+// ──────────────────────────────────────────────────────────────
+// MOBILE CARD
+// ──────────────────────────────────────────────────────────────
 
 class _RoleMobileCard extends StatelessWidget {
   final RoleModel role;
@@ -188,28 +312,53 @@ class _RoleMobileCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(role.name,
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(
+              role.name,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 6),
-            Text(role.code,
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF3F4F6),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(
+                role.code,
                 style: const TextStyle(
-                    fontFamily: 'monospace', color: Colors.grey)),
+                  fontFamily: 'monospace',
+                  fontSize: 12,
+                  color: Color(0xFF1D4ED8),
+                ),
+              ),
+            ),
             const SizedBox(height: 12),
             Row(
               children: [
-                IconButton(
-                    tooltip: 'Menu & Permessi',
-                    icon: const Icon(Icons.tune),
-                    onPressed: onManage),
-                IconButton(
-                    tooltip: 'Modifica',
-                    icon: const Icon(Icons.edit),
-                    onPressed: onEdit),
-                IconButton(
-                    tooltip: 'Elimina',
-                    icon: const Icon(Icons.delete),
-                    onPressed: onDelete),
+                _ActionButton(
+                  tooltip: 'Menu & Permessi',
+                  icon: Icons.tune,
+                  color: Colors.blue.shade700,
+                  onPressed: onManage,
+                ),
+                const SizedBox(width: 8),
+                _ActionButton(
+                  tooltip: 'Modifica',
+                  icon: Icons.edit_outlined,
+                  color: Colors.green.shade700,
+                  onPressed: onEdit,
+                ),
+                const SizedBox(width: 8),
+                _ActionButton(
+                  tooltip: 'Elimina',
+                  icon: Icons.delete_outline,
+                  color: Colors.red.shade700,
+                  onPressed: onDelete,
+                ),
               ],
             ),
           ],

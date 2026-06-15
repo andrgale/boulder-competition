@@ -17,6 +17,9 @@ class MenusListPage extends StatefulWidget {
 class _MenusListPageState extends State<MenusListPage> {
   final service = MenuServiceAdmin();
 
+  // controller condiviso tra Scrollbar e ListView
+  final _scrollController = ScrollController();
+
   List<MenuModel> menus = [];
   bool loading = true;
 
@@ -24,6 +27,12 @@ class _MenusListPageState extends State<MenusListPage> {
   void initState() {
     super.initState();
     loadMenus();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   Future<void> loadMenus() async {
@@ -66,6 +75,40 @@ class _MenusListPageState extends State<MenusListPage> {
   List<MenuModel> childrenOf(String parentId) =>
       menus.where((m) => m.parentId == parentId).toList();
 
+  // costruisce la lista piatta: root + figli indentati
+  List<Widget> _buildMenuTiles() {
+    return roots.expand((root) {
+      final kids = childrenOf(root.id);
+      return <Widget>[
+        _MenuTile(
+          menu: root,
+          isRoot: true,
+          onEdit: () async {
+            await context.push('/security/menus/edit', extra: root);
+            await loadMenus();
+          },
+          onDelete: () => deleteMenu(root),
+          onAddChild: () async {
+            await context.push('/security/menus/new', extra: root.id);
+            await loadMenus();
+          },
+        ),
+        ...kids.map(
+          (kid) => _MenuTile(
+            menu: kid,
+            isRoot: false,
+            onEdit: () async {
+              await context.push('/security/menus/edit', extra: kid);
+              await loadMenus();
+            },
+            onDelete: () => deleteMenu(kid),
+            onAddChild: null,
+          ),
+        ),
+      ];
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BasePage(
@@ -91,43 +134,23 @@ class _MenusListPageState extends State<MenusListPage> {
           side: const BorderSide(color: Color(0xFFE5E7EB)),
         ),
         clipBehavior: Clip.antiAlias,
-        child: ListView(
-          children: roots.expand((root) {
-            final kids = childrenOf(root.id);
-            return [
-              _MenuTile(
-                menu: root,
-                isRoot: true,
-                onEdit: () async {
-                  await context.push('/security/menus/edit', extra: root);
-                  await loadMenus();
-                },
-                onDelete: () => deleteMenu(root),
-                onAddChild: () async {
-                  // passa il parentId come extra
-                  await context.push('/security/menus/new',
-                      extra: root.id);
-                  await loadMenus();
-                },
-              ),
-              ...kids.map((kid) => _MenuTile(
-                    menu: kid,
-                    isRoot: false,
-                    onEdit: () async {
-                      await context.push('/security/menus/edit',
-                          extra: kid);
-                      await loadMenus();
-                    },
-                    onDelete: () => deleteMenu(kid),
-                    onAddChild: null,
-                  )),
-            ];
-          }).toList(),
+        // ── Scrollbar avvolge la ListView ────────────────
+        child: Scrollbar(
+          controller: _scrollController,
+          thumbVisibility: true,
+          child: ListView(
+            controller: _scrollController,
+            children: _buildMenuTiles(),
+          ),
         ),
       ),
     );
   }
 }
+
+// ──────────────────────────────────────────────────────────────
+// MENU TILE
+// ──────────────────────────────────────────────────────────────
 
 class _MenuTile extends StatelessWidget {
   final MenuModel menu;
@@ -148,7 +171,9 @@ class _MenuTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Color(0xFFE5E7EB))),
+        border: Border(
+          bottom: BorderSide(color: Color(0xFFE5E7EB)),
+        ),
       ),
       child: ListTile(
         contentPadding: EdgeInsets.only(
@@ -162,20 +187,28 @@ class _MenuTile extends StatelessWidget {
         title: Text(
           menu.label,
           style: TextStyle(
-            fontWeight: isRoot ? FontWeight.bold : FontWeight.normal,
+            fontWeight:
+                isRoot ? FontWeight.bold : FontWeight.normal,
           ),
         ),
         subtitle: Text(
           menu.route,
-          style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+          style: const TextStyle(
+            fontFamily: 'monospace',
+            fontSize: 12,
+          ),
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // badge visibilità
-            _VisibilityBadge(visible: menu.visible, mobile: menu.mobile, desktop: menu.desktop),
+            // badge visibilità / piattaforme
+            _VisibilityBadge(
+              visible: menu.visible,
+              mobile: menu.mobile,
+              desktop: menu.desktop,
+            ),
             const SizedBox(width: 8),
-            // ordine
+            // numero ordine
             Chip(
               label: Text('${menu.displayOrder}'),
               visualDensity: VisualDensity.compact,
@@ -203,6 +236,10 @@ class _MenuTile extends StatelessWidget {
   }
 }
 
+// ──────────────────────────────────────────────────────────────
+// VISIBILITY BADGE
+// ──────────────────────────────────────────────────────────────
+
 class _VisibilityBadge extends StatelessWidget {
   final bool visible;
   final bool mobile;
@@ -219,16 +256,23 @@ class _VisibilityBadge extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(visible ? Icons.visibility : Icons.visibility_off,
-            size: 16,
-            color: visible ? Colors.green : Colors.grey),
+        Icon(
+          visible ? Icons.visibility : Icons.visibility_off,
+          size: 16,
+          color: visible ? Colors.green : Colors.grey,
+        ),
         const SizedBox(width: 4),
-        Icon(Icons.smartphone,
-            size: 16, color: mobile ? Colors.blue : Colors.grey.shade300),
+        Icon(
+          Icons.smartphone,
+          size: 16,
+          color: mobile ? Colors.blue : Colors.grey.shade300,
+        ),
         const SizedBox(width: 2),
-        Icon(Icons.desktop_windows,
-            size: 16,
-            color: desktop ? Colors.blue : Colors.grey.shade300),
+        Icon(
+          Icons.desktop_windows,
+          size: 16,
+          color: desktop ? Colors.blue : Colors.grey.shade300,
+        ),
       ],
     );
   }
