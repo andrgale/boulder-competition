@@ -64,6 +64,11 @@ class AthleteBoulderService {
           'profile_id',
           profile['id'],
         )
+        .eq(
+          'fl_presente',
+          true,
+        )
+
         .maybeSingle();
   }
 
@@ -91,7 +96,7 @@ class AthleteBoulderService {
 
     if (registration == null) {
       throw Exception(
-        'Atleta non iscritto alla gara',
+        'Atleta non iscritto alla gara o senza check-in',
       );
     }
 
@@ -108,6 +113,10 @@ class AthleteBoulderService {
         .eq(
           'competition_id',
           competition.id,
+        )
+        .eq(
+          'is_finale',
+          false,
         )
         .order(
           'numero',

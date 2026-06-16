@@ -210,7 +210,7 @@ class _AthleteBouldersPageState
             padding:
                 EdgeInsets.all(24),
             child: Text(
-              'Gara chiusa - impossibile aggiornare i boulder',
+              'Gara chiusa o atleta senza check-in',
               textAlign:
                   TextAlign.center,
               style: TextStyle(
