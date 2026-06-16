@@ -11,6 +11,7 @@ class AthleteBoulderModel {
   final bool zone;
   final int tentativiTop;
   final int tentativiZone;
+  final bool isFinale;
 
 
   AthleteBoulderModel({
@@ -22,6 +23,7 @@ class AthleteBoulderModel {
     required this.zone,
     required this.tentativiTop,
     required this.tentativiZone,
+    required this.isFinale
     
   });
 
@@ -37,7 +39,7 @@ class AthleteBoulderModel {
       zone: json['zone'] ?? false,
       tentativiTop: json['tentativi_top'] ?? 0,
       tentativiZone: json['tentativi_zone'] ?? 0,
-
+      isFinale: json['is_finale']
     );
   }
 }

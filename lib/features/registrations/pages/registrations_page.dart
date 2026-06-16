@@ -124,9 +124,9 @@ class _RegistrationsPageState
         },
       );
 
-      debugPrint('STATUS: ${response.status}');
-      debugPrint('DATA: ${response.data}');
-      debugPrint('TYPE: ${response.data.runtimeType}');
+      // debugPrint('STATUS: ${response.status}');
+      // debugPrint('DATA: ${response.data}');
+      // debugPrint('TYPE: ${response.data.runtimeType}');
 
       if (!mounted) return;
 
@@ -321,13 +321,6 @@ class _RegistrationsPageState
             )
           : null,
 
-      // body: loading
-      //     ? const Center(
-      //         child:
-      //             CircularProgressIndicator(),
-      //       )
-      //     : registrations.isEmpty
-
     body: loading
         ? const Center(
             child:
@@ -390,14 +383,10 @@ class _RegistrationsPageState
                   ),
                 )
               : ListView.builder(
-                  // itemCount:
-                  //     registrations.length,
                   itemCount:
                     filtered.length,
                   itemBuilder:
                       (context, index) {
-//                    final r =
-//                        registrations[index];
                     final r =
                         filtered[index];
                     return ListTile(
@@ -448,21 +437,52 @@ class _RegistrationsPageState
                               ),
                             ),
 
-                            IconButton(
-                              icon: const Icon(Icons.terrain),
-                              tooltip: 'Boulder',
-                              onPressed: () {
-                                context.push(
-                                  '/ascents-boulders',
-                                  extra: {
-                                    'registrationId': r.id,
-                                    'athleteName':
-                                        '${r.cognome} ${r.nome}',
-                                  },
-                                );
-                              },
-                            ),
+                            if (r.flOmaggio)
+                              const Padding(
+                                padding: EdgeInsets.only(
+                                  right: 8,
+                                ),
+                                child: Icon(
+                                  Icons.card_giftcard,
+                                  color: Colors.orange,
+                                ),
+                              ),
 
+                            // IconButton(
+                            //   icon: const Icon(Icons.terrain),
+                            //   tooltip: 'Boulder',
+                            //   onPressed: () {
+                            //     context.push(
+                            //       '/ascents-boulders',
+                            //       extra: {
+                            //         'registrationId': r.id,
+                            //         'athleteName':
+                            //             '${r.cognome} ${r.nome}',
+                            //       },
+                            //     );
+                            //   },
+                            // ),
+
+                          IconButton(
+                            icon: const Icon(
+                              Icons.terrain,
+                            ),
+                            tooltip: r.flPresente
+                                ? 'Boulder'
+                                : 'Atleta non presente',
+                            onPressed: r.flPresente
+                                ? () {
+                                    context.push(
+                                      '/ascents-boulders',
+                                      extra: {
+                                        'registrationId': r.id,
+                                        'athleteName':
+                                            '${r.cognome} ${r.nome}',
+                                      },
+                                    );
+                                  }
+                                : null,
+                          ),
 
                           IconButton(
                             icon: const Icon(

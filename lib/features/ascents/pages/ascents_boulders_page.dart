@@ -152,10 +152,44 @@ class _AscentsBouldersPageState extends State<AscentsBouldersPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Difficoltà ${item.difficolta}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  Row(
+                    children: [
+                      Text(
+                        'Difficoltà ${item.difficolta}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      if (item.isFinale)
+                        Container(
+                          margin: const EdgeInsets.only(
+                            left: 8,
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.shade100,
+                            borderRadius:
+                                BorderRadius.circular(12),
+                          ),
+                          child: const Text(
+                            'FINALE',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
+
+                  // Text(
+                  //   'Difficoltà ${item.difficolta}',
+                  //   style: const TextStyle(fontWeight: FontWeight.bold),
+                  // ),
                   const SizedBox(height: 4),
                   Row(
                     children: [

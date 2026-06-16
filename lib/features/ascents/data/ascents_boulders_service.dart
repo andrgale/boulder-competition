@@ -59,6 +59,7 @@ class AscentsBouldersService {
         zone: a?['zone'] ?? false,
         tentativiTop: a?['tentativi_top'] ?? 0,
         tentativiZone: a?['tentativi_zone'] ?? 0,
+        isFinale: b['is_finale']
       );
     }).toList();
 
