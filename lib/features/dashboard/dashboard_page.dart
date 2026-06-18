@@ -38,11 +38,11 @@ class _DashboardPageState extends State<DashboardPage> {
           tooltip: 'Aggiorna',
         ),
         const SizedBox(width: 8),
-        FilledButton.icon(
-          onPressed: () {},
-          icon: const Icon(Icons.add),
-          label: const Text('Nuova Gara'),
-        ),
+        // FilledButton.icon(
+        //   onPressed: () {},
+        //   icon: const Icon(Icons.add),
+        //   label: const Text('Nuova Gara'),
+        // ),
       ],
       child: FutureBuilder<DashboardStats>(
         future: _statsFuture,

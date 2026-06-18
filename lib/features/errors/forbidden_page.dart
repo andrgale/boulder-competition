@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../../config/app_mode.dart';
+
 
 class ForbiddenPage extends StatelessWidget {
   const ForbiddenPage({super.key});
@@ -34,14 +37,38 @@ class ForbiddenPage extends StatelessWidget {
 
             const SizedBox(height: 32),
 
-            FilledButton(
+            // FilledButton(
+            //   onPressed: () {
+            //     Navigator.pop(context);
+            //   },
+            //   child: const Text(
+            //     'Indietro',
+            //   ),
+            // ),
+
+
+            // FilledButton.icon(
+            //   onPressed: () {
+            //     context.go('/dashboard');
+            //   },
+            //   icon: const Icon(Icons.home),
+            //   label: const Text('Dashboard'),
+            // ),
+            FilledButton.icon(
               onPressed: () {
-                Navigator.pop(context);
+                if (AppConfig.isAthlete) {
+                  context.go('/athlete-boulders');
+                } else {
+                  context.go('/dashboard');
+                }
               },
-              child: const Text(
-                'Indietro',
+              icon: const Icon(Icons.home),
+              label: const Text('Dashboard'),              
+              // child: const Text(
+              //   'Torna alla Home',
               ),
-            ),
+        //    ),
+
           ],
         ),
       ),

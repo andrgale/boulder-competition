@@ -5,7 +5,7 @@ import '../../core/services/auth_service.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
+//import '../../../core/services/permission_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -32,6 +32,8 @@ class _LoginPageState extends State<LoginPage> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
+
+//      PermissionService.clearCache();
 
       final user =
           Supabase.instance.client.auth.currentUser!;

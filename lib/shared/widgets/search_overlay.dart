@@ -92,21 +92,18 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
 
     try {
       final results = await _service.search(query);
-   //   debugPrint('OVERLAY - risultati ricevuti: ${results.length} per "$query"'); // ← aggiungi
       if (!mounted || query != _lastQuery) return;
       setState(() {
         _results = results;
         _loading = false;
       });
       _updateOverlay();
-    } catch (e) {
-  //    debugPrint('OVERLAY - errore: $e'); // ← aggiungi
+    } catch (_) {
       if (!mounted) return;
       setState(() => _loading = false);
       _updateOverlay();
     }
   }
-
 
   // ---------------------------------------------------------------------------
   // Overlay
@@ -154,7 +151,14 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
     _controller.clear();
     _removeOverlay();
     _focusNode.unfocus();
-    context.go(result.route);
+
+    // Le rotte parametriche (es. /competitions/:id/registrations) hanno già
+    // l'id interpolato in result.route. Per ascents-boulders serve anche extra.
+    if (result.extra != null) {
+      context.go(result.route, extra: result.extra);
+    } else {
+      context.go(result.route);
+    }
   }
 
   // ---------------------------------------------------------------------------

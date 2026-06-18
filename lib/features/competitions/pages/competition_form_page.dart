@@ -10,6 +10,9 @@ import '../models/competition_model.dart';
 
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 
+//import '../../errors/forbidden_page.dart';
+import '../../../core/services/permission_service.dart';
+
 class CompetitionFormPage extends StatefulWidget {
   final CompetitionModel? competition;
 
@@ -55,6 +58,9 @@ class _CompetitionFormPageState
 
   bool saving = false;
 
+  bool checkingPermission = true;
+  bool canWrite = false;
+
   final currencyFormatter = CurrencyTextInputFormatter.currency(
     locale: 'it',
     symbol: '€ ',
@@ -67,6 +73,8 @@ class _CompetitionFormPageState
   void initState() {
     super.initState();
     loadData();
+
+    checkPermission();
   }
 
   // =======================================================
@@ -104,6 +112,20 @@ class _CompetitionFormPageState
     flGestioneOmaggi = c.flGestioneOmaggi;
   }
 
+  Future<void> checkPermission() async {
+    final allowed =
+        await PermissionService.hasPermission(
+      'competition.write',
+    );
+
+    if (!mounted) return;
+
+    setState(() {
+      canWrite = allowed;
+      checkingPermission = false;
+    });
+  }
+
   // =======================================================
   // DATE FORMAT
   // =======================================================
@@ -137,6 +159,20 @@ class _CompetitionFormPageState
   // =======================================================
 
   Future<void> save() async {
+
+    final canWrite =
+        await PermissionService.hasPermission(
+      'competition.write',
+    );
+
+    if (!canWrite) {
+      showError(
+        'Non hai i permessi per modificare le gare',
+      );
+      return;
+    }
+
+
     if (!formKey.currentState!.validate()) return;
 
     if (dtGara == null) {

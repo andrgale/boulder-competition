@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
+import 'package:flutter/material.dart';
 import '../services/permission_service.dart';
 
 class RouteGuard {
@@ -86,6 +86,7 @@ class RouteGuard {
     '/security/profiles':           'security.admin',
     '/security/profiles/roles':     'security.admin',
 
+    '/check-in': 'checkin.read',
   };
 
   // =======================================================
@@ -193,13 +194,22 @@ class RouteGuard {
       return '/athlete-boulders';
     }
 
-    final baseRoute =
-        _extractBaseRoute(location);
+    // final baseRoute =
+    //     _extractBaseRoute(location);
+
+    // final allowed =
+    //     await hasRoutePermission(
+    //   baseRoute,
+    // );
+
+    final normalizedRoute =
+        normalizeRoute(location);
 
     final allowed =
         await hasRoutePermission(
-      baseRoute,
-    );
+          normalizedRoute,
+        );
+
 
     if (!allowed) {
       return '/forbidden';
@@ -224,7 +234,11 @@ class RouteGuard {
               normalizedRoute];
 
       if (permission == null) {
-        return true;
+        debugPrint(
+          'ATTENZIONE: route non configurata: $route'
+        );
+        return false;
+     //   return true;
       }
 
       return await PermissionService
@@ -271,16 +285,16 @@ class RouteGuard {
   // BASE ROUTE
   // =======================================================
 
-  static String _extractBaseRoute(
-    String route,
-  ) {
-    final segments =
-        Uri.parse(route).pathSegments;
+  // static String _extractBaseRoute(
+  //   String route,
+  // ) {
+  //   final segments =
+  //       Uri.parse(route).pathSegments;
 
-    if (segments.isEmpty) {
-      return route;
-    }
+  //   if (segments.isEmpty) {
+  //     return route;
+  //   }
 
-    return '/${segments.first}';
-  }
+  //   return '/${segments.first}';
+  // }
 }

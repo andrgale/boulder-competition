@@ -8,9 +8,9 @@ class PermissionService {
   // CACHE
   // =======================================================
 
-  static List<String>? _cachedPermissions;
+  //static List<String>? _cachedPermissions;
 
-  static List<String>? _cachedRoles;
+ // static List<String>? _cachedRoles;
 
   // =======================================================
   // LOAD USER PERMISSIONS
@@ -18,9 +18,9 @@ class PermissionService {
 
   static Future<List<String>> loadPermissions() async {
     try {
-      if (_cachedPermissions != null) {
-        return _cachedPermissions!;
-      }
+      // if (_cachedPermissions != null) {
+      //   return _cachedPermissions!;
+      // }
 
       final user =
           supabase.auth.currentUser;
@@ -98,8 +98,8 @@ class PermissionService {
               .toSet()
               .toList();
 
-      _cachedPermissions =
-          permissions;
+   //   _cachedPermissions =
+   //       permissions;
 
       return permissions;
     } catch (e) {
@@ -113,9 +113,9 @@ class PermissionService {
 
   static Future<List<String>> loadRoles() async {
     try {
-      if (_cachedRoles != null) {
-        return _cachedRoles!;
-      }
+      // if (_cachedRoles != null) {
+      //   return _cachedRoles!;
+      // }
 
       final user =
           supabase.auth.currentUser;
@@ -165,7 +165,7 @@ class PermissionService {
               .toSet()
               .toList();
 
-      _cachedRoles = roles;
+   //   _cachedRoles = roles;
 
       return roles;
     } catch (e) {
@@ -207,8 +207,8 @@ class PermissionService {
   // CLEAR CACHE
   // =======================================================
 
-  static void clearCache() {
-    _cachedPermissions = null;
-    _cachedRoles = null;
-  }
+  // static void clearCache() {
+  //   _cachedPermissions = null;
+  //   _cachedRoles = null;
+  // }
 }

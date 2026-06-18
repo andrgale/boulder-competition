@@ -6,6 +6,7 @@ import '../../../core/services/auth_service.dart';
 //import '../pages/athlete_change_password_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+//import '../../../core/services/permission_service.dart';
 
 class AthleteLoginPage extends StatefulWidget {
   const AthleteLoginPage({super.key});
@@ -37,7 +38,9 @@ class _AthleteLoginPageState
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-
+      
+ //     PermissionService.clearCache();
+      
       final user =
           Supabase.instance.client.auth.currentUser!;
 

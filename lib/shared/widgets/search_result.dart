@@ -9,15 +9,17 @@ class SearchResult {
     required this.title,
     required this.subtitle,
     required this.route,
+    this.extra,
   });
 
   final String id;
   final SearchResultType type;
   final String title;
   final String subtitle;
-
-  /// Rotta a cui navigare al tap del risultato.
   final String route;
+
+  /// Dati aggiuntivi necessari per la navigazione (es. competitionId).
+  final Map<String, dynamic>? extra;
 
   IconData get icon {
     switch (type) {

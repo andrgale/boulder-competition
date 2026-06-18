@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../models/category_model.dart';
 import '../data/category_service.dart';
 
+import '../../../core/services/permission_service.dart';
+
 
 class CategoryFormPage extends StatefulWidget {
   final String competitionId;
@@ -33,9 +35,16 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
 
   bool get isEdit => widget.category != null;
 
+  bool checkingPermission = true;
+  bool canWrite = false;
+
+
   @override
   void initState() {
     super.initState();
+
+    checkPermission();
+
 
     final c = widget.category;
 
@@ -55,7 +64,37 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
     super.dispose();
   }
 
+  Future<void> checkPermission() async {
+    final allowed =
+        await PermissionService.hasPermission(
+      'category.write',
+    );
+
+    if (!mounted) return;
+
+    setState(() {
+      canWrite = allowed;
+      checkingPermission = false;
+    });
+  }
+
+
   Future<void> save() async {
+
+    final canWrite =
+        await PermissionService.hasPermission(
+      'category.write',
+    );
+
+    if (!canWrite) {
+      showError(
+        'Non hai i permessi per modificare le gare',
+      );
+      return;
+    }
+
+
+
     if (!formKey.currentState!.validate()) return;
 
     setState(() => loading = true);
@@ -92,6 +131,17 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
       if (mounted) setState(() => loading = false);
     }
   }
+
+  // =======================================================
+  // ERROR
+  // =======================================================
+
+  void showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {

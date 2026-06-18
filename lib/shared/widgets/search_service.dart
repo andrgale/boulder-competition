@@ -8,8 +8,6 @@ class SearchService {
 
   final SupabaseClient _client;
 
-  /// Cerca in tutte le tabelle in parallelo.
-  /// Restituisce al massimo [limitPerTable] risultati per tabella.
   Future<List<SearchResult>> search(
     String query, {
     int limitPerTable = 5,
@@ -29,7 +27,7 @@ class SearchService {
   }
 
   // ---------------------------------------------------------------------------
-  // competitions → descrizione, note
+  // competitions → /competitions (lista, nessun extra necessario)
   // ---------------------------------------------------------------------------
   Future<List<SearchResult>> _searchCompetitions(String q, int limit) async {
     final safe = q.replaceAll('"', '');
@@ -47,50 +45,76 @@ class SearchService {
         type: SearchResultType.competition,
         title: r['descrizione'] as String? ?? '—',
         subtitle: note.isNotEmpty ? note : 'Competizione',
+        // Rotta esistente nel router — nessun extra necessario
         route: '/competitions',
       );
     }).toList();
   }
 
   // ---------------------------------------------------------------------------
-  // registrations → cognome, nome, email, societa
-  // Deduplicati per email (stesso atleta iscritto a più gare conta una volta).
-  //
-  // NOTA: il client Dart di Supabase richiede che dentro .or() i valori
-  // per ilike siano racchiusi tra virgolette doppie quando contengono
-  // caratteri speciali (es. %). La sintassi corretta è:
-  //   or('col.ilike."%valore%",col2.ilike."%valore%"')
+  // registrations → /competitions/:id/registrations
+  // Recuperiamo anche competition_id per costruire la rotta corretta.
+  // Deduplicati per email.
   // ---------------------------------------------------------------------------
   Future<List<SearchResult>> _searchAthletes(String q, int limit) async {
-    // Escape apici nel query per evitare injection nella stringa PostgREST.
     final safe = q.replaceAll('"', '');
 
+    // Recuperiamo anche competition_id per costruire la rotta corretta.
+    // Il nome gara viene caricato con una seconda query per mostrarlo nella pagina.
     final rows = await _client
         .from('registrations')
-        .select('id, cognome, nome, email, societa')
+        .select('id, competition_id, cognome, nome, email, societa')
         .or(
           'cognome.ilike."%$safe%",'
           'nome.ilike."%$safe%",'
           'email.ilike."%$safe%",'
           'societa.ilike."%$safe%"',
         )
-        .limit(limit * 3); // margine per la dedup
+        .limit(limit * 3);
+
+    if ((rows as List).isEmpty) return [];
+
+    // Recupera i nomi delle competizioni coinvolte in un'unica query
+    final competitionIds = rows
+        .map((r) => r['competition_id'] as String?)
+        .whereType<String>()
+        .toSet()
+        .toList();
+
+    final compRows = competitionIds.isNotEmpty
+        ? await _client
+            .from('competitions')
+            .select('id, descrizione')
+            .inFilter('id', competitionIds)
+        : <Map<String, dynamic>>[];
+
+    final compMap = {
+      for (final c in compRows as List)
+        c['id'] as String: c['descrizione'] as String? ?? '',
+    };
 
     final seen = <String>{};
     final results = <SearchResult>[];
 
-    for (final r in rows as List) {
+    for (final r in rows) {
       final email = (r['email'] as String?) ?? r['id'] as String;
       if (seen.contains(email)) continue;
       seen.add(email);
 
       final nome = '${r['cognome'] ?? ''} ${r['nome'] ?? ''}'.trim();
+      final competitionId = r['competition_id'] as String? ?? '';
+      final competitionName = compMap[competitionId] ?? '';
+
       results.add(SearchResult(
         id: r['id'] as String,
         type: SearchResultType.athlete,
         title: nome.isNotEmpty ? nome : email,
         subtitle: (r['societa'] as String?) ?? email,
-        route: '/registrations',
+        route: '/competitions/$competitionId/registrations',
+        extra: {
+          'competitionId': competitionId,
+          'competitionName': competitionName,
+        },
       ));
 
       if (results.length >= limit) break;
@@ -100,18 +124,18 @@ class SearchService {
   }
 
   // ---------------------------------------------------------------------------
-  // boulders → colore, difficolta (cast a text), numero (cast a text)
+  // boulders → /competitions (non esiste /boulders standalone)
+  // Recuperiamo competition_id per navigare alla gara giusta.
   // ---------------------------------------------------------------------------
   Future<List<SearchResult>> _searchBoulders(String q, int limit) async {
     final safe = q.replaceAll('"', '');
 
     final rows = await _client
         .from('boulders')
-        .select('id, numero, difficolta, colore')
+        .select('id, competition_id, numero, difficolta, colore')
         .or('colore.ilike."%$safe%"')
         .limit(limit);
 
-    // Filtro lato client per numero/difficolta (campi numerici):
     final qLower = q.toLowerCase();
     final filtered = (rows as List).where((r) {
       final numero = r['numero']?.toString() ?? '';
@@ -120,19 +144,48 @@ class SearchService {
       return numero.contains(qLower) ||
           diff.contains(qLower) ||
           colore.contains(qLower);
-    }).take(limit);
+    }).toList();
 
-    return filtered.map((r) => SearchResult(
-          id: r['id'] as String,
-          type: SearchResultType.boulder,
-          title: 'Boulder ${r['numero']}',
-          subtitle: '${r['colore']} · difficoltà ${r['difficolta']}',
-          route: '/boulders',
-        )).toList();
+    if (filtered.isEmpty) return [];
+
+    // Recupera i nomi delle competizioni in un'unica query
+    final competitionIds = filtered
+        .map((r) => r['competition_id'] as String?)
+        .whereType<String>()
+        .toSet()
+        .toList();
+
+    final compRows = competitionIds.isNotEmpty
+        ? await _client
+            .from('competitions')
+            .select('id, descrizione')
+            .inFilter('id', competitionIds)
+        : <Map<String, dynamic>>[];
+
+    final compMap = {
+      for (final c in compRows as List)
+        c['id'] as String: c['descrizione'] as String? ?? '',
+    };
+
+    return filtered.take(limit).map((r) {
+      final competitionId = r['competition_id'] as String? ?? '';
+      final competitionName = compMap[competitionId] ?? '';
+      return SearchResult(
+        id: r['id'] as String,
+        type: SearchResultType.boulder,
+        title: 'Boulder ${r['numero']}',
+        subtitle: '${r['colore']} · difficoltà ${r['difficolta']}',
+        route: '/competitions/$competitionId/boulders',
+        extra: {
+          'competitionId': competitionId,
+          'competitionName': competitionName,
+        },
+      );
+    }).toList();
   }
 
   // ---------------------------------------------------------------------------
-  // ascents → ricerca per nome atleta, poi ascent correlati
+  // ascents → /ascents-boulders (richiede registrationId e athleteName)
   // ---------------------------------------------------------------------------
   Future<List<SearchResult>> _searchAscents(String q, int limit) async {
     final safe = q.replaceAll('"', '');
@@ -150,25 +203,33 @@ class SearchService {
 
     final ascentRows = await _client
         .from('ascents')
-        .select('registration_id, boulder_id, top, zone, tentativi_top, tentativi_zone')
+        .select(
+            'registration_id, boulder_id, top, zone, tentativi_top, tentativi_zone')
         .inFilter('registration_id', athleteIds)
         .limit(limit);
 
     return (ascentRows as List).map((r) {
       final athlete = athleteRows.firstWhere(
         (a) => a['id'] == r['registration_id'],
-        orElse: () => {'cognome': '?', 'nome': ''},
+        orElse: () => {'cognome': '?', 'nome': '', 'id': ''},
       );
       final nome =
           '${athlete['cognome'] ?? ''} ${athlete['nome'] ?? ''}'.trim();
+      final registrationId = r['registration_id'] as String;
       final top = (r['top'] as bool?) == true ? 'Top ✓' : 'Top ✗';
       final zone = (r['zone'] as bool?) == true ? 'Zone ✓' : 'Zone ✗';
+
       return SearchResult(
-        id: r['registration_id'] as String,
+        id: registrationId,
         type: SearchResultType.ascent,
         title: 'Ascent – $nome',
         subtitle: '$top · $zone · ${r['tentativi_top']} tent.',
-        route: '/ascents',
+        // Rotta esistente nel router con extra Map richiesto
+        route: '/ascents-boulders',
+        extra: {
+          'registrationId': registrationId,
+          'athleteName': nome,
+        },
       );
     }).toList();
   }

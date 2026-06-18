@@ -1,4 +1,8 @@
 .
+├── assets
+│   └── fonts
+│       ├── NotoSans-Bold.ttf
+│       └── NotoSans-Regular.ttf
 ├── lib
 │   ├── config
 │   │   └── app_mode.dart
@@ -27,11 +31,16 @@
 │   ├── features
 │   │   ├── administration
 │   │   │   └── administration_page.dart
+│   │   ├── ascents
+│   │   │   ├── data
+│   │   │   ├── model
+│   │   │   └── pages
 │   │   ├── athlete
 │   │   │   ├── data
 │   │   │   ├── models
 │   │   │   └── pages
 │   │   ├── auth
+│   │   │   ├── change_password_page.dart
 │   │   │   └── login_page.dart
 │   │   ├── boulders
 │   │   │   ├── data
@@ -41,11 +50,17 @@
 │   │   │   ├── data
 │   │   │   ├── models
 │   │   │   └── pages
+│   │   ├── checkin
+│   │   │   ├── data
+│   │   │   ├── models
+│   │   │   └── pages
 │   │   ├── competitions
 │   │   │   ├── data
 │   │   │   ├── models
 │   │   │   └── pages
 │   │   ├── dashboard
+│   │   │   ├── data
+│   │   │   ├── models
 │   │   │   └── dashboard_page.dart
 │   │   ├── errors
 │   │   │   └── forbidden_page.dart
@@ -61,6 +76,10 @@
 │   │   │   ├── data
 │   │   │   ├── models
 │   │   │   └── pages
+│   │   ├── security
+│   │   │   ├── data
+│   │   │   ├── models
+│   │   │   └── pages
 │   │   └── splash
 │   │       └── splash_page.dart
 │   ├── shared
@@ -70,7 +89,11 @@
 │   │   │   ├── app_breadcrumb.dart
 │   │   │   ├── app_drawer.dart
 │   │   │   ├── app_shell.dart
-│   │   │   └── base_page.dart
+│   │   │   ├── base_page.dart
+│   │   │   ├── search_overlay.dart
+│   │   │   ├── search_result.dart
+│   │   │   ├── search_service.dart
+│   │   │   └── shell_user_service.dart
 │   │   ├── app_snackbar.dart
 │   │   └── services
 │   ├── main.dart
@@ -106,14 +129,16 @@
 │   ├── Pods
 │   │   ├── Headers
 │   │   ├── Local Podspecs
-│   │   │   └── FlutterMacOS.podspec.json
+│   │   │   ├── FlutterMacOS.podspec.json
+│   │   │   └── printing.podspec.json
 │   │   ├── Pods.xcodeproj
 │   │   │   ├── xcuserdata
 │   │   │   └── project.pbxproj
 │   │   ├── Target Support Files
 │   │   │   ├── FlutterMacOS
 │   │   │   ├── Pods-Runner
-│   │   │   └── Pods-RunnerTests
+│   │   │   ├── Pods-RunnerTests
+│   │   │   └── printing
 │   │   └── Manifest.lock
 │   ├── Runner
 │   │   ├── Assets.xcassets
@@ -197,15 +222,18 @@
 ├── Abilitazioni_Home_Page.txt
 ├── Installazione_Flutter.txt
 ├── README.md
+├── SupaBase_db.md
 ├── SupaBase_db.sql
 ├── SupaBase_db.txt
 ├── analysis_options.yaml
 ├── boulder_competition.iml
+├── classifiche.txt
 ├── devtools_options.yaml
 ├── pubspec.lock
 ├── pubspec.yaml
+├── sicurezza_profilazione.txt
 ├── struttura.md
 ├── struttura.txt
 └── test_import.cvs
 
-95 directories, 114 files
+112 directories, 125 files

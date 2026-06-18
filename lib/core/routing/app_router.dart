@@ -170,20 +170,41 @@ final GoRouter appRouter = GoRouter(
           },
         ),
 
+        // GoRoute(
+        //   path: '/competitions/:id/boulders',
+        //   builder: (context, state) {
+        //     final competition =
+        //         state.extra as CompetitionModel;
+
+        //     return BouldersPage(
+        //       competitionId: competition.id,
+        //       competitionName:
+        //           competition.descrizione,
+        //     );
+        //   },
+        // ),
+
         GoRoute(
           path: '/competitions/:id/boulders',
           builder: (context, state) {
-            final competition =
-                state.extra as CompetitionModel;
+            final competitionId = state.pathParameters['id']!;
+
+            // Gestisce sia CompetitionModel (navigazione normale dall'app)
+            // sia Map<String,dynamic> (navigazione dalla ricerca globale)
+            final extra = state.extra;
+            String competitionName = '';
+            if (extra is CompetitionModel) {
+              competitionName = extra.descrizione;
+            } else if (extra is Map) {
+              competitionName = extra['competitionName'] as String? ?? '';
+            }
 
             return BouldersPage(
-              competitionId: competition.id,
-              competitionName:
-                  competition.descrizione,
+              competitionId: competitionId,
+              competitionName: competitionName,
             );
           },
         ),
-
 
         GoRoute(
           path: '/rankings',
@@ -314,19 +335,42 @@ final GoRouter appRouter = GoRouter(
 // REGISTRATIONS
 // ======================================================
 
+        // GoRoute(
+        //   path: '/competitions/:id/registrations',
+        //   name: 'registrations_list',
+        //   builder: (context, state) {
+        //     final competitionId = state.pathParameters['id']!;
+        //     final competition = state.extra as CompetitionModel?;
+
+        //     return RegistrationsPage(
+        //       competitionId: competitionId,
+        //       competitionName: competition?.descrizione ?? '',
+        //     );
+        //   },
+        // ),
         GoRoute(
           path: '/competitions/:id/registrations',
           name: 'registrations_list',
           builder: (context, state) {
             final competitionId = state.pathParameters['id']!;
-            final competition = state.extra as CompetitionModel?;
+
+            // Gestisce sia CompetitionModel (navigazione normale dall'app)
+            // sia Map<String,dynamic> (navigazione dalla ricerca globale)
+            final extra = state.extra;
+            String competitionName = '';
+            if (extra is CompetitionModel) {
+              competitionName = extra.descrizione;
+            } else if (extra is Map) {
+              competitionName = extra['competitionName'] as String? ?? '';
+            }
 
             return RegistrationsPage(
               competitionId: competitionId,
-              competitionName: competition?.descrizione ?? '',
+              competitionName: competitionName,
             );
           },
         ),
+
 
         GoRoute(
           path: '/registrations/new',
