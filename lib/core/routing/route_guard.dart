@@ -29,6 +29,11 @@ class RouteGuard {
 
     '/competitions/delete': 'competition.write',
 
+    '/competitions/categories'    : 'competition.read',
+    '/competitions/registrations' : 'registration.read',
+    '/competitions/boulders'      : 'boulder.read',
+
+
     // =====================================================
     // REGISTRATIONS
     // =====================================================
@@ -50,10 +55,25 @@ class RouteGuard {
     '/boulders/edit': 'boulder.write',
 
     // =====================================================
+    // CATEGORIES
+    // =====================================================
+
+    '/categories/new': 'category.write',
+
+    '/categories/edit': 'category.write',
+
+    // =====================================================
+    // ASCENTS
+    // =====================================================
+
+
+    '/ascents-boulders': 'ascent.write',
+    // =====================================================
     // RANKINGS
     // =====================================================
 
     '/rankings': 'ranking.read',
+    '/rankings/qualifications':'qualifications.read',
 
     // =====================================================
     // IMPORT
@@ -272,6 +292,26 @@ class RouteGuard {
     )) {
       return '/boulders/edit';
     }
+    if (RegExp(r'^/competitions/[^/]+/categories$')
+        .hasMatch(route)) {
+      return '/competitions/categories';
+    }
+
+    if (RegExp(r'^/competitions/[^/]+/registrations$')
+        .hasMatch(route)) {
+      return '/competitions/registrations';
+    }
+
+    if (RegExp(r'^/competitions/[^/]+/boulders$')
+        .hasMatch(route)) {
+      return '/competitions/boulders';
+    } 
+
+    if (RegExp(r'^/rankings/[^/]+/qualifications$')
+        .hasMatch(route)) {
+      return '/rankings/qualifications';
+    } 
+
     // Security routes con segmenti dinamici (attualmente nessuno,
     // ma pronti per future estensioni)
     if (route.startsWith('/security/')) {

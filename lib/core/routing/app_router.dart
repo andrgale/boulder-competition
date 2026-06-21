@@ -12,7 +12,9 @@ import '../../features/registrations/pages/registrations_page.dart';
 
 import '../../features/registrations/pages/registration_form_page.dart';
 
-import '../../features/rankings/rankings_page.dart';
+import '../../features/rankings/pages/ranking_competition_page.dart';
+
+import '../../features/rankings/pages/ranking_qualificazione_page.dart';
 
 import '../../features/administration/administration_page.dart';
 
@@ -210,7 +212,21 @@ final GoRouter appRouter = GoRouter(
           path: '/rankings',
 
           builder: (context, state) {
-            return const RankingsPage();
+            return const RankingsCompetitionsPage();
+          },
+        ),
+
+        GoRoute(
+          path: '/rankings/:id/qualifications',
+          builder: (context, state) {
+            final competitionId = state.pathParameters['id']!;
+            final extra = state.extra as Map<String, dynamic>?;
+
+            return RankingQualificazionePage(
+              competitionId: competitionId,
+              competitionName: extra?['competitionName'] as String? ?? '',
+              nrFinalisti: extra?['nrFinalisti'] as int? ?? 0,
+            );
           },
         ),
 
