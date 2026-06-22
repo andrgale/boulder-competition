@@ -1,4 +1,4 @@
-class RankingQualificazioneModel {
+class RankingFinalModel {
   final String registrationId;
   final String competitionId;
   final String? categoryId;
@@ -8,9 +8,11 @@ class RankingQualificazioneModel {
   final String? sesso;
   final String? societa;
   final int nrTop;
-  final double punteggioTotale;
+  final int nrZone;
+  final int tentativiTop;
+  final int tentativiZone;
 
-  RankingQualificazioneModel({
+  RankingFinalModel({
     required this.registrationId,
     required this.competitionId,
     this.categoryId,
@@ -20,7 +22,9 @@ class RankingQualificazioneModel {
     this.sesso,
     this.societa,
     required this.nrTop,
-    required this.punteggioTotale,
+    required this.nrZone,
+    required this.tentativiTop,
+    required this.tentativiZone,
   });
 
   String get fullName => '$cognome $nome';
@@ -37,8 +41,8 @@ class RankingQualificazioneModel {
     }
   }
 
-  factory RankingQualificazioneModel.fromJson(Map<String, dynamic> json) {
-    return RankingQualificazioneModel(
+  factory RankingFinalModel.fromJson(Map<String, dynamic> json) {
+    return RankingFinalModel(
       registrationId: json['registration_id'] as String,
       competitionId: json['competition_id'] as String,
       categoryId: json['category_id'] as String?,
@@ -48,8 +52,9 @@ class RankingQualificazioneModel {
       sesso: json['sesso'] as String?,
       societa: json['societa'] as String?,
       nrTop: json['nr_top'] as int? ?? 0,
-      // numeric può arrivare come int o double dal DB
-      punteggioTotale: (json['punteggio_totale'] as num?)?.toDouble() ?? 0.0,
+      nrZone: json['nr_zone'] as int? ?? 0,
+      tentativiTop: json['tentativi_top'] as int? ?? 0,
+      tentativiZone: json['tentativi_zone'] as int? ?? 0,
     );
   }
 }

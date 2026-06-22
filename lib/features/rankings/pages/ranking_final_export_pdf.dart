@@ -6,11 +6,11 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
-import '../models/ranking_qualificazione_model.dart';
+import '../models/ranking_final_model.dart';
 
 import 'package:flutter/services.dart';
 
-/// Genera e condivide/stampa il PDF della classifica qualificazioni.
+/// Genera e condivide/stampa il PDF della classifica finale.
 ///
 /// Produce tre sezioni — Maschile, Femminile, Generale — ciascuna
 /// su una nuova pagina, con lo stesso stile grafico di CheckinPdfExport.
@@ -18,19 +18,17 @@ import 'package:flutter/services.dart';
 /// Dipendenze da aggiungere in pubspec.yaml:
 ///   pdf: ^3.11.0
 ///   printing: ^5.13.0
-class RankingQualificazioneExportPdf {
+class RankingFinalExportPdf {
   /// Apre il dialog di stampa/condivisione nativo.
   static Future<void> exportAndShare({
     required String competitionName,
     required DateTime dtGara,
-    required List<RankingQualificazioneModel> rankings,
-    required int nrFinalisti,
+    required List<RankingFinalModel> rankings,
   }) async {
     final bytes = await _buildPdf(
       competitionName: competitionName,
       dtGara: dtGara,
       rankings: rankings,
-      nrFinalisti: nrFinalisti,
     );
 
     String buildSafeFileName(String value) {
@@ -45,7 +43,7 @@ class RankingQualificazioneExportPdf {
       await dir.create(recursive: true);
       final safeName = buildSafeFileName(competitionName);
       final fileName =
-          'classifica_qualificazioni_${safeName}_'
+          'classifica_finale_${safeName}_'
           '${DateFormat('yyyyMMdd').format(dtGara)}.pdf';
       final file = File('${dir.path}/$fileName');
       await file.writeAsBytes(bytes);
@@ -55,7 +53,7 @@ class RankingQualificazioneExportPdf {
       await Printing.sharePdf(
         bytes: bytes,
         filename:
-            'classifica_qualificazioni_${competitionName.replaceAll(' ', '_')}_'
+            'classifica_finale_${competitionName.replaceAll(' ', '_')}_'
             '${DateFormat('yyyyMMdd').format(dtGara)}.pdf',
       );
     }
@@ -68,19 +66,22 @@ class RankingQualificazioneExportPdf {
   static Future<Uint8List> _buildPdf({
     required String competitionName,
     required DateTime dtGara,
-    required List<RankingQualificazioneModel> rankings,
-    required int nrFinalisti,
+    required List<RankingFinalModel> rankings,
   }) async {
     final doc = pw.Document();
 
     // ── colori (stessa palette di CheckinPdfExport) ───────────
     const headerBg = PdfColor.fromInt(0xFF1E40AF); // blue-800
     const rowAlt   = PdfColor.fromInt(0xFFF8FAFC); // slate-50
-    const green    = PdfColor.fromInt(0xFF16A34A);
     const grey     = PdfColor.fromInt(0xFF6B7280);
     const blue     = PdfColor.fromInt(0xFF1D4ED8);
     const pink     = PdfColor.fromInt(0xFFDB2777);
     const indigo   = PdfColor.fromInt(0xFF4F46E5);
+
+    // ── colori podio: oro, argento, bronzo ─────────────────────
+    const gold   = PdfColor.fromInt(0xFFD4AF37);
+    const silver = PdfColor.fromInt(0xFFA8A9AD);
+    const bronze = PdfColor.fromInt(0xFFB08D57);
 
     // ── font (NotoSans, coerente col resto dell'app) ──────────
     final regular = pw.Font.ttf(
@@ -93,7 +94,7 @@ class RankingQualificazioneExportPdf {
     // ── tre sezioni: Maschile, Femminile, Generale ────────────
     final maschile = rankings.where((r) => r.sesso == 'M').toList();
     final femminile = rankings.where((r) => r.sesso == 'F').toList();
-    final generale = rankings; // già ordinata per punteggio dal service
+    final generale = rankings; // già ordinata dal service
 
     _addRankingPage(
       doc: doc,
@@ -102,13 +103,14 @@ class RankingQualificazioneExportPdf {
       competitionName: competitionName,
       dtGara: dtGara,
       rankings: maschile,
-      nrFinalisti: nrFinalisti,
       bold: bold,
       regular: regular,
       headerBg: headerBg,
       rowAlt: rowAlt,
-      green: green,
       grey: grey,
+      gold: gold,
+      silver: silver,
+      bronze: bronze,
     );
 
     _addRankingPage(
@@ -118,13 +120,14 @@ class RankingQualificazioneExportPdf {
       competitionName: competitionName,
       dtGara: dtGara,
       rankings: femminile,
-      nrFinalisti: nrFinalisti,
       bold: bold,
       regular: regular,
       headerBg: headerBg,
       rowAlt: rowAlt,
-      green: green,
       grey: grey,
+      gold: gold,
+      silver: silver,
+      bronze: bronze,
     );
 
     _addRankingPage(
@@ -134,13 +137,14 @@ class RankingQualificazioneExportPdf {
       competitionName: competitionName,
       dtGara: dtGara,
       rankings: generale,
-      nrFinalisti: nrFinalisti,
       bold: bold,
       regular: regular,
       headerBg: headerBg,
       rowAlt: rowAlt,
-      green: green,
       grey: grey,
+      gold: gold,
+      silver: silver,
+      bronze: bronze,
     );
 
     return doc.save();
@@ -156,32 +160,48 @@ class RankingQualificazioneExportPdf {
     required PdfColor subtitleColor,
     required String competitionName,
     required DateTime dtGara,
-    required List<RankingQualificazioneModel> rankings,
-    required int nrFinalisti,
+    required List<RankingFinalModel> rankings,
     required pw.Font bold,
     required pw.Font regular,
     required PdfColor headerBg,
     required PdfColor rowAlt,
-    required PdfColor green,
     required PdfColor grey,
+    required PdfColor gold,
+    required PdfColor silver,
+    required PdfColor bronze,
   }) {
     // ── intestazioni colonne ─────────────────────────────────
     final colHeaders = <String>[
-      '#', 'Pett.', 'Cognome e Nome', 'Sesso', 'Società', 'Top', 'Punti',
+      '#', 'Pett.', 'Cognome e Nome', 'Sesso', 'Società',
+      'Top', 'Tent. Top', 'Zone', 'Tent. Zone',
     ];
 
     // ── larghezze colonne (A4 landscape usable width ≈ 770pt) ─
-    final colWidths = <double>[25, 40, 220, 55, 220, 50, 80];
+    final colWidths = <double>[25, 40, 190, 50, 190, 45, 60, 45, 60];
 
-    // ── helper: cella pettorale (verde se finalista) ──────────
-    pw.Widget pettoraleCell(int? pettorale, bool isFinalist) {
+    // ── helper: colore podio per posizione ────────────────────
+    PdfColor? podiumColor(int position) {
+      switch (position) {
+        case 1:
+          return gold;
+        case 2:
+          return silver;
+        case 3:
+          return bronze;
+        default:
+          return null;
+      }
+    }
+
+    // ── helper: cella pettorale (oro/argento/bronzo per podio) ─
+    pw.Widget pettoraleCell(int? pettorale, PdfColor? color) {
       return pw.Center(
         child: pw.Container(
           width: 26,
           height: 26,
           alignment: pw.Alignment.center,
           decoration: pw.BoxDecoration(
-            color: isFinalist ? green : PdfColors.grey200,
+            color: color ?? PdfColors.grey200,
             borderRadius: pw.BorderRadius.circular(13),
           ),
           child: pw.Text(
@@ -189,7 +209,7 @@ class RankingQualificazioneExportPdf {
             style: pw.TextStyle(
               font: bold,
               fontSize: 9,
-              color: isFinalist ? PdfColors.white : PdfColors.grey700,
+              color: color != null ? PdfColors.white : PdfColors.grey700,
             ),
           ),
         ),
@@ -200,16 +220,17 @@ class RankingQualificazioneExportPdf {
     final dataRows = rankings.asMap().entries.map((entry) {
       final i = entry.key;
       final r = entry.value;
-      final isFinalist = nrFinalisti > 0 && i < nrFinalisti;
+      final position = i + 1;
+      final color = podiumColor(position);
 
       final cells = <pw.Widget>[
         pw.Center(
           child: pw.Text(
-            '${i + 1}°',
+            '$position°',
             style: pw.TextStyle(font: bold, fontSize: 9, color: grey),
           ),
         ),
-        pettoraleCell(r.pettorale, isFinalist),
+        pettoraleCell(r.pettorale, color),
         pw.Text(r.fullName,
             style: pw.TextStyle(font: bold, fontSize: 9)),
         pw.Center(
@@ -226,11 +247,22 @@ class RankingQualificazioneExportPdf {
             style: pw.TextStyle(font: bold, fontSize: 9),
           ),
         ),
-        pw.Align(
-          alignment: pw.Alignment.centerRight,
+        pw.Center(
           child: pw.Text(
-            r.punteggioTotale.toStringAsFixed(2),
+            '${r.tentativiTop}',
+            style: pw.TextStyle(font: regular, fontSize: 8, color: grey),
+          ),
+        ),
+        pw.Center(
+          child: pw.Text(
+            '${r.nrZone}',
             style: pw.TextStyle(font: bold, fontSize: 9),
+          ),
+        ),
+        pw.Center(
+          child: pw.Text(
+            '${r.tentativiZone}',
+            style: pw.TextStyle(font: regular, fontSize: 8, color: grey),
           ),
         ),
       ];
@@ -269,8 +301,6 @@ class RankingQualificazioneExportPdf {
               children: [
                 _statBox('Atleti', '${rankings.length}',
                     subtitleColor, bold, regular),
-                _statBox('Finalisti', '$nrFinalisti',
-                    green, bold, regular),
               ],
             ),
           ),
@@ -343,32 +373,43 @@ class RankingQualificazioneExportPdf {
                   ],
                 ),
 
-          // ── legenda finalisti ──────────────────────────────
-          if (nrFinalisti > 0 && rankings.isNotEmpty)
+          // ── legenda podio ───────────────────────────────────
+          if (rankings.isNotEmpty)
             pw.Padding(
               padding: const pw.EdgeInsets.only(top: 8),
               child: pw.Row(
                 children: [
-                  pw.Container(
-                    width: 12,
-                    height: 12,
-                    decoration: pw.BoxDecoration(
-                      color: green,
-                      borderRadius: pw.BorderRadius.circular(6),
-                    ),
-                  ),
-                  pw.SizedBox(width: 6),
-                  pw.Text(
-                    'Pettorale verde = atleta qualificato alla finale '
-                    '(primi $nrFinalisti)',
-                    style: pw.TextStyle(
-                        font: regular, fontSize: 8, color: grey),
-                  ),
+                  _podiumLegendDot(gold, '1° posto'),
+                  pw.SizedBox(width: 12),
+                  _podiumLegendDot(silver, '2° posto'),
+                  pw.SizedBox(width: 12),
+                  _podiumLegendDot(bronze, '3° posto'),
                 ],
               ),
             ),
         ],
       ),
+    );
+  }
+
+  static pw.Widget _podiumLegendDot(PdfColor color, String label) {
+    return pw.Row(
+      mainAxisSize: pw.MainAxisSize.min,
+      children: [
+        pw.Container(
+          width: 12,
+          height: 12,
+          decoration: pw.BoxDecoration(
+            color: color,
+            borderRadius: pw.BorderRadius.circular(6),
+          ),
+        ),
+        pw.SizedBox(width: 6),
+        pw.Text(
+          label,
+          style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey700),
+        ),
+      ],
     );
   }
 
@@ -402,7 +443,7 @@ class RankingQualificazioneExportPdf {
                 ),
                 pw.SizedBox(height: 2),
                 pw.Text(
-                  '$sectionTitle — Classifica Qualificazioni · '
+                  '$sectionTitle — Classifica Finale · '
                   '${DateFormat('dd/MM/yyyy').format(dtGara)}',
                   style: pw.TextStyle(
                     font: bold,

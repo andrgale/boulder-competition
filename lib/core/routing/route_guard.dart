@@ -74,6 +74,7 @@ class RouteGuard {
 
     '/rankings': 'ranking.read',
     '/rankings/qualifications':'qualifications.read',
+    '/rankings/final':'final.read',
 
     // =====================================================
     // IMPORT
@@ -311,6 +312,13 @@ class RouteGuard {
         .hasMatch(route)) {
       return '/rankings/qualifications';
     } 
+
+    if (RegExp(r'^/rankings/[^/]+/final$')
+        .hasMatch(route)) {
+      return '/rankings/final';
+    } 
+
+
 
     // Security routes con segmenti dinamici (attualmente nessuno,
     // ma pronti per future estensioni)

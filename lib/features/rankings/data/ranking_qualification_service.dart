@@ -1,6 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../models/ranking_qualificazione_model.dart';
+import '../models/ranking_qualification_model.dart';
 
 class RankingQualificazioneService {
   final supabase = Supabase.instance.client;
@@ -9,7 +9,7 @@ class RankingQualificazioneService {
   // GET RANKINGS — ordinati per punteggio totale decrescente
   // =========================================================
 
-  Future<List<RankingQualificazioneModel>> getRankings(
+  Future<List<RankingQualificationModel>> getRankings(
     String competitionId,
   ) async {
     final data = await supabase
@@ -19,8 +19,8 @@ class RankingQualificazioneService {
         .order('punteggio_totale', ascending: false);
 
     return data
-        .map<RankingQualificazioneModel>(
-          (e) => RankingQualificazioneModel.fromJson(e),
+        .map<RankingQualificationModel>(
+          (e) => RankingQualificationModel.fromJson(e),
         )
         .toList();
   }

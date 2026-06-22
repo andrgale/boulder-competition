@@ -14,7 +14,9 @@ import '../../features/registrations/pages/registration_form_page.dart';
 
 import '../../features/rankings/pages/ranking_competition_page.dart';
 
-import '../../features/rankings/pages/ranking_qualificazione_page.dart';
+import '../../features/rankings/pages/ranking_final_page.dart';
+
+import '../../features/rankings/pages/ranking_qualification_page.dart';
 
 import '../../features/administration/administration_page.dart';
 
@@ -222,10 +224,23 @@ final GoRouter appRouter = GoRouter(
             final competitionId = state.pathParameters['id']!;
             final extra = state.extra as Map<String, dynamic>?;
 
-            return RankingQualificazionePage(
+            return RankingQualificationPage(
               competitionId: competitionId,
               competitionName: extra?['competitionName'] as String? ?? '',
               nrFinalisti: extra?['nrFinalisti'] as int? ?? 0,
+            );
+          },
+        ),
+
+        GoRoute(
+          path: '/rankings/:id/final',
+          builder: (context, state) {
+            final competitionId = state.pathParameters['id']!;
+            final extra = state.extra as Map<String, dynamic>?;
+
+            return RankingFinalPage(
+              competitionId: competitionId,
+              competitionName: extra?['competitionName'] as String? ?? '',
             );
           },
         ),

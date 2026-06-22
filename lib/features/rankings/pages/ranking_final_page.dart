@@ -1,34 +1,30 @@
 import 'package:flutter/material.dart';
 
-import '../data/ranking_qualificazione_service.dart';
-import '../models/ranking_qualificazione_model.dart';
-import 'ranking_qualificazione_export_pdf.dart';
+import '../data/ranking_final_service.dart';
+import '../models/ranking_final_model.dart';
+import 'ranking_final_export_pdf.dart';
 
 enum _RankingFilter { maschile, femminile, generale }
 
-class RankingQualificazionePage extends StatefulWidget {
+class RankingFinalPage extends StatefulWidget {
   final String competitionId;
   final String competitionName;
-  final int nrFinalisti;
 
-  const RankingQualificazionePage({
+  const RankingFinalPage({
     super.key,
     required this.competitionId,
     required this.competitionName,
-    this.nrFinalisti = 0,
   });
 
   @override
-  State<RankingQualificazionePage> createState() =>
-      _RankingQualificazionePageState();
+  State<RankingFinalPage> createState() => _RankingFinalPageState();
 }
 
-class _RankingQualificazionePageState
-    extends State<RankingQualificazionePage> {
-  final service = RankingQualificazioneService();
+class _RankingFinalPageState extends State<RankingFinalPage> {
+  final service = RankingFinalService();
   final searchController = TextEditingController();
 
-  List<RankingQualificazioneModel> rankings = [];
+  List<RankingFinalModel> rankings = [];
   bool loading = true;
   bool _exporting = false;
 
@@ -72,7 +68,7 @@ class _RankingQualificazionePageState
   // FILTER (sesso + ricerca testuale combinati)
   // =========================================================
 
-  List<RankingQualificazioneModel> get filtered {
+  List<RankingFinalModel> get filtered {
     final q = searchController.text.trim().toLowerCase();
 
     return rankings.where((r) {
@@ -93,7 +89,7 @@ class _RankingQualificazionePageState
   }
 
   // =========================================================
-  // EXPORT PDF — implementazione nel prossimo step
+  // EXPORT PDF
   // =========================================================
 
   Future<void> _exportPdf() async {
@@ -101,11 +97,10 @@ class _RankingQualificazionePageState
     setState(() => _exporting = true);
 
     try {
-      await RankingQualificazioneExportPdf.exportAndShare(
+      await RankingFinalExportPdf.exportAndShare(
         competitionName: widget.competitionName,
         dtGara: DateTime.now(), // sostituisci con la data gara reale se disponibile
         rankings: rankings, // usa la lista completa, non filtered
-        nrFinalisti: widget.nrFinalisti,
       );
     } catch (e) {
       if (!mounted) return;
@@ -126,7 +121,7 @@ class _RankingQualificazionePageState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Classifica qualificazioni - ${widget.competitionName}',
+          'Classifica finale - ${widget.competitionName}',
         ),
         actions: [
           if (!loading)
@@ -194,32 +189,13 @@ class _RankingQualificazionePageState
                           itemCount: filtered.length,
                           itemBuilder: (_, i) => _RankingTile(
                             ranking: filtered[i],
-                            // La posizione qui rispecchia l'ordine
-                            // dell'elenco FILTRATO, ma il colore finalisti
-                            // si basa sull'ordine GENERALE per coerenza
-                            // con la classifica reale, non con il filtro
-                            // sesso applicato. Vedi nota sotto.
                             position: i + 1,
-                            isFinalist: _isFinalist(filtered[i]),
                           ),
                         ),
                 ),
               ],
             ),
     );
-  }
-
-  // =========================================================
-  // FINALISTI — basato sulla posizione nell'elenco FILTRATO
-  // corrente (es. se è attivo "Maschile", i finalisti sono i
-  // primi N uomini; se "Generale", i primi N assoluti).
-  // =========================================================
-
-  bool _isFinalist(RankingQualificazioneModel ranking) {
-    if (widget.nrFinalisti <= 0) return false;
-    final list = filtered;
-    final idx = list.indexOf(ranking);
-    return idx >= 0 && idx < widget.nrFinalisti;
   }
 }
 
@@ -329,20 +305,38 @@ class _FilterChip extends StatelessWidget {
 // RANKING TILE
 // ──────────────────────────────────────────────────────────────
 
+/// Colori podio: oro, argento, bronzo per le prime 3 posizioni.
+const _goldColor = Color(0xFFD4AF37);
+const _silverColor = Color(0xFFA8A9AD);
+const _bronzeColor = Color(0xFFB08D57);
+
 class _RankingTile extends StatelessWidget {
-  final RankingQualificazioneModel ranking;
+  final RankingFinalModel ranking;
   final int position;
-  final bool isFinalist;
 
   const _RankingTile({
     required this.ranking,
     required this.position,
-    required this.isFinalist,
   });
+
+  Color? get _podiumColor {
+    switch (position) {
+      case 1:
+        return _goldColor;
+      case 2:
+        return _silverColor;
+      case 3:
+        return _bronzeColor;
+      default:
+        return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final r = ranking;
+    final podiumColor = _podiumColor;
+    final isPodium = podiumColor != null;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
@@ -350,10 +344,8 @@ class _RankingTile extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: isFinalist
-              ? Colors.green.shade300
-              : const Color(0xFFE5E7EB),
-          width: isFinalist ? 1.5 : 1,
+          color: isPodium ? podiumColor.withValues(alpha: 0.6) : const Color(0xFFE5E7EB),
+          width: isPodium ? 1.5 : 1,
         ),
       ),
       child: Padding(
@@ -375,17 +367,16 @@ class _RankingTile extends StatelessWidget {
 
             const SizedBox(width: 8),
 
-            // ── pettorale — verde se finalista ─────────────
+            // ── pettorale — oro/argento/bronzo per il podio ─
             CircleAvatar(
               radius: 20,
-              backgroundColor:
-                  isFinalist ? Colors.green.shade400 : Colors.grey.shade100,
+              backgroundColor: isPodium ? podiumColor : Colors.grey.shade100,
               child: Text(
                 r.pettorale?.toString() ?? '—',
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
-                  color: isFinalist ? Colors.white : Colors.grey.shade700,
+                  color: isPodium ? Colors.white : Colors.grey.shade700,
                 ),
               ),
             ),
@@ -420,7 +411,7 @@ class _RankingTile extends StatelessWidget {
 
             const SizedBox(width: 8),
 
-            // ── nr top ────────────────────────────────────
+            // ── top / tentativi top ─────────────────────────
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -433,7 +424,7 @@ class _RankingTile extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Top',
+                  'Top (${r.tentativiTop})',
                   style: TextStyle(fontSize: 10, color: Colors.teal.shade700),
                 ),
               ],
@@ -441,25 +432,23 @@ class _RankingTile extends StatelessWidget {
 
             const SizedBox(width: 16),
 
-            // ── punteggio totale ──────────────────────────
-            SizedBox(
-              width: 72,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    r.punteggioTotale.toStringAsFixed(2),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+            // ── zone / tentativi zone ────────────────────────
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '${r.nrZone}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.indigo.shade700,
                   ),
-                  const Text(
-                    'punti',
-                    style: TextStyle(fontSize: 10, color: Colors.grey),
-                  ),
-                ],
-              ),
+                ),
+                Text(
+                  'Zone (${r.tentativiZone})',
+                  style: TextStyle(fontSize: 10, color: Colors.indigo.shade700),
+                ),
+              ],
             ),
           ],
         ),
