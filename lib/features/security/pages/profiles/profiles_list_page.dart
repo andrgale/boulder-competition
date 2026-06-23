@@ -264,24 +264,68 @@ class _ProfilesListPageState extends State<ProfilesListPage> {
         ),
 
         // ── password cambiata ─────────────────────────────
+        // DataCell(
+        //   Row(
+        //     mainAxisSize: MainAxisSize.min,
+        //     children: [
+        //       Icon(
+        //         p.passwordChanged ? Icons.check_circle : Icons.cancel,
+        //         color: p.passwordChanged ? Colors.green : Colors.red,
+        //         size: 20,
+        //       ),
+        //       const SizedBox(width: 6),
+        //       Text(
+        //         p.passwordChanged ? 'Sì' : 'No',
+        //         style: TextStyle(
+        //           color: p.passwordChanged ? Colors.green : Colors.red,
+        //           fontWeight: FontWeight.w500,
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
         DataCell(
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                p.passwordChanged ? Icons.check_circle : Icons.cancel,
-                color: p.passwordChanged ? Colors.green : Colors.red,
-                size: 20,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                p.passwordChanged ? 'Sì' : 'No',
-                style: TextStyle(
-                  color: p.passwordChanged ? Colors.green : Colors.red,
-                  fontWeight: FontWeight.w500,
+          InkWell(
+                onTap: () async {
+                  try {
+                    await profileService.updatePasswordChanged(
+                      profileId: p.id,
+                      passwordChanged: !p.passwordChanged,
+                    );
+
+                    await loadAll();
+                  } catch (e) {
+                    if (!context.mounted) return;
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Errore aggiornamento: $e'),
+                      ),
+                    );
+                  }
+                },
+           child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  p.passwordChanged
+                      ? Icons.check_circle
+                      : Icons.cancel,
+                  color:
+                      p.passwordChanged ? Colors.green : Colors.red,
+                  size: 20,
                 ),
-              ),
-            ],
+                const SizedBox(width: 6),
+                Text(
+                  p.passwordChanged ? 'Sì' : 'No',
+                  style: TextStyle(
+                    color:
+                        p.passwordChanged ? Colors.green : Colors.red,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
 

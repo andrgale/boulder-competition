@@ -22,6 +22,23 @@ class SecurityProfileService {
   }
 
   // =========================================================
+  // UPDATE PASSWORD CHANGED
+  // =========================================================
+
+  Future<void> updatePasswordChanged({
+    required String profileId,
+    required bool passwordChanged,
+  }) async {
+    await supabase
+        .from('profiles')
+        .update({
+          'password_changed': passwordChanged,
+        })
+        .eq('id', profileId);
+  }
+
+
+  // =========================================================
   // USER ROLES
   // =========================================================
 

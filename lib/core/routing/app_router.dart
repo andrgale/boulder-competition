@@ -18,6 +18,8 @@ import '../../features/rankings/pages/ranking_final_page.dart';
 
 import '../../features/rankings/pages/ranking_qualification_page.dart';
 
+import '../../features/rankings/pages/ranking_top_zone_page.dart';
+
 import '../../features/administration/administration_page.dart';
 
 import '../../features/errors/forbidden_page.dart';
@@ -244,6 +246,21 @@ final GoRouter appRouter = GoRouter(
             );
           },
         ),
+
+        GoRoute(
+          path: '/rankings/:id/top-zone',
+          builder: (context, state) {
+            final competitionId = state.pathParameters['id']!;
+            final extra = state.extra as Map<String, dynamic>?;
+
+            return RankingTopZonePage(
+              competitionId: competitionId,
+              competitionName: extra?['competitionName'] as String? ?? '',
+              nrFinalisti: extra?['nrFinalisti'] as int? ?? 0,
+            );
+          },
+        ),
+
 
         GoRoute(
           path: '/admin',

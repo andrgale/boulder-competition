@@ -161,6 +161,7 @@ class _RankingsCompetitionsPageState
     context.push('/rankings/${c.id}/top-zone', extra: {
       'competitionId': c.id,
       'competitionName': c.descrizione,
+      'nrFinalisti': c.nrFinalisti,
     });
   }
 
