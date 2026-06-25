@@ -21,5 +21,13 @@
   "[typescript]": {
     "editor.defaultFormatter": "denoland.vscode-deno"
   },
-  "dart.flutterSdkPath": ".fvm/versions/stable"
+  "dart.flutterSdkPath": ".fvm/versions/stable",
+  "taskButtons.tasks": [
+    {
+      "label": "🚀 Build Windows",
+      "task": "🚀 Build Windows"
+    }
+  ],
+  "taskButtons.showCounter": false,
+  "taskButtons.location": "statusBar"
 }

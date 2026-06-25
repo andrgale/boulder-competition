@@ -535,3 +535,9 @@ Se Xcode mostra errori di firma i più comuni sono:
 | "Failed to register bundle ID"                    | Bundle ID già usato da un'altra app nel tuo account — cambialo         |
 | "Device not registered"                           | Con firma manuale devi registrare il dispositivo sul portale Developer |
 | "Provisioning profile doesn't include the device" | Rigenera il profilo includendo il nuovo dispositivo                    |
+
+
+token GitHub Action: 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
+
+comando per lanciare github action e creare l'eseguibile windows:
+Cmd + Shift + B

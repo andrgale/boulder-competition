@@ -1,0 +1,70 @@
+name: Build Windows EXE + MSI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      # ✅ CHECKOUT
+      - uses: actions/checkout@v4
+
+      # ✅ LEGGI NOME + VERSIONE
+      - name: Get app info
+        id: appinfo
+        run: |
+          $name = Select-String -Path pubspec.yaml -Pattern '^name:' | % { $_.Line.Split(' ')[1] }
+          $version = Select-String -Path pubspec.yaml -Pattern '^version:' | % { $_.Line.Split(' ')[1] }
+
+          echo "app_name=$name" >> $env:GITHUB_OUTPUT
+          echo "version=$version" >> $env:GITHUB_OUTPUT
+
+      # ✅ SETUP FLUTTER
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      # ✅ ABILITA WINDOWS
+      - run: flutter config --enable-windows-desktop
+
+      # ✅ DEPENDENZE
+      - run: flutter pub get
+
+      # ✅ BUILD ADMIN PROD
+      - run: flutter build windows -t lib/main_admin_prod.dart
+
+      # ✅ TROVA EXE REALE
+      - name: Find EXE
+        id: findexe
+        run: |
+          $exe = Get-ChildItem build/windows/x64/runner/Release -Filter *.exe | Select-Object -First 1
+          echo "exe_name=$($exe.Name)" >> $env:GITHUB_OUTPUT
+
+      # ✅ CREA ZIP
+      - name: Zip EXE
+        id: zipstep
+        run: |
+          $name = "${{ steps.appinfo.outputs.app_name }}"
+          $version = "${{ steps.appinfo.outputs.version }}"
+          $zip = "$name-$version-windows.zip"
+
+          Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath $zip
+          echo "zip_name=$zip" >> $env:GITHUB_OUTPUT
+
+      # ✅ INSTALLA WiX
+      - run: choco install wixtoolset -y
+
+      # ✅ INCLUDE FILE FLUTTER
+      - name: Heat directory
+        run: |
+          heat dir build/windows/x64/runner/Release `
+          -cg AppFiles `
+          -dr INSTALLFOLDER `
+          -srd `
+          -gg `
+          -out files.wxs

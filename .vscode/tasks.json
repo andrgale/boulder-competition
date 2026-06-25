@@ -1,0 +1,10 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "🚀 Build Windows",
+      "type": "shell",
+      "command": "curl -X POST -H \"Authorization: token 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\" -H \"Accept: application/vnd.github+json\" https://api.github.com/repos/andrgale/boulder-competition/actions/workflows/build-windows.yml/dispatches -d '{\"ref\":\"main\"}'"
+    }
+  ]
+}
