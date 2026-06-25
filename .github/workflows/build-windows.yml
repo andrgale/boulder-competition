@@ -66,21 +66,27 @@ jobs:
           -gg `
           -out files.wxs
 
-      # ✅ CREA INSTALLER
+        # ✅ CREA INSTALLER
       - name: Create main.wxs
         run: |
           $app = "${{ steps.appinfo.outputs.app_name }}"
           $ver = "${{ steps.appinfo.outputs.version }}"
           $exe = "${{ steps.findexe.outputs.exe_name }}"
 
-          @"
+            @"
           <?xml version="1.0" encoding="UTF-8"?>
           <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 
-            <Package Name="$app"
+            <Product Id="*"
+                    Name="$app"
                     Manufacturer="MyCompany"
                     Version="$ver"
-                    UpgradeCode="12345678-1234-1234-1234-123456789012">
+                    UpgradeCode="12345678-1234-1234-1234-123456789012"
+                    Language="1033">
+
+              <Package InstallerVersion="500"
+                      Compressed="yes"
+                      InstallScope="perMachine" />
 
               <MediaTemplate />
 
@@ -111,7 +117,7 @@ jobs:
                 </Component>
               </DirectoryRef>
 
-            </Package>
+            </Product>
 
           </Wix>
           "@ > main.wxs
