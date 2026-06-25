@@ -537,7 +537,17 @@ Se Xcode mostra errori di firma i più comuni sono:
 | "Provisioning profile doesn't include the device" | Rigenera il profilo includendo il nuovo dispositivo                    |
 
 
-token GitHub Action: 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
+brew install gh
+gh auth login
+gh workflow run build-windows.yml
+
+gh run view 28184095736
+
+su browser al link dato da gh
+Actions → build → Artifacts
+
+token GitHub Action:
+export GITHUB_TOKEN=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
 
 comando per lanciare github action e creare l'eseguibile windows:
 Cmd + Shift + B

@@ -29,16 +29,13 @@ jobs:
           channel: stable
           cache: true
 
-      # ✅ ABILITA WINDOWS
       - run: flutter config --enable-windows-desktop
-
-      # ✅ DEPENDENZE
       - run: flutter pub get
 
       # ✅ BUILD ADMIN PROD
       - run: flutter build windows -t lib/main_admin_prod.dart
 
-      # ✅ TROVA EXE REALE
+      # ✅ TROVA EXE
       - name: Find EXE
         id: findexe
         run: |
@@ -49,9 +46,9 @@ jobs:
       - name: Zip EXE
         id: zipstep
         run: |
-          $name = "${{ steps.appinfo.outputs.app_name }}"
-          $version = "${{ steps.appinfo.outputs.version }}"
-          $zip = "$name-$version-windows.zip"
+          $app = "${{ steps.appinfo.outputs.app_name }}"
+          $ver = "${{ steps.appinfo.outputs.version }}"
+          $zip = "$app-$ver-windows.zip"
 
           Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath $zip
           echo "zip_name=$zip" >> $env:GITHUB_OUTPUT
@@ -59,7 +56,7 @@ jobs:
       # ✅ INSTALLA WiX
       - run: choco install wixtoolset -y
 
-      # ✅ INCLUDE FILE FLUTTER
+      # ✅ GENERA LISTA FILE
       - name: Heat directory
         run: |
           heat dir build/windows/x64/runner/Release `
@@ -68,3 +65,85 @@ jobs:
           -srd `
           -gg `
           -out files.wxs
+
+      # ✅ CREA INSTALLER
+      - name: Create main.wxs
+        run: |
+          $app = "${{ steps.appinfo.outputs.app_name }}"
+          $ver = "${{ steps.appinfo.outputs.version }}"
+          $exe = "${{ steps.findexe.outputs.exe_name }}"
+
+          @"
+          <?xml version="1.0" encoding="UTF-8"?>
+          <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+
+            <Package Name="$app"
+                    Manufacturer="MyCompany"
+                    Version="$ver"
+                    UpgradeCode="12345678-1234-1234-1234-123456789012">
+
+              <MediaTemplate />
+
+              <Directory Id="TARGETDIR" Name="SourceDir">
+                <Directory Id="ProgramFilesFolder">
+                  <Directory Id="INSTALLFOLDER" Name="$app"/>
+                </Directory>
+                <Directory Id="DesktopFolder" />
+              </Directory>
+
+              <Feature Id="MainFeature" Level="1">
+                <ComponentGroupRef Id="AppFiles"/>
+                <ComponentRef Id="ShortcutComponent"/>
+              </Feature>
+
+              <DirectoryRef Id="INSTALLFOLDER">
+                <Component Id="ShortcutComponent" Guid="*">
+                  <Shortcut Id="DesktopShortcut"
+                            Directory="DesktopFolder"
+                            Name="$app"
+                            Target="[INSTALLFOLDER]$exe"/>
+                  <RegistryValue Root="HKCU"
+                                Key="Software\\$app"
+                                Name="installed"
+                                Type="integer"
+                                Value="1"
+                                KeyPath="yes"/>
+                </Component>
+              </DirectoryRef>
+
+            </Package>
+
+          </Wix>
+          "@ > main.wxs
+
+      # ✅ BUILD MSI
+      - name: Build MSI
+        id: msistep
+        run: |
+          $app = "${{ steps.appinfo.outputs.app_name }}"
+          $ver = "${{ steps.appinfo.outputs.version }}"
+          $msi = "$app-$ver.msi"
+
+          candle main.wxs files.wxs
+          light main.wixobj files.wixobj -o $msi
+
+          echo "msi_name=$msi" >> $env:GITHUB_OUTPUT
+
+      # ✅ UPLOAD ARTIFACT
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: |
+            ${{ steps.zipstep.outputs.zip_name }}
+            ${{ steps.msistep.outputs.msi_name }}
+
+      # ✅ RELEASE AUTOMATICA
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.appinfo.outputs.version }}
+          name: Release v${{ steps.appinfo.outputs.version }}
+          files: |
+            ${{ steps.zipstep.outputs.zip_name }}
+            ${{ steps.msistep.outputs.msi_name }}
