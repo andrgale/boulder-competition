@@ -18,7 +18,10 @@ jobs:
         id: appinfo
         run: |
           $name = Select-String -Path pubspec.yaml -Pattern '^name:' | % { $_.Line.Split(' ')[1] }
-          $version = Select-String -Path pubspec.yaml -Pattern '^version:' | % { $_.Line.Split(' ')[1] }
+          $versionRaw = Select-String -Path pubspec.yaml -Pattern '^version:' | % { $_.Line.Split(' ')[1] }
+
+          # 🔥 rimuove il +build
+          $version = $versionRaw.Split('+')[0]
 
           echo "app_name=$name" >> $env:GITHUB_OUTPUT
           echo "version=$version" >> $env:GITHUB_OUTPUT
