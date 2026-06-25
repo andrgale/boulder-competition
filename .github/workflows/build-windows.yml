@@ -94,7 +94,7 @@ jobs:
                       Compressed="yes"
                       InstallScope="perMachine" />
 
-              <MediaTemplate />
+              <MediaTemplate EmbedCab="yes"/>
 
               <Directory Id="TARGETDIR" Name="SourceDir">
                 <Directory Id="ProgramFilesFolder">
