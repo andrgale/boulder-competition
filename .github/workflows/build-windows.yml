@@ -134,7 +134,7 @@ jobs:
           $msi = "$app-$ver.msi"
 
           candle main.wxs files.wxs
-          light main.wixobj files.wixobj -o $msi
+          light main.wixobj files.wixobj -b build/windows/x64/runner/Release -o $msi
 
           echo "msi_name=$msi" >> $env:GITHUB_OUTPUT
 
