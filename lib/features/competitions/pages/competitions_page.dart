@@ -1,9 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../shared/widgets/base_page.dart';
+import '../../../core/ui/responsive.dart';
+import '../../../core/ui/responsive_table.dart';
 
 import '../data/competition_service.dart';
 import '../models/competition_model.dart';
@@ -19,67 +20,40 @@ class CompetitionsPage extends StatefulWidget {
 class _CompetitionsPageState
     extends State<CompetitionsPage> {
   final service = CompetitionService();
+  final searchController = TextEditingController();
+  final scrollController = ScrollController();
 
-  final searchController =
-      TextEditingController();
-
-  List<CompetitionModel> allCompetitions =
-      [];
-
-  List<CompetitionModel> competitions =
-      [];
+  List<CompetitionModel> allCompetitions = [];
+  List<CompetitionModel> competitions = [];
 
   bool loading = true;
-
   bool showOnlyOpen = false;
-
   bool sortAsc = true;
-
   String sortColumn = 'dt_gara';
 
   @override
   void initState() {
     super.initState();
-
     loadRealtime();
   }
 
-  // =======================================================
-  // REALTIME
-  // =======================================================
-
   void loadRealtime() {
-    service.watchCompetitions().listen(
-      (rows) {
-        if (!mounted) return;
-
-        allCompetitions = rows;
-
-        applyFilters();
-      },
-    );
+    service.watchCompetitions().listen((rows) {
+      if (!mounted) return;
+      allCompetitions = rows;
+      applyFilters();
+    });
   }
 
-  // =======================================================
-  // FILTERS
-  // =======================================================
-
   void applyFilters() {
-    final query =
-        searchController.text
-            .trim()
-            .toLowerCase();
+    final query = searchController.text.trim().toLowerCase();
 
-    List<CompetitionModel> filtered =
-        allCompetitions.where((c) {
+    var filtered = allCompetitions.where((c) {
       final matchSearch =
-          c.descrizione
-              .toLowerCase()
-              .contains(query);
+          c.descrizione.toLowerCase().contains(query);
 
       final matchOpen =
-          !showOnlyOpen ||
-          c.flGaraChiusa == false;
+          !showOnlyOpen || c.flGaraChiusa == false;
 
       return matchSearch && matchOpen;
     }).toList();
@@ -93,591 +67,374 @@ class _CompetitionsPageState
           valueA = a.descrizione;
           valueB = b.descrizione;
           break;
-
         case 'dt_gara':
           valueA = a.dtGara;
           valueB = b.dtGara;
           break;
-
         default:
           valueA = a.createdAt;
           valueB = b.createdAt;
       }
 
-      final result =
-          Comparable.compare(
-        valueA,
-        valueB,
-      );
-
+      final result = Comparable.compare(valueA, valueB);
       return sortAsc ? result : -result;
     });
 
     setState(() {
       competitions = filtered;
-
       loading = false;
     });
   }
 
-  // =======================================================
-  // DELETE
-  // =======================================================
-
   Future<void> deleteCompetition(
-    CompetitionModel competition,
-  ) async {
+      CompetitionModel c) async {
     final confirm = await showDialog<bool>(
       context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        return AlertDialog(
-          title: const Text(
-            'Elimina competizione',
+      builder: (_) => AlertDialog(
+        title: const Text('Elimina competizione'),
+        content: Text('Eliminare "${c.descrizione}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Annulla'),
           ),
-          content: Text(
-            'Vuoi eliminare "${competition.descrizione}"?',
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Elimina'),
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(dialogContext).pop(false);
-              },
-              child: const Text('Annulla'),
-            ),
-            FilledButton.icon(
-              icon: const Icon(Icons.delete),
-              label: const Text('Elimina'),
-              style: FilledButton.styleFrom(
-                backgroundColor: Colors.red,
-              ),
-              onPressed: () {
-                Navigator.of(dialogContext).pop(true);
-              },
-            ),
-          ],
-        );
-      },
+        ],
+      ),
     );
 
     if (confirm != true) return;
 
-    try {
-      await service.deleteCompetition(
-        competition.id,
-      );
-
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Competizione eliminata',
-          ),
-        ),
-      );
-
-      loadRealtime();
-    } catch (e) {
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Errore eliminazione: $e',
-          ),
-        ),
-      );
-    }
+    await service.deleteCompetition(c.id);
+    await refreshData();
   }
 
-  // =======================================================
-  // SORT
-  // =======================================================
+  Future<void> refreshData() async {
+    final rows = await service.getCompetitions();
+    if (!mounted) return;
+    allCompetitions = rows;
+    applyFilters();
+  }
 
-  void updateSort(String column) {
+  void updateSort(String col) {
     setState(() {
-      if (sortColumn == column) {
+      if (sortColumn == col) {
         sortAsc = !sortAsc;
       } else {
-        sortColumn = column;
+        sortColumn = col;
         sortAsc = true;
       }
-
       applyFilters();
     });
   }
 
-  // =======================================================
-  // REFRESH
-  // =======================================================
+  // ✅ AZIONI RIPRISTINATE
 
-  Future<void> refreshData() async {
-    final rows =
-        await service.getCompetitions();
-
-    if (!mounted) return;
-
-    allCompetitions = rows;
-
-    applyFilters();
-  }
-
-  // =======================================================
-  // OPEN CATEGORIES
-  // =======================================================
-
-  // Future<void> openCategories(
-  //   CompetitionModel competition,
-  // ) async {
-  //   await context.push(
-  //     '/competitions/${competition.id}/categories',
-  //     extra: competition,
-  //   );
-  // }
-
-  Future<void> openCategories(CompetitionModel competition) async {
+  Future<void> openCategories(CompetitionModel c) async {
     await context.push(
-      '/competitions/${competition.id}/categories',
-      extra: competition,
+      '/competitions/${c.id}/categories',
+      extra: c,
     );
   }
 
-// =======================================================
-// OPEN BOULDERS
-// =======================================================
-
-  Future<void> openBoulders(
-    CompetitionModel competition,
-  ) async {
+  Future<void> openBoulders(CompetitionModel c) async {
     await context.push(
-      '/competitions/${competition.id}/boulders',
-      extra: competition,
+      '/competitions/${c.id}/boulders',
+      extra: c,
     );
   }
 
-  Future<void> openRegistrations(
-    CompetitionModel competition,
-  ) async {
+  Future<void> openRegistrations(CompetitionModel c) async {
     await context.push(
-      '/competitions/${competition.id}/registrations',
-      extra: competition,
+      '/competitions/${c.id}/registrations',
+      extra: c,
     );
+  }
+
+  void _createNew() async {
+    final result =
+        await context.push('/competitions/new');
+    if (result == true) await refreshData();
   }
 
   @override
   Widget build(BuildContext context) {
-    final isMobile =
-        MediaQuery.of(context).size.width <
-            700;
+    final screen = context.responsive;
 
     return BasePage(
       title: 'Competizioni',
-
-      floatingActionButton: isMobile
+      floatingActionButton: screen.isMobile
           ? FloatingActionButton.extended(
-              onPressed: () async {
-                final result =
-                    await context.push(
-                  '/competitions/new',
-                );
-
-                if (result == true) {
-                  await refreshData();
-                }
-              },
+              onPressed: _createNew,
               icon: const Icon(Icons.add),
               label: const Text('Nuova'),
             )
           : null,
-
       actions: [
         FilledButton.icon(
-          onPressed: () async {
-            final result =
-                await context.push(
-              '/competitions/new',
-            );
-
-            if (result == true) {
-              await refreshData();
-            }
-          },
+          onPressed: _createNew,
           icon: const Icon(Icons.add),
-          label: const Text(
-            'Nuova Gara',
-          ),
+          label: const Text('Nuova Gara'),
         ),
       ],
-
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // =============================================
-          // FILTER BAR
-          // =============================================
-
-          Wrap(
-            spacing: 16,
-            runSpacing: 16,
-            crossAxisAlignment:
-                WrapCrossAlignment.center,
-            children: [
-              SizedBox(
-                width:
-                    isMobile ? 320 : 420,
-                child: TextField(
-                  controller:
-                      searchController,
-                  decoration:
-                      const InputDecoration(
-                    hintText:
-                        'Cerca competizione',
-                    prefixIcon:
-                        Icon(Icons.search),
-                  ),
-                  onChanged: (_) {
-                    applyFilters();
-                  },
-                ),
-              ),
-
-              FilterChip(
-                label:
-                    const Text('Solo aperte'),
-                selected: showOnlyOpen,
-                onSelected: (value) {
-                  showOnlyOpen = value;
-
-                  applyFilters();
-                },
-              ),
-            ],
-          ),
-
+          _buildFilters(screen),
           const SizedBox(height: 24),
-
-          // =============================================
-          // TABLE
-          // =============================================
-
-          Expanded(
-            child: loading
-                ? const Center(
-                    child:
-                        CircularProgressIndicator(),
-                  )
-                : buildTable(),
-          ),
+          Expanded(child: _buildContent(screen)),
         ],
       ),
     );
   }
 
-  // =======================================================
-  // TABLE
-  // =======================================================
+  Widget _buildFilters(Responsive screen) {
+    return Wrap(
+      spacing: 16,
+      runSpacing: 16,
+      children: [
+        SizedBox(
+          width: screen.isMobile ? double.infinity : 420,
+          child: TextField(
+            controller: searchController,
+            decoration: const InputDecoration(
+              hintText: 'Cerca competizione',
+              prefixIcon: Icon(Icons.search),
+            ),
+            onChanged: (_) => applyFilters(),
+          ),
+        ),
+        FilterChip(
+          label: const Text('Solo aperte'),
+          selected: showOnlyOpen,
+          onSelected: (v) {
+            showOnlyOpen = v;
+            applyFilters();
+          },
+        ),
+      ],
+    );
+  }
 
-  Widget buildTable() {
+  Widget _buildContent(Responsive screen) {
+    if (loading) {
+      return const Center(
+          child: CircularProgressIndicator());
+    }
+
     if (competitions.isEmpty) {
       return const Center(
-        child: Text(
-          'Nessuna competizione trovata',
-        ),
-      );
+          child: Text('Nessuna competizione'));
     }
 
-    final isMobile =
-        MediaQuery.of(context).size.width <
-            700;
+    switch (screen.screenSize) {
+      case ScreenSize.mobile:
+        return _MobileListView(
+          competitions: competitions,
+          onDelete: deleteCompetition,
+          refresh: refreshData,
+          openRegistrations: openRegistrations,
+          openCategories: openCategories,
+          openBoulders: openBoulders,
+        );
 
-    // =====================================================
-    // MOBILE
-    // =====================================================
-
-    if (isMobile) {
-      return ListView.separated(
-        itemCount: competitions.length,
-        separatorBuilder:
-            (_, _) =>
-                const SizedBox(height: 12),
-        itemBuilder: (context, index) {
-          final c = competitions[index];
-
-          return Card(
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.circular(16),
-              side: const BorderSide(
-                color: Color(0xFFE5E7EB),
-              ),
-            ),
-            child: Padding(
-              padding:
-                  const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    c.descrizione,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight:
-                          FontWeight.bold,
-                    ),
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  Text(
-                    DateFormat(
-                      'dd/MM/yyyy',
-                    ).format(c.dtGara),
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  Chip(
-                    label: Text(
-                      c.flGaraChiusa
-                          ? 'Chiusa'
-                          : 'Aperta',
-                    ),
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  Row(
-                    children: [
-
-                      IconButton(
-                        tooltip: 'Iscritti',
-                        onPressed: () {
-                          openRegistrations(c);
-                        },
-                        icon: const Icon(Icons.how_to_reg),
-                      ),
-
-                      IconButton(
-                        tooltip: 'Categorie',
-                        onPressed: () {
-                          openCategories(c);
-                        },
-                        icon: const Icon(
-                          Icons.category,
-                        ),
-                      ),
-
-                      IconButton(
-                        tooltip: 'Boulder',
-                        onPressed: () {
-                          openBoulders(c);
-                        },
-                        icon: const Icon(
-                          Icons.terrain,
-                        ),
-                      ),
-
-                      IconButton(
-                        onPressed: () async {
-                          final result =
-                              await context.push(
-                            '/competitions/edit/${c.id}',
-                          );
-
-                          if (result == true) {
-                            await refreshData();
-                          }
-                        },
-                        icon:
-                            const Icon(Icons.edit),
-                      ),
-
-                      IconButton(
-                        onPressed: () {
-                          deleteCompetition(c);
-                        },
-                        icon: const Icon(
-                          Icons.delete,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
+      case ScreenSize.tablet:
+      case ScreenSize.desktop:
+        return _TableView(
+          competitions: competitions,
+          scrollController: scrollController,
+          onDelete: deleteCompetition,
+          refresh: refreshData,
+          updateSort: updateSort,
+          sortAsc: sortAsc,
+          sortColumn: sortColumn,
+          openRegistrations: openRegistrations,
+          openCategories: openCategories,
+          openBoulders: openBoulders,
+        );
     }
+  }
+}
 
-    // =====================================================
-    // DESKTOP TABLE
-    // =====================================================
+// ✅ MOBILE
 
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius:
-            BorderRadius.circular(20),
-        side: const BorderSide(
-          color: Color(0xFFE5E7EB),
-        ),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minWidth:
-                MediaQuery.of(context)
-                        .size
-                        .width -
-                    360,
-          ),
-          child: DataTable(
-            columnSpacing: 48,
-            horizontalMargin: 32,
-            dataRowMinHeight: 72,
-            dataRowMaxHeight: 72,
-            headingRowHeight: 64,
-            sortAscending: sortAsc,
+class _MobileListView extends StatelessWidget {
+  final List<CompetitionModel> competitions;
+  final Function refresh;
+  final Function(CompetitionModel) onDelete;
 
-            columns: [
-              DataColumn(
-                label: const Text(
-                  'Descrizione',
+  final Function(CompetitionModel) openRegistrations;
+  final Function(CompetitionModel) openCategories;
+  final Function(CompetitionModel) openBoulders;
+
+  const _MobileListView({
+    required this.competitions,
+    required this.refresh,
+    required this.onDelete,
+    required this.openRegistrations,
+    required this.openCategories,
+    required this.openBoulders,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      itemCount: competitions.length,
+      separatorBuilder: (_, _) =>
+          const SizedBox(height: 12),
+      itemBuilder: (_, i) {
+        final c = competitions[i];
+
+        return Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
+              children: [
+                Text(c.descrizione),
+                const SizedBox(height: 8),
+                Text(DateFormat('dd/MM/yyyy')
+                    .format(c.dtGara)),
+                const SizedBox(height: 8),
+                Chip(
+                  label: Text(
+                      c.flGaraChiusa ? 'Chiusa' : 'Aperta'),
                 ),
-                onSort: (_, _) {
-                  updateSort(
-                    'descrizione',
-                  );
-                },
-              ),
-
-              DataColumn(
-                label:
-                    const Text('Data Gara'),
-                onSort: (_, _) {
-                  updateSort('dt_gara');
-                },
-              ),
-
-              const DataColumn(
-                label: Text('Stato'),
-              ),
-
-              const DataColumn(
-                label: Text('Azioni'),
-              ),
-            ],
-
-            rows: competitions.map((c) {
-              return DataRow(
-                cells: [
-                  DataCell(
-                    SizedBox(
-                      width: 500,
-                      child: Text(
-                        c.descrizione,
-                        overflow:
-                            TextOverflow.ellipsis,
-                      ),
+                Row(
+                  children: [
+                    IconButton(
+                        icon:
+                            const Icon(Icons.how_to_reg),
+                        onPressed: () =>
+                            openRegistrations(c)),
+                    IconButton(
+                        icon:
+                            const Icon(Icons.category),
+                        onPressed: () =>
+                            openCategories(c)),
+                    IconButton(
+                        icon:
+                            const Icon(Icons.terrain),
+                        onPressed: () =>
+                            openBoulders(c)),
+                    IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () async {
+                        final r =
+                            await context.push(
+                                '/competitions/edit/${c.id}');
+                        if (r == true) refresh();
+                      },
                     ),
-                  ),
-
-                  DataCell(
-                    Text(
-                      DateFormat(
-                        'dd/MM/yyyy',
-                      ).format(c.dtGara),
+                    IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () =>
+                          onDelete(c),
                     ),
-                  ),
-
-                  DataCell(
-                    Chip(
-                      label: Text(
-                        c.flGaraChiusa
-                            ? 'Chiusa'
-                            : 'Aperta',
-                      ),
-                    ),
-                  ),
-
-                  DataCell(
-                    Row(
-                      mainAxisSize:
-                          MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          tooltip: 'Iscritti',
-                          onPressed: () {
-                            openRegistrations(c);
-                          },
-                          icon: const Icon(
-                            Icons.how_to_reg,
-                          ),
-                        ),
-
-                        IconButton(
-                          tooltip: 'Categorie',
-                          onPressed: () {
-                            openCategories(c);
-                          },
-                          icon: const Icon(
-                            Icons.category,
-                          ),
-                        ),
-
-                        IconButton(
-                          tooltip: 'Boulder',
-                          onPressed: () {
-                            openBoulders(c);
-                          },
-                          icon: const Icon(
-                            Icons.terrain,
-                          ),
-                        ),
-
-                        IconButton(
-                          onPressed: () async {
-                            final result =
-                                await context.push(
-                              '/competitions/edit/${c.id}',
-                            );
-
-                            if (result ==
-                                true) {
-                              await refreshData();
-                            }
-                          },
-                          icon: const Icon(
-                            Icons.edit,
-                          ),
-                        ),
-
-                        IconButton(
-                          onPressed: () {
-                            deleteCompetition(
-                              c,
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.delete,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            }).toList(),
+                  ],
+                )
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
+    );
+  }
+}
+
+// ✅ TABLE
+
+class _TableView extends StatelessWidget {
+  final List<CompetitionModel> competitions;
+  final ScrollController scrollController;
+  final Function(CompetitionModel) onDelete;
+  final Function refresh;
+  final Function(String) updateSort;
+
+  final bool sortAsc;
+  final String sortColumn;
+
+  final Function(CompetitionModel) openRegistrations;
+  final Function(CompetitionModel) openCategories;
+  final Function(CompetitionModel) openBoulders;
+
+  const _TableView({
+    required this.competitions,
+    required this.scrollController,
+    required this.onDelete,
+    required this.refresh,
+    required this.updateSort,
+    required this.sortAsc,
+    required this.sortColumn,
+    required this.openRegistrations,
+    required this.openCategories,
+    required this.openBoulders,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ResponsiveTable(
+      controller: scrollController,
+      columns: const [
+        DataColumn(label: Text('Descrizione')),
+        DataColumn(label: Text('Data')),
+        DataColumn(label: Text('Stato')),
+        DataColumn(label: Text('Azioni')),
+      ],
+      rows: competitions.map((c) {
+        return DataRow(cells: [
+          DataCell(SizedBox(
+            width: 400,
+            child: Text(
+              c.descrizione,
+              overflow: TextOverflow.ellipsis,
+            ),
+          )),
+          DataCell(Text(
+              DateFormat('dd/MM/yyyy')
+                  .format(c.dtGara))),
+          DataCell(Chip(
+              label: Text(c.flGaraChiusa
+                  ? 'Chiusa'
+                  : 'Aperta'))),
+          DataCell(Row(
+            children: [
+              IconButton(
+                  icon:
+                      const Icon(Icons.how_to_reg),
+                  onPressed: () =>
+                      openRegistrations(c)),
+              IconButton(
+                  icon:
+                      const Icon(Icons.category),
+                  onPressed: () =>
+                      openCategories(c)),
+              IconButton(
+                  icon:
+                      const Icon(Icons.terrain),
+                  onPressed: () =>
+                      openBoulders(c)),
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () async {
+                  final r =
+                      await context.push(
+                          '/competitions/edit/${c.id}');
+                  if (r == true) refresh();
+                },
+              ),
+              IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () =>
+                      onDelete(c)),
+            ],
+          )),
+        ]);
+      }).toList(),
     );
   }
 }

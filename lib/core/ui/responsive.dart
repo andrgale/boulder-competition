@@ -1,68 +1,51 @@
 import 'package:flutter/material.dart';
 
+enum ScreenSize { mobile, tablet, desktop }
+
 class Responsive {
-  static bool isMobile(BuildContext context) {
-    return MediaQuery.of(context).size.width < 768;
+  final double width;
+
+  Responsive(this.width);
+
+  static Responsive of(BuildContext context) {
+    return Responsive(MediaQuery.of(context).size.width);
   }
 
-  static bool isTablet(BuildContext context) {
-    return MediaQuery.of(context).size.width >= 768 &&
-        MediaQuery.of(context).size.width < 1200;
+  // ───────────────── BREAKPOINTS ─────────────────
+
+  ScreenSize get screenSize {
+    if (width < 768) return ScreenSize.mobile;
+    if (width < 1200) return ScreenSize.tablet;
+    return ScreenSize.desktop;
   }
 
-  static bool isDesktop(BuildContext context) {
-    return MediaQuery.of(context).size.width >= 1200;
+  bool get isMobile => screenSize == ScreenSize.mobile;
+  bool get isTablet => screenSize == ScreenSize.tablet;
+  bool get isDesktop => screenSize == ScreenSize.desktop;
+
+  // ───────────────── LAYOUT HELPERS ─────────────────
+
+  double get contentWidth {
+    if (width < 768) return width;
+    if (width < 1200) return width;
+    if (width < 1440) return 1200;
+    if (width < 1800) return 1400;
+    return width * 0.85;
   }
 
-  // static double contentWidth(BuildContext context) {
-  //   final width = MediaQuery.of(context).size.width;
-
-  //   if (width > 1600) {
-  //     return 1400;
-  //   }
-
-  //   if (width > 1200) {
-  //     return 1100;
-  //   }
-
-  //   return width;
-  // }
-
-  static double contentWidth(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-
-    if (width < 768) {
-      return width;
+  EdgeInsets get pagePadding {
+    switch (screenSize) {
+      case ScreenSize.mobile:
+        return const EdgeInsets.all(16);
+      case ScreenSize.tablet:
+        return const EdgeInsets.all(24);
+      case ScreenSize.desktop:
+        return const EdgeInsets.all(32);
     }
-
-    if (width < 1200) {
-      return width;
-    }
-
-    if (width < 1440) {
-      return 1200;
-    }
-
-    if (width < 1800) {
-      return 1400;
-    }
-
-    if (width > 1200) {
-      return width * 0.85;
-    }
-
-    return 1600;
   }
+}
 
-  static EdgeInsets pagePadding(BuildContext context) {
-    if (isDesktop(context)) {
-      return const EdgeInsets.all(32);
-    }
-
-    if (isTablet(context)) {
-      return const EdgeInsets.all(24);
-    }
-
-    return const EdgeInsets.all(16);
-  }
+// ✅ EXTENSION (USO CONSIGLIATO)
+extension ResponsiveExtension on BuildContext {
+  Responsive get responsive => Responsive.of(this);
 }

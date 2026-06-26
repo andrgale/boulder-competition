@@ -41,12 +41,14 @@ class _AppShellState extends State<AppShell> {
         shellUserService.fetchCurrentUser(),
       ]);
 
+      final responsive = context.responsive;
+
       var loadedMenus = results[0] as List<AppMenu>;
       final loadedUser = results[1] as ShellUser;
 
       loadedMenus = loadedMenus.where((m) {
         if (!m.visible) return false;
-        if (Responsive.isMobile(context)) return m.mobile;
+        if (responsive.isMobile) return m.mobile;
         return m.desktop;
       }).toList();
 
@@ -66,18 +68,21 @@ class _AppShellState extends State<AppShell> {
 
   @override
   Widget build(BuildContext context) {
+    final responsive = context.responsive;
+
     if (loading) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
     }
 
-    final isDesktop = Responsive.isDesktop(context);
-    final isMobile = Responsive.isMobile(context);
+    final isDesktop = responsive.isDesktop;
+    final isMobile = responsive.isMobile;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F8FB),
 
+      // ───────────────── DRAWER MOBILE ─────────────────
       drawer: isMobile
           ? Drawer(
               child: SafeArea(
@@ -98,9 +103,7 @@ class _AppShellState extends State<AppShell> {
 
       body: Row(
         children: [
-          // =================================================
-          // SIDEBAR
-          // =================================================
+          // ───────────────── SIDEBAR ─────────────────
 
           if (!isMobile)
             Container(
@@ -146,7 +149,8 @@ class _AppShellState extends State<AppShell> {
                                 Text(
                                   shellUser.nomeCompleto,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontWeight: FontWeight.w600),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w600),
                                 ),
                                 if (shellUser.ruolo.isNotEmpty) ...[
                                   const SizedBox(height: 2),
@@ -170,16 +174,12 @@ class _AppShellState extends State<AppShell> {
               ),
             ),
 
-          // =================================================
-          // MAIN CONTENT
-          // =================================================
+          // ───────────────── MAIN ─────────────────
 
           Expanded(
             child: Column(
               children: [
-                // =============================================
-                // TOP BAR
-                // =============================================
+                // ───── TOP BAR ─────
 
                 Container(
                   height: 72,
@@ -195,7 +195,8 @@ class _AppShellState extends State<AppShell> {
                       if (isMobile)
                         Builder(
                           builder: (context) => IconButton(
-                            onPressed: () => Scaffold.of(context).openDrawer(),
+                            onPressed: () =>
+                                Scaffold.of(context).openDrawer(),
                             icon: const Icon(Icons.menu),
                           ),
                         ),
@@ -225,12 +226,10 @@ class _AppShellState extends State<AppShell> {
                         ),
                       ),
 
-                      // ── SEARCH BAR ── unica modifica al top bar ──────────
                       if (!isMobile) ...[
                         const SizedBox(width: 24),
                         const GlobalSearchBar(width: 300, height: 42),
                       ],
-                      // ─────────────────────────────────────────────────────
 
                       const SizedBox(width: 12),
 
@@ -242,31 +241,30 @@ class _AppShellState extends State<AppShell> {
                   ),
                 ),
 
-                // =============================================
-                // CONTENT
-                // =============================================
+                // ───── CONTENT ─────
 
                 Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: isDesktop ? 40 : 20,
-                      vertical: 32,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AppBreadcrumb(current: currentPageTitle()),
-                        const SizedBox(height: 24),
-                        Flexible(child: widget.child),
-                      ],
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: responsive.contentWidth,
+                      ),
+                      child: Padding(
+                        padding: responsive.pagePadding,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AppBreadcrumb(current: currentPageTitle()),
+                            const SizedBox(height: 24),
+                            Expanded(child: widget.child),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
 
-                // =============================================
-                // MOBILE NAVIGATION
-                // =============================================
+                // ───── MOBILE NAV ─────
 
                 if (isMobile)
                   NavigationBar(
@@ -301,10 +299,11 @@ class _AppShellState extends State<AppShell> {
     );
   }
 
+  // ───────────────── MENU ─────────────────
+
   List<Widget> buildMenuTiles(BuildContext context) {
     return menus.map((menu) {
-      final selected =
-          GoRouterState.of(context).uri.path == menu.route;
+      final selected = GoRouterState.of(context).uri.path == menu.route;
 
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 4),
@@ -326,8 +325,6 @@ class _AppShellState extends State<AppShell> {
     }).toList();
   }
 
-  /// Naviga alla rotta del menu. Se la rotta è '/login' esegue prima
-  /// il signOut di Supabase, così il RouteGuard non reindirizza alla dashboard.
   Future<void> _handleMenuTap(BuildContext context, String route) async {
     if (route == '/login') {
       await Supabase.instance.client.auth.signOut();
@@ -361,11 +358,8 @@ class _AppShellState extends State<AppShell> {
   }
 
   String currentPageTitle() {
-    final route = GoRouter.of(context)
-        .routeInformationProvider
-        .value
-        .uri
-        .path;
+    final route =
+        GoRouter.of(context).routeInformationProvider.value.uri.path;
 
     final menu = menus.where((m) => m.route == route);
     if (menu.isEmpty) return 'Boulder Competition';
@@ -380,20 +374,15 @@ class _AppShellState extends State<AppShell> {
   ];
 
   int currentBottomIndex() {
-    final current = GoRouter.of(context)
-        .routeInformationProvider
-        .value
-        .uri
-        .path;
+    final current =
+        GoRouter.of(context).routeInformationProvider.value.uri.path;
 
     final index = mobileRoutes.indexOf(current);
     return index < 0 ? 0 : index;
   }
 }
 
-// =============================================================================
-// Widgets invariati
-// =============================================================================
+// ───────────────── UI ─────────────────
 
 class _SidebarHeader extends StatelessWidget {
   const _SidebarHeader();
