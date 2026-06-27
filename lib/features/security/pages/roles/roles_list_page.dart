@@ -200,82 +200,52 @@ class _RolesTabletView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: SingleChildScrollView(
-        controller: scrollController,
-        scrollDirection: Axis.horizontal,
-        child: 
-        // DataTable(
-        //   columnSpacing: 24,
-        //   columns: const [
-        //     DataColumn(label: Text('Codice')),
-        //     DataColumn(label: Text('Nome')),
-        //     DataColumn(label: Text('Azioni')),
-        //   ],
-        //   rows: roles.map((role) {
-        //     return DataRow(cells: [
-        //       DataCell(Text(role.code)),
-        //       DataCell(Text(role.name)),
-        //       DataCell(Row(
-        //         children: [
-        //           IconButton(
-        //             icon: const Icon(Icons.tune),
-        //             onPressed: () async {
-        //               await context.push('/security/roles/manage',
-        //                   extra: role);
-        //               await onReload();
-        //             },
-        //           ),
-        //           IconButton(
-        //             icon: const Icon(Icons.edit),
-        //             onPressed: () async {
-        //               await context.push('/security/roles/edit',
-        //                   extra: role);
-        //               await onReload();
-        //             },
-        //           ),
-        //           IconButton(
-        //             icon: const Icon(Icons.delete),
-        //             onPressed: () => onDelete(role),
-        //           ),
-        //         ],
-        //       )),
-        //     ]);
-        //   }).toList(),
-        // ),
-        ResponsiveTable(
-          controller: scrollController,
-          columns: const [
-            DataColumn(label: Text('Codice')),
-            DataColumn(label: Text('Nome')),
-            DataColumn(label: Text('Azioni')),
-          ],
-          rows: roles.map((role) {
-            return DataRow(
-              cells: [
-                DataCell(Text(role.code)),
-                DataCell(Text(role.name)),
-                DataCell(
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        onPressed: () {},
-                      ),
-                    ],
+    return ResponsiveTable(
+      controller: scrollController,
+      columns: const [
+        DataColumn(label: Text('Codice')),
+        DataColumn(label: Text('Nome')),
+        DataColumn(label: Text('Azioni')),
+      ],
+      rows: roles.map((role) {
+        return DataRow(
+          cells: [
+            DataCell(Text(role.code)),
+            DataCell(Text(role.name)),
+            DataCell(
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.tune),
+                    onPressed: () async {
+                      await context.push('/security/roles/manage',
+                          extra: role);
+                      await onReload();
+                    },
                   ),
-                ),
-              ],
-            );
-          }).toList(),
-        )
-      ),
+                  IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () async {
+                      await context.push('/security/roles/edit',
+                          extra: role);
+                      await onReload();
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => onDelete(role),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      }).toList(),
     );
   }
 }
 
 // ✅ DESKTOP
-
 class _RolesDesktopView extends StatelessWidget {
   final List<RoleModel> roles;
   final ScrollController scrollController;
@@ -291,49 +261,47 @@ class _RolesDesktopView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: SingleChildScrollView(
-        controller: scrollController,
-        scrollDirection: Axis.horizontal,
-        child: DataTable(
-          columnSpacing: 48,
-          columns: const [
-            DataColumn(label: Text('Codice')),
-            DataColumn(label: Text('Nome')),
-            DataColumn(label: Text('Azioni')),
-          ],
-          rows: roles.map((role) {
-            return DataRow(cells: [
-              DataCell(Text(role.code)),
-              DataCell(Text(role.name)),
-              DataCell(Row(
+    return ResponsiveTable(
+      controller: scrollController,
+      columns: const [
+        DataColumn(label: Text('Codice')),
+        DataColumn(label: Text('Nome')),
+        DataColumn(label: Text('Azioni')),
+      ],
+      rows: roles.map((role) {
+        return DataRow(
+          cells: [
+            DataCell(Text(role.code)),
+            DataCell(Text(role.name)),
+            DataCell(
+              Row(
                 children: [
-                  _desktopBtn(Icons.tune, () async {
-                    await context.push('/security/roles/manage',
-                        extra: role);
-                    await onReload();
-                  }),
-                  _desktopBtn(Icons.edit, () async {
-                    await context.push('/security/roles/edit',
-                        extra: role);
-                    await onReload();
-                  }),
-                  _desktopBtn(Icons.delete,
-                      () => onDelete(role), color: Colors.red),
+                  IconButton(
+                    icon: const Icon(Icons.tune),
+                    onPressed: () async {
+                      await context.push('/security/roles/manage',
+                          extra: role);
+                      await onReload();
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () async {
+                      await context.push('/security/roles/edit',
+                          extra: role);
+                      await onReload();
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => onDelete(role),
+                  ),
                 ],
-              )),
-            ]);
-          }).toList(),
-        ),
-      ),
-    );
-  }
-
-  Widget _desktopBtn(IconData icon, VoidCallback onTap,
-      {Color color = Colors.black87}) {
-    return IconButton(
-      onPressed: onTap,
-      icon: Icon(icon, color: color),
+              ),
+            ),
+          ],
+        );
+      }).toList(),
     );
   }
 }

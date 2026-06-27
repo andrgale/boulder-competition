@@ -72,6 +72,16 @@ jobs:
           -gg `
           -out files.wxs
 
+      # ✅ FILE LICENZA MINIMO RICHIESTO DA WixUI_Minimal
+      - name: Create dummy license
+        run: |
+          $app = "${{ steps.appinfo.outputs.app_name }}"
+          @"
+          {\rtf1\ansi
+          Licenza d'uso $app. Procedendo con l'installazione accetti i termini d'uso.
+          }
+          "@ > License.rtf
+
         # ✅ CREA INSTALLER
       - name: Create main.wxs
         run: |
@@ -81,7 +91,7 @@ jobs:
 
             @"
           <?xml version="1.0" encoding="UTF-8"?>
-          <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+          <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:ui="http://schemas.microsoft.com/wix/UIExtension">
 
             <Product Id="*"
                     Name="$app"
@@ -103,9 +113,35 @@ jobs:
                 <Directory Id="DesktopFolder" />
               </Directory>
 
+              <!-- ✅ Componente collegamento sul Desktop -->
+              <DirectoryRef Id="DesktopFolder">
+                <Component Id="DesktopShortcut" Guid="*">
+                  <Shortcut Id="AppDesktopShortcut"
+                            Name="$app"
+                            Description="Avvia $app"
+                            Target="[INSTALLFOLDER]$exe"
+                            WorkingDirectory="INSTALLFOLDER" />
+                  <RemoveFolder Id="RemoveDesktopFolder" On="uninstall" />
+                  <RegistryValue Root="HKCU"
+                                 Key="Software\MyCompany\$app"
+                                 Name="DesktopShortcutInstalled"
+                                 Type="integer"
+                                 Value="1"
+                                 KeyPath="yes" />
+                </Component>
+              </DirectoryRef>
+
               <Feature Id="MainFeature" Level="1">
                 <ComponentGroupRef Id="AppFiles"/>
+                <ComponentRef Id="DesktopShortcut"/>
               </Feature>
+
+              <!-- ✅ UI standard con messaggio di completamento personalizzato -->
+              <UIRef Id="WixUI_Minimal" />
+              <WixVariable Id="WixUILicenseRtf" Value="License.rtf" Overridable="yes" />
+
+              <Property Id="WIXUI_EXITDIALOGOPTIONALTEXT"
+                         Value="Installazione completata correttamente. $app e pronto all'uso." />
 
             </Product>
 
@@ -120,8 +156,8 @@ jobs:
           $ver = "${{ steps.appinfo.outputs.version }}"
           $msi = "$app-$ver.msi"
 
-          candle main.wxs files.wxs
-          light main.wixobj files.wixobj -b build/windows/x64/runner/Release -o $msi
+          candle main.wxs files.wxs -ext WixUIExtension
+          light main.wixobj files.wixobj -ext WixUIExtension -b build/windows/x64/runner/Release -o $msi
 
           echo "msi_name=$msi" >> $env:GITHUB_OUTPUT
 
