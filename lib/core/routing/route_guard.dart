@@ -16,6 +16,7 @@ class RouteGuard {
     // =====================================================
 
     '/dashboard': 'menu.read',
+    '/change-password': 'menu.read',
 
     // =====================================================
     // COMPETITIONS
@@ -106,6 +107,9 @@ class RouteGuard {
     '/security/menus/edit':         'security.admin',
     '/security/profiles':           'security.admin',
     '/security/profiles/roles':     'security.admin',
+    '/security/profiles/new':       'security.admin',
+    '/security/profiles/delete':    'security.admin',
+
 
     '/check-in': 'checkin.read',
   };

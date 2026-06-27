@@ -24,6 +24,7 @@ import '../../features/administration/administration_page.dart';
 
 import '../../features/errors/forbidden_page.dart';
 
+import '../../features/security/pages/profiles/profile_form_page.dart';
 import '../../shared/widgets/app_shell.dart';
 
 import 'route_guard.dart';
@@ -579,6 +580,25 @@ final GoRouter appRouter = GoRouter(
             return const ProfilesListPage();
           },
         ),
+
+        GoRoute(
+          path: '/security/profiles/new',
+          builder: (_, __) => const ProfileFormPage(),
+        ),
+
+        GoRoute(
+          path: '/security/profiles/delete',
+          builder: (_, state) {
+            final data = state.extra as Map<String, dynamic>;
+
+            return ProfileFormPage(
+              profileId: data['id'],
+              nome: data['nome'],
+              cognome: data['cognome'],
+              email: data['email'],
+            );
+          },
+        ),        
 
         GoRoute(
           path: '/security/profiles/roles',
