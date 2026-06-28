@@ -384,19 +384,6 @@ final GoRouter appRouter = GoRouter(
 // REGISTRATIONS
 // ======================================================
 
-        // GoRoute(
-        //   path: '/competitions/:id/registrations',
-        //   name: 'registrations_list',
-        //   builder: (context, state) {
-        //     final competitionId = state.pathParameters['id']!;
-        //     final competition = state.extra as CompetitionModel?;
-
-        //     return RegistrationsPage(
-        //       competitionId: competitionId,
-        //       competitionName: competition?.descrizione ?? '',
-        //     );
-        //   },
-        // ),
         GoRoute(
           path: '/competitions/:id/registrations',
           name: 'registrations_list',
@@ -407,15 +394,21 @@ final GoRouter appRouter = GoRouter(
             // sia Map<String,dynamic> (navigazione dalla ricerca globale)
             final extra = state.extra;
             String competitionName = '';
+            bool flIscrizioniChiuse = false; // ← aggiunto
+
             if (extra is CompetitionModel) {
               competitionName = extra.descrizione;
+              flIscrizioniChiuse = extra.flIscrizioniChiuse; // ← aggiunto
             } else if (extra is Map) {
               competitionName = extra['competitionName'] as String? ?? '';
+              flIscrizioniChiuse =
+                  extra['flIscrizioniChiuse'] as bool? ?? false; // ← aggiunto
             }
 
             return RegistrationsPage(
               competitionId: competitionId,
               competitionName: competitionName,
+              flIscrizioniChiuse: flIscrizioniChiuse, // ← aggiunto
             );
           },
         ),

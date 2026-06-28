@@ -31,6 +31,13 @@ class _CompetitionsPageState
   bool sortAsc = true;
   String sortColumn = 'dt_gara';
 
+  // ── true se esiste almeno una gara aperta ──────────────────
+  // Calcolato sui dati già in memoria (allCompetitions), che
+  // sono sempre sincronizzati via realtime: non serve una
+  // query separata, basta filtrare la lista che abbiamo già.
+  bool get hasOpenCompetition =>
+      allCompetitions.any((c) => c.flGaraChiusa == false);
+
   @override
   void initState() {
     super.initState();
@@ -155,6 +162,20 @@ class _CompetitionsPageState
   }
 
   void _createNew() async {
+    // ── guardia di sicurezza: non crea se esiste già una gara
+    // aperta, anche se per qualche motivo il bottone fosse
+    // stato chiamato comunque (es. tasto Invio, automazione test)
+    if (hasOpenCompetition) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Esiste già una gara aperta: chiudila prima di crearne una nuova.',
+          ),
+        ),
+      );
+      return;
+    }
+
     final result =
         await context.push('/competitions/new');
     if (result == true) await refreshData();
@@ -168,16 +189,21 @@ class _CompetitionsPageState
       title: 'Competizioni',
       floatingActionButton: screen.isMobile
           ? FloatingActionButton.extended(
-              onPressed: _createNew,
+              onPressed: hasOpenCompetition ? null : _createNew,
               icon: const Icon(Icons.add),
               label: const Text('Nuova'),
             )
           : null,
       actions: [
-        FilledButton.icon(
-          onPressed: _createNew,
-          icon: const Icon(Icons.add),
-          label: const Text('Nuova Gara'),
+        Tooltip(
+          message: hasOpenCompetition
+              ? 'Chiudi la gara aperta prima di crearne una nuova'
+              : 'Crea una nuova gara',
+          child: FilledButton.icon(
+            onPressed: hasOpenCompetition ? null : _createNew,
+            icon: const Icon(Icons.add),
+            label: const Text('Nuova Gara'),
+          ),
         ),
       ],
       child: Column(
@@ -283,7 +309,7 @@ class _MobileListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
       itemCount: competitions.length,
-      separatorBuilder: (_, _) =>
+      separatorBuilder: (_, __) =>
           const SizedBox(height: 12),
       itemBuilder: (_, i) {
         final c = competitions[i];
@@ -309,18 +335,21 @@ class _MobileListView extends StatelessWidget {
                     IconButton(
                         icon:
                             const Icon(Icons.how_to_reg),
-                        onPressed: () =>
-                            openRegistrations(c)),
+                        onPressed: c.flGaraChiusa
+                            ? null
+                            : () => openRegistrations(c)),
                     IconButton(
                         icon:
                             const Icon(Icons.category),
-                        onPressed: () =>
-                            openCategories(c)),
+                        onPressed: c.flGaraChiusa
+                            ? null
+                            : () => openCategories(c)),
                     IconButton(
                         icon:
                             const Icon(Icons.terrain),
-                        onPressed: () =>
-                            openBoulders(c)),
+                        onPressed: c.flGaraChiusa
+                            ? null
+                            : () => openBoulders(c)),
                     IconButton(
                       icon: const Icon(Icons.edit),
                       onPressed: () async {
@@ -332,8 +361,9 @@ class _MobileListView extends StatelessWidget {
                     ),
                     IconButton(
                       icon: const Icon(Icons.delete),
-                      onPressed: () =>
-                          onDelete(c),
+                      onPressed: c.flGaraChiusa
+                          ? null
+                          : () => onDelete(c),
                     ),
                   ],
                 )
@@ -406,18 +436,21 @@ class _TableView extends StatelessWidget {
               IconButton(
                   icon:
                       const Icon(Icons.how_to_reg),
-                  onPressed: () =>
-                      openRegistrations(c)),
+                  onPressed: c.flGaraChiusa
+                      ? null
+                      : () => openRegistrations(c)),
               IconButton(
                   icon:
                       const Icon(Icons.category),
-                  onPressed: () =>
-                      openCategories(c)),
+                  onPressed: c.flGaraChiusa
+                      ? null
+                      : () => openCategories(c)),
               IconButton(
                   icon:
                       const Icon(Icons.terrain),
-                  onPressed: () =>
-                      openBoulders(c)),
+                  onPressed: c.flGaraChiusa
+                      ? null
+                      : () => openBoulders(c)),
               IconButton(
                 icon: const Icon(Icons.edit),
                 onPressed: () async {
@@ -429,8 +462,9 @@ class _TableView extends StatelessWidget {
               ),
               IconButton(
                   icon: const Icon(Icons.delete),
-                  onPressed: () =>
-                      onDelete(c)),
+                  onPressed: c.flGaraChiusa
+                      ? null
+                      : () => onDelete(c)),
             ],
           )),
         ]);

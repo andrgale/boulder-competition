@@ -17,11 +17,11 @@ Build dell'app
 fvm flutter build macos \
   --release \
   -t lib/main_admin_prod.dart
-`
+
 
 L'output è in:
 `
-build/macos/Build/Products/Release/bouldercompetition.app
+build/macos/Build/Products/Release/boulder_competition.app
 `
 
 Creare il .dmg (distribuibile)
@@ -33,15 +33,19 @@ brew install create-dmg
 `
 
 `bash
+sips -z 400 600 background.png --out background_600x400.png
+
 create-dmg \
   --volname "Boulder Admin" \
   --window-size 600 400 \
-  --icon-size 100 \
-  --app-drop-link 400 150 \
-  --icon "bouldercompetition.app" 150 150 \
+  --icon-size 110 \s
+  --text-size 12 \
+  --app-drop-link 450 200 \
+  --icon "boulder_competition.app" 150 200 \
+  --hide-extension "boulder_competition.app" \
+  --background "./background_600x400.png" \
   "BoulderAdmin-1.0.0.dmg" \
-  "build/macos/Build/Products/Release/"
-`
+  "build/macos/Build/Products/Release/boulder_competition.app"
 
 Il .dmg risultante è quello che distribuisci agli utenti Mac.
 

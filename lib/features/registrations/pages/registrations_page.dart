@@ -12,10 +12,14 @@ class RegistrationsPage extends StatefulWidget {
   final String competitionId;
   final String competitionName;
 
+  // ── flag dalla competition: se true, iscrizioni chiuse ─────
+  final bool flIscrizioniChiuse;
+
   const RegistrationsPage({
     super.key,
     required this.competitionId,
     required this.competitionName,
+    this.flIscrizioniChiuse = false,
   });
 
   @override
@@ -84,6 +88,9 @@ class _RegistrationsPageState
 // =====================================================
 
   Future<void> importCsv() async {
+    // ── guardia: non importa se le iscrizioni sono chiuse ────
+    if (widget.flIscrizioniChiuse) return;
+
     try {
       final result =
           await FilePicker.platform.pickFiles(
@@ -123,10 +130,6 @@ class _RegistrationsPageState
           'csv_content': csvContent,
         },
       );
-
-      // debugPrint('STATUS: ${response.status}');
-      // debugPrint('DATA: ${response.data}');
-      // debugPrint('TYPE: ${response.data.runtimeType}');
 
       if (!mounted) return;
 
@@ -247,6 +250,9 @@ class _RegistrationsPageState
   // =====================================================
 
   Future<void> openCreate() async {
+    // ── guardia: non crea se le iscrizioni sono chiuse ────────
+    if (widget.flIscrizioniChiuse) return;
+
     final res = await context.push(
       '/registrations/new',
       extra: widget.competitionId,
@@ -289,7 +295,9 @@ class _RegistrationsPageState
             700;
 
     final filtered =
-    filteredRegistrations();        
+    filteredRegistrations();
+
+    final closed = widget.flIscrizioniChiuse;
 
     return Scaffold(
       appBar: AppBar(
@@ -298,25 +306,35 @@ class _RegistrationsPageState
         ),
 
         actions: [
-          IconButton(
-            tooltip: 'Importa CSV',
-            icon: const Icon(
-              Icons.upload_file,
+          Tooltip(
+            message: closed
+                ? 'Iscrizioni chiuse: importazione non disponibile'
+                : 'Importa CSV',
+            child: IconButton(
+              icon: const Icon(
+                Icons.upload_file,
+              ),
+              onPressed: closed ? null : importCsv,
             ),
-            onPressed: importCsv,
           ),
 
-          IconButton(
-            tooltip: 'Nuova iscrizione',
-            icon: const Icon(Icons.add),
-            onPressed: openCreate,
+          Tooltip(
+            message: closed
+                ? 'Iscrizioni chiuse: nuova iscrizione non disponibile'
+                : 'Nuova iscrizione',
+            child: IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: closed ? null : openCreate,
+            ),
           ),
         ],
       ),
 
       floatingActionButton: isMobile
           ? FloatingActionButton(
-              onPressed: openCreate,
+              onPressed: closed ? null : openCreate,
+              backgroundColor:
+                  closed ? Colors.grey.shade300 : null,
               child: const Icon(Icons.add),
             )
           : null,
@@ -328,6 +346,39 @@ class _RegistrationsPageState
           )
         : Column(
             children: [
+
+              // ── banner informativo se iscrizioni chiuse ────
+              if (closed)
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.orange.shade200),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.lock_outline,
+                          size: 18, color: Colors.orange.shade800),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Le iscrizioni per questa gara sono chiuse. '
+                          'Non è possibile aggiungere nuovi atleti o importare CSV.',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.orange.shade900,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
 
               Padding(
                 padding:
@@ -447,21 +498,6 @@ class _RegistrationsPageState
                                   color: Colors.orange,
                                 ),
                               ),
-
-                            // IconButton(
-                            //   icon: const Icon(Icons.terrain),
-                            //   tooltip: 'Boulder',
-                            //   onPressed: () {
-                            //     context.push(
-                            //       '/ascents-boulders',
-                            //       extra: {
-                            //         'registrationId': r.id,
-                            //         'athleteName':
-                            //             '${r.cognome} ${r.nome}',
-                            //       },
-                            //     );
-                            //   },
-                            // ),
 
                           IconButton(
                             icon: const Icon(
