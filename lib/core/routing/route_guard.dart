@@ -136,6 +136,7 @@ class RouteGuard {
     final isAthleteRoute =
     location == '/athlete-login' ||
     location == '/athlete-change-password' ||
+    location == '/athlete-boulder-scan' ||    
     location == '/athlete-boulders';    
 
     // =====================================================

@@ -34,6 +34,12 @@ dependencies:
 
   path_provider: ^2.1.0
 
+  qr_flutter: ^4.1.0
+
+  mobile_scanner: ^7.2.0
+
+  permission_handler: ^11.3.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -66,3 +72,6 @@ flutter:
     - assets/fonts/NotoSans-Regular.ttf
     - assets/fonts/NotoSans-Bold.ttf
     - assets/app_icon/app_icon.png
+
+dependency_overrides:
+  path_provider_foundation: 2.4.1

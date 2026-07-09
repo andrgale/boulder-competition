@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../data/boulder_service.dart';
 import '../models/boulder_model.dart';
+import 'boulder_card_export_pdf.dart';
 
 class BoulderFormPage extends StatefulWidget {
   final String competitionId;
@@ -35,6 +36,7 @@ class _BoulderFormPageState
       valoreCtrl;
   bool isFinale = false;
   bool loading = false;
+  bool _exportingCartellino = false; // ← aggiunto
 
   bool get isEdit =>
       widget.boulder != null;
@@ -178,6 +180,35 @@ class _BoulderFormPageState
       }
     }
   }
+
+  // =====================================================
+  // STAMPA CARTELLINO — solo in modifica (boulder già creato)
+  // =====================================================
+
+  Future<void> _printCartellino() async {
+    final b = widget.boulder;
+    if (b == null || _exportingCartellino) return;
+
+    setState(() => _exportingCartellino = true);
+
+    try {
+      await BoulderCardExportPdf.exportAndShare(
+        competitionId: widget.competitionId,
+        boulderId: b.id,
+        numero: int.tryParse(numeroCtrl.text) ?? b.numero,
+        difficolta: difficolta.toInt(),
+        colore: colore,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Errore stampa cartellino: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _exportingCartellino = false);
+    }
+  }
+
   // =====================================================
   // UI
   // =====================================================
@@ -191,6 +222,27 @@ class _BoulderFormPageState
               ? 'Modifica Boulder'
               : 'Nuovo Boulder',
         ),
+        actions: [
+          // ── bottone cartellino: solo in modifica ──────────
+          if (isEdit)
+            _exportingCartellino
+                ? const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                : IconButton(
+                    tooltip: 'Stampa cartellino QR',
+                    icon: const Icon(Icons.qr_code),
+                    onPressed: _printCartellino,
+                  ),
+        ],
       ),
 
       body: SingleChildScrollView(

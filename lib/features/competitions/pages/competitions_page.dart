@@ -309,7 +309,7 @@ class _MobileListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
       itemCount: competitions.length,
-      separatorBuilder: (_, __) =>
+      separatorBuilder: (_, _) =>
           const SizedBox(height: 12),
       itemBuilder: (_, i) {
         final c = competitions[i];

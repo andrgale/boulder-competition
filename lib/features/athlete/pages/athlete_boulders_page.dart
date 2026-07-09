@@ -159,6 +159,35 @@ class _AthleteBouldersPageState
     }
   }
 
+  // =========================================================
+  // SCAN QR — apre lo scanner e gestisce l'esito
+  // =========================================================
+
+  Future<void> openScanner() async {
+    final competition = pageData?.competition;
+    final registrationId = pageData?.registrationId;
+
+    debugPrint("OPEN SCANNER");
+
+    if (competition == null || registrationId == null) return;
+
+    debugPrint("PUSH SCANNER");
+    final result = await context.push<bool>(
+      '/athlete-boulder-scan',
+      extra: {
+        'competitionId': competition.id,
+        'registrationId': registrationId,
+      },
+    );
+    debugPrint("RETURNED FROM SCANNER");
+    
+    // Se la scansione ha avuto successo, ricarica la lista
+    // così il boulder appena registrato appare come "Fatto".
+    if (result == true) {
+      await loadData();
+    }
+  }
+
   List<AthleteBoulderModel>
       filteredBoulders() {
     final items =
@@ -230,6 +259,12 @@ class _AthleteBouldersPageState
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        // ── icona scanner QR in alto a sinistra ───────────────
+        leading: IconButton(
+          tooltip: 'Registra boulder (scansiona QR)',
+          icon: const Icon(Icons.qr_code_scanner),
+          onPressed: openScanner,
+        ),
         title: const Text(
           'I miei Boulder',
         ),

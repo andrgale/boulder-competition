@@ -1,7 +1,9 @@
 import 'package:go_router/go_router.dart';
 
+import '../../features/athlete/pages/athlete_boulder_scan_page.dart';
 import '../../features/auth/login_page.dart';
 import '../../features/auth/change_password_page.dart';
+
 
 import '../../features/competitions/models/competition_model.dart';
 import '../../features/dashboard/dashboard_page.dart';
@@ -146,6 +148,22 @@ final GoRouter appRouter = GoRouter(
       name: 'athlete_boulders',
       builder: (context, state) {
         return const AthleteBouldersPage();
+      },
+    ),
+
+    GoRoute(
+      path: '/athlete-boulder-scan',
+      name: 'athlete_boulder_scan',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+
+        final competitionId = extra?['competitionId'] as String? ?? '';
+        final registrationId = extra?['registrationId'] as String? ?? '';
+
+        return AthleteBoulderScanPage(
+          competitionId: competitionId,
+          registrationId: registrationId,
+        );
       },
     ),
 
@@ -576,7 +594,7 @@ final GoRouter appRouter = GoRouter(
 
         GoRoute(
           path: '/security/profiles/new',
-          builder: (_, __) => const ProfileFormPage(),
+          builder: (_, _) => const ProfileFormPage(),
         ),
 
         GoRoute(
