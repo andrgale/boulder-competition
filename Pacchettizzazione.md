@@ -1,15 +1,6 @@
 Guida alla build degli eseguibili
-Premessa — prod vs dev
 
-Prima di fare qualsiasi build di distribuzione, devi creare mainprod.dart anche per l'app Athlete (attualmente maindev.dart usa DevEnv). La build di produzione deve usare ProdEnv.load() invece di DevEnv.load(). Crea una copia:
-
-`dart
-// lib/mainathleteprod.dart
-import 'core/config/prodenv.dart';
-// ... tutto uguale a maindev.dart ma con ProdEnv.load()
-AppConfig.mode = AppMode.athlete;
-`
-
+########################################################## ok MacOs ∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞
 1 — macOS (.app + .dmg)
 Build dell'app
 
@@ -46,6 +37,38 @@ create-dmg \
   --background "./background_600x400.png" \
   "BoulderAdmin-1.0.1.dmg" \
   "build/macos/Build/Products/Release/boulder_competition.app"
+
+#################################################################### Ok Windows ############
+
+brew install gh
+gh auth login
+gh workflow run build-windows.yml
+
+gh run view 28184095736
+
+su browser al link dato da gh
+Actions → build → Artifacts
+
+token GitHub Action:
+export GITHUB_TOKEN=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
+
+comando per lanciare github action e creare l'eseguibile windows:
+Cmd + Shift + B
+
+######################################################### Ok Android ##############
+
+fvm flutter build apk \
+  --release \
+  -t lib/main_athlete_prod.dart \
+  --split-per-abi
+
+✓ Built build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk (27.1MB)
+✓ Built build/app/outputs/flutter-apk/boulder_competition.apk (30.7MB)
+✓ Built build/app/outputs/flutter-apk/app-x86_64-release.apk (33.2MB)
+
+adb install -r build/app/outputs/flutter-apk/boulder_competition.apk
+
+########################################  
 
 Il .dmg risultante è quello che distribuisci agli utenti Mac.
 
@@ -541,17 +564,3 @@ Se Xcode mostra errori di firma i più comuni sono:
 | "Provisioning profile doesn't include the device" | Rigenera il profilo includendo il nuovo dispositivo                    |
 
 
-brew install gh
-gh auth login
-gh workflow run build-windows.yml
-
-gh run view 28184095736
-
-su browser al link dato da gh
-Actions → build → Artifacts
-
-token GitHub Action:
-export GITHUB_TOKEN=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
-
-comando per lanciare github action e creare l'eseguibile windows:
-Cmd + Shift + B
