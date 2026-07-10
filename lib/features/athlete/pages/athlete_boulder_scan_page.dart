@@ -1,23 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-//import 'package:permission_handler/permission_handler.dart';
 
 import '../data/athlete_boulder_scan_service.dart';
 
-//import 'dart:io';
-
-//import 'package:flutter/foundation.dart';
-/// Pagina scanner QR per la registrazione self-service del top
-/// durante le qualifiche. Usata solo da atleti via app mobile.
-///
-/// Naviga qui con:
-///   context.push('/athlete-boulder-scan', extra: {
-///     'competitionId': competitionId,
-///     'registrationId': registrationId,
-///   });
-///
-/// Ritorna `true` con Navigator.pop se la registrazione è andata
-/// a buon fine, così la pagina chiamante può ricaricare la lista.
 class AthleteBoulderScanPage extends StatefulWidget {
   final String competitionId;
   final String registrationId;
@@ -44,107 +29,8 @@ class _BoulderScanPageState extends State<AthleteBoulderScanPage> {
   @override
   void initState() {
     super.initState();
-
-    // debugPrint("Physical device: ${!kIsWeb && Platform.isIOS}");
-    // debugPrint("IOS VERSION: ${Platform.operatingSystemVersion}");
-    // debugPrint("Platform: ${Platform.operatingSystem}");
-    
-    // debugPrint("SCAN PAGE INIT");
     _initCamera();
   }
-
-  // Future<void> _initCamera() async {
-  //   final status = await Permission.camera.status;
-
-  //   debugPrint("STATUS BEFORE REQUEST: $status");
-
-  //   final request = await Permission.camera.request();
-
-  //   debugPrint("STATUS AFTER REQUEST: $request");
-
-  //   debugPrint("isGranted: ${request.isGranted}");
-  //   debugPrint("isDenied: ${request.isDenied}");
-  //   debugPrint("isPermanentlyDenied: ${request.isPermanentlyDenied}");
-  //   debugPrint("isRestricted: ${request.isRestricted}");
-  //   debugPrint("isLimited: ${request.isLimited}");
-  // }
-
-  // Future<void> _initCamera() async {
-  //   try {
-  //     final request = await Permission.camera.status;
-  //     debugPrint("STATUS BEFORE REQUEST: $request");
-
-  //     // Richiedi esplicitamente il permesso camera prima di avviare
-  //     final status = await Permission.camera.request();
-
-  //     debugPrint('CAMERA PERMISSION STATUS: $status');
-  //     debugPrint('isGranted: ${status.isGranted}');
-  //     debugPrint('isDenied: ${status.isDenied}');
-  //     debugPrint('isPermanentlyDenied: ${status.isPermanentlyDenied}');
-  //     debugPrint('isRestricted: ${status.isRestricted}');
-
-  //     if (!status.isGranted) {
-  //       if (mounted) {
-  //         setState(() {
-  //           _cameraUnavailable = true;
-  //           _cameraErrorMessage =
-  //               status.isPermanentlyDenied
-  //                   ? 'Permesso fotocamera negato in modo permanente. '
-  //                     'Abilitalo in Impostazioni → Privacy → Fotocamera.'
-  //                   : 'Permesso fotocamera negato.';
-  //         });
-  //       }
-  //       return;
-  //     }
-
-  //     _controller = MobileScannerController(
-  //       detectionSpeed: DetectionSpeed.noDuplicates,
-  //     );
-
-  //     await _controller!.start();
-
-  //     if (mounted) setState(() => _cameraReady = true);
-
-  //   } catch (e) {
-  //     debugPrint('CAMERA ERROR: $e');
-  //     if (!mounted) return;
-  //     setState(() {
-  //       _cameraUnavailable = true;
-  //       _cameraErrorMessage = e.toString();
-  //     });
-  //   }
-  // }
-
-  // Future<void> _initCamera() async {
-  //   try {
-  //     debugPrint("STARTING CAMERA");
-
-  //     _controller = MobileScannerController(
-  //       detectionSpeed: DetectionSpeed.noDuplicates,
-  //     );
-
-  //     await _controller!.start();
-
-  //     debugPrint("CAMERA STARTED");
-
-  //     if (mounted) {
-  //       setState(() {
-  //         _cameraReady = true;
-  //       });
-  //     }
-  //   } catch (e, stack) {
-  //     debugPrint("CAMERA EXCEPTION");
-  //     debugPrint(e.toString());
-  //     debugPrint(stack.toString());
-
-  //     if (mounted) {
-  //       setState(() {
-  //         _cameraUnavailable = true;
-  //         _cameraErrorMessage = e.toString();
-  //       });
-  //     }
-  //   }
-  // }
 
   Future<void> _initCamera() async {
     setState(() {
@@ -267,12 +153,6 @@ class _BoulderScanPageState extends State<AthleteBoulderScanPage> {
 
   Widget _buildScannerView() {
     // Mostra spinner mentre la camera si inizializza
-    // if (!_cameraReady || _controller == null) {
-    //   return const Center(
-    //     child: CircularProgressIndicator(color: Colors.white),
-    //   );
-    // }
-
     if (_controller == null) {
       return const Center(
         child: CircularProgressIndicator(
@@ -283,19 +163,6 @@ class _BoulderScanPageState extends State<AthleteBoulderScanPage> {
 
     return Stack(
       children: [
-        // MobileScanner(
-        //   controller: _controller,
-        //   onDetect: _onDetect,
-        //   errorBuilder: (context, error) {
-        //     // mobile_scanner chiama questo builder quando la camera
-        //     // non è disponibile o l'accesso viene negato — è il caso
-        //     // tipico del Simulatore iOS, che non ha hardware camera.
-        //     WidgetsBinding.instance.addPostFrameCallback((_) {
-        //       _onCameraError(error);
-        //     });
-        //     return _buildCameraUnavailableView();
-        //   },
-        // ),
         MobileScanner(
           onDetect: _onDetect,
         ),

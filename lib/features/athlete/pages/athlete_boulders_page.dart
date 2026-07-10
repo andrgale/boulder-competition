@@ -167,11 +167,11 @@ class _AthleteBouldersPageState
     final competition = pageData?.competition;
     final registrationId = pageData?.registrationId;
 
-    debugPrint("OPEN SCANNER");
+   // debugPrint("OPEN SCANNER");
 
     if (competition == null || registrationId == null) return;
 
-    debugPrint("PUSH SCANNER");
+  //  debugPrint("PUSH SCANNER");
     final result = await context.push<bool>(
       '/athlete-boulder-scan',
       extra: {
@@ -179,7 +179,7 @@ class _AthleteBouldersPageState
         'registrationId': registrationId,
       },
     );
-    debugPrint("RETURNED FROM SCANNER");
+ //   debugPrint("RETURNED FROM SCANNER");
     
     // Se la scansione ha avuto successo, ricarica la lista
     // così il boulder appena registrato appare come "Fatto".
