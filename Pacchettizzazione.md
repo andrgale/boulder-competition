@@ -68,60 +68,8 @@ fvm flutter build apk \
 
 adb install -r build/app/outputs/flutter-apk/boulder_competition.apk
 
-########################################  
-
-Il .dmg risultante è quello che distribuisci agli utenti Mac.
-
-> Nota su Gatekeeper: se non hai un Apple Developer account, gli utenti dovranno fare tasto destro → Apri la prima volta. Per distribuzione ufficiale serve la firma con codesign e il notarization tramite Apple — necessario solo se distribuisci fuori dalla propria organizzazione.
-
-2 — Windows (.exe installer)
-Build dell'app
-
-`bash
-fvm flutter build windows \
-  --release \
-  -t lib/main_admin_prod.dart
-`
-
-Output in:
-`
-build/windows/x64/runner/Release/
-`
-
-Quella cartella contiene l'.exe + tutte le DLL necessarie — non è distribuibile da sola, va impacchettata.
-
-Creare l'installer con Inno Setup
-Scarica e installa Inno Setup (gratuito)
-Crea un file installer.iss:
-
-`ini
-[Setup]
-AppName=Boulder Admin
-AppVersion=1.0.0
-DefaultDirName={pf}\BoulderAdmin
-DefaultGroupName=Boulder Admin
-OutputBaseFilename=BoulderAdmin-Setup-1.0.0
-Compression=lzma
-SolidCompression=yes
-
-[Files]
-Source: "build\windows\x64\runner\Release\"; \
-  DestDir: "{app}"; Flags: ignoreversion recursesubdirs
-
-[Icons]
-Name: "{group}\Boulder Admin"; Filename: "{app}\bouldercompetition.exe"
-Name: "{commondesktop}\Boulder Admin"; Filename: "{app}\bouldercompetition.exe"
-
-[Run]
-Filename: "{app}\bouldercompetition.exe"; \
-  Description: "Avvia Boulder Admin"; Flags: nowait postinstall skipifsilent
-`
-
-Compila con Inno Setup → ottieni BoulderAdmin-Setup-1.0.0.exe
-
-> Alternativa più semplice: usa MSIX Packaging Tool di Microsoft per creare un pacchetto installabile dal Microsoft Store o via sideloading aziendale.
-
-3 — iOS (.ipa)
+########################################  Ok IOS (ipa)
+iOS (.ipa)
 Prerequisiti
 • Mac con Xcode installato
 • Apple Developer account (99$/anno) — obbligatorio per distribuire su dispositivi reali al di fuori del tuo
@@ -134,8 +82,6 @@ fvm flutter build ipa \
   --release \
   -t lib/main_athlete_prod.dart
 `
-
-> Sostituisci con mainathleteprod.dart quando hai il file di produzione.
 
 Output:
 `
@@ -153,30 +99,12 @@ Distribuzione
 
 Per caricare su App Store Connect usa Transporter (app gratuita sul Mac App Store) o xcrun altool.
 
-4 — Android (.apk / .aab)
-Build APK (installazione diretta)
-
-`bash
-fvm flutter build apk \
+Non avendo un account di sviluppatore Apple a pagamento non crea l'ipa, posso solo installarlo sul mio Iphone con questo comando:
+fvm flutter run \
   --release \
-  -t lib/main_athlete_prod.dart \
-  --split-per-abi
-`
+  -t lib/main_athlete_prod.dart
 
---split-per-abi genera tre APK separati (arm64, arm32, x8664) più leggeri invece di uno universale da 80+ MB. Gli output sono in:
-
-`
-build/app/outputs/flutter-apk/
-  app-arm64-v8a-release.apk   ← la maggior parte dei telefoni moderni
-  app-armeabi-v7a-release.apk
-  app-x8664-release.apk
-`
-
-Installa direttamente sul dispositivo con:
-`bash
-adb install build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-`
-
+############################# 
 Build AAB (Google Play Store)
 
 `bash
@@ -246,15 +174,15 @@ signingConfigs {
 
 Riepilogo comandi di build
 
-| Target            | Comando                                                             | Output                                    |
-|-------------------|---------------------------------------------------------------------|-------------------------------------------|
-| macOS app         | fvm flutter build macos --release -t lib/main_admin_prod.dart       | .app in build/macos/...                   |
-| macOS dmg         | create-dmg ... (post-build)                                         | .dmg                                      |
-| Windows exe       | fvm flutter build windows --release -t lib/main_admin_prod.dart     | cartella in build/windows/...             |
-| Windows installer | Inno Setup (post-build)                                             | .exe installer                            |
-| iOS ipa           | fvm flutter build ipa --release -t lib/main_athlete_prod.dart       | .ipa in build/ios/ipa/                    |
+| Target            | Comando                                                                       | Output                                    |
+|-------------------|-------------------------------------------------------------------------------|-------------------------------------------|
+| macOS app         | fvm flutter build macos --release -t lib/main_admin_prod.dart                 | .app in build/macos/...                   |
+| macOS dmg         | create-dmg ... (post-build)                                                   | .dmg                                      |
+| Windows exe       | fvm flutter build windows --release -t lib/main_admin_prod.dart               | cartella in build/windows/...             |
+| Windows installer | Inno Setup (post-build)                                                       | .exe installer                            |
+| iOS ipa           | fvm flutter build ipa --release -t lib/main_athlete_prod.dart                 | .ipa in build/ios/ipa/                    |
 | Android apk       | fvm flutter build apk --release --split-per-abi -t lib/main_athlete_prod.dart | .apk in build/app/outputs/flutter-apk/    |
-| Android aab       | fvm flutter build appbundle --release -t lib/main_athlete_prod.dart | .aab in build/app/outputs/bundle/release/ |
+| Android aab       | fvm flutter build appbundle --release -t lib/main_athlete_prod.dart           | .aab in build/app/outputs/bundle/release/ |
 
 Due cose da fare prima di qualsiasi build
 Versiona correttamente in pubspec.yaml — il campo version diventa il numero di versione dell'app:
