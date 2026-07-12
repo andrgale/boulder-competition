@@ -23,6 +23,7 @@ class RankingFinalPage extends StatefulWidget {
 class _RankingFinalPageState extends State<RankingFinalPage> {
   final service = RankingFinalService();
   final searchController = TextEditingController();
+  final _horizontalController = ScrollController();
 
   List<RankingFinalModel> rankings = [];
   bool loading = true;
@@ -40,6 +41,7 @@ class _RankingFinalPageState extends State<RankingFinalPage> {
   @override
   void dispose() {
     searchController.dispose();
+    _horizontalController.dispose();
     super.dispose();
   }
 
@@ -180,17 +182,55 @@ class _RankingFinalPageState extends State<RankingFinalPage> {
                 ),
 
                 // ── lista classifica ───────────────────────
+                // Expanded(
+                //   child: filtered.isEmpty
+                //       ? const Center(
+                //           child: Text('Nessun atleta in classifica'),
+                //         )
+                //       : ListView.builder(
+                //           itemCount: filtered.length,
+                //           itemBuilder: (_, i) => _RankingTile(
+                //             ranking: filtered[i],
+                //             position: i + 1,
+                //           ),
+                //         ),
+                // ),
+                // ── lista classifica ───────────────────────
                 Expanded(
                   child: filtered.isEmpty
                       ? const Center(
                           child: Text('Nessun atleta in classifica'),
                         )
-                      : ListView.builder(
-                          itemCount: filtered.length,
-                          itemBuilder: (_, i) => _RankingTile(
-                            ranking: filtered[i],
-                            position: i + 1,
-                          ),
+                      : LayoutBuilder(
+                          builder: (context, constraints) {
+                            const minContentWidth = 780.0;
+                            final contentWidth =
+                                constraints.maxWidth > minContentWidth
+                                    ? constraints.maxWidth
+                                    : minContentWidth;
+
+                            return Scrollbar(
+                              controller: _horizontalController,
+                              thumbVisibility: true,
+                              notificationPredicate: (notif) =>
+                                  notif.metrics.axis == Axis.horizontal,
+                              child: SingleChildScrollView(
+                                controller: _horizontalController,
+                                scrollDirection: Axis.horizontal,
+                                child: SizedBox(
+                                  width: contentWidth,
+                                  height: constraints.maxHeight,
+                                  child: ListView.builder(
+                                    itemCount: filtered.length,
+                                    itemBuilder: (_, i) => _RankingTile(
+                                      ranking: filtered[i],
+                                      position: i + 1,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                 ),
               ],

@@ -180,6 +180,11 @@ class _ImportJobRowsPageState
                                           ),
                                         ),
                                         const SizedBox(height: 4),
+                                        SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: SelectableText(row.rawRow),
+                                        ), 
+                                        const SizedBox(height: 4),
                                         SelectableText(row.rawRow),
                                         if (row.errorMessage != null &&
                                             row.errorMessage!.isNotEmpty) ...[

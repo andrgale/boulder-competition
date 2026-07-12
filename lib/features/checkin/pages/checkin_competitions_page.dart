@@ -7,7 +7,7 @@ import '../../../shared/app_snackbar.dart';
 import '../data/checkin_competition_service.dart';
 import '../models/checkin_competition_model.dart';
 import 'checkin_registrations_page.dart';
-
+import 'dart:math';
 
 class CheckinCompetitionsPage extends StatefulWidget {
   const CheckinCompetitionsPage({super.key});
@@ -315,8 +315,81 @@ class _CheckinCompetitionsPageState
   // DESKTOP
   // =========================================================
 
-  Widget _buildDesktopTable() {
+  // Widget _buildDesktopTable() {
+  //   final verticalController = ScrollController();
+
+  //   return Card(
+  //     elevation: 0,
+  //     shape: RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.circular(20),
+  //       side: const BorderSide(color: Color(0xFFE5E7EB)),
+  //     ),
+  //     clipBehavior: Clip.antiAlias,
+  //     child: Scrollbar(
+  //       controller: verticalController,
+  //       thumbVisibility: true,
+  //       child: SingleChildScrollView(
+  //         controller: verticalController,
+  //         scrollDirection: Axis.vertical,
+  //         child: SingleChildScrollView(
+  //           scrollDirection: Axis.horizontal,
+  //           child: ConstrainedBox(
+  //             constraints: BoxConstraints(
+  //               minWidth: MediaQuery.of(context).size.width - 360,
+  //             ),
+  //             child: DataTable(
+  //               columnSpacing: 32,
+  //               horizontalMargin: 32,
+  //               dataRowMinHeight: 72,
+  //               dataRowMaxHeight: 72,
+  //               headingRowHeight: 64,
+  //               sortAscending: sortAsc,
+  //               columns: [
+  //                 DataColumn(
+  //                   label: const Text('Descrizione'),
+  //                   onSort: (_, _) => updateSort('descrizione'),
+  //                 ),
+  //                 DataColumn(
+  //                   label: const Text('Data Gara'),
+  //                   onSort: (_, _) => updateSort('dt_gara'),
+  //                 ),
+  //                 const DataColumn(label: Text('Stato')),
+  //                 // i tre flag come colonne dedicate
+  //                 const DataColumn(
+  //                   label: _FlagColumnHeader(
+  //                     icon: Icons.person_pin,
+  //                     label: 'Presenze',
+  //                     color: Colors.blue,
+  //                   ),
+  //                 ),
+  //                 const DataColumn(
+  //                   label: _FlagColumnHeader(
+  //                     icon: Icons.payments_outlined,
+  //                     label: 'Pagamenti',
+  //                     color: Colors.green,
+  //                   ),
+  //                 ),
+  //                 const DataColumn(
+  //                   label: _FlagColumnHeader(
+  //                     icon: Icons.card_giftcard,
+  //                     label: 'Omaggi',
+  //                     color: Colors.orange,
+  //                   ),
+  //                 ),
+  //                 const DataColumn(label: Text('Azioni')),
+  //               ],
+  //               rows: competitions.map((c) => _buildRow(c)).toList(),
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+    Widget _buildDesktopTable() {
     final verticalController = ScrollController();
+    final horizontalController = ScrollController();
 
     return Card(
       elevation: 0,
@@ -331,54 +404,66 @@ class _CheckinCompetitionsPageState
         child: SingleChildScrollView(
           controller: verticalController,
           scrollDirection: Axis.vertical,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minWidth: MediaQuery.of(context).size.width - 360,
-              ),
-              child: DataTable(
-                columnSpacing: 32,
-                horizontalMargin: 32,
-                dataRowMinHeight: 72,
-                dataRowMaxHeight: 72,
-                headingRowHeight: 64,
-                sortAscending: sortAsc,
-                columns: [
-                  DataColumn(
-                    label: const Text('Descrizione'),
-                    onSort: (_, _) => updateSort('descrizione'),
+          child: Scrollbar(
+            controller: horizontalController,
+            thumbVisibility: true,
+            notificationPredicate: (notification) =>
+                notification.metrics.axis == Axis.horizontal,
+            child: SingleChildScrollView(
+              controller: horizontalController,
+              scrollDirection: Axis.horizontal,
+              child: ConstrainedBox(
+                // constraints: BoxConstraints(
+                //   minWidth: MediaQuery.of(context).size.width - 360,
+                // ),
+                constraints: BoxConstraints(
+                  minWidth: max(
+                    1200,
+                    MediaQuery.of(context).size.width - 360,
                   ),
-                  DataColumn(
-                    label: const Text('Data Gara'),
-                    onSort: (_, _) => updateSort('dt_gara'),
-                  ),
-                  const DataColumn(label: Text('Stato')),
-                  // i tre flag come colonne dedicate
-                  const DataColumn(
-                    label: _FlagColumnHeader(
-                      icon: Icons.person_pin,
-                      label: 'Presenze',
-                      color: Colors.blue,
+                ),
+                child: DataTable(
+                  columnSpacing: 32,
+                  horizontalMargin: 32,
+                  dataRowMinHeight: 72,
+                  dataRowMaxHeight: 72,
+                  headingRowHeight: 64,
+                  sortAscending: sortAsc,
+                  columns: [
+                    DataColumn(
+                      label: const Text('Descrizione'),
+                      onSort: (_, _) => updateSort('descrizione'),
                     ),
-                  ),
-                  const DataColumn(
-                    label: _FlagColumnHeader(
-                      icon: Icons.payments_outlined,
-                      label: 'Pagamenti',
-                      color: Colors.green,
+                    DataColumn(
+                      label: const Text('Data Gara'),
+                      onSort: (_, _) => updateSort('dt_gara'),
                     ),
-                  ),
-                  const DataColumn(
-                    label: _FlagColumnHeader(
-                      icon: Icons.card_giftcard,
-                      label: 'Omaggi',
-                      color: Colors.orange,
+                    const DataColumn(label: Text('Stato')),
+                    const DataColumn(
+                      label: _FlagColumnHeader(
+                        icon: Icons.person_pin,
+                        label: 'Presenze',
+                        color: Colors.blue,
+                      ),
                     ),
-                  ),
-                  const DataColumn(label: Text('Azioni')),
-                ],
-                rows: competitions.map((c) => _buildRow(c)).toList(),
+                    const DataColumn(
+                      label: _FlagColumnHeader(
+                        icon: Icons.payments_outlined,
+                        label: 'Pagamenti',
+                        color: Colors.green,
+                      ),
+                    ),
+                    const DataColumn(
+                      label: _FlagColumnHeader(
+                        icon: Icons.card_giftcard,
+                        label: 'Omaggi',
+                        color: Colors.orange,
+                      ),
+                    ),
+                    const DataColumn(label: Text('Azioni')),
+                  ],
+                  rows: competitions.map((c) => _buildRow(c)).toList(),
+                ),
               ),
             ),
           ),

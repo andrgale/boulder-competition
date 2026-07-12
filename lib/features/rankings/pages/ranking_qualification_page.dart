@@ -27,6 +27,7 @@ class _RankingQualificazionePageState
     extends State<RankingQualificationPage> {
   final service = RankingQualificazioneService();
   final searchController = TextEditingController();
+  final _horizontalController = ScrollController();
 
   List<RankingQualificationModel> rankings = [];
   bool loading = true;
@@ -44,6 +45,7 @@ class _RankingQualificazionePageState
   @override
   void dispose() {
     searchController.dispose();
+    _horizontalController.dispose();
     super.dispose();
   }
 
@@ -185,23 +187,68 @@ class _RankingQualificazionePageState
                 ),
 
                 // ── lista classifica ───────────────────────
+                // Expanded(
+                //   child: filtered.isEmpty
+                //       ? const Center(
+                //           child: Text('Nessun atleta in classifica'),
+                //         )
+                //       : ListView.builder(
+                //           itemCount: filtered.length,
+                //           itemBuilder: (_, i) => _RankingTile(
+                //             ranking: filtered[i],
+                //             // La posizione qui rispecchia l'ordine
+                //             // dell'elenco FILTRATO, ma il colore finalisti
+                //             // si basa sull'ordine GENERALE per coerenza
+                //             // con la classifica reale, non con il filtro
+                //             // sesso applicato. Vedi nota sotto.
+                //             position: i + 1,
+                //             isFinalist: _isFinalist(filtered[i]),
+                //           ),
+                //         ),
+                // ),
+                // ── lista classifica ───────────────────────
                 Expanded(
                   child: filtered.isEmpty
                       ? const Center(
                           child: Text('Nessun atleta in classifica'),
                         )
-                      : ListView.builder(
-                          itemCount: filtered.length,
-                          itemBuilder: (_, i) => _RankingTile(
-                            ranking: filtered[i],
-                            // La posizione qui rispecchia l'ordine
-                            // dell'elenco FILTRATO, ma il colore finalisti
-                            // si basa sull'ordine GENERALE per coerenza
-                            // con la classifica reale, non con il filtro
-                            // sesso applicato. Vedi nota sotto.
-                            position: i + 1,
-                            isFinalist: _isFinalist(filtered[i]),
-                          ),
+                      : LayoutBuilder(
+                          builder: (context, constraints) {
+                            const minContentWidth = 720.0;
+                            final contentWidth =
+                                constraints.maxWidth > minContentWidth
+                                    ? constraints.maxWidth
+                                    : minContentWidth;
+
+                            return Scrollbar(
+                              controller: _horizontalController,
+                              thumbVisibility: true,
+                              notificationPredicate: (notif) =>
+                                  notif.metrics.axis == Axis.horizontal,
+                              child: SingleChildScrollView(
+                                controller: _horizontalController,
+                                scrollDirection: Axis.horizontal,
+                                child: SizedBox(
+                                  width: contentWidth,
+                                  height: constraints.maxHeight,
+                                  child: ListView.builder(
+                                    itemCount: filtered.length,
+                                    itemBuilder: (_, i) => _RankingTile(
+                                      ranking: filtered[i],
+                                      // La posizione qui rispecchia l'ordine
+                                      // dell'elenco FILTRATO, ma il colore
+                                      // finalisti si basa sull'ordine
+                                      // GENERALE per coerenza con la
+                                      // classifica reale, non con il filtro
+                                      // sesso applicato. Vedi nota sotto.
+                                      position: i + 1,
+                                      isFinalist: _isFinalist(filtered[i]),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                 ),
               ],

@@ -17,6 +17,9 @@ class ImportJobsPage extends StatefulWidget {
 class _ImportJobsPageState
     extends State<ImportJobsPage> {
   final service = ImportJobService();
+  final _verticalController = ScrollController();   
+  final _horizontalController = ScrollController(); 
+
 
   List<ImportJobModel> jobs = [];
 
@@ -28,6 +31,12 @@ class _ImportJobsPageState
     loadRealtime();
   }
 
+  @override
+    void dispose() {
+      _verticalController.dispose();
+      _horizontalController.dispose();
+      super.dispose();
+    }
   // =====================================================
   // REFRESH
   // =====================================================
@@ -116,147 +125,123 @@ class _ImportJobsPageState
   // =====================================================
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Importazioni CSV',
+    Widget build(
+      BuildContext context,
+    ) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Importazioni CSV',
+          ),
         ),
-      ),
-      body: loading
-          ? const Center(
-              child:
-                  CircularProgressIndicator(),
-            )
-          : jobs.isEmpty
-              ? const Center(
-                  child: Text(
-                    'Nessuna importazione trovata',
+        body: loading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : jobs.isEmpty
+                ? const Center(
+                    child: Text(
+                      'Nessuna importazione trovata',
+                    ),
+                  )
+                : LayoutBuilder(
+                    builder: (context, constraints) {
+                      const minContentWidth = 900.0;
+                      final contentWidth =
+                          constraints.maxWidth > minContentWidth
+                              ? constraints.maxWidth
+                              : minContentWidth;
+
+                      return Scrollbar(
+                        controller: _verticalController,
+                        thumbVisibility: true,
+                        notificationPredicate: (notif) =>
+                            notif.metrics.axis == Axis.vertical,
+                        child: SingleChildScrollView(
+                          controller: _verticalController,
+                          scrollDirection: Axis.vertical,
+                          child: Scrollbar(
+                            controller: _horizontalController,
+                            thumbVisibility: true,
+                            notificationPredicate: (notif) =>
+                                notif.metrics.axis == Axis.horizontal,
+                            child: SingleChildScrollView(
+                              controller: _horizontalController,
+                              scrollDirection: Axis.horizontal,
+                              child: ConstrainedBox(
+                                constraints:
+                                    BoxConstraints(minWidth: contentWidth),
+                                child: DataTable(
+                                  columns: const [
+                                    DataColumn(label: Text('Data import')),
+                                    DataColumn(label: Text('Gara')),
+                                    DataColumn(label: Text('File')),
+                                    DataColumn(
+                                      numeric: true,
+                                      label: Text('Totali'),
+                                    ),
+                                    DataColumn(
+                                      numeric: true,
+                                      label: Text('Inseriti'),
+                                    ),
+                                    DataColumn(
+                                      numeric: true,
+                                      label: Text('Scartati'),
+                                    ),
+                                    DataColumn(label: Text('Stato')),
+                                    DataColumn(label: Text('Dettaglio')),
+                                  ],
+                                  rows: jobs.map(
+                                    (job) {
+                                      return DataRow(
+                                        cells: [
+                                          DataCell(
+                                            Text(formatDate(job.startedAt)),
+                                          ),
+                                          DataCell(
+                                            Text(
+                                              job.competitionDescription ??
+                                                  '-',
+                                            ),
+                                          ),
+                                          DataCell(Text(job.fileName)),
+                                          DataCell(
+                                            Text(job.totalRows.toString()),
+                                          ),
+                                          DataCell(
+                                            Text(job.insertedRows.toString()),
+                                          ),
+                                          DataCell(
+                                            Text(job.discardedRows.toString()),
+                                          ),
+                                          DataCell(
+                                            Chip(
+                                              label: Text(job.status),
+                                              backgroundColor:
+                                                  getStatusColor(job.status),
+                                            ),
+                                          ),
+                                          DataCell(
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.visibility,
+                                              ),
+                                              tooltip: 'Dettaglio',
+                                              onPressed: () => openDetail(job),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ).toList(),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                )
-              : SingleChildScrollView(
-                  scrollDirection:
-                      Axis.horizontal,
-                  child: DataTable(
-                    columns: const [
-                      DataColumn(
-                        label: Text(
-                          'Data import',
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Gara',
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'File',
-                        ),
-                      ),
-                      DataColumn(
-                        numeric: true,
-                        label: Text(
-                          'Totali',
-                        ),
-                      ),
-                      DataColumn(
-                        numeric: true,
-                        label: Text(
-                          'Inseriti',
-                        ),
-                      ),
-                      DataColumn(
-                        numeric: true,
-                        label: Text(
-                          'Scartati',
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Stato',
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Dettaglio',
-                        ),
-                      ),
-                    ],
-                    rows: jobs.map(
-                      (job) {
-                        return DataRow(
-                          cells: [
-                            DataCell(
-                              Text(
-                                formatDate(
-                                  job.startedAt,
-                                ),
-                              ),
-                            ),
-                            DataCell(
-                              Text(
-                                job.competitionDescription ?? '-',
-                              ),
-                            ),
-                            DataCell(
-                              Text(
-                                job.fileName,
-                              ),
-                            ),
-                            DataCell(
-                              Text(
-                                job.totalRows
-                                    .toString(),
-                              ),
-                            ),
-                            DataCell(
-                              Text(
-                                job.insertedRows
-                                    .toString(),
-                              ),
-                            ),
-                            DataCell(
-                              Text(
-                                job.discardedRows
-                                    .toString(),
-                              ),
-                            ),
-                            DataCell(
-                              Chip(
-                                label: Text(
-                                  job.status,
-                                ),
-                                backgroundColor:
-                                    getStatusColor(
-                                  job.status,
-                                ),
-                              ),
-                            ),
-                            DataCell(
-                              IconButton(
-                                icon:
-                                    const Icon(
-                                  Icons
-                                      .visibility,
-                                ),
-                                tooltip:
-                                    'Dettaglio',
-                                onPressed:
-                                    () =>
-                                        openDetail(
-                                  job,
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ).toList(),
-                  ),
-                ),
-    );
-  }
+      );
+    }
 }

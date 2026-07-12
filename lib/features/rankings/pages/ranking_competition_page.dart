@@ -19,6 +19,9 @@ class _RankingsCompetitionsPageState
     extends State<RankingsCompetitionsPage> {
   final service = RankingsCompetitionService();
   final searchController = TextEditingController();
+  final _verticalController = ScrollController();   // ← nuovo
+  final _horizontalController = ScrollController();  // ← nuovo
+
 
   List<RankingCompetitionModel> allCompetitions = [];
   List<RankingCompetitionModel> competitions = [];
@@ -37,6 +40,8 @@ class _RankingsCompetitionsPageState
   @override
   void dispose() {
     searchController.dispose();
+    _verticalController.dispose();   // ← nuovo
+    _horizontalController.dispose(); // ← nuovo
     super.dispose();
   }
 
@@ -310,8 +315,6 @@ class _RankingsCompetitionsPageState
   // =========================================================
 
   Widget _buildDesktopTable() {
-    final verticalController = ScrollController();
-
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -319,44 +322,60 @@ class _RankingsCompetitionsPageState
         side: const BorderSide(color: Color(0xFFE5E7EB)),
       ),
       clipBehavior: Clip.antiAlias,
-      child: Scrollbar(
-        controller: verticalController,
-        thumbVisibility: true,
-        child: SingleChildScrollView(
-          controller: verticalController,
-          scrollDirection: Axis.vertical,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minWidth: MediaQuery.of(context).size.width - 360,
-              ),
-              child: DataTable(
-                columnSpacing: 24,
-                horizontalMargin: 32,
-                dataRowMinHeight: 72,
-                dataRowMaxHeight: 72,
-                headingRowHeight: 56,
-                sortAscending: sortAsc,
-                columns: [
-                  DataColumn(
-                    label: const Text('Descrizione'),
-                    onSort: (_, _) => updateSort('descrizione'),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          const minContentWidth = 900.0;
+          final contentWidth = constraints.maxWidth > minContentWidth
+              ? constraints.maxWidth
+              : minContentWidth;
+
+          return Scrollbar(
+            controller: _verticalController,
+            thumbVisibility: true,
+            notificationPredicate: (notif) =>
+                notif.metrics.axis == Axis.vertical,
+            child: SingleChildScrollView(
+              controller: _verticalController,
+              scrollDirection: Axis.vertical,
+              child: Scrollbar(
+                controller: _horizontalController,
+                thumbVisibility: true,
+                notificationPredicate: (notif) =>
+                    notif.metrics.axis == Axis.horizontal,
+                child: SingleChildScrollView(
+                  controller: _horizontalController,
+                  scrollDirection: Axis.horizontal,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minWidth: contentWidth),
+                    child: DataTable(
+                      columnSpacing: 24,
+                      horizontalMargin: 32,
+                      dataRowMinHeight: 72,
+                      dataRowMaxHeight: 72,
+                      headingRowHeight: 56,
+                      sortAscending: sortAsc,
+                      columns: [
+                        DataColumn(
+                          label: const Text('Descrizione'),
+                          onSort: (_, _) => updateSort('descrizione'),
+                        ),
+                        DataColumn(
+                          label: const Text('Data Gara'),
+                          onSort: (_, _) => updateSort('dt_gara'),
+                        ),
+                        const DataColumn(label: Text('Stato')),
+                        const DataColumn(label: Text('Qualificazioni')),
+                        const DataColumn(label: Text('Finale')),
+                        const DataColumn(label: Text('Top e Zone')),
+                      ],
+                      rows: competitions.map((c) => _buildRow(c)).toList(),
+                    ),
                   ),
-                  DataColumn(
-                    label: const Text('Data Gara'),
-                    onSort: (_, _) => updateSort('dt_gara'),
-                  ),
-                  const DataColumn(label: Text('Stato')),
-                  const DataColumn(label: Text('Qualificazioni')),
-                  const DataColumn(label: Text('Finale')),
-                  const DataColumn(label: Text('Top e Zone')),
-                ],
-                rows: competitions.map((c) => _buildRow(c)).toList(),
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

@@ -11,20 +11,8 @@ import 'config/app_mode.dart';
 
 import 'core/routing/app_router.dart';
 
-// Future<void> main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
+import 'package:flutter_localizations/flutter_localizations.dart';
 
-//   // LOAD DEV ENV
-//   ProdEnv.load();
-
-//   // INIT SUPABASE
-//   await Supabase.initialize(
-//     url: Env.supabaseUrl,
-//     anonKey: Env.supabaseAnonKey,
-//   );
-
-//   runApp(const MyApp());
-// }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,6 +35,17 @@ class AdminApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+       localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+
+      supportedLocales: const [
+        Locale('it', 'IT'),
+        Locale('en', 'EN'),
+      ],
+
       debugShowCheckedModeBanner: false,
       routerConfig: appRouter,
       title: 'Boulder Admin',
@@ -57,22 +56,22 @@ class AdminApp extends StatelessWidget {
     );
   }
 }
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Boulder Competition Prod',
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp.router(
+//       title: 'Boulder Competition Prod',
 
-      debugShowCheckedModeBanner: false,
+//       debugShowCheckedModeBanner: false,
 
-      routerConfig: appRouter,
+//       routerConfig: appRouter,
 
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: Colors.blue,
-      ),
-    );
-  }
-}
+//       theme: ThemeData(
+//         useMaterial3: true,
+//         colorSchemeSeed: Colors.blue,
+//       ),
+//     );
+//   }
+// }

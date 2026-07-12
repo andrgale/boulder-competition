@@ -69,8 +69,8 @@ class MyApp extends StatelessWidget {
       ],
 
       supportedLocales: const [
-        Locale('it'),
-        Locale('en'),
+        Locale('it', 'IT'),
+        Locale('en', 'EN'),
       ],
       title: 'Boulder Competition DEV',
 

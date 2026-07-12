@@ -33,6 +33,7 @@ class _CheckinRegistrationsPageState
     extends State<CheckinRegistrationsPage> {
   final service = CheckinRegistrationService();
   final searchController = TextEditingController();
+  final _horizontalController = ScrollController();
 
   List<CheckinRegistrationModel> registrations = [];
   bool loading = true;
@@ -60,6 +61,7 @@ class _CheckinRegistrationsPageState
   @override
   void dispose() {
     searchController.dispose();
+    _horizontalController.dispose();
     super.dispose();
   }
 
@@ -242,22 +244,48 @@ class _CheckinRegistrationsPageState
                   showPagato: widget.flGestionePagamenti,
                   showOmaggio: widget.flGestioneOmaggi,
                 ),
-
-                // ── lista ─────────────────────────────────
+              // ── lista ─────────────────────────────────
                 Expanded(
                   child: filtered.isEmpty
                       ? const Center(
                           child: Text('Nessuna iscrizione trovata'),
                         )
-                      : ListView.builder(
-                          itemCount: filtered.length,
-                          itemBuilder: (_, i) => _RegistrationTile(
-                            registration: filtered[i],
-                            onToggle: _toggleFlag,
-                            enablePresente: widget.flGestionePresenze,
-                            enablePagato: widget.flGestionePagamenti,
-                            enableOmaggio: widget.flGestioneOmaggi,
-                          ),
+                      : LayoutBuilder(
+                          builder: (context, constraints) {
+                            const minContentWidth = 720.0;
+                            final contentWidth =
+                                constraints.maxWidth > minContentWidth
+                                    ? constraints.maxWidth
+                                    : minContentWidth;
+
+                            return Scrollbar(
+                              controller: _horizontalController,
+                              thumbVisibility: true,
+                              notificationPredicate: (notif) =>
+                                  notif.metrics.axis == Axis.horizontal,
+                              child: SingleChildScrollView(
+                                controller: _horizontalController,
+                                scrollDirection: Axis.horizontal,
+                                child: SizedBox(
+                                  width: contentWidth,
+                                  height: constraints.maxHeight,
+                                  child: ListView.builder(
+                                    itemCount: filtered.length,
+                                    itemBuilder: (_, i) => _RegistrationTile(
+                                      registration: filtered[i],
+                                      onToggle: _toggleFlag,
+                                      enablePresente:
+                                          widget.flGestionePresenze,
+                                      enablePagato:
+                                          widget.flGestionePagamenti,
+                                      enableOmaggio:
+                                          widget.flGestioneOmaggi,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                 ),
               ],
