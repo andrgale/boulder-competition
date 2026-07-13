@@ -1,6 +1,6 @@
 Guida alla build degli eseguibili
 
-########################################################## ok MacOs ∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞
+#### ok MacOs ∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞
 1 — macOS (.app + .dmg)
 Build dell'app
 
@@ -38,7 +38,7 @@ create-dmg \
   "BoulderAdmin-1.0.1.dmg" \
   "build/macos/Build/Products/Release/boulder_competition.app"
 
-#################################################################### Ok Windows ############
+### Ok Windows ############
 
 brew install gh
 gh auth login
@@ -55,7 +55,7 @@ export GITHUB_TOKEN=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
 comando per lanciare github action e creare l'eseguibile windows:
 Cmd + Shift + B
 
-######################################################### Ok Android ##############
+### Ok Android ##############
 
 fvm flutter build apk \
   --release \
@@ -68,7 +68,7 @@ fvm flutter build apk \
 
 adb install -r build/app/outputs/flutter-apk/boulder_competition.apk
 
-########################################  Ok IOS (ipa)
+####  Ok IOS (ipa)
 iOS (.ipa)
 Prerequisiti
 • Mac con Xcode installato
@@ -88,7 +88,7 @@ Output:
 build/ios/ipa/bouldercompetition.ipa
 `
 
-Distribuzione
+### Distribuzione
 
 | Canale                         | Come                                                                                      |
 |--------------------------------|-------------------------------------------------------------------------------------------|
@@ -104,8 +104,7 @@ fvm flutter run \
   --release \
   -t lib/main_athlete_prod.dart
 
-############################# 
-Build AAB (Google Play Store)
+### Build AAB (Google Play Store)
 
 `bash
 fvm flutter build appbundle \
@@ -191,7 +190,7 @@ Versiona correttamente in pubspec.yaml — il campo version diventa il numero di
    `
 
 
-***** creazione profilo su xcode ***********
+*** creazione profilo su xcode ***********
 
 1. Verifica di avere un Apple Developer Account
 
