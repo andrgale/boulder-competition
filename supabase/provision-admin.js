@@ -6,7 +6,7 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-const ADMIN_ROLE_CODE = 'ADMIN';
+const ADMIN_ROLE_CODE = 'admin';
 
 async function provisionAdmin() {
 
@@ -15,31 +15,129 @@ async function provisionAdmin() {
   const nome = process.env.ADMIN_NOME;
   const cognome = process.env.ADMIN_COGNOME;
 
-  // creazione auth user
+  console.log(`Provisioning admin: ${email}`);
 
-  const { data: userData, error: userError } =
-    await supabase.auth.admin.createUser({
-      email,
-      password,
-      email_confirm: true
-    });
+  // Recupera ruolo ADMIN
 
-  if (userError) {
-    throw userError;
+  const { data: role, error: roleError } =
+    await supabase
+      .from('roles')
+      .select('id')
+      .eq('code', ADMIN_ROLE_CODE)
+      .maybeSingle();
+
+  if (roleError) {
+    throw roleError;
   }
 
-  const authUserId = userData.user.id;
+  if (!role) {
+    throw new Error(
+      `Ruolo '${ADMIN_ROLE_CODE}' non trovato nella tabella roles`
+    );
+  }
 
-  // profilo
+  // Cerca profilo esistente
+
+  const { data: existingProfile, error: profileSearchError } =
+    await supabase
+      .from('profiles')
+      .select('id, email')
+      .eq('email', email)
+      .maybeSingle();
+
+  if (profileSearchError) {
+    throw profileSearchError;
+  }
+
+  // Se il profilo esiste già verifica user_roles
+
+  if (existingProfile) {
+
+    console.log('Profilo admin già presente');
+
+    const { data: existingUserRole, error: userRoleSearchError } =
+      await supabase
+        .from('user_roles')
+        .select('*')
+        .eq('profile_id', existingProfile.id)
+        .eq('role_id', role.id)
+        .maybeSingle();
+
+    if (userRoleSearchError) {
+      throw userRoleSearchError;
+    }
+
+    if (!existingUserRole) {
+
+      const { error: userRoleError } =
+        await supabase
+          .from('user_roles')
+          .insert({
+            profile_id: existingProfile.id,
+            role_id: role.id
+          });
+
+      if (userRoleError) {
+        throw userRoleError;
+      }
+
+      console.log('Ruolo ADMIN assegnato al profilo');
+    }
+
+    console.log('Admin già configurato');
+    return;
+  }
+
+  // Cerca utente Auth
+
+  const { data: usersData, error: listError } =
+    await supabase.auth.admin.listUsers();
+
+  if (listError) {
+    throw listError;
+  }
+
+  const existingAuthUser =
+    usersData.users.find(u => u.email === email);
+
+  let authUserId;
+
+  if (existingAuthUser) {
+
+    console.log('Utente Auth già presente');
+
+    authUserId = existingAuthUser.id;
+
+  } else {
+
+    console.log('Creazione utente Auth...');
+
+    const { data: userData, error: userError } =
+      await supabase.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true
+      });
+
+    if (userError) {
+      throw userError;
+    }
+
+    authUserId = userData.user.id;
+
+    console.log(`Utente Auth creato: ${authUserId}`);
+  }
+
+  // Creazione profilo
 
   const { data: profile, error: profileError } =
     await supabase
       .from('profiles')
       .insert({
         auth_user_id: authUserId,
-        email: email,
-        nome: nome,
-        cognome: cognome,
+        email,
+        nome,
+        cognome,
         password_changed: false
       })
       .select()
@@ -49,20 +147,9 @@ async function provisionAdmin() {
     throw profileError;
   }
 
-  // recupera ruolo ADMIN
+  console.log('Profilo creato');
 
-  const { data: role, error: roleError } =
-    await supabase
-      .from('roles')
-      .select('id')
-      .eq('code', ADMIN_ROLE_CODE)
-      .single();
-
-  if (roleError) {
-    throw roleError;
-  }
-
-  // collega utente -> ruolo
+  // Associazione ruolo
 
   const { error: userRoleError } =
     await supabase
@@ -76,8 +163,8 @@ async function provisionAdmin() {
     throw userRoleError;
   }
 
-  console.log('Admin creato correttamente');
-  console.log('Auth User ID:', authUserId);
+  console.log('Ruolo ADMIN associato');
+  console.log('Provisioning completato');
 }
 
 provisionAdmin()

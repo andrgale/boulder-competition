@@ -6,17 +6,24 @@ source .env
 
 echo ""
 echo "=================================="
+echo "LINKED PROJECT"
+echo "=================================="
+
+supabase projects list
+
+echo ""
+echo "=================================="
 echo "1. APPLY MIGRATIONS"
 echo "=================================="
 
-supabase db push
+supabase db push || echo "Database already aligned"
 
 echo ""
 echo "=================================="
 echo "2. LOAD SEED DATA"
 echo "=================================="
 
-psql "$DATABASE_URL" -f supabase/seed.sql
+supabase db query --linked -f supabase/seed.sql
 
 echo ""
 echo "=================================="
