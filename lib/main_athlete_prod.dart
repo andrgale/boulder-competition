@@ -23,6 +23,7 @@ Future<void> main() async {
   );
 
   AppConfig.mode = AppMode.athlete;
+  AppConfig.mostraCampo = false;
 
   runApp(const AthleteApp());
 }

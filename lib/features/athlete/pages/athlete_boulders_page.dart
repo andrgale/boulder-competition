@@ -5,6 +5,7 @@ import '../models/athlete_boulders_page_data.dart';
 import '../data/athlete_boulder_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../config/app_mode.dart';
 
 enum AthleteFilter {
   all,
@@ -311,26 +312,27 @@ class _AthleteBouldersPageState
                           ),
                         ),
                       ),
-                      TextButton.icon(
-                        icon: const Icon(
-                          Icons.logout,
-                          size: 18,
+                      if(AppConfig.mostraCampo)
+                        TextButton.icon(
+                          icon: const Icon(
+                            Icons.logout,
+                            size: 18,
+                          ),
+                          label: const Text('Esci'),
+                          onPressed: () async {
+                            await Supabase
+                                .instance
+                                .client
+                                .auth
+                                .signOut();
+
+                            if (!mounted) return;
+
+                            context.go(
+                              '/athlete-login',
+                            );
+                          },
                         ),
-                        label: const Text('Esci'),
-                        onPressed: () async {
-                          await Supabase
-                              .instance
-                              .client
-                              .auth
-                              .signOut();
-
-                          if (!mounted) return;
-
-                          context.go(
-                            '/athlete-login',
-                          );
-                        },
-                      ),
                     ],
                   ),
 

@@ -5,6 +5,7 @@ enum AppMode {
 
 class AppConfig {
   static late AppMode mode;
+  static late bool mostraCampo;
 
   static bool get isAthlete =>
       mode == AppMode.athlete;
