@@ -122,5 +122,937 @@
     "categoryLabelMaxAge": "Età massima",
     "@categoryLabelMaxAge": {
     "description": "Etichetta del campo età massima della categoria"
-    }
+    },
+    "registrationTitle": "Titolo iscrizione",
+    "@registrationTitle": {
+      "description": "Iscrizione - Titolo"
+    },
+    "registrationButtonRegister": "Pulsante iscrizione",
+    "@registrationButtonRegister": {
+      "description": "Iscrizione - Pulsante registrazione"
+    },
+    "registrationMessageSuccess": "Messaggio iscrizione completata",
+    "@registrationMessageSuccess": {
+      "description": "Iscrizione - Messaggio di successo"
+    },
+    "registrationLabelBib": "Etichetta pettorale",
+    "@registrationLabelBib": {
+      "description": "Iscrizione - Etichetta pettorale"
+    },
+    "registrationLabelClub": "Etichetta società",
+    "@registrationLabelClub": {
+      "description": "Iscrizione - Etichetta società"
+    },
+    "athleteTitle": "Titolo atleta",
+    "@athleteTitle": {
+      "description": "Atleta - Titolo"
+    },
+    "athleteLabelFirstName": "Etichetta nome",
+    "@athleteLabelFirstName": {
+      "description": "Atleta - Etichetta nome"
+    },
+    "athleteLabelLastName": "Etichetta cognome",
+    "@athleteLabelLastName": {
+      "description": "Atleta - Etichetta cognome"
+    },
+    "athleteLabelBirthDate": "Etichetta data di nascita",
+    "@athleteLabelBirthDate": {
+      "description": "Atleta - Etichetta data di nascita"
+    },
+    "boulderTitle": "Titolo boulder",
+    "@boulderTitle": {
+      "description": "Boulder - Titolo"
+    },
+    "boulderLabelNumber": "Numero boulder",
+    "@boulderLabelNumber": {
+      "description": "Boulder - Numero"
+    },
+    "boulderLabelDifficulty": "Difficoltà boulder",
+    "@boulderLabelDifficulty": {
+      "description": "Boulder - Difficoltà"
+    },
+    "boulderLabelColor": "Colore boulder",
+    "@boulderLabelColor": {
+      "description": "Boulder - Colore"
+    },
+    "boulderLabelTop": "Top boulder",
+    "@boulderLabelTop": {
+      "description": "Boulder - Top"
+    },
+    "boulderLabelZone": "Zona boulder",
+    "@boulderLabelZone": {
+      "description": "Boulder - Zona"
+    },
+    "checkinTitle": "Titolo check-in",
+    "@checkinTitle": {
+      "description": "Check-in - Titolo"
+    },
+    "checkinButtonScanQr": "Pulsante scansione QR",
+    "@checkinButtonScanQr": {
+      "description": "Check-in - Pulsante scansione QR"
+    },
+    "checkinMessageCompleted": "Messaggio check-in completato",
+    "@checkinMessageCompleted": {
+      "description": "Check-in - Messaggio completato"
+    },
+    "checkinMessageNotFound": "Messaggio non trovato",
+    "@checkinMessageNotFound": {
+      "description": "Check-in - Messaggio non trovato"
+    },
+    "rankingTitle": "Titolo classifica",
+    "@rankingTitle": {
+      "description": "Classifica - Titolo"
+    },
+    "rankingLabelPosition": "Posizione",
+    "@rankingLabelPosition": {
+      "description": "Classifica - Posizione"
+    },
+    "rankingLabelScore": "Punteggio",
+    "@rankingLabelScore": {
+      "description": "Classifica - Punteggio"
+    },
+    "rankingLabelAttempts": "Tentativi",
+    "@rankingLabelAttempts": {
+      "description": "Classifica - Tentativi"
+    },
+    "adminDashboard": "Dashboard amministrativa",
+    "@adminDashboard": {
+    "description": "Amministrazione - Dashboard"
+    },
+    "adminUsers": "Utenti",
+    "@adminUsers": {
+    "description": "Amministrazione - Utenti"
+    },
+    "adminRoles": "Ruoli",
+    "@adminRoles": {
+    "description": "Amministrazione - Ruoli"
+    },
+    "adminPermissions": "Permessi",
+    "@adminPermissions": {
+    "description": "Amministrazione - Permessi"
+    },
+    "adminSettings": "Impostazioni",
+    "@adminSettings": {
+    "description": "Amministrazione - Impostazioni"
+    },
+    "errorGeneric": "Errore generico",
+    "@errorGeneric": {
+    "description": "Errore - Generico"
+    },
+    "errorNetwork": "Errore di rete",
+    "@errorNetwork": {
+    "description": "Errore - Rete"
+    },
+    "errorUnauthorized": "Accesso non autorizzato",
+    "@errorUnauthorized": {
+    "description": "Errore - Non autorizzato"
+    },
+    "errorCompetitionClosed": "Gara chiusa",
+    "@errorCompetitionClosed": {
+    "description": "Errore - Gara chiusa"
+    },
+    "errorSavingData": "Errore durante il salvataggio dei dati",
+    "@errorSavingData": {
+    "description": "Errore - Salvataggio dati"
+    },
+      "competitionMessageCustom1": "Messaggio gara 1",
+  "@competitionMessageCustom1": {
+    "description": "Custom competition message 1"
+  },
+  "competitionMessageCustom2": "Messaggio gara 2",
+  "@competitionMessageCustom2": {
+    "description": "Custom competition message 2"
+  },
+  "competitionMessageCustom3": "Messaggio gara 3",
+  "@competitionMessageCustom3": {
+    "description": "Custom competition message 3"
+  },
+  "competitionMessageCustom4": "Messaggio gara 4",
+  "@competitionMessageCustom4": {
+    "description": "Custom competition message 4"
+  },
+  "competitionMessageCustom5": "Messaggio gara 5",
+  "@competitionMessageCustom5": {
+    "description": "Custom competition message 5"
+  },
+  "competitionMessageCustom6": "Messaggio gara 6",
+  "@competitionMessageCustom6": {
+    "description": "Custom competition message 6"
+  },
+  "competitionMessageCustom7": "Messaggio gara 7",
+  "@competitionMessageCustom7": {
+    "description": "Custom competition message 7"
+  },
+  "competitionMessageCustom8": "Messaggio gara 8",
+  "@competitionMessageCustom8": {
+    "description": "Custom competition message 8"
+  },
+  "competitionMessageCustom9": "Messaggio gara 9",
+  "@competitionMessageCustom9": {
+    "description": "Custom competition message 9"
+  },
+  "competitionMessageCustom10": "Messaggio gara 10",
+  "@competitionMessageCustom10": {
+    "description": "Custom competition message 10"
+  },
+  "competitionMessageCustom11": "Messaggio gara 11",
+  "@competitionMessageCustom11": {
+    "description": "Custom competition message 11"
+  },
+  "competitionMessageCustom12": "Messaggio gara 12",
+  "@competitionMessageCustom12": {
+    "description": "Custom competition message 12"
+  },
+  "competitionMessageCustom13": "Messaggio gara 13",
+  "@competitionMessageCustom13": {
+    "description": "Custom competition message 13"
+  },
+  "competitionMessageCustom14": "Messaggio gara 14",
+  "@competitionMessageCustom14": {
+    "description": "Custom competition message 14"
+  },
+  "competitionMessageCustom15": "Messaggio gara 15",
+  "@competitionMessageCustom15": {
+    "description": "Custom competition message 15"
+  },
+  "competitionMessageCustom16": "Messaggio gara 16",
+  "@competitionMessageCustom16": {
+    "description": "Custom competition message 16"
+  },
+  "competitionMessageCustom17": "Messaggio gara 17",
+  "@competitionMessageCustom17": {
+    "description": "Custom competition message 17"
+  },
+  "competitionMessageCustom18": "Messaggio gara 18",
+  "@competitionMessageCustom18": {
+    "description": "Custom competition message 18"
+  },
+  "competitionMessageCustom19": "Messaggio gara 19",
+  "@competitionMessageCustom19": {
+    "description": "Custom competition message 19"
+  },
+  "competitionMessageCustom20": "Messaggio gara 20",
+  "@competitionMessageCustom20": {
+    "description": "Custom competition message 20"
+  },
+  "competitionMessageCustom21": "Messaggio gara 21",
+  "@competitionMessageCustom21": {
+    "description": "Custom competition message 21"
+  },
+  "competitionMessageCustom22": "Messaggio gara 22",
+  "@competitionMessageCustom22": {
+    "description": "Custom competition message 22"
+  },
+  "competitionMessageCustom23": "Messaggio gara 23",
+  "@competitionMessageCustom23": {
+    "description": "Custom competition message 23"
+  },
+  "competitionMessageCustom24": "Messaggio gara 24",
+  "@competitionMessageCustom24": {
+    "description": "Custom competition message 24"
+  },
+  "competitionMessageCustom25": "Messaggio gara 25",
+  "@competitionMessageCustom25": {
+    "description": "Custom competition message 25"
+  },
+  "competitionMessageCustom26": "Messaggio gara 26",
+  "@competitionMessageCustom26": {
+    "description": "Custom competition message 26"
+  },
+  "competitionMessageCustom27": "Messaggio gara 27",
+  "@competitionMessageCustom27": {
+    "description": "Custom competition message 27"
+  },
+  "competitionMessageCustom28": "Messaggio gara 28",
+  "@competitionMessageCustom28": {
+    "description": "Custom competition message 28"
+  },
+  "competitionMessageCustom29": "Messaggio gara 29",
+  "@competitionMessageCustom29": {
+    "description": "Custom competition message 29"
+  },
+  "competitionMessageCustom30": "Messaggio gara 30",
+  "@competitionMessageCustom30": {
+    "description": "Custom competition message 30"
+  },
+  "competitionMessageCustom31": "Messaggio gara 31",
+  "@competitionMessageCustom31": {
+    "description": "Custom competition message 31"
+  },
+  "competitionMessageCustom32": "Messaggio gara 32",
+  "@competitionMessageCustom32": {
+    "description": "Custom competition message 32"
+  },
+  "competitionMessageCustom33": "Messaggio gara 33",
+  "@competitionMessageCustom33": {
+    "description": "Custom competition message 33"
+  },
+  "competitionMessageCustom34": "Messaggio gara 34",
+  "@competitionMessageCustom34": {
+    "description": "Custom competition message 34"
+  },
+  "competitionMessageCustom35": "Messaggio gara 35",
+  "@competitionMessageCustom35": {
+    "description": "Custom competition message 35"
+  },
+  "competitionMessageCustom36": "Messaggio gara 36",
+  "@competitionMessageCustom36": {
+    "description": "Custom competition message 36"
+  },
+  "competitionMessageCustom37": "Messaggio gara 37",
+  "@competitionMessageCustom37": {
+    "description": "Custom competition message 37"
+  },
+  "competitionMessageCustom38": "Messaggio gara 38",
+  "@competitionMessageCustom38": {
+    "description": "Custom competition message 38"
+  },
+  "competitionMessageCustom39": "Messaggio gara 39",
+  "@competitionMessageCustom39": {
+    "description": "Custom competition message 39"
+  },
+  "competitionMessageCustom40": "Messaggio gara 40",
+  "@competitionMessageCustom40": {
+    "description": "Custom competition message 40"
+  },
+  "competitionMessageCustom41": "Messaggio gara 41",
+  "@competitionMessageCustom41": {
+    "description": "Custom competition message 41"
+  },
+  "competitionMessageCustom42": "Messaggio gara 42",
+  "@competitionMessageCustom42": {
+    "description": "Custom competition message 42"
+  },
+  "competitionMessageCustom43": "Messaggio gara 43",
+  "@competitionMessageCustom43": {
+    "description": "Custom competition message 43"
+  },
+  "competitionMessageCustom44": "Messaggio gara 44",
+  "@competitionMessageCustom44": {
+    "description": "Custom competition message 44"
+  },
+  "competitionMessageCustom45": "Messaggio gara 45",
+  "@competitionMessageCustom45": {
+    "description": "Custom competition message 45"
+  },
+  "competitionMessageCustom46": "Messaggio gara 46",
+  "@competitionMessageCustom46": {
+    "description": "Custom competition message 46"
+  },
+  "competitionMessageCustom47": "Messaggio gara 47",
+  "@competitionMessageCustom47": {
+    "description": "Custom competition message 47"
+  },
+  "competitionMessageCustom48": "Messaggio gara 48",
+  "@competitionMessageCustom48": {
+    "description": "Custom competition message 48"
+  },
+  "competitionMessageCustom49": "Messaggio gara 49",
+  "@competitionMessageCustom49": {
+    "description": "Custom competition message 49"
+  },
+  "competitionMessageCustom50": "Messaggio gara 50",
+  "@competitionMessageCustom50": {
+    "description": "Custom competition message 50"
+  },
+  "competitionMessageCustom51": "Messaggio gara 51",
+  "@competitionMessageCustom51": {
+    "description": "Custom competition message 51"
+  },
+  "competitionMessageCustom52": "Messaggio gara 52",
+  "@competitionMessageCustom52": {
+    "description": "Custom competition message 52"
+  },
+  "competitionMessageCustom53": "Messaggio gara 53",
+  "@competitionMessageCustom53": {
+    "description": "Custom competition message 53"
+  },
+  "competitionMessageCustom54": "Messaggio gara 54",
+  "@competitionMessageCustom54": {
+    "description": "Custom competition message 54"
+  },
+  "competitionMessageCustom55": "Messaggio gara 55",
+  "@competitionMessageCustom55": {
+    "description": "Custom competition message 55"
+  },
+  "competitionMessageCustom56": "Messaggio gara 56",
+  "@competitionMessageCustom56": {
+    "description": "Custom competition message 56"
+  },
+  "competitionMessageCustom57": "Messaggio gara 57",
+  "@competitionMessageCustom57": {
+    "description": "Custom competition message 57"
+  },
+  "competitionMessageCustom58": "Messaggio gara 58",
+  "@competitionMessageCustom58": {
+    "description": "Custom competition message 58"
+  },
+  "competitionMessageCustom59": "Messaggio gara 59",
+  "@competitionMessageCustom59": {
+    "description": "Custom competition message 59"
+  },
+  "competitionMessageCustom60": "Messaggio gara 60",
+  "@competitionMessageCustom60": {
+    "description": "Custom competition message 60"
+  },
+  "competitionMessageCustom61": "Messaggio gara 61",
+  "@competitionMessageCustom61": {
+    "description": "Custom competition message 61"
+  },
+  "competitionMessageCustom62": "Messaggio gara 62",
+  "@competitionMessageCustom62": {
+    "description": "Custom competition message 62"
+  },
+  "competitionMessageCustom63": "Messaggio gara 63",
+  "@competitionMessageCustom63": {
+    "description": "Custom competition message 63"
+  },
+  "competitionMessageCustom64": "Messaggio gara 64",
+  "@competitionMessageCustom64": {
+    "description": "Custom competition message 64"
+  },
+  "competitionMessageCustom65": "Messaggio gara 65",
+  "@competitionMessageCustom65": {
+    "description": "Custom competition message 65"
+  },
+  "competitionMessageCustom66": "Messaggio gara 66",
+  "@competitionMessageCustom66": {
+    "description": "Custom competition message 66"
+  },
+  "competitionMessageCustom67": "Messaggio gara 67",
+  "@competitionMessageCustom67": {
+    "description": "Custom competition message 67"
+  },
+  "competitionMessageCustom68": "Messaggio gara 68",
+  "@competitionMessageCustom68": {
+    "description": "Custom competition message 68"
+  },
+  "competitionMessageCustom69": "Messaggio gara 69",
+  "@competitionMessageCustom69": {
+    "description": "Custom competition message 69"
+  },
+  "competitionMessageCustom70": "Messaggio gara 70",
+  "@competitionMessageCustom70": {
+    "description": "Custom competition message 70"
+  },
+  "competitionMessageCustom71": "Messaggio gara 71",
+  "@competitionMessageCustom71": {
+    "description": "Custom competition message 71"
+  },
+  "competitionMessageCustom72": "Messaggio gara 72",
+  "@competitionMessageCustom72": {
+    "description": "Custom competition message 72"
+  },
+  "competitionMessageCustom73": "Messaggio gara 73",
+  "@competitionMessageCustom73": {
+    "description": "Custom competition message 73"
+  },
+  "competitionMessageCustom74": "Messaggio gara 74",
+  "@competitionMessageCustom74": {
+    "description": "Custom competition message 74"
+  },
+  "competitionMessageCustom75": "Messaggio gara 75",
+  "@competitionMessageCustom75": {
+    "description": "Custom competition message 75"
+  },
+  "competitionMessageCustom76": "Messaggio gara 76",
+  "@competitionMessageCustom76": {
+    "description": "Custom competition message 76"
+  },
+  "competitionMessageCustom77": "Messaggio gara 77",
+  "@competitionMessageCustom77": {
+    "description": "Custom competition message 77"
+  },
+  "competitionMessageCustom78": "Messaggio gara 78",
+  "@competitionMessageCustom78": {
+    "description": "Custom competition message 78"
+  },
+  "competitionMessageCustom79": "Messaggio gara 79",
+  "@competitionMessageCustom79": {
+    "description": "Custom competition message 79"
+  },
+  "competitionMessageCustom80": "Messaggio gara 80",
+  "@competitionMessageCustom80": {
+    "description": "Custom competition message 80"
+  },
+  "competitionMessageCustom81": "Messaggio gara 81",
+  "@competitionMessageCustom81": {
+    "description": "Custom competition message 81"
+  },
+  "competitionMessageCustom82": "Messaggio gara 82",
+  "@competitionMessageCustom82": {
+    "description": "Custom competition message 82"
+  },
+  "competitionMessageCustom83": "Messaggio gara 83",
+  "@competitionMessageCustom83": {
+    "description": "Custom competition message 83"
+  },
+  "competitionMessageCustom84": "Messaggio gara 84",
+  "@competitionMessageCustom84": {
+    "description": "Custom competition message 84"
+  },
+  "competitionMessageCustom85": "Messaggio gara 85",
+  "@competitionMessageCustom85": {
+    "description": "Custom competition message 85"
+  },
+  "competitionMessageCustom86": "Messaggio gara 86",
+  "@competitionMessageCustom86": {
+    "description": "Custom competition message 86"
+  },
+  "competitionMessageCustom87": "Messaggio gara 87",
+  "@competitionMessageCustom87": {
+    "description": "Custom competition message 87"
+  },
+  "competitionMessageCustom88": "Messaggio gara 88",
+  "@competitionMessageCustom88": {
+    "description": "Custom competition message 88"
+  },
+  "competitionMessageCustom89": "Messaggio gara 89",
+  "@competitionMessageCustom89": {
+    "description": "Custom competition message 89"
+  },
+  "competitionMessageCustom90": "Messaggio gara 90",
+  "@competitionMessageCustom90": {
+    "description": "Custom competition message 90"
+  },
+  "competitionMessageCustom91": "Messaggio gara 91",
+  "@competitionMessageCustom91": {
+    "description": "Custom competition message 91"
+  },
+  "competitionMessageCustom92": "Messaggio gara 92",
+  "@competitionMessageCustom92": {
+    "description": "Custom competition message 92"
+  },
+  "competitionMessageCustom93": "Messaggio gara 93",
+  "@competitionMessageCustom93": {
+    "description": "Custom competition message 93"
+  },
+  "competitionMessageCustom94": "Messaggio gara 94",
+  "@competitionMessageCustom94": {
+    "description": "Custom competition message 94"
+  },
+  "competitionMessageCustom95": "Messaggio gara 95",
+  "@competitionMessageCustom95": {
+    "description": "Custom competition message 95"
+  },
+  "competitionMessageCustom96": "Messaggio gara 96",
+  "@competitionMessageCustom96": {
+    "description": "Custom competition message 96"
+  },
+  "competitionMessageCustom97": "Messaggio gara 97",
+  "@competitionMessageCustom97": {
+    "description": "Custom competition message 97"
+  },
+  "competitionMessageCustom98": "Messaggio gara 98",
+  "@competitionMessageCustom98": {
+    "description": "Custom competition message 98"
+  },
+  "competitionMessageCustom99": "Messaggio gara 99",
+  "@competitionMessageCustom99": {
+    "description": "Custom competition message 99"
+  },
+  "competitionMessageCustom100": "Messaggio gara 100",
+  "@competitionMessageCustom100": {
+    "description": "Custom competition message 100"
+  },
+  "competitionMessageCustom101": "Messaggio gara 101",
+  "@competitionMessageCustom101": {
+    "description": "Custom competition message 101"
+  },
+  "competitionMessageCustom102": "Messaggio gara 102",
+  "@competitionMessageCustom102": {
+    "description": "Custom competition message 102"
+  },
+  "competitionMessageCustom103": "Messaggio gara 103",
+  "@competitionMessageCustom103": {
+    "description": "Custom competition message 103"
+  },
+  "competitionMessageCustom104": "Messaggio gara 104",
+  "@competitionMessageCustom104": {
+    "description": "Custom competition message 104"
+  },
+  "competitionMessageCustom105": "Messaggio gara 105",
+  "@competitionMessageCustom105": {
+    "description": "Custom competition message 105"
+  },
+  "competitionMessageCustom106": "Messaggio gara 106",
+  "@competitionMessageCustom106": {
+    "description": "Custom competition message 106"
+  },
+  "competitionMessageCustom107": "Messaggio gara 107",
+  "@competitionMessageCustom107": {
+    "description": "Custom competition message 107"
+  },
+  "competitionMessageCustom108": "Messaggio gara 108",
+  "@competitionMessageCustom108": {
+    "description": "Custom competition message 108"
+  },
+  "competitionMessageCustom109": "Messaggio gara 109",
+  "@competitionMessageCustom109": {
+    "description": "Custom competition message 109"
+  },
+  "competitionMessageCustom110": "Messaggio gara 110",
+  "@competitionMessageCustom110": {
+    "description": "Custom competition message 110"
+  },
+  "competitionMessageCustom111": "Messaggio gara 111",
+  "@competitionMessageCustom111": {
+    "description": "Custom competition message 111"
+  },
+  "competitionMessageCustom112": "Messaggio gara 112",
+  "@competitionMessageCustom112": {
+    "description": "Custom competition message 112"
+  },
+  "competitionMessageCustom113": "Messaggio gara 113",
+  "@competitionMessageCustom113": {
+    "description": "Custom competition message 113"
+  },
+  "competitionMessageCustom114": "Messaggio gara 114",
+  "@competitionMessageCustom114": {
+    "description": "Custom competition message 114"
+  },
+  "competitionMessageCustom115": "Messaggio gara 115",
+  "@competitionMessageCustom115": {
+    "description": "Custom competition message 115"
+  },
+  "competitionMessageCustom116": "Messaggio gara 116",
+  "@competitionMessageCustom116": {
+    "description": "Custom competition message 116"
+  },
+  "competitionMessageCustom117": "Messaggio gara 117",
+  "@competitionMessageCustom117": {
+    "description": "Custom competition message 117"
+  },
+  "competitionMessageCustom118": "Messaggio gara 118",
+  "@competitionMessageCustom118": {
+    "description": "Custom competition message 118"
+  },
+  "competitionMessageCustom119": "Messaggio gara 119",
+  "@competitionMessageCustom119": {
+    "description": "Custom competition message 119"
+  },
+  "competitionMessageCustom120": "Messaggio gara 120",
+  "@competitionMessageCustom120": {
+    "description": "Custom competition message 120"
+  },
+  "competitionMessageCustom121": "Messaggio gara 121",
+  "@competitionMessageCustom121": {
+    "description": "Custom competition message 121"
+  },
+  "competitionMessageCustom122": "Messaggio gara 122",
+  "@competitionMessageCustom122": {
+    "description": "Custom competition message 122"
+  },
+  "competitionMessageCustom123": "Messaggio gara 123",
+  "@competitionMessageCustom123": {
+    "description": "Custom competition message 123"
+  },
+  "competitionMessageCustom124": "Messaggio gara 124",
+  "@competitionMessageCustom124": {
+    "description": "Custom competition message 124"
+  },
+  "competitionMessageCustom125": "Messaggio gara 125",
+  "@competitionMessageCustom125": {
+    "description": "Custom competition message 125"
+  },
+  "competitionMessageCustom126": "Messaggio gara 126",
+  "@competitionMessageCustom126": {
+    "description": "Custom competition message 126"
+  },
+  "competitionMessageCustom127": "Messaggio gara 127",
+  "@competitionMessageCustom127": {
+    "description": "Custom competition message 127"
+  },
+  "competitionMessageCustom128": "Messaggio gara 128",
+  "@competitionMessageCustom128": {
+    "description": "Custom competition message 128"
+  },
+  "competitionMessageCustom129": "Messaggio gara 129",
+  "@competitionMessageCustom129": {
+    "description": "Custom competition message 129"
+  },
+  "competitionMessageCustom130": "Messaggio gara 130",
+  "@competitionMessageCustom130": {
+    "description": "Custom competition message 130"
+  },
+  "competitionMessageCustom131": "Messaggio gara 131",
+  "@competitionMessageCustom131": {
+    "description": "Custom competition message 131"
+  },
+  "competitionMessageCustom132": "Messaggio gara 132",
+  "@competitionMessageCustom132": {
+    "description": "Custom competition message 132"
+  },
+  "competitionMessageCustom133": "Messaggio gara 133",
+  "@competitionMessageCustom133": {
+    "description": "Custom competition message 133"
+  },
+  "competitionMessageCustom134": "Messaggio gara 134",
+  "@competitionMessageCustom134": {
+    "description": "Custom competition message 134"
+  },
+  "competitionMessageCustom135": "Messaggio gara 135",
+  "@competitionMessageCustom135": {
+    "description": "Custom competition message 135"
+  },
+  "competitionMessageCustom136": "Messaggio gara 136",
+  "@competitionMessageCustom136": {
+    "description": "Custom competition message 136"
+  },
+  "competitionMessageCustom137": "Messaggio gara 137",
+  "@competitionMessageCustom137": {
+    "description": "Custom competition message 137"
+  },
+  "competitionMessageCustom138": "Messaggio gara 138",
+  "@competitionMessageCustom138": {
+    "description": "Custom competition message 138"
+  },
+  "competitionMessageCustom139": "Messaggio gara 139",
+  "@competitionMessageCustom139": {
+    "description": "Custom competition message 139"
+  },
+  "competitionMessageCustom140": "Messaggio gara 140",
+  "@competitionMessageCustom140": {
+    "description": "Custom competition message 140"
+  },
+  "competitionMessageCustom141": "Messaggio gara 141",
+  "@competitionMessageCustom141": {
+    "description": "Custom competition message 141"
+  },
+  "competitionMessageCustom142": "Messaggio gara 142",
+  "@competitionMessageCustom142": {
+    "description": "Custom competition message 142"
+  },
+  "competitionMessageCustom143": "Messaggio gara 143",
+  "@competitionMessageCustom143": {
+    "description": "Custom competition message 143"
+  },
+  "competitionMessageCustom144": "Messaggio gara 144",
+  "@competitionMessageCustom144": {
+    "description": "Custom competition message 144"
+  },
+  "competitionMessageCustom145": "Messaggio gara 145",
+  "@competitionMessageCustom145": {
+    "description": "Custom competition message 145"
+  },
+  "competitionMessageCustom146": "Messaggio gara 146",
+  "@competitionMessageCustom146": {
+    "description": "Custom competition message 146"
+  },
+  "competitionMessageCustom147": "Messaggio gara 147",
+  "@competitionMessageCustom147": {
+    "description": "Custom competition message 147"
+  },
+  "competitionMessageCustom148": "Messaggio gara 148",
+  "@competitionMessageCustom148": {
+    "description": "Custom competition message 148"
+  },
+  "competitionMessageCustom149": "Messaggio gara 149",
+  "@competitionMessageCustom149": {
+    "description": "Custom competition message 149"
+  },
+  "competitionMessageCustom150": "Messaggio gara 150",
+  "@competitionMessageCustom150": {
+    "description": "Custom competition message 150"
+  },
+  "competitionMessageCustom151": "Messaggio gara 151",
+  "@competitionMessageCustom151": {
+    "description": "Custom competition message 151"
+  },
+  "competitionMessageCustom152": "Messaggio gara 152",
+  "@competitionMessageCustom152": {
+    "description": "Custom competition message 152"
+  },
+  "competitionMessageCustom153": "Messaggio gara 153",
+  "@competitionMessageCustom153": {
+    "description": "Custom competition message 153"
+  },
+  "competitionMessageCustom154": "Messaggio gara 154",
+  "@competitionMessageCustom154": {
+    "description": "Custom competition message 154"
+  },
+  "competitionMessageCustom155": "Messaggio gara 155",
+  "@competitionMessageCustom155": {
+    "description": "Custom competition message 155"
+  },
+  "competitionMessageCustom156": "Messaggio gara 156",
+  "@competitionMessageCustom156": {
+    "description": "Custom competition message 156"
+  },
+  "competitionMessageCustom157": "Messaggio gara 157",
+  "@competitionMessageCustom157": {
+    "description": "Custom competition message 157"
+  },
+  "competitionMessageCustom158": "Messaggio gara 158",
+  "@competitionMessageCustom158": {
+    "description": "Custom competition message 158"
+  },
+  "competitionMessageCustom159": "Messaggio gara 159",
+  "@competitionMessageCustom159": {
+    "description": "Custom competition message 159"
+  },
+  "competitionMessageCustom160": "Messaggio gara 160",
+  "@competitionMessageCustom160": {
+    "description": "Custom competition message 160"
+  },
+  "competitionMessageCustom161": "Messaggio gara 161",
+  "@competitionMessageCustom161": {
+    "description": "Custom competition message 161"
+  },
+  "competitionMessageCustom162": "Messaggio gara 162",
+  "@competitionMessageCustom162": {
+    "description": "Custom competition message 162"
+  },
+  "competitionMessageCustom163": "Messaggio gara 163",
+  "@competitionMessageCustom163": {
+    "description": "Custom competition message 163"
+  },
+  "competitionMessageCustom164": "Messaggio gara 164",
+  "@competitionMessageCustom164": {
+    "description": "Custom competition message 164"
+  },
+  "competitionMessageCustom165": "Messaggio gara 165",
+  "@competitionMessageCustom165": {
+    "description": "Custom competition message 165"
+  },
+  "competitionMessageCustom166": "Messaggio gara 166",
+  "@competitionMessageCustom166": {
+    "description": "Custom competition message 166"
+  },
+  "competitionMessageCustom167": "Messaggio gara 167",
+  "@competitionMessageCustom167": {
+    "description": "Custom competition message 167"
+  },
+  "competitionMessageCustom168": "Messaggio gara 168",
+  "@competitionMessageCustom168": {
+    "description": "Custom competition message 168"
+  },
+  "competitionMessageCustom169": "Messaggio gara 169",
+  "@competitionMessageCustom169": {
+    "description": "Custom competition message 169"
+  },
+  "competitionMessageCustom170": "Messaggio gara 170",
+  "@competitionMessageCustom170": {
+    "description": "Custom competition message 170"
+  },
+  "competitionMessageCustom171": "Messaggio gara 171",
+  "@competitionMessageCustom171": {
+    "description": "Custom competition message 171"
+  },
+  "competitionMessageCustom172": "Messaggio gara 172",
+  "@competitionMessageCustom172": {
+    "description": "Custom competition message 172"
+  },
+  "competitionMessageCustom173": "Messaggio gara 173",
+  "@competitionMessageCustom173": {
+    "description": "Custom competition message 173"
+  },
+  "competitionMessageCustom174": "Messaggio gara 174",
+  "@competitionMessageCustom174": {
+    "description": "Custom competition message 174"
+  },
+  "competitionMessageCustom175": "Messaggio gara 175",
+  "@competitionMessageCustom175": {
+    "description": "Custom competition message 175"
+  },
+  "competitionMessageCustom176": "Messaggio gara 176",
+  "@competitionMessageCustom176": {
+    "description": "Custom competition message 176"
+  },
+  "competitionMessageCustom177": "Messaggio gara 177",
+  "@competitionMessageCustom177": {
+    "description": "Custom competition message 177"
+  },
+  "competitionMessageCustom178": "Messaggio gara 178",
+  "@competitionMessageCustom178": {
+    "description": "Custom competition message 178"
+  },
+  "competitionMessageCustom179": "Messaggio gara 179",
+  "@competitionMessageCustom179": {
+    "description": "Custom competition message 179"
+  },
+  "competitionMessageCustom180": "Messaggio gara 180",
+  "@competitionMessageCustom180": {
+    "description": "Custom competition message 180"
+  },
+  "competitionMessageCustom181": "Messaggio gara 181",
+  "@competitionMessageCustom181": {
+    "description": "Custom competition message 181"
+  },
+  "competitionMessageCustom182": "Messaggio gara 182",
+  "@competitionMessageCustom182": {
+    "description": "Custom competition message 182"
+  },
+  "competitionMessageCustom183": "Messaggio gara 183",
+  "@competitionMessageCustom183": {
+    "description": "Custom competition message 183"
+  },
+  "competitionMessageCustom184": "Messaggio gara 184",
+  "@competitionMessageCustom184": {
+    "description": "Custom competition message 184"
+  },
+  "competitionMessageCustom185": "Messaggio gara 185",
+  "@competitionMessageCustom185": {
+    "description": "Custom competition message 185"
+  },
+  "competitionMessageCustom186": "Messaggio gara 186",
+  "@competitionMessageCustom186": {
+    "description": "Custom competition message 186"
+  },
+  "competitionMessageCustom187": "Messaggio gara 187",
+  "@competitionMessageCustom187": {
+    "description": "Custom competition message 187"
+  },
+  "competitionMessageCustom188": "Messaggio gara 188",
+  "@competitionMessageCustom188": {
+    "description": "Custom competition message 188"
+  },
+  "competitionMessageCustom189": "Messaggio gara 189",
+  "@competitionMessageCustom189": {
+    "description": "Custom competition message 189"
+  },
+  "competitionMessageCustom190": "Messaggio gara 190",
+  "@competitionMessageCustom190": {
+    "description": "Custom competition message 190"
+  },
+  "competitionMessageCustom191": "Messaggio gara 191",
+  "@competitionMessageCustom191": {
+    "description": "Custom competition message 191"
+  },
+  "competitionMessageCustom192": "Messaggio gara 192",
+  "@competitionMessageCustom192": {
+    "description": "Custom competition message 192"
+  },
+  "competitionMessageCustom193": "Messaggio gara 193",
+  "@competitionMessageCustom193": {
+    "description": "Custom competition message 193"
+  },
+  "competitionMessageCustom194": "Messaggio gara 194",
+  "@competitionMessageCustom194": {
+    "description": "Custom competition message 194"
+  },
+  "competitionMessageCustom195": "Messaggio gara 195",
+  "@competitionMessageCustom195": {
+    "description": "Custom competition message 195"
+  },
+  "competitionMessageCustom196": "Messaggio gara 196",
+  "@competitionMessageCustom196": {
+    "description": "Custom competition message 196"
+  },
+  "competitionMessageCustom197": "Messaggio gara 197",
+  "@competitionMessageCustom197": {
+    "description": "Custom competition message 197"
+  },
+  "competitionMessageCustom198": "Messaggio gara 198",
+  "@competitionMessageCustom198": {
+    "description": "Custom competition message 198"
+  },
+  "competitionMessageCustom199": "Messaggio gara 199",
+  "@competitionMessageCustom199": {
+    "description": "Custom competition message 199"
+  },
+  "competitionMessageCustom200": "Messaggio gara 200",
+  "@competitionMessageCustom200": {
+    "description": "Custom competition message 200"
+  }
 }
