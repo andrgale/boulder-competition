@@ -2,6 +2,7 @@ import 'package:boulder_competition/core/models/client_config.dart';
 import 'package:boulder_competition/core/pages/activation_screen.dart';
 import 'package:boulder_competition/core/services/central_config_service.dart';
 import 'package:boulder_competition/core/services/client_config_store.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -117,6 +118,7 @@ class AdminApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       localizationsDelegates: const [
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,

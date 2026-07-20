@@ -28,16 +28,31 @@ class _AppShellState extends State<AppShell> {
   List<AppMenu> menus = [];
   ShellUser shellUser = ShellUser.fallback();
 
+  String? _lastLocale; // per evitare reload inutili
+
   @override
   void initState() {
     super.initState();
-    loadMenus();
+    // NIENTE loadMenus() qui: Localizations non è ancora disponibile
   }
 
-  Future<void> loadMenus() async {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final currentLocale = Localizations.localeOf(context).languageCode;
+
+    // primo avvio, oppure cambio lingua a runtime
+    if (_lastLocale != currentLocale) {
+      _lastLocale = currentLocale;
+      loadMenus(currentLocale);
+    }
+  }
+
+  Future<void> loadMenus(String locale) async {
     try {
       final results = await Future.wait([
-        menuService.getMenus(),
+        menuService.getMenus(locale: locale),
         shellUserService.fetchCurrentUser(),
       ]);
 

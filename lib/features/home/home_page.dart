@@ -42,8 +42,10 @@ class _HomePageState extends State<HomePage> {
   // nel caso serva riabilitare la pagina in futuro.
   Future<void> loadData() async {
     try {
+      final locale = Localizations.localeOf(context).languageCode; // 'it' / 'en'
+
       user = await profileService.getCurrentProfile();
-      menus = await menuService.getMenus();
+      menus = await menuService.getMenus(locale: locale);
     } catch (e) {
       debugPrint(e.toString());
     }

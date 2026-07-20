@@ -1,3 +1,6 @@
+import 'package:boulder_competition/features/security/models/menu_translation_model.dart';
+import 'package:boulder_competition/features/security/pages/menus/menu_translation_form_page.dart';
+import 'package:boulder_competition/features/security/pages/menus/menu_translations_list_page.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/athlete/pages/athlete_boulder_scan_page.dart';
@@ -194,20 +197,6 @@ final GoRouter appRouter = GoRouter(
             return const CompetitionsPage();
           },
         ),
-
-        // GoRoute(
-        //   path: '/competitions/:id/boulders',
-        //   builder: (context, state) {
-        //     final competition =
-        //         state.extra as CompetitionModel;
-
-        //     return BouldersPage(
-        //       competitionId: competition.id,
-        //       competitionName:
-        //           competition.descrizione,
-        //     );
-        //   },
-        // ),
 
         GoRoute(
           path: '/competitions/:id/boulders',
@@ -582,6 +571,30 @@ final GoRouter appRouter = GoRouter(
           builder: (context, state) {
             final menu = state.extra as MenuModel;
             return MenuFormPage(menu: menu);
+          },
+        ),
+        GoRoute(
+          path: '/security/menus/translations',
+          builder: (context, state) {
+            final menu = state.extra as MenuModel;
+            return MenuTranslationsListPage(menu: menu);
+          },
+        ),
+        GoRoute(
+          path: '/security/menus/translations/new',
+          builder: (context, state) {
+            final menu = state.extra as MenuModel;
+            return MenuTranslationFormPage(menu: menu);
+          },
+        ),
+        GoRoute(
+          path: '/security/menus/translations/edit',
+          builder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>;
+            return MenuTranslationFormPage(
+              menu: extra['menu'] as MenuModel,
+              translation: extra['translation'] as MenuTranslationModel,
+            );
           },
         ),
 

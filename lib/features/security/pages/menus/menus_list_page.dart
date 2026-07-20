@@ -92,6 +92,10 @@ class _MenusListPageState extends State<MenusListPage> {
             await context.push('/security/menus/new', extra: root.id);
             await loadMenus();
           },
+          onTranslations: () async { 
+          await context.push('/security/menus/translations', extra: root);
+          await loadMenus();
+          },
         ),
         ...kids.map(
           (kid) => _MenuTile(
@@ -103,6 +107,10 @@ class _MenusListPageState extends State<MenusListPage> {
             },
             onDelete: () => deleteMenu(kid),
             onAddChild: null,
+            onTranslations: () async {
+            await context.push('/security/menus/translations', extra: kid);
+            await loadMenus();
+            },
           ),
         ),
       ];
@@ -158,6 +166,7 @@ class _MenuTile extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   final VoidCallback? onAddChild;
+  final VoidCallback onTranslations;
 
   const _MenuTile({
     required this.menu,
@@ -165,6 +174,7 @@ class _MenuTile extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
     this.onAddChild,
+    required this.onTranslations,
   });
 
   @override
@@ -212,6 +222,11 @@ class _MenuTile extends StatelessWidget {
             Chip(
               label: Text('${menu.displayOrder}'),
               visualDensity: VisualDensity.compact,
+            ),
+            IconButton(
+              tooltip: 'Traduzioni',
+              icon: const Icon(Icons.translate),
+              onPressed: onTranslations,
             ),
             if (onAddChild != null)
               IconButton(

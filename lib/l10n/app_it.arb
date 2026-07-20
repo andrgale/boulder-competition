@@ -1,0 +1,126 @@
+{
+  "@@locale": "it",
+
+  "competitionClosed": "Gara chiusa o atleta senza check-in",
+  "@competitionClosed": {
+    "description": "Message shown when competition is closed"
+  },
+  "login": "Accedi",
+
+  "email": "Email",
+
+  "password": "Password",
+  
+    "commonOk": "OK",
+    "@commonOk": {
+    "description": "OK"
+    },
+    "commonCancel": "Annulla",
+    "@commonCancel": {
+    "description": "Annulla"
+    },
+    "commonSave": "Salva",
+    "@commonSave": {
+    "description": "Salva"
+    },
+    "commonDelete": "Elimina",
+    "@commonDelete": {
+    "description": "Elimina"
+    },
+    "commonClose": "Chiudi",
+    "@commonClose": {
+    "description": "Chiudi"
+    },
+    "commonBack": "Indietro",
+    "@commonBack": {
+    "description": "Indietro"
+    },
+    "commonYes": "Sì",
+    "@commonYes": {
+    "description": "Sì"
+    },
+    "commonNo": "No",
+    "@commonNo": {
+    "description": "No"
+    },
+    "commonSearch": "Cerca",
+    "@commonSearch": {
+    "description": "Cerca"
+    },
+    "commonRefresh": "Aggiorna",
+    "@commonRefresh": {
+    "description": "Aggiorna"
+    },
+    "loginTitle": "Accesso",
+    "@loginTitle": {
+    "description": "Titolo della schermata di accesso"
+    },
+    "loginEmail": "Email",
+    "@loginEmail": {
+    "description": "Etichetta del campo email"
+    },
+    "loginPassword": "Password",
+    "@loginPassword": {
+    "description": "Etichetta del campo password"
+    },
+    "loginButton": "Accedi",
+    "@loginButton": {
+    "description": "Testo del pulsante di accesso"
+    },
+    "loginForgotPassword": "Password dimenticata",
+    "@loginForgotPassword": {
+    "description": "Link per il recupero della password"
+    },
+    "competitionTitle": "Competizione",
+    "@competitionTitle": {
+    "description": "Titolo della schermata di gestione competizione"
+    },
+    "competitionDescription": "Descrizione",
+    "@competitionDescription": {
+    "description": "Etichetta del campo descrizione della competizione"
+    },
+    "competitionDate": "Data Gara",
+    "@competitionDate": {
+    "description": "Etichetta del campo data della competizione"
+    },
+    "competitionLocation": "Luogo",
+    "@competitionLocation": {
+    "description": "Etichetta del campo luogo della competizione"
+    },
+    "competitionButtonCreate": "Crea competizione",
+    "@competitionButtonCreate": {
+    "description": "Testo del pulsante per creare una nuova competizione"
+    },
+    "competitionButtonSave": "Salva",
+    "@competitionButtonSave": {
+    "description": "Testo del pulsante per salvare la competizione"
+    },
+    "competitionMessageClosed": "Gara chiusa",
+    "@competitionMessageClosed": {
+    "description": "Messaggio visualizzato quando la competizione è chiusa"
+    },
+    "competitionLabelName": "Nome",
+    "@competitionLabelName": {
+    "description": "Etichetta del campo nome della competizione"
+    },
+    "categoryTitle": "Categoria",
+    "@categoryTitle": {
+    "description": "Titolo della schermata di gestione categorie"
+    },
+    "categoryLabelName": "Nome",
+    "@categoryLabelName": {
+    "description": "Etichetta del campo nome della categoria"
+    },
+    "categoryLabelGender": "Genere",
+    "@categoryLabelGender": {
+    "description": "Etichetta del campo genere della categoria"
+    },
+    "categoryLabelMinAge": "Età minima",
+    "@categoryLabelMinAge": {
+    "description": "Etichetta del campo età minima della categoria"
+    },
+    "categoryLabelMaxAge": "Età massima",
+    "@categoryLabelMaxAge": {
+    "description": "Etichetta del campo età massima della categoria"
+    }
+}

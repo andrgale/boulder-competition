@@ -1,0 +1,128 @@
+{
+  "@@locale": "en",
+
+  "competitionClosed": "Competition closed or athlete without check-in",
+  "@competitionClosed": {
+    "description": "Message shown when competition is closed"
+  },
+  "login": "Login",
+
+  "email": "Email",
+
+  "password": "Password",
+
+  "commonOk": "common Ok",
+  "@commonOk": {
+    "description": " Ok"
+  },
+  "commonCancel": "common Cancel",
+  "@commonCancel": {
+    "description": " Cancel"
+  },
+  "commonSave": "common Save",
+  "@commonSave": {
+    "description": " Save"
+  },
+  "commonDelete": "common Delete",
+  "@commonDelete": {
+    "description": " Delete"
+  },
+  "commonClose": "common Close",
+  "@commonClose": {
+    "description": " Close"
+  },
+  "commonBack": "common Back",
+  "@commonBack": {
+    "description": " Back"
+  },
+  "commonYes": "common Yes",
+  "@commonYes": {
+    "description": " Yes"
+  },
+  "commonNo": "common No",
+  "@commonNo": {
+    "description": " No"
+  },
+  "commonSearch": "common Search",
+  "@commonSearch": {
+    "description": " Search"
+  },
+  "commonRefresh": "common Refresh",
+  "@commonRefresh": {
+    "description": " Refresh"
+  },
+    "loginTitle": "login Title",
+  "@loginTitle": {
+    "description": "Title"
+  },
+  "loginEmail": "login Email",
+  "@loginEmail": {
+    "description": "Email"
+  },
+  "loginPassword": "login Password",
+  "@loginPassword": {
+    "description": "Password"
+  },
+  "loginButton": "login Button",
+  "@loginButton": {
+    "description": "Button"
+  },
+  "loginForgotPassword": "login ForgotPassword",
+  "@loginForgotPassword": {
+    "description": "ForgotPassword"
+  },
+    "competitionTitle": "competition Title",
+  "@competitionTitle": {
+    "description": "competition - Title"
+  },
+  "competitionDescription": "competition Description",
+  "@competitionDescription": {
+    "description": "competition - Description"
+  },
+  "competitionDate": "competition Date",
+  "@competitionDate": {
+    "description": "competition - Date"
+  },
+  "competitionLocation": "competition Location",
+  "@competitionLocation": {
+    "description": "competition - Location"
+  },
+  "competitionButtonCreate": "competition ButtonCreate",
+  "@competitionButtonCreate": {
+    "description": "competition - ButtonCreate"
+  },
+  "competitionButtonSave": "competition ButtonSave",
+  "@competitionButtonSave": {
+    "description": "competition - ButtonSave"
+  },
+  "competitionMessageClosed": "competition MessageClosed",
+  "@competitionMessageClosed": {
+    "description": "competition - MessageClosed"
+  },
+  "competitionLabelName": "competition LabelName",
+  "@competitionLabelName": {
+    "description": "competition - LabelName"
+  },
+  "categoryTitle": "category Title",
+  "@categoryTitle": {
+    "description": "category - Title"
+  },
+  "categoryLabelName": "category LabelName",
+  "@categoryLabelName": {
+    "description": "category - LabelName"
+  },
+  "categoryLabelGender": "category LabelGender",
+  "@categoryLabelGender": {
+    "description": "category - LabelGender"
+  },
+  "categoryLabelMinAge": "category LabelMinAge",
+  "@categoryLabelMinAge": {
+    "description": "category - LabelMinAge"
+  },
+  "categoryLabelMaxAge": "category LabelMaxAge",
+  "@categoryLabelMaxAge": {
+    "description": "category - LabelMaxAge"
+  }
+
+
+}

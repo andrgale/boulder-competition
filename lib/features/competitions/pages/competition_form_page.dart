@@ -13,6 +13,8 @@ import 'package:currency_text_input_formatter/currency_text_input_formatter.dart
 //import '../../errors/forbidden_page.dart';
 import '../../../core/services/permission_service.dart';
 
+import 'package:boulder_competition/l10n/app_localizations.dart';
+
 class CompetitionFormPage extends StatefulWidget {
   final CompetitionModel? competition;
 
@@ -242,6 +244,7 @@ class _CompetitionFormPageState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BasePage(
       title: isEdit ? 'Modifica Gara' : 'Nuova Gara',
       subtitle: 'Gestione competizione',
@@ -286,9 +289,13 @@ class _CompetitionFormPageState
                     controller: dtGaraController,
                     readOnly: true,
                     onTap: pickDate,
-                    decoration: const InputDecoration(
-                      labelText: 'Data Gara',
-                      suffixIcon: Icon(Icons.calendar_today),
+                    // decoration: const InputDecoration(
+                    //   labelText: 'Data Gara',
+                    //   suffixIcon: Icon(Icons.calendar_today),
+                    // ),
+                      decoration: InputDecoration(
+                      labelText: l10n.competitionDate,
+                      suffixIcon: const Icon(Icons.calendar_today),
                     ),
                   ),
 
