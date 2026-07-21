@@ -104,19 +104,19 @@ abstract class AppLocalizations {
   /// **'Competition closed or athlete without check-in'**
   String get competitionClosed;
 
-  /// No description provided for @login.
+  /// OK
   ///
   /// In en, this message translates to:
   /// **'Login'**
   String get login;
 
-  /// No description provided for @email.
+  /// Email
   ///
   /// In en, this message translates to:
   /// **'Email'**
   String get email;
 
-  /// No description provided for @password.
+  /// Password
   ///
   /// In en, this message translates to:
   /// **'Password'**

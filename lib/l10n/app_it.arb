@@ -6,10 +6,19 @@
     "description": "Message shown when competition is closed"
   },
   "login": "Accedi",
+    "@login": {
+    "description": "Accedi"
+    },
 
   "email": "Email",
+    "@email": {
+    "description": "Email"
+    },
 
   "password": "Password",
+    "@password": {
+    "description": "Password"
+    },
   
     "commonOk": "OK",
     "@commonOk": {

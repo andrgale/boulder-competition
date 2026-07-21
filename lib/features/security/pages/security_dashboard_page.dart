@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:boulder_competition/core/services/locale_override_controller.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../shared/widgets/base_page.dart';
@@ -72,6 +74,9 @@ class SecurityDashboardPage extends StatelessWidget {
               label: const Text('Reset configurazione cliente'),
               onPressed: () => _confirmAndReset(context),
             ),
+             // ───── forzatura lingua per test ─────
+            const SizedBox(height: 24),
+            const _LocaleOverrideSwitcher(),
           ],
         ],
       ),
@@ -141,6 +146,75 @@ class SecurityDashboardPage extends StatelessWidget {
     exit(0);
   }
 }
+
+class _LocaleOverrideSwitcher extends StatelessWidget {
+  const _LocaleOverrideSwitcher();
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<Locale?>(
+      valueListenable: localeOverrideNotifier,
+      builder: (context, currentOverride, _) {
+        return Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: const BorderSide(color: Color(0xFFE5E7EB)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Row(
+                  children: [
+                    Icon(Icons.translate, size: 18, color: Colors.orange),
+                    SizedBox(width: 8),
+                    Text(
+                      'Forza lingua (solo test)',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  currentOverride == null
+                      ? 'Lingua attuale: automatica (sistema operativo)'
+                      : 'Lingua forzata: ${currentOverride.languageCode.toUpperCase()}',
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    // opzione "automatica" per tornare al comportamento normale
+                    ChoiceChip(
+                      label: const Text('Automatica'),
+                      selected: currentOverride == null,
+                      onSelected: (_) => LocaleOverrideController.set(null),
+                    ),
+                    ...AppLocalizations.supportedLocales.map((locale) {
+                      final selected = currentOverride?.languageCode ==
+                          locale.languageCode;
+                      return ChoiceChip(
+                        label: Text(locale.languageCode.toUpperCase()),
+                        selected: selected,
+                        onSelected: (_) =>
+                            LocaleOverrideController.set(locale),
+                      );
+                    }),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
 
 class _SecurityCard extends StatelessWidget {
   final IconData icon;

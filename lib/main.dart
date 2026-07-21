@@ -2,6 +2,7 @@ import 'package:boulder_competition/core/models/client_config.dart';
 import 'package:boulder_competition/core/pages/activation_screen.dart';
 import 'package:boulder_competition/core/services/central_config_service.dart';
 import 'package:boulder_competition/core/services/client_config_store.dart';
+import 'package:boulder_competition/core/services/locale_override_controller.dart';
 import 'package:boulder_competition/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -16,6 +17,7 @@ final bootstrapAppKey = GlobalKey<BootstrapAppState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await LocaleOverrideController.restore();
   runApp(BootstrapApp(key: bootstrapAppKey));
 }
 
@@ -116,24 +118,30 @@ class AdminApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('it', 'IT'),
-        Locale('en', 'EN'),
-      ],
-      debugShowCheckedModeBanner: false,
-      routerConfig: appRouter,
-      title: 'Boulder Admin',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: Colors.blue,
-      ),
-    );
+    return ValueListenableBuilder<Locale?>(
+      valueListenable: localeOverrideNotifier,
+      builder: (context, overrideLocale, _) {
+        return MaterialApp.router(
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          locale: overrideLocale,
+          supportedLocales: const [
+            Locale('it', 'IT'),
+            Locale('en', 'EN'),
+          ],
+          debugShowCheckedModeBanner: false,
+          routerConfig: appRouter,
+          title: 'Boulder Admin',
+          theme: ThemeData(
+            useMaterial3: true,
+            colorSchemeSeed: Colors.blue,
+          ),
+        );
+      }
+     );
   }
-}
+}   
