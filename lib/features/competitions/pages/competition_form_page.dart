@@ -1,3 +1,4 @@
+import 'package:boulder_competition/features/competitions/pages/competition_card_export_pdf.dart';
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
@@ -46,6 +47,12 @@ class _CompetitionFormPageState
 
   final noteController = TextEditingController();
 
+  final nrMaxRegistrationsController = TextEditingController();
+  final nrMaxFirstTurnController = TextEditingController();
+  final nrMaxSecondTurnController = TextEditingController();
+
+  bool isTurn = false;
+
   DateTime? dtGara;
 
   bool flIscrizioniChiuse = false;
@@ -70,6 +77,7 @@ class _CompetitionFormPageState
   );
 
   bool get isEdit => widget.competition != null;
+  bool _exportingCartellino = false; 
 
   @override
   void initState() {
@@ -94,6 +102,11 @@ class _CompetitionFormPageState
     dtGaraController.text = formatDate(c.dtGara);
 
     nrBoulderController.text = c.nrBoulder.toString();
+
+    nrMaxRegistrationsController.text = c.nrMaxRegistrations.toString();
+    isTurn = c.isTurn;
+    nrMaxFirstTurnController.text = c.nrMaxFirstTurn.toString();
+    nrMaxSecondTurnController.text = c.nrMaxSecondTurn.toString();
 
     // ✅ FIX: formatDouble accetta direttamente il double dal DB (es. 25.0)
     //    e lo converte correttamente in "€ 25,00".
@@ -156,6 +169,24 @@ class _CompetitionFormPageState
     });
   }
 
+  Future<void> printCard() async {
+    final c = widget.competition;
+    if (c == null || _exportingCartellino) return;
+
+     setState(() => _exportingCartellino = true);
+
+    try {
+      await CompetitionCardExportPdf.exportAndShare(
+        competitionId: c.id,
+        descrizione: descrizioneController.text.trim(),
+        dtGara: dtGara ?? c.dtGara,
+      );
+    } catch (e) {
+      showError('Errore nella generazione del cartellino: $e');
+    } finally {
+      if (mounted) setState(() => _exportingCartellino = false);
+    }
+  }
   // =======================================================
   // SAVE
   // =======================================================
@@ -182,6 +213,23 @@ class _CompetitionFormPageState
       return;
     }
 
+    final nrMaxRegistrations = int.tryParse(nrMaxRegistrationsController.text) ?? 0;
+    final nrMaxFirstTurn = int.tryParse(nrMaxFirstTurnController.text) ?? 0;
+    final nrMaxSecondTurn = int.tryParse(nrMaxSecondTurnController.text) ?? 0;
+
+    if (isTurn) {
+      if (nrMaxRegistrations <= 0) {
+        showError('Inserisci un Nr. Massimo Iscritti maggiore di 0');
+        return;
+      }
+      if ((nrMaxFirstTurn + nrMaxSecondTurn) > nrMaxRegistrations) {
+        showError(
+          'La somma degli iscritti al primo e secondo turno non può superare il Nr. Massimo Iscritti',
+        );
+        return;
+      }
+    }
+
     setState(() => saving = true);
 
     try {
@@ -200,6 +248,10 @@ class _CompetitionFormPageState
           flGestionePresenze: flGestionePresenze,
           flGestionePagamenti: flGestionePagamenti,
           flGestioneOmaggi: flGestioneOmaggi,
+          nrMaxRegistrations: nrMaxRegistrations,
+          isTurn: isTurn,
+          nrMaxFirstTurn: nrMaxFirstTurn,
+          nrMaxSecondTurn: nrMaxSecondTurn,
         );
       } else {
         await service.createCompetition(
@@ -210,6 +262,10 @@ class _CompetitionFormPageState
               currencyFormatter.getUnformattedValue().toDouble(),
           nrFinalisti: int.tryParse(nrFinalistiController.text) ?? 0,
           note: noteController.text.trim(),
+          nrMaxRegistrations: nrMaxRegistrations,
+          isTurn: isTurn,
+          nrMaxFirstTurn: nrMaxFirstTurn,
+          nrMaxSecondTurn: nrMaxSecondTurn,
         );
       }
 
@@ -260,6 +316,26 @@ class _CompetitionFormPageState
               : const Icon(Icons.save),
           label: Text(saving ? 'Salvataggio...' : 'Salva'),
         ),
+          // ── bottone cartellino: solo in modifica ──────────
+          if (isEdit)
+            _exportingCartellino
+                ? const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                : IconButton(
+                    tooltip: 'Stampa cartellino QR',
+                    icon: const Icon(Icons.qr_code),
+                    onPressed: isEdit ? printCard : null,
+                  ),
+
       ],
       child: SizedBox(
         width: double.infinity,
@@ -330,6 +406,53 @@ class _CompetitionFormPageState
                       ),
                     ],
                   ),
+
+                  const SizedBox(height: 24),
+
+                  TextFormField(
+                    controller: nrMaxRegistrationsController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Nr. Massimo Iscritti',
+                    ),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  SwitchListTile(
+                    value: isTurn,
+                    title: const Text('Abilitazione Turni'),
+                    onChanged: (value) => setState(() => isTurn = value),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: nrMaxFirstTurnController,
+                          enabled: isTurn,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: 'Iscritti Primo Turno',
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: TextFormField(
+                          controller: nrMaxSecondTurnController,
+                          enabled: isTurn,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: 'Iscritti Secondo Turno',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
 
                   const SizedBox(height: 24),
 

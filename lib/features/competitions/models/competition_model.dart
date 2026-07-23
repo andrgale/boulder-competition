@@ -29,6 +29,14 @@ class CompetitionModel {
 
   final DateTime updatedAt;
 
+  final int nrMaxRegistrations;
+
+  final bool isTurn;
+
+  final int nrMaxFirstTurn;
+
+  final int nrMaxSecondTurn;
+
   CompetitionModel({
     required this.id,
     required this.descrizione,
@@ -44,6 +52,10 @@ class CompetitionModel {
     required this.createdBy,
     required this.createdAt,
     required this.updatedAt,
+    required this.nrMaxRegistrations,
+    required this.isTurn,
+    required this.nrMaxFirstTurn,
+    required this.nrMaxSecondTurn,
     this.note,
   });
 
@@ -103,6 +115,20 @@ class CompetitionModel {
       updatedAt: DateTime.parse(
         map['updated_at'],
       ),
+
+      nrMaxRegistrations:
+          map['nr_max_registrations'] ?? 0,
+
+      isTurn:
+          map['is_turn'] ??
+              false,
+
+      nrMaxFirstTurn:
+          map['nr_max_first_turn'] ?? 0,
+
+      nrMaxSecondTurn:
+          map['nr_max_second_turn'] ?? 0,
+
     );
   }
 
@@ -140,6 +166,15 @@ class CompetitionModel {
       'note': note,
 
       'created_by': profileId,
+
+      'nr_max_registrations': nrMaxRegistrations,
+
+      'is_turn':
+          isTurn,
+
+      'nr_max_first_turn': nrMaxFirstTurn,
+
+      'nr_max_second_turn': nrMaxSecondTurn,      
     };
   }
 
@@ -176,6 +211,16 @@ class CompetitionModel {
 
       'updated_at':
           DateTime.now().toIso8601String(),
+
+      'nr_max_registrations': nrMaxRegistrations,
+
+      'is_turn':
+          isTurn,
+
+      'nr_max_first_turn': nrMaxFirstTurn,
+
+      'nr_max_second_turn': nrMaxSecondTurn,      
+
     };
   }
 }

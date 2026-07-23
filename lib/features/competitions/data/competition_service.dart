@@ -85,6 +85,10 @@ class CompetitionService {
     required double quotaIscrizione,
     required int nrFinalisti,
     String? note,
+    required int nrMaxRegistrations,
+    required bool isTurn,
+    required int nrMaxFirstTurn,
+    required int nrMaxSecondTurn,    
   }) async {
     final user =
         supabase.auth.currentUser;
@@ -122,6 +126,14 @@ class CompetitionService {
 
       'note': note,
 
+      'nr_max_registrations': nrMaxRegistrations,
+
+      'is_turn': isTurn,
+
+      'nr_max_first_turn': nrMaxFirstTurn,
+
+      'nr_max_second_turn': nrMaxSecondTurn,
+
       'created_by': profile['id'],
     });
   }
@@ -143,6 +155,10 @@ class CompetitionService {
     required bool flGestionePresenze,
     required bool flGestionePagamenti,
     required bool flGestioneOmaggi,
+    required int nrMaxRegistrations,
+    required bool isTurn,
+    required int nrMaxFirstTurn,
+    required int nrMaxSecondTurn,    
   }) async {
     await supabase
         .from('competitions')
@@ -179,6 +195,19 @@ class CompetitionService {
       'updated_at':
           DateTime.now()
               .toIso8601String(),
+
+      'nr_max_registrations':
+        nrMaxRegistrations,
+
+      'is_turn':
+        isTurn,
+
+      'nr_max_first_turn':
+        nrMaxFirstTurn,
+
+      'nr_max_second_turn':
+        nrMaxSecondTurn,
+
     })
         .eq('id', id);
   }
