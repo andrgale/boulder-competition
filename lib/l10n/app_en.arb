@@ -20,43 +20,43 @@
     "description": "Password"
     },
 
-  "commonOk": "common Ok",
+  "commonOk": "Ok",
   "@commonOk": {
     "description": " Ok"
   },
-  "commonCancel": "common Cancel",
+  "commonCancel": "Cancel",
   "@commonCancel": {
     "description": " Cancel"
   },
-  "commonSave": "common Save",
+  "commonSave": "Save",
   "@commonSave": {
     "description": " Save"
   },
-  "commonDelete": "common Delete",
+  "commonDelete": "Delete",
   "@commonDelete": {
     "description": " Delete"
   },
-  "commonClose": "common Close",
+  "commonClose": "Close",
   "@commonClose": {
     "description": " Close"
   },
-  "commonBack": "common Back",
+  "commonBack": "Back",
   "@commonBack": {
     "description": " Back"
   },
-  "commonYes": "common Yes",
+  "commonYes": "Yes",
   "@commonYes": {
     "description": " Yes"
   },
-  "commonNo": "common No",
+  "commonNo": "No",
   "@commonNo": {
     "description": " No"
   },
-  "commonSearch": "common Search",
+  "commonSearch": "Search",
   "@commonSearch": {
     "description": " Search"
   },
-  "commonRefresh": "common Refresh",
+  "commonRefresh": "Refresh",
   "@commonRefresh": {
     "description": " Refresh"
   },
@@ -84,11 +84,11 @@
   "@competitionTitle": {
     "description": "competition - Title"
   },
-  "competitionDescription": "competition Description",
+  "competitionDescription": "Description",
   "@competitionDescription": {
     "description": "competition - Description"
   },
-  "competitionDate": "competition Date",
+  "competitionDate": "Date",
   "@competitionDate": {
     "description": "competition - Date"
   },
@@ -172,7 +172,7 @@
   "@boulderTitle": {
     "description": "boulder - Title"
   },
-  "boulderLabelNumber": "boulder LabelNumber",
+  "boulderLabelNumber": "Nr Boulder",
   "@boulderLabelNumber": {
     "description": "boulder - LabelNumber"
   },
@@ -264,77 +264,81 @@
   "@errorSavingData": {
     "description": "error - SavingData"
   },
-    "competitionMessageCustom1": "Messaggio gara 1",
+    "competitionMessageCustom1": "Race Modification",
   "@competitionMessageCustom1": {
     "description": "Custom competition message 1"
   },
-  "competitionMessageCustom2": "Messaggio gara 2",
+  "competitionMessageCustom2": "New Race",
   "@competitionMessageCustom2": {
     "description": "Custom competition message 2"
   },
-  "competitionMessageCustom3": "Messaggio gara 3",
+  "competitionMessageCustom3": "Competition Management",
   "@competitionMessageCustom3": {
     "description": "Custom competition message 3"
   },
-  "competitionMessageCustom4": "Messaggio gara 4",
+  "competitionMessageCustom4": "Rescue...",
   "@competitionMessageCustom4": {
     "description": "Custom competition message 4"
   },
-  "competitionMessageCustom5": "Messaggio gara 5",
+  "competitionMessageCustom5": "Print QR code card",
   "@competitionMessageCustom5": {
     "description": "Custom competition message 5"
   },
-  "competitionMessageCustom6": "Messaggio gara 6",
+  "competitionMessageCustom6": "Required field",
   "@competitionMessageCustom6": {
     "description": "Custom competition message 6"
   },
-  "competitionMessageCustom7": "Messaggio gara 7",
+  "competitionMessageCustom7": "Nr Finalists",
   "@competitionMessageCustom7": {
     "description": "Custom competition message 7"
   },
-  "competitionMessageCustom8": "Messaggio gara 8",
+  "competitionMessageCustom8": "Nr Max Registrations",
   "@competitionMessageCustom8": {
     "description": "Custom competition message 8"
   },
-  "competitionMessageCustom9": "Messaggio gara 9",
+  "competitionMessageCustom9": "Slots Enabling",
   "@competitionMessageCustom9": {
     "description": "Custom competition message 9"
   },
-  "competitionMessageCustom10": "Messaggio gara 10",
+  "competitionMessageCustom10": "First Slot Registered",
   "@competitionMessageCustom10": {
     "description": "Custom competition message 10"
   },
-  "competitionMessageCustom11": "Messaggio gara 11",
+  "competitionMessageCustom11": "Second Slot Registered",
   "@competitionMessageCustom11": {
     "description": "Custom competition message 11"
   },
-  "competitionMessageCustom12": "Messaggio gara 12",
+  "competitionMessageCustom12": "Registration Fee",
   "@competitionMessageCustom12": {
     "description": "Custom competition message 12"
   },
-  "competitionMessageCustom13": "Messaggio gara 13",
+  "competitionMessageCustom13": "Notes",
   "@competitionMessageCustom13": {
     "description": "Custom competition message 13"
   },
-  "competitionMessageCustom14": "Messaggio gara 14",
+  "competitionMessageCustom14": "Registration closed",
   "@competitionMessageCustom14": {
-    "description": "Custom competition message 14"
+    "description": "Label of the option to close competition registrations"
   },
-  "competitionMessageCustom15": "Messaggio gara 15",
+
+  "competitionMessageCustom15": "Competition closed",
   "@competitionMessageCustom15": {
-    "description": "Custom competition message 15"
+    "description": "Label of the option indicating that the competition is closed"
   },
-  "competitionMessageCustom16": "Messaggio gara 16",
+
+  "competitionMessageCustom16": "Attendance management",
   "@competitionMessageCustom16": {
-    "description": "Custom competition message 16"
+    "description": "Label of the option to enable attendance management"
   },
-  "competitionMessageCustom17": "Messaggio gara 17",
+
+  "competitionMessageCustom17": "Payment management",
   "@competitionMessageCustom17": {
-    "description": "Custom competition message 17"
+    "description": "Label of the option to enable payment management"
   },
-  "competitionMessageCustom18": "Messaggio gara 18",
+
+  "competitionMessageCustom18": "Gift management",
   "@competitionMessageCustom18": {
-    "description": "Custom competition message 18"
+    "description": "Label of the option to enable complimentary registrations management"
   },
   "competitionMessageCustom19": "Messaggio gara 19",
   "@competitionMessageCustom19": {

@@ -22,34 +22,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get password => 'Password';
 
   @override
-  String get commonOk => 'common Ok';
+  String get commonOk => 'Ok';
 
   @override
-  String get commonCancel => 'common Cancel';
+  String get commonCancel => 'Cancel';
 
   @override
-  String get commonSave => 'common Save';
+  String get commonSave => 'Save';
 
   @override
-  String get commonDelete => 'common Delete';
+  String get commonDelete => 'Delete';
 
   @override
-  String get commonClose => 'common Close';
+  String get commonClose => 'Close';
 
   @override
-  String get commonBack => 'common Back';
+  String get commonBack => 'Back';
 
   @override
-  String get commonYes => 'common Yes';
+  String get commonYes => 'Yes';
 
   @override
-  String get commonNo => 'common No';
+  String get commonNo => 'No';
 
   @override
-  String get commonSearch => 'common Search';
+  String get commonSearch => 'Search';
 
   @override
-  String get commonRefresh => 'common Refresh';
+  String get commonRefresh => 'Refresh';
 
   @override
   String get loginTitle => 'login Title';
@@ -70,10 +70,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get competitionTitle => 'competition Title';
 
   @override
-  String get competitionDescription => 'competition Description';
+  String get competitionDescription => 'Description';
 
   @override
-  String get competitionDate => 'competition Date';
+  String get competitionDate => 'Date';
 
   @override
   String get competitionLocation => 'competition Location';
@@ -136,7 +136,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get boulderTitle => 'boulder Title';
 
   @override
-  String get boulderLabelNumber => 'boulder LabelNumber';
+  String get boulderLabelNumber => 'Nr Boulder';
 
   @override
   String get boulderLabelDifficulty => 'boulder LabelDifficulty';
@@ -205,58 +205,58 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorSavingData => 'error SavingData';
 
   @override
-  String get competitionMessageCustom1 => 'Messaggio gara 1';
+  String get competitionMessageCustom1 => 'Race Modification';
 
   @override
-  String get competitionMessageCustom2 => 'Messaggio gara 2';
+  String get competitionMessageCustom2 => 'New Race';
 
   @override
-  String get competitionMessageCustom3 => 'Messaggio gara 3';
+  String get competitionMessageCustom3 => 'Competition Management';
 
   @override
-  String get competitionMessageCustom4 => 'Messaggio gara 4';
+  String get competitionMessageCustom4 => 'Rescue...';
 
   @override
-  String get competitionMessageCustom5 => 'Messaggio gara 5';
+  String get competitionMessageCustom5 => 'Print QR code card';
 
   @override
-  String get competitionMessageCustom6 => 'Messaggio gara 6';
+  String get competitionMessageCustom6 => 'Required field';
 
   @override
-  String get competitionMessageCustom7 => 'Messaggio gara 7';
+  String get competitionMessageCustom7 => 'Nr Finalists';
 
   @override
-  String get competitionMessageCustom8 => 'Messaggio gara 8';
+  String get competitionMessageCustom8 => 'Nr Max Registrations';
 
   @override
-  String get competitionMessageCustom9 => 'Messaggio gara 9';
+  String get competitionMessageCustom9 => 'Slots Enabling';
 
   @override
-  String get competitionMessageCustom10 => 'Messaggio gara 10';
+  String get competitionMessageCustom10 => 'First Slot Registered';
 
   @override
-  String get competitionMessageCustom11 => 'Messaggio gara 11';
+  String get competitionMessageCustom11 => 'Second Slot Registered';
 
   @override
-  String get competitionMessageCustom12 => 'Messaggio gara 12';
+  String get competitionMessageCustom12 => 'Registration Fee';
 
   @override
-  String get competitionMessageCustom13 => 'Messaggio gara 13';
+  String get competitionMessageCustom13 => 'Notes';
 
   @override
-  String get competitionMessageCustom14 => 'Messaggio gara 14';
+  String get competitionMessageCustom14 => 'Registration closed';
 
   @override
-  String get competitionMessageCustom15 => 'Messaggio gara 15';
+  String get competitionMessageCustom15 => 'Competition closed';
 
   @override
-  String get competitionMessageCustom16 => 'Messaggio gara 16';
+  String get competitionMessageCustom16 => 'Attendance management';
 
   @override
-  String get competitionMessageCustom17 => 'Messaggio gara 17';
+  String get competitionMessageCustom17 => 'Payment management';
 
   @override
-  String get competitionMessageCustom18 => 'Messaggio gara 18';
+  String get competitionMessageCustom18 => 'Gift management';
 
   @override
   String get competitionMessageCustom19 => 'Messaggio gara 19';

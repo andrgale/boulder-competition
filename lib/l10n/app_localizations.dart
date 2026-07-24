@@ -125,61 +125,61 @@ abstract class AppLocalizations {
   ///  Ok
   ///
   /// In en, this message translates to:
-  /// **'common Ok'**
+  /// **'Ok'**
   String get commonOk;
 
   ///  Cancel
   ///
   /// In en, this message translates to:
-  /// **'common Cancel'**
+  /// **'Cancel'**
   String get commonCancel;
 
   ///  Save
   ///
   /// In en, this message translates to:
-  /// **'common Save'**
+  /// **'Save'**
   String get commonSave;
 
   ///  Delete
   ///
   /// In en, this message translates to:
-  /// **'common Delete'**
+  /// **'Delete'**
   String get commonDelete;
 
   ///  Close
   ///
   /// In en, this message translates to:
-  /// **'common Close'**
+  /// **'Close'**
   String get commonClose;
 
   ///  Back
   ///
   /// In en, this message translates to:
-  /// **'common Back'**
+  /// **'Back'**
   String get commonBack;
 
   ///  Yes
   ///
   /// In en, this message translates to:
-  /// **'common Yes'**
+  /// **'Yes'**
   String get commonYes;
 
   ///  No
   ///
   /// In en, this message translates to:
-  /// **'common No'**
+  /// **'No'**
   String get commonNo;
 
   ///  Search
   ///
   /// In en, this message translates to:
-  /// **'common Search'**
+  /// **'Search'**
   String get commonSearch;
 
   ///  Refresh
   ///
   /// In en, this message translates to:
-  /// **'common Refresh'**
+  /// **'Refresh'**
   String get commonRefresh;
 
   /// Title
@@ -221,13 +221,13 @@ abstract class AppLocalizations {
   /// competition - Description
   ///
   /// In en, this message translates to:
-  /// **'competition Description'**
+  /// **'Description'**
   String get competitionDescription;
 
   /// competition - Date
   ///
   /// In en, this message translates to:
-  /// **'competition Date'**
+  /// **'Date'**
   String get competitionDate;
 
   /// competition - Location
@@ -353,7 +353,7 @@ abstract class AppLocalizations {
   /// boulder - LabelNumber
   ///
   /// In en, this message translates to:
-  /// **'boulder LabelNumber'**
+  /// **'Nr Boulder'**
   String get boulderLabelNumber;
 
   /// boulder - LabelDifficulty
@@ -491,109 +491,109 @@ abstract class AppLocalizations {
   /// Custom competition message 1
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 1'**
+  /// **'Race Modification'**
   String get competitionMessageCustom1;
 
   /// Custom competition message 2
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 2'**
+  /// **'New Race'**
   String get competitionMessageCustom2;
 
   /// Custom competition message 3
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 3'**
+  /// **'Competition Management'**
   String get competitionMessageCustom3;
 
   /// Custom competition message 4
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 4'**
+  /// **'Rescue...'**
   String get competitionMessageCustom4;
 
   /// Custom competition message 5
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 5'**
+  /// **'Print QR code card'**
   String get competitionMessageCustom5;
 
   /// Custom competition message 6
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 6'**
+  /// **'Required field'**
   String get competitionMessageCustom6;
 
   /// Custom competition message 7
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 7'**
+  /// **'Nr Finalists'**
   String get competitionMessageCustom7;
 
   /// Custom competition message 8
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 8'**
+  /// **'Nr Max Registrations'**
   String get competitionMessageCustom8;
 
   /// Custom competition message 9
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 9'**
+  /// **'Slots Enabling'**
   String get competitionMessageCustom9;
 
   /// Custom competition message 10
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 10'**
+  /// **'First Slot Registered'**
   String get competitionMessageCustom10;
 
   /// Custom competition message 11
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 11'**
+  /// **'Second Slot Registered'**
   String get competitionMessageCustom11;
 
   /// Custom competition message 12
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 12'**
+  /// **'Registration Fee'**
   String get competitionMessageCustom12;
 
   /// Custom competition message 13
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 13'**
+  /// **'Notes'**
   String get competitionMessageCustom13;
 
-  /// Custom competition message 14
+  /// Label of the option to close competition registrations
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 14'**
+  /// **'Registration closed'**
   String get competitionMessageCustom14;
 
-  /// Custom competition message 15
+  /// Label of the option indicating that the competition is closed
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 15'**
+  /// **'Competition closed'**
   String get competitionMessageCustom15;
 
-  /// Custom competition message 16
+  /// Label of the option to enable attendance management
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 16'**
+  /// **'Attendance management'**
   String get competitionMessageCustom16;
 
-  /// Custom competition message 17
+  /// Label of the option to enable payment management
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 17'**
+  /// **'Payment management'**
   String get competitionMessageCustom17;
 
-  /// Custom competition message 18
+  /// Label of the option to enable complimentary registrations management
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 18'**
+  /// **'Gift management'**
   String get competitionMessageCustom18;
 
   /// Custom competition message 19

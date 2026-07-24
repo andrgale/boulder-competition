@@ -88,7 +88,7 @@
     "@competitionDescription": {
     "description": "Etichetta del campo descrizione della competizione"
     },
-    "competitionDate": "Data Gara",
+    "competitionDate": "Data",
     "@competitionDate": {
     "description": "Etichetta del campo data della competizione"
     },
@@ -172,7 +172,7 @@
     "@boulderTitle": {
       "description": "Boulder - Titolo"
     },
-    "boulderLabelNumber": "Numero boulder",
+    "boulderLabelNumber": "Nr Boulder",
     "@boulderLabelNumber": {
       "description": "Boulder - Numero"
     },
@@ -264,77 +264,81 @@
     "@errorSavingData": {
     "description": "Errore - Salvataggio dati"
     },
-      "competitionMessageCustom1": "Messaggio gara 1",
+      "competitionMessageCustom1": "Modifica Gara",
   "@competitionMessageCustom1": {
     "description": "Custom competition message 1"
   },
-  "competitionMessageCustom2": "Messaggio gara 2",
+  "competitionMessageCustom2": "Nuova Gara",
   "@competitionMessageCustom2": {
     "description": "Custom competition message 2"
   },
-  "competitionMessageCustom3": "Messaggio gara 3",
+  "competitionMessageCustom3": "Gestione competizione",
   "@competitionMessageCustom3": {
     "description": "Custom competition message 3"
   },
-  "competitionMessageCustom4": "Messaggio gara 4",
+  "competitionMessageCustom4": "Salvataggio...",
   "@competitionMessageCustom4": {
     "description": "Custom competition message 4"
   },
-  "competitionMessageCustom5": "Messaggio gara 5",
+  "competitionMessageCustom5": "Stampa cartellino QR",
   "@competitionMessageCustom5": {
     "description": "Custom competition message 5"
   },
-  "competitionMessageCustom6": "Messaggio gara 6",
+  "competitionMessageCustom6": "Campo obbligatorio",
   "@competitionMessageCustom6": {
     "description": "Custom competition message 6"
   },
-  "competitionMessageCustom7": "Messaggio gara 7",
+  "competitionMessageCustom7": "Nr Finalisti",
   "@competitionMessageCustom7": {
     "description": "Custom competition message 7"
   },
-  "competitionMessageCustom8": "Messaggio gara 8",
+  "competitionMessageCustom8": "Nr Massimo Iscritti",
   "@competitionMessageCustom8": {
     "description": "Custom competition message 8"
   },
-  "competitionMessageCustom9": "Messaggio gara 9",
+  "competitionMessageCustom9": "Abilitazione Turni",
   "@competitionMessageCustom9": {
     "description": "Custom competition message 9"
   },
-  "competitionMessageCustom10": "Messaggio gara 10",
+  "competitionMessageCustom10": "Iscritti Primo Turno",
   "@competitionMessageCustom10": {
     "description": "Custom competition message 10"
   },
-  "competitionMessageCustom11": "Messaggio gara 11",
+  "competitionMessageCustom11": "Iscritti Secondo Turno",
   "@competitionMessageCustom11": {
     "description": "Custom competition message 11"
   },
-  "competitionMessageCustom12": "Messaggio gara 12",
+  "competitionMessageCustom12": "Quota Iscrizione",
   "@competitionMessageCustom12": {
     "description": "Custom competition message 12"
   },
-  "competitionMessageCustom13": "Messaggio gara 13",
+  "competitionMessageCustom13": "Note",
   "@competitionMessageCustom13": {
     "description": "Custom competition message 13"
   },
-  "competitionMessageCustom14": "Messaggio gara 14",
+  "competitionMessageCustom14": "Iscrizioni chiuse",
   "@competitionMessageCustom14": {
-    "description": "Custom competition message 14"
+    "description": "Etichetta dell'opzione per chiudere le iscrizioni alla competizione"
   },
-  "competitionMessageCustom15": "Messaggio gara 15",
+
+  "competitionMessageCustom15": "Gara chiusa",
   "@competitionMessageCustom15": {
-    "description": "Custom competition message 15"
+    "description": "Etichetta dell'opzione che indica se la competizione è chiusa"
   },
-  "competitionMessageCustom16": "Messaggio gara 16",
+
+  "competitionMessageCustom16": "Gestione presenze",
   "@competitionMessageCustom16": {
-    "description": "Custom competition message 16"
+    "description": "Etichetta dell'opzione per abilitare la gestione delle presenze"
   },
-  "competitionMessageCustom17": "Messaggio gara 17",
+
+  "competitionMessageCustom17": "Gestione pagamenti",
   "@competitionMessageCustom17": {
-    "description": "Custom competition message 17"
+    "description": "Etichetta dell'opzione per abilitare la gestione dei pagamenti"
   },
-  "competitionMessageCustom18": "Messaggio gara 18",
+
+  "competitionMessageCustom18": "Gestione omaggi",
   "@competitionMessageCustom18": {
-    "description": "Custom competition message 18"
+    "description": "Etichetta dell'opzione per abilitare la gestione degli omaggi"
   },
   "competitionMessageCustom19": "Messaggio gara 19",
   "@competitionMessageCustom19": {
