@@ -17,7 +17,9 @@ class _ActivationScreenState extends State<ActivationScreen> {
 
   Future<void> _submit() async {
     if (_clientIdController.text.trim().isEmpty ||
-        _passwordController.text.isEmpty) return;
+        _passwordController.text.isEmpty) {
+      return;
+    }
     setState(() => _submitting = true);
     await widget.onSubmit(
       _clientIdController.text.trim(),

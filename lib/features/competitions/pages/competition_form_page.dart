@@ -31,6 +31,9 @@ class CompetitionFormPage extends StatefulWidget {
 
 class _CompetitionFormPageState
     extends State<CompetitionFormPage> {
+
+   AppLocalizations get l10n => AppLocalizations.of(context)!;
+
   final service = CompetitionService();
 
   final formKey = GlobalKey<FormState>();
@@ -182,7 +185,7 @@ class _CompetitionFormPageState
         dtGara: dtGara ?? c.dtGara,
       );
     } catch (e) {
-      showError('Errore nella generazione del cartellino: $e');
+      showError('${l10n.competitionMessageCustom19} $e');
     } finally {
       if (mounted) setState(() => _exportingCartellino = false);
     }
@@ -192,39 +195,43 @@ class _CompetitionFormPageState
   // =======================================================
 
   Future<void> save() async {
-
-    final canWrite =
-        await PermissionService.hasPermission(
+    final canWrite = await PermissionService.hasPermission(
       'competition.write',
     );
 
     if (!canWrite) {
       showError(
-        'Non hai i permessi per modificare le gare',
+        l10n.competitionMessageCustom20,
       );
       return;
     }
 
-
     if (!formKey.currentState!.validate()) return;
 
     if (dtGara == null) {
-      showError('Seleziona la data gara');
+      showError(l10n.competitionMessageCustom21);
       return;
     }
 
-    final nrMaxRegistrations = int.tryParse(nrMaxRegistrationsController.text) ?? 0;
-    final nrMaxFirstTurn = int.tryParse(nrMaxFirstTurnController.text) ?? 0;
-    final nrMaxSecondTurn = int.tryParse(nrMaxSecondTurnController.text) ?? 0;
+    final nrMaxRegistrations =
+        int.tryParse(nrMaxRegistrationsController.text) ?? 0;
+    final nrMaxFirstTurn =
+        int.tryParse(nrMaxFirstTurnController.text) ?? 0;
+    final nrMaxSecondTurn =
+        int.tryParse(nrMaxSecondTurnController.text) ?? 0;
 
     if (isTurn) {
       if (nrMaxRegistrations <= 0) {
-        showError('Inserisci un Nr. Massimo Iscritti maggiore di 0');
+        showError(
+          l10n.competitionMessageCustom22,
+        );
         return;
       }
-      if ((nrMaxFirstTurn + nrMaxSecondTurn) > nrMaxRegistrations) {
+
+      if ((nrMaxFirstTurn + nrMaxSecondTurn) >
+          nrMaxRegistrations) {
         showError(
-          'La somma degli iscritti al primo e secondo turno non può superare il Nr. Massimo Iscritti',
+          l10n.competitionMessageCustom23,
         );
         return;
       }
@@ -274,7 +281,9 @@ class _CompetitionFormPageState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            isEdit ? 'Competizione aggiornata' : 'Competizione creata',
+            isEdit
+                ? l10n.competitionMessageCustom24
+                : l10n.competitionMessageCustom25,
           ),
         ),
       );
@@ -300,7 +309,7 @@ class _CompetitionFormPageState
 
   @override
   Widget build(BuildContext context) {
-      final l10n = AppLocalizations.of(context)!;
+    //  final l10n = AppLocalizations.of(context)!;
 
           return BasePage(
             title: isEdit

@@ -258,25 +258,29 @@ class AppLocalizationsIt extends AppLocalizations {
   String get competitionMessageCustom18 => 'Gestione omaggi';
 
   @override
-  String get competitionMessageCustom19 => 'Messaggio gara 19';
+  String get competitionMessageCustom19 =>
+      'Errore nella generazione del cartellino:';
 
   @override
-  String get competitionMessageCustom20 => 'Messaggio gara 20';
+  String get competitionMessageCustom20 =>
+      'Non hai i permessi per modificare le gare';
 
   @override
-  String get competitionMessageCustom21 => 'Messaggio gara 21';
+  String get competitionMessageCustom21 => 'Seleziona la data gara';
 
   @override
-  String get competitionMessageCustom22 => 'Messaggio gara 22';
+  String get competitionMessageCustom22 =>
+      'Inserisci un Nr. Massimo Iscritti maggiore di 0';
 
   @override
-  String get competitionMessageCustom23 => 'Messaggio gara 23';
+  String get competitionMessageCustom23 =>
+      'La somma degli iscritti al primo e secondo turno non può superare il Nr. Massimo Iscritti';
 
   @override
-  String get competitionMessageCustom24 => 'Messaggio gara 24';
+  String get competitionMessageCustom24 => 'Gara aggiornata';
 
   @override
-  String get competitionMessageCustom25 => 'Messaggio gara 25';
+  String get competitionMessageCustom25 => 'Gara creata';
 
   @override
   String get competitionMessageCustom26 => 'Messaggio gara 26';

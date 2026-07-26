@@ -599,43 +599,43 @@ abstract class AppLocalizations {
   /// Custom competition message 19
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 19'**
+  /// **'Error generating the QR badge:'**
   String get competitionMessageCustom19;
 
-  /// Custom competition message 20
+  /// Message displayed when the user does not have permission to modify a competition
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 20'**
+  /// **'You do not have permission to modify competitions'**
   String get competitionMessageCustom20;
 
-  /// Custom competition message 21
+  /// Validation message displayed when no competition date has been selected
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 21'**
+  /// **'Please select the competition date'**
   String get competitionMessageCustom21;
 
-  /// Custom competition message 22
+  /// Validation message displayed when the maximum number of registrations is not valid
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 22'**
+  /// **'Enter a maximum number of registrations greater than 0'**
   String get competitionMessageCustom22;
 
-  /// Custom competition message 23
+  /// Validation message displayed when the total registrations for the first and second time slots exceed the maximum number of registrations
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 23'**
+  /// **'The total number of registrations for the first and second time slots cannot exceed the maximum number of registrations'**
   String get competitionMessageCustom23;
 
-  /// Custom competition message 24
+  /// Message displayed after successfully updating a competition
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 24'**
+  /// **'Competition updated'**
   String get competitionMessageCustom24;
 
-  /// Custom competition message 25
+  /// Message displayed after successfully creating a new competition
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 25'**
+  /// **'Competition created'**
   String get competitionMessageCustom25;
 
   /// Custom competition message 26

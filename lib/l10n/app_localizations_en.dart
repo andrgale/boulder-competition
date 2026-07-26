@@ -259,25 +259,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get competitionMessageCustom18 => 'Gift management';
 
   @override
-  String get competitionMessageCustom19 => 'Messaggio gara 19';
+  String get competitionMessageCustom19 => 'Error generating the QR badge:';
 
   @override
-  String get competitionMessageCustom20 => 'Messaggio gara 20';
+  String get competitionMessageCustom20 =>
+      'You do not have permission to modify competitions';
 
   @override
-  String get competitionMessageCustom21 => 'Messaggio gara 21';
+  String get competitionMessageCustom21 => 'Please select the competition date';
 
   @override
-  String get competitionMessageCustom22 => 'Messaggio gara 22';
+  String get competitionMessageCustom22 =>
+      'Enter a maximum number of registrations greater than 0';
 
   @override
-  String get competitionMessageCustom23 => 'Messaggio gara 23';
+  String get competitionMessageCustom23 =>
+      'The total number of registrations for the first and second time slots cannot exceed the maximum number of registrations';
 
   @override
-  String get competitionMessageCustom24 => 'Messaggio gara 24';
+  String get competitionMessageCustom24 => 'Competition updated';
 
   @override
-  String get competitionMessageCustom25 => 'Messaggio gara 25';
+  String get competitionMessageCustom25 => 'Competition created';
 
   @override
   String get competitionMessageCustom26 => 'Messaggio gara 26';

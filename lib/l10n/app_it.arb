@@ -340,31 +340,31 @@
   "@competitionMessageCustom18": {
     "description": "Etichetta dell'opzione per abilitare la gestione degli omaggi"
   },
-  "competitionMessageCustom19": "Messaggio gara 19",
+  "competitionMessageCustom19": "Errore nella generazione del cartellino:",
   "@competitionMessageCustom19": {
     "description": "Custom competition message 19"
   },
-  "competitionMessageCustom20": "Messaggio gara 20",
+  "competitionMessageCustom20": "Non hai i permessi per modificare le gare",
   "@competitionMessageCustom20": {
     "description": "Custom competition message 20"
   },
-  "competitionMessageCustom21": "Messaggio gara 21",
+  "competitionMessageCustom21": "Seleziona la data gara",
   "@competitionMessageCustom21": {
     "description": "Custom competition message 21"
   },
-  "competitionMessageCustom22": "Messaggio gara 22",
+  "competitionMessageCustom22": "Inserisci un Nr. Massimo Iscritti maggiore di 0",
   "@competitionMessageCustom22": {
     "description": "Custom competition message 22"
   },
-  "competitionMessageCustom23": "Messaggio gara 23",
+  "competitionMessageCustom23": "La somma degli iscritti al primo e secondo turno non può superare il Nr. Massimo Iscritti",
   "@competitionMessageCustom23": {
     "description": "Custom competition message 23"
   },
-  "competitionMessageCustom24": "Messaggio gara 24",
+  "competitionMessageCustom24": "Gara aggiornata",
   "@competitionMessageCustom24": {
     "description": "Custom competition message 24"
   },
-  "competitionMessageCustom25": "Messaggio gara 25",
+  "competitionMessageCustom25": "Gara creata",
   "@competitionMessageCustom25": {
     "description": "Custom competition message 25"
   },

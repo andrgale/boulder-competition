@@ -340,33 +340,33 @@
   "@competitionMessageCustom18": {
     "description": "Label of the option to enable complimentary registrations management"
   },
-  "competitionMessageCustom19": "Messaggio gara 19",
+  "competitionMessageCustom19": "Error generating the QR badge:",
   "@competitionMessageCustom19": {
     "description": "Custom competition message 19"
   },
-  "competitionMessageCustom20": "Messaggio gara 20",
+  "competitionMessageCustom20": "You do not have permission to modify competitions",
   "@competitionMessageCustom20": {
-    "description": "Custom competition message 20"
+  "description": "Message displayed when the user does not have permission to modify a competition"
   },
-  "competitionMessageCustom21": "Messaggio gara 21",
+  "competitionMessageCustom21": "Please select the competition date",
   "@competitionMessageCustom21": {
-    "description": "Custom competition message 21"
+    "description": "Validation message displayed when no competition date has been selected"
   },
-  "competitionMessageCustom22": "Messaggio gara 22",
+  "competitionMessageCustom22": "Enter a maximum number of registrations greater than 0",
   "@competitionMessageCustom22": {
-    "description": "Custom competition message 22"
+    "description": "Validation message displayed when the maximum number of registrations is not valid"
   },
-  "competitionMessageCustom23": "Messaggio gara 23",
+  "competitionMessageCustom23": "The total number of registrations for the first and second time slots cannot exceed the maximum number of registrations",
   "@competitionMessageCustom23": {
-    "description": "Custom competition message 23"
+    "description": "Validation message displayed when the total registrations for the first and second time slots exceed the maximum number of registrations"
   },
-  "competitionMessageCustom24": "Messaggio gara 24",
+  "competitionMessageCustom24": "Competition updated",
   "@competitionMessageCustom24": {
-    "description": "Custom competition message 24"
+    "description": "Message displayed after successfully updating a competition"
   },
-  "competitionMessageCustom25": "Messaggio gara 25",
+  "competitionMessageCustom25": "Competition created",
   "@competitionMessageCustom25": {
-    "description": "Custom competition message 25"
+    "description": "Message displayed after successfully creating a new competition"
   },
   "competitionMessageCustom26": "Messaggio gara 26",
   "@competitionMessageCustom26": {

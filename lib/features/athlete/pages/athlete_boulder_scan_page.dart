@@ -22,7 +22,7 @@ class _BoulderScanPageState extends State<AthleteBoulderScanPage> {
   MobileScannerController? _controller;
 
   bool _processing = false;
-  bool _cameraUnavailable = false;
+  final bool _cameraUnavailable = false;
  // bool _cameraReady = false; // true solo dopo che start() è andato a buon fine
   String? _cameraErrorMessage;
 
