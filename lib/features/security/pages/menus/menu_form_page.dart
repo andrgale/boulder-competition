@@ -40,6 +40,7 @@ class _MenuFormPageState extends State<MenuFormPage> {
     'dashboard', 'groups', 'terrain', 'leaderboard',
     'sports_score', 'emoji_events', 'admin_panel_settings',
     'category', 'person', 'lock', 'menu_book', 'security',
+    'upload_file',
   ];
 
   @override
@@ -205,6 +206,14 @@ class _MenuFormPageState extends State<MenuFormPage> {
                                   value: name,
                                   child: Text(name),
                                 )),
+                            // fallback: se il valore a DB non è tra le opzioni note,
+                            // aggiungilo comunque per evitare il crash del DropdownButtonFormField
+                            if (iconController.text.isNotEmpty &&
+                                !_iconOptions.contains(iconController.text))
+                              DropdownMenuItem(
+                                value: iconController.text,
+                                child: Text('${iconController.text} (non standard)'),
+                              ),
                           ],
                           onChanged: (val) {
                             iconController.text = val ?? '';

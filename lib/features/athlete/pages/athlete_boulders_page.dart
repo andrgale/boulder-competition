@@ -4,8 +4,8 @@ import '../models/athlete_boulder_model.dart';
 import '../models/athlete_boulders_page_data.dart';
 import '../data/athlete_boulder_service.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../config/app_mode.dart';
+//import 'package:supabase_flutter/supabase_flutter.dart';
+//import '../../../config/app_mode.dart';
 
 enum AthleteFilter {
   all,
@@ -269,8 +269,14 @@ class _AthleteBouldersPageState
         title: const Text(
           'I miei Boulder',
         ),
+        actions: [
+          IconButton(
+            tooltip: 'Torna alla home',
+            icon: const Icon(Icons.home_outlined),
+            onPressed: () => context.go('/athlete-home'),
+          ),
+        ],
       ),
-
       body: RefreshIndicator(
         onRefresh: loadData,
         child: Column(
@@ -312,27 +318,27 @@ class _AthleteBouldersPageState
                           ),
                         ),
                       ),
-                      if(AppConfig.mostraCampo)
-                        TextButton.icon(
-                          icon: const Icon(
-                            Icons.logout,
-                            size: 18,
-                          ),
-                          label: const Text('Esci'),
-                          onPressed: () async {
-                            await Supabase
-                                .instance
-                                .client
-                                .auth
-                                .signOut();
+                      // if(AppConfig.mostraCampo)
+                      //   TextButton.icon(
+                      //     icon: const Icon(
+                      //       Icons.logout,
+                      //       size: 18,
+                      //     ),
+                      //     label: const Text('Esci'),
+                      //     onPressed: () async {
+                      //       await Supabase
+                      //           .instance
+                      //           .client
+                      //           .auth
+                      //           .signOut();
 
-                            if (!mounted) return;
+                      //       if (!mounted) return;
 
-                            context.go(
-                              '/athlete-login',
-                            );
-                          },
-                        ),
+                      //       context.go(
+                      //         '/athlete-login',
+                      //       );
+                      //     },
+                      //   ),
                     ],
                   ),
 

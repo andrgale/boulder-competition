@@ -39,7 +39,7 @@ jobs:
       - run: flutter pub get
 
       # ✅ BUILD ADMIN PROD
-      - run: flutter build windows -t lib/main_admin_prod.dart
+      - run: flutter build windows -t lib/main.dart
 
       # ✅ TROVA EXE
       - name: Find EXE

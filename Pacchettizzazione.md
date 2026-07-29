@@ -7,7 +7,7 @@ Build dell'app
 `bash
 fvm flutter build macos \
   --release \
-  -t lib/main_admin_prod.dart
+  -t lib/main.dart
 
 
 L'output è in:
@@ -59,7 +59,7 @@ Cmd + Shift + B
 
 fvm flutter build apk \
   --release \
-  -t lib/main_athlete_prod.dart \
+  -t lib/main_smartphone.dart \
   --split-per-abi
 
 ✓ Built build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk (27.1MB)
@@ -80,7 +80,7 @@ Build
 `bash
 fvm flutter build ipa \
   --release \
-  -t lib/main_athlete_prod.dart
+  -t lib/main_smartphone.dart
 `
 
 Output:
@@ -102,14 +102,14 @@ Per caricare su App Store Connect usa Transporter (app gratuita sul Mac App Stor
 Non avendo un account di sviluppatore Apple a pagamento non crea l'ipa, posso solo installarlo sul mio Iphone con questo comando:
 fvm flutter run \
   --release \
-  -t lib/main_athlete_prod.dart
+  -t lib/main_smartphone.dart
 
 ### Build AAB (Google Play Store)
 
 `bash
 fvm flutter build appbundle \
   --release \
-  -t lib/main_athlete_prod.dart
+  -t lib/main_smartphone.dart
 `
 
 Output:
@@ -175,13 +175,13 @@ Riepilogo comandi di build
 
 | Target            | Comando                                                                       | Output                                    |
 |-------------------|-------------------------------------------------------------------------------|-------------------------------------------|
-| macOS app         | fvm flutter build macos --release -t lib/main_admin_prod.dart                 | .app in build/macos/...                   |
+| macOS app         | fvm flutter build macos --release -t lib/main.dart                 | .app in build/macos/...                   |
 | macOS dmg         | create-dmg ... (post-build)                                                   | .dmg                                      |
-| Windows exe       | fvm flutter build windows --release -t lib/main_admin_prod.dart               | cartella in build/windows/...             |
+| Windows exe       | fvm flutter build windows --release -t lib/main.dart               | cartella in build/windows/...             |
 | Windows installer | Inno Setup (post-build)                                                       | .exe installer                            |
-| iOS ipa           | fvm flutter build ipa --release -t lib/main_athlete_prod.dart                 | .ipa in build/ios/ipa/                    |
-| Android apk       | fvm flutter build apk --release --split-per-abi -t lib/main_athlete_prod.dart | .apk in build/app/outputs/flutter-apk/    |
-| Android aab       | fvm flutter build appbundle --release -t lib/main_athlete_prod.dart           | .aab in build/app/outputs/bundle/release/ |
+| iOS ipa           | fvm flutter build ipa --release -t lib/main_smartphone.dart                 | .ipa in build/ios/ipa/                    |
+| Android apk       | fvm flutter build apk --release --split-per-abi -t lib/main_smartphone.dart | .apk in build/app/outputs/flutter-apk/    |
+| Android aab       | fvm flutter build appbundle --release -t lib/main_smartphone.dart           | .aab in build/app/outputs/bundle/release/ |
 
 Due cose da fare prima di qualsiasi build
 Versiona correttamente in pubspec.yaml — il campo version diventa il numero di versione dell'app:
@@ -464,8 +464,8 @@ Situazione del tuo progetto specifico
 Hai due app distinte che condividono lo stesso codebase (maindev.dart per Athlete, mainprod.dart per Admin). Per iOS devi configurare due Bundle Identifier separati se vuoi che coesistano sul dispositivo:
 
 `
-com.tuaazienda.boulderadmin    ← per mainprod.dart
-com.tuaazienda.boulderathlete  ← per main_dev.dart
+com.tuaazienda.boulderadmin    ← per main.dart
+com.tuaazienda.boulderathlete  ← per main_smartphone.dart
 `
 
 Per cambiare il Bundle ID in base al flavor puoi usare gli Xcode Schemes — ma per iniziare è più semplice tenere due configurazioni separate in ios/Runner.xcworkspace e switchare manualmente prima della build.

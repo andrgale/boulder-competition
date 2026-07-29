@@ -140,7 +140,10 @@ class RouteGuard {
     location == '/athlete-login' ||
     location == '/athlete-change-password' ||
     location == '/athlete-boulder-scan' ||    
-    location == '/athlete-boulders';    
+    location == '/athlete-boulders' ||
+    location == '/athlete-home' ||
+    location == '/athlete-competition-registration' ||
+    location == '/athlete-checkin';
 
     // =====================================================
     // ROTTE ATLETA
@@ -158,7 +161,7 @@ class RouteGuard {
         );
 
         if (isAthlete) {
-          return '/athlete-boulders';
+          return '/athlete-home';   // era '/athlete-boulders'
         }
 
         return '/dashboard';
@@ -200,9 +203,8 @@ class RouteGuard {
       );
 
       if (isAthlete) {
-        return '/athlete-boulders';
+          return '/athlete-home';   // era '/athlete-boulders'
       }
-
       return '/dashboard';
     }
 
@@ -220,7 +222,7 @@ class RouteGuard {
     );
 
     if (isAthlete) {
-      return '/athlete-boulders';
+      return '/athlete-home';   // era '/athlete-boulders'
     }
 
     // final baseRoute =

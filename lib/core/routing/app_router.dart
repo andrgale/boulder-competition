@@ -74,7 +74,9 @@ import '../../features/security/models/permission_model.dart';
 import '../../features/security/models/menu_model.dart';
 import '../../features/security/models/security_profile_model.dart';
 import '../../features/checkin/pages/checkin_competitions_page.dart';
-
+import '../../features/athlete/pages/athlete_home_page.dart';
+import '../../features/athlete/pages/athlete_competition_registration_page.dart';
+import '../../features/athlete/pages/athlete_checkin_page.dart';
 
 
 final GoRouter appRouter = GoRouter(
@@ -169,6 +171,31 @@ final GoRouter appRouter = GoRouter(
         );
       },
     ),
+
+    GoRoute(
+          path: '/athlete-home',
+          name: 'athlete_home',
+          builder: (context, state) {
+            return const AthleteHomePage();
+          },
+        ),
+
+        GoRoute(
+          path: '/athlete-competition-registration',
+          name: 'athlete_competition_registration',
+          builder: (context, state) {
+            return const AthleteCompetitionRegistrationPage();
+          },
+        ),
+
+        GoRoute(
+          path: '/athlete-checkin',
+          name: 'athlete_checkin',
+          builder: (context, state) {
+            return const AthleteCheckinPage();
+          },
+        ),
+
 
     // =====================================================
     // APP SHELL
