@@ -418,6 +418,10 @@ final GoRouter appRouter = GoRouter(
 // REGISTRATIONS
 // ======================================================
 
+// ======================================================
+// REGISTRATIONS
+// ======================================================
+
         GoRoute(
           path: '/competitions/:id/registrations',
           name: 'registrations_list',
@@ -429,24 +433,28 @@ final GoRouter appRouter = GoRouter(
             final extra = state.extra;
             String competitionName = '';
             bool flIscrizioniChiuse = false; // ← aggiunto
+            int nrMaxRegistrations = 0; // ← aggiunto
 
             if (extra is CompetitionModel) {
               competitionName = extra.descrizione;
               flIscrizioniChiuse = extra.flIscrizioniChiuse; // ← aggiunto
+              nrMaxRegistrations = extra.nrMaxRegistrations; // ← aggiunto
             } else if (extra is Map) {
               competitionName = extra['competitionName'] as String? ?? '';
               flIscrizioniChiuse =
                   extra['flIscrizioniChiuse'] as bool? ?? false; // ← aggiunto
+              nrMaxRegistrations =
+                  extra['nrMaxRegistrations'] as int? ?? 0; // ← aggiunto
             }
 
             return RegistrationsPage(
               competitionId: competitionId,
               competitionName: competitionName,
               flIscrizioniChiuse: flIscrizioniChiuse, // ← aggiunto
+              nrMaxRegistrations: nrMaxRegistrations, // ← aggiunto
             );
           },
         ),
-
 
         GoRoute(
           path: '/registrations/new',

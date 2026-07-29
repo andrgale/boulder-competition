@@ -51,7 +51,7 @@ class SearchService {
     }).toList();
   }
 
-  // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
   // registrations → /competitions/:id/registrations
   // Recuperiamo anche competition_id per costruire la rotta corretta.
   // Deduplicati per email.
@@ -60,7 +60,9 @@ class SearchService {
     final safe = q.replaceAll('"', '');
 
     // Recuperiamo anche competition_id per costruire la rotta corretta.
-    // Il nome gara viene caricato con una seconda query per mostrarlo nella pagina.
+    // Il nome gara e i flag di controllo iscrizioni vengono caricati con
+    // una seconda query, per mostrarli e applicarli correttamente nella
+    // pagina di destinazione (RegistrationsPage).
     final rows = await _client
         .from('registrations')
         .select('id, competition_id, cognome, nome, email, societa')
@@ -74,7 +76,7 @@ class SearchService {
 
     if ((rows as List).isEmpty) return [];
 
-    // Recupera i nomi delle competizioni coinvolte in un'unica query
+    // Recupera i dati delle competizioni coinvolte in un'unica query
     final competitionIds = rows
         .map((r) => r['competition_id'] as String?)
         .whereType<String>()
@@ -84,13 +86,14 @@ class SearchService {
     final compRows = competitionIds.isNotEmpty
         ? await _client
             .from('competitions')
-            .select('id, descrizione')
+            // ← aggiunte le colonne necessarie ai controlli iscrizioni
+            .select('id, descrizione, fl_iscrizioni_chiuse, nr_max_registrations')
             .inFilter('id', competitionIds)
         : <Map<String, dynamic>>[];
 
+    // ← mappiamo l'intera riga della competizione, non solo la descrizione
     final compMap = {
-      for (final c in compRows as List)
-        c['id'] as String: c['descrizione'] as String? ?? '',
+      for (final c in compRows as List) c['id'] as String: c,
     };
 
     final seen = <String>{};
@@ -103,7 +106,12 @@ class SearchService {
 
       final nome = '${r['cognome'] ?? ''} ${r['nome'] ?? ''}'.trim();
       final competitionId = r['competition_id'] as String? ?? '';
-      final competitionName = compMap[competitionId] ?? '';
+      final comp = compMap[competitionId];
+      final competitionName = comp?['descrizione'] as String? ?? '';
+      final flIscrizioniChiuse =
+          comp?['fl_iscrizioni_chiuse'] as bool? ?? false;
+      final nrMaxRegistrations =
+          comp?['nr_max_registrations'] as int? ?? 0;
 
       results.add(SearchResult(
         id: r['id'] as String,
@@ -114,6 +122,8 @@ class SearchService {
         extra: {
           'competitionId': competitionId,
           'competitionName': competitionName,
+          'flIscrizioniChiuse': flIscrizioniChiuse,   // ← aggiunto
+          'nrMaxRegistrations': nrMaxRegistrations,    // ← aggiunto
         },
       ));
 
@@ -122,7 +132,6 @@ class SearchService {
 
     return results;
   }
-
   // ---------------------------------------------------------------------------
   // boulders → /competitions (non esiste /boulders standalone)
   // Recuperiamo competition_id per navigare alla gara giusta.

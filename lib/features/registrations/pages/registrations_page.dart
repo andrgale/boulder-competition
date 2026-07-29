@@ -15,11 +15,15 @@ class RegistrationsPage extends StatefulWidget {
   // ── flag dalla competition: se true, iscrizioni chiuse ─────
   final bool flIscrizioniChiuse;
 
+// ── numero massimo di atleti iscrivibili (0 = nessun limite) ─
+  final int nrMaxRegistrations;
+
   const RegistrationsPage({
     super.key,
     required this.competitionId,
     required this.competitionName,
     this.flIscrizioniChiuse = false,
+    this.nrMaxRegistrations = 0,
   });
 
   @override
@@ -83,13 +87,18 @@ class _RegistrationsPageState
     }).toList();
   }
 
+// ── true se il numero di iscritti ha raggiunto il tetto massimo ────
+// nrMaxRegistrations == 0 => nessun limite impostato
+  bool get isFull =>
+      widget.nrMaxRegistrations > 0 &&
+      registrations.length >= widget.nrMaxRegistrations;
 // =====================================================
 // IMPORT CSV
 // =====================================================
 
   Future<void> importCsv() async {
     // ── guardia: non importa se le iscrizioni sono chiuse ────
-    if (widget.flIscrizioniChiuse) return;
+    if (widget.flIscrizioniChiuse || isFull) return;
 
     try {
       final result =
@@ -251,7 +260,8 @@ class _RegistrationsPageState
 
   Future<void> openCreate() async {
     // ── guardia: non crea se le iscrizioni sono chiuse ────────
-    if (widget.flIscrizioniChiuse) return;
+  //  if (widget.flIscrizioniChiuse) return;
+     if (widget.flIscrizioniChiuse || isFull) return;
 
     final res = await context.push(
       '/registrations/new',
@@ -291,13 +301,19 @@ class _RegistrationsPageState
   @override
   Widget build(BuildContext context) {
     final isMobile =
-        MediaQuery.of(context).size.width <
-            700;
+        MediaQuery.of(context).size.width < 700;
 
-    final filtered =
-    filteredRegistrations();
+    final filtered = filteredRegistrations();
 
     final closed = widget.flIscrizioniChiuse;
+    final full = isFull;
+    final blocked = closed || full;
+
+    String tooltipMessage(String actionLabel) {
+      if (closed) return 'Iscrizioni chiuse: $actionLabel non disponibile';
+      if (full) return 'Numero massimo iscritti raggiunto: $actionLabel non disponibile';
+      return actionLabel;
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -307,24 +323,18 @@ class _RegistrationsPageState
 
         actions: [
           Tooltip(
-            message: closed
-                ? 'Iscrizioni chiuse: importazione non disponibile'
-                : 'Importa CSV',
+            message: tooltipMessage('Importa CSV'),
             child: IconButton(
-              icon: const Icon(
-                Icons.upload_file,
-              ),
-              onPressed: closed ? null : importCsv,
+              icon: const Icon(Icons.upload_file),
+              onPressed: blocked ? null : importCsv,
             ),
           ),
 
           Tooltip(
-            message: closed
-                ? 'Iscrizioni chiuse: nuova iscrizione non disponibile'
-                : 'Nuova iscrizione',
+            message: tooltipMessage('Nuova iscrizione'),
             child: IconButton(
               icon: const Icon(Icons.add),
-              onPressed: closed ? null : openCreate,
+              onPressed: blocked ? null : openCreate,
             ),
           ),
         ],
@@ -332,23 +342,22 @@ class _RegistrationsPageState
 
       floatingActionButton: isMobile
           ? FloatingActionButton(
-              onPressed: closed ? null : openCreate,
+              onPressed: blocked ? null : openCreate,
               backgroundColor:
-                  closed ? Colors.grey.shade300 : null,
+                  blocked ? Colors.grey.shade300 : null,
               child: const Icon(Icons.add),
             )
           : null,
 
     body: loading
         ? const Center(
-            child:
-                CircularProgressIndicator(),
+            child: CircularProgressIndicator(),
           )
         : Column(
             children: [
 
-              // ── banner informativo se iscrizioni chiuse ────
-              if (closed)
+              // ── banner informativo se iscrizioni chiuse o al completo ──
+              if (closed || full)
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
@@ -368,8 +377,12 @@ class _RegistrationsPageState
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'Le iscrizioni per questa gara sono chiuse. '
-                          'Non è possibile aggiungere nuovi atleti o importare CSV.',
+                          closed
+                              ? 'Le iscrizioni per questa gara sono chiuse. '
+                                'Non è possibile aggiungere nuovi atleti o importare CSV.'
+                              : 'Numero massimo di iscritti raggiunto '
+                                '(${registrations.length}/${widget.nrMaxRegistrations}). '
+                                'Non è possibile aggiungere nuovi atleti o importare CSV.',
                           style: TextStyle(
                             fontSize: 13,
                             color: Colors.orange.shade900,
