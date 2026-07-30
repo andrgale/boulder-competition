@@ -18,12 +18,19 @@ class RegistrationsPage extends StatefulWidget {
 // ── numero massimo di atleti iscrivibili (0 = nessun limite) ─
   final int nrMaxRegistrations;
 
+  final bool isTurn;
+  final int nrMaxFirstTurn;
+  final int nrMaxSecondTurn;
+
   const RegistrationsPage({
     super.key,
     required this.competitionId,
     required this.competitionName,
     this.flIscrizioniChiuse = false,
     this.nrMaxRegistrations = 0,
+    this.isTurn = false,
+    this.nrMaxFirstTurn = 0,
+    this.nrMaxSecondTurn = 0,
   });
 
   @override
@@ -92,6 +99,13 @@ class _RegistrationsPageState
   bool get isFull =>
       widget.nrMaxRegistrations > 0 &&
       registrations.length >= widget.nrMaxRegistrations;
+
+// ── conteggi iscritti per turno, calcolati sulla lista già in memoria ──
+  int get firstTurnCount =>
+      registrations.where((r) => r.isFirstTurn).length;
+
+  int get secondTurnCount =>
+      registrations.where((r) => r.isSecondTurn).length;      
 // =====================================================
 // IMPORT CSV
 // =====================================================
@@ -259,33 +273,17 @@ class _RegistrationsPageState
   // =====================================================
 
   Future<void> openCreate() async {
-    // ── guardia: non crea se le iscrizioni sono chiuse ────────
-  //  if (widget.flIscrizioniChiuse) return;
-     if (widget.flIscrizioniChiuse || isFull) return;
+    if (widget.flIscrizioniChiuse || isFull) return;
 
     final res = await context.push(
       '/registrations/new',
-      extra: widget.competitionId,
-    );
-
-    if (res == true) {
-      await refreshData();
-    }
-  }
-
-  // =====================================================
-  // NAV EDIT
-  // =====================================================
-
-  Future<void> openEdit(
-    RegistrationModel r,
-  ) async {
-    final res = await context.push(
-      '/registrations/edit',
       extra: {
-        'competitionId':
-            widget.competitionId,
-        'registration': r,
+        'competitionId': widget.competitionId,
+        'isTurn': widget.isTurn,
+        'nrMaxFirstTurn': widget.nrMaxFirstTurn,
+        'nrMaxSecondTurn': widget.nrMaxSecondTurn,
+        'firstTurnCount': firstTurnCount,
+        'secondTurnCount': secondTurnCount,
       },
     );
 
@@ -293,7 +291,28 @@ class _RegistrationsPageState
       await refreshData();
     }
   }
+  // =====================================================
+  // NAV EDIT
+  // =====================================================
 
+  Future<void> openEdit(RegistrationModel r) async {
+    final res = await context.push(
+      '/registrations/edit',
+      extra: {
+        'competitionId': widget.competitionId,
+        'registration': r,
+        'isTurn': widget.isTurn,
+        'nrMaxFirstTurn': widget.nrMaxFirstTurn,
+        'nrMaxSecondTurn': widget.nrMaxSecondTurn,
+        'firstTurnCount': firstTurnCount,
+        'secondTurnCount': secondTurnCount,
+      },
+    );
+
+    if (res == true) {
+      await refreshData();
+    }
+  }
   // =====================================================
   // UI
   // =====================================================

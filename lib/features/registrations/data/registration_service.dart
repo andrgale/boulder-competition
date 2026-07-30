@@ -84,6 +84,10 @@ class RegistrationService {
     bool flPresente = false,
     bool flPagato = false,
     bool flOmaggio = false,
+    bool isFirstTurn = false,
+    bool isSecondTurn = false,
+    String ownerRegistration = 'admin',
+
   }) async {
     final autoPettorale =
         pettorale ??
@@ -101,6 +105,9 @@ class RegistrationService {
       'fl_pagato': flPagato,
       'fl_omaggio': flOmaggio,
       'profile_id': profileId,
+      'is_first_turn': isFirstTurn,
+      'is_second_turn': isSecondTurn,
+      'owner_registration': ownerRegistration,
     });
   }
 
@@ -118,6 +125,10 @@ class RegistrationService {
     bool flPresente = false,
     bool flPagato = false,
     bool flOmaggio = false,
+    bool isFirstTurn = false,
+    bool isSecondTurn = false,
+ //   String ownerRegistration = 'admin',
+
   }) async {
     await _db.update({
       'cognome': cognome,
@@ -129,6 +140,9 @@ class RegistrationService {
       'fl_presente': flPresente,
       'fl_pagato': flPagato,
       'fl_omaggio': flOmaggio,
+      'is_first_turn': isFirstTurn,
+      'is_second_turn': isSecondTurn,
+    //  'owner_registration': ownerRegistration,
       'updated_at': DateTime.now().toIso8601String(),
     }).eq('id', id);
   }

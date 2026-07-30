@@ -6,17 +6,27 @@ class RegistrationFormPage extends StatefulWidget {
   final String competitionId;
   final RegistrationModel? registration;
 
+  // ── nuovi campi per controllo turni ─────────────────────────
+  final bool isTurn;
+  final int nrMaxFirstTurn;
+  final int nrMaxSecondTurn;
+  final int firstTurnCount;
+  final int secondTurnCount;
+
   const RegistrationFormPage({
     super.key,
     required this.competitionId,
     this.registration,
+    this.isTurn = false,
+    this.nrMaxFirstTurn = 0,
+    this.nrMaxSecondTurn = 0,
+    this.firstTurnCount = 0,
+    this.secondTurnCount = 0,
   });
 
   @override
-  State<RegistrationFormPage> createState() =>
-      _RegistrationFormPageState();
+  State<RegistrationFormPage> createState() => _RegistrationFormPageState();
 }
-
 class _RegistrationFormPageState
     extends State<RegistrationFormPage> {
   final service = RegistrationService();
@@ -35,9 +45,34 @@ class _RegistrationFormPageState
   bool flPagato = false;
   bool flOmaggio = false;
 
+  bool isFirstTurn = false;
+  bool isSecondTurn = false;
+
   bool loading = false;
 
   bool get isEdit => widget.registration != null;
+
+  // ── conteggio iscritti al turno, escludendo il record che si sta
+  // modificando (altrimenti un atleta già iscritto al turno non
+  // potrebbe mai salvare/mantenere la propria iscrizione) ───────────
+  int get _effectiveFirstTurnCount =>
+      widget.firstTurnCount -
+      (isEdit && (widget.registration?.isFirstTurn ?? false) ? 1 : 0);
+
+  int get _effectiveSecondTurnCount =>
+      widget.secondTurnCount -
+      (isEdit && (widget.registration?.isSecondTurn ?? false) ? 1 : 0);
+
+  // ── vero se il campo va abilitato: is_turn deve essere true, e il
+  // turno deve avere posti liberi oppure essere già quello selezionato
+  // (così l'utente può comunque disattivarlo senza restare bloccato) ──
+  bool get firstTurnAvailable =>
+      widget.isTurn &&
+      (isFirstTurn || _effectiveFirstTurnCount < widget.nrMaxFirstTurn);
+
+  bool get secondTurnAvailable =>
+      widget.isTurn &&
+      (isSecondTurn || _effectiveSecondTurnCount < widget.nrMaxSecondTurn);
 
   @override
   void initState() {
@@ -59,6 +94,9 @@ class _RegistrationFormPageState
     flPresente = r?.flPresente ?? false;
     flPagato = r?.flPagato ?? false;
     flOmaggio = r?.flOmaggio ?? false;
+
+    isFirstTurn = r?.isFirstTurn ?? false;
+    isSecondTurn = r?.isSecondTurn ?? false;
 
     pettoraleCtrl = TextEditingController();
 
@@ -163,6 +201,26 @@ class _RegistrationFormPageState
         return;
       }
 
+      if (isFirstTurn && !firstTurnAvailable) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Primo turno al completo, seleziona un\'altra opzione'),
+          ),
+        );
+        setState(() => loading = false);
+        return;
+      }
+
+      if (isSecondTurn && !secondTurnAvailable) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Secondo turno al completo, seleziona un\'altra opzione'),
+          ),
+        );
+        setState(() => loading = false);
+        return;
+      }
+
       final pettorale =
           pettoraleCtrl.text.isEmpty
               ? null
@@ -188,6 +246,8 @@ class _RegistrationFormPageState
           flPresente: flPresente,
           flPagato: flPagato,
           flOmaggio: flOmaggio,
+          isFirstTurn: isFirstTurn,
+          isSecondTurn: isSecondTurn,
         );
       }
 
@@ -223,6 +283,9 @@ class _RegistrationFormPageState
           flPresente: flPresente,
           flPagato: flPagato,
           flOmaggio: flOmaggio,
+          isFirstTurn: isFirstTurn,
+          isSecondTurn: isSecondTurn,
+          ownerRegistration: 'admin',
         );
       }
 
@@ -244,22 +307,6 @@ class _RegistrationFormPageState
           ),
         ),
       );
-                // catch (e, stack) {
-                //   debugPrint('ERROR CREATE ATHLETE: $e');
-                //   debugPrintStack(stackTrace: stack);
-
-                //   if (!mounted) return;
-
-                //   showDialog(
-                //     context: context,
-                //     builder: (_) => AlertDialog(
-                //       title: const Text('Errore'),
-                //       content: SingleChildScrollView(
-                //         child: Text(e.toString()),
-                //       ),
-                //     ),
-                //   );
-                // }
     } finally {
       if (mounted) {
         setState(() {
@@ -371,6 +418,44 @@ class _RegistrationFormPageState
                   labelText: 'Sesso',
                 ),
               ),
+
+              const SizedBox(height: 12),
+
+              SwitchListTile(
+                title: const Text('Primo turno'),
+                subtitle: !widget.isTurn
+                    ? const Text('Gestione turni non attiva per questa gara')
+                    : (!firstTurnAvailable
+                        ? const Text('Turno al completo')
+                        : null),
+                value: isFirstTurn,
+                onChanged: firstTurnAvailable
+                    ? (v) {
+                        setState(() {
+                          isFirstTurn = v;
+                          if (v) isSecondTurn = false;
+                        });
+                      }
+                    : null,
+              ),
+
+              SwitchListTile(
+                title: const Text('Secondo turno'),
+                subtitle: !widget.isTurn
+                    ? const Text('Gestione turni non attiva per questa gara')
+                    : (!secondTurnAvailable
+                        ? const Text('Turno al completo')
+                        : null),
+                value: isSecondTurn,
+                onChanged: secondTurnAvailable
+                    ? (v) {
+                        setState(() {
+                          isSecondTurn = v;
+                          if (v) isFirstTurn = false;
+                        });
+                      }
+                    : null,
+              ), 
 
               const SizedBox(height: 12),
 

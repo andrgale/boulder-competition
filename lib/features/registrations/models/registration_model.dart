@@ -24,6 +24,10 @@ class RegistrationModel {
   final DateTime createdAt;
   final DateTime updatedAt;
 
+  final bool isFirstTurn;
+  final bool isSecondTurn;
+  final String ownerRegistration;
+
   RegistrationModel({
     required this.id,
     required this.competitionId,
@@ -39,6 +43,9 @@ class RegistrationModel {
     required this.flPresente,
     required this.flPagato,
     required this.flOmaggio,
+    this.isFirstTurn = false,
+    this.isSecondTurn = false,
+    this.ownerRegistration = 'admin', 
     required this.createdAt,
     required this.updatedAt,
   });
@@ -97,6 +104,16 @@ class RegistrationModel {
           json['fl_omaggio'] as bool? ??
           false,
 
+      isFirstTurn:
+          json['is_first_turn'] as bool? ?? false,
+
+      isSecondTurn:
+          json['is_second_turn'] as bool? ?? false,
+
+      ownerRegistration:
+          json['owner_registration'] as String? ??
+          'admin',
+
       createdAt: DateTime.parse(
         json['created_at'],
       ),
@@ -125,6 +142,9 @@ class RegistrationModel {
       'fl_presente': flPresente,
       'fl_pagato': flPagato,
       'fl_omaggio': flOmaggio,
+      'is_first_turn': isFirstTurn,
+      'is_second_turn': isSecondTurn,
+      'owner_registration': ownerRegistration,
     };
   }
 
@@ -145,6 +165,9 @@ class RegistrationModel {
       'fl_presente': flPresente,
       'fl_pagato': flPagato,
       'fl_omaggio': flOmaggio,
+      'is_first_turn': isFirstTurn,
+      'is_second_turn': isSecondTurn,
+      'owner_registration': ownerRegistration,
       'updated_at':
           DateTime.now().toIso8601String(),
     };

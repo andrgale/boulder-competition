@@ -51,7 +51,7 @@ class SearchService {
     }).toList();
   }
 
-// ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
   // registrations → /competitions/:id/registrations
   // Recuperiamo anche competition_id per costruire la rotta corretta.
   // Deduplicati per email.
@@ -60,8 +60,8 @@ class SearchService {
     final safe = q.replaceAll('"', '');
 
     // Recuperiamo anche competition_id per costruire la rotta corretta.
-    // Il nome gara e i flag di controllo iscrizioni vengono caricati con
-    // una seconda query, per mostrarli e applicarli correttamente nella
+    // Il nome gara e i flag/limiti di controllo iscrizioni e turni vengono
+    // caricati con una seconda query, per applicarli correttamente nella
     // pagina di destinazione (RegistrationsPage).
     final rows = await _client
         .from('registrations')
@@ -86,8 +86,10 @@ class SearchService {
     final compRows = competitionIds.isNotEmpty
         ? await _client
             .from('competitions')
-            // ← aggiunte le colonne necessarie ai controlli iscrizioni
-            .select('id, descrizione, fl_iscrizioni_chiuse, nr_max_registrations')
+            // ← aggiunte le colonne necessarie ai controlli iscrizioni/turni
+            .select(
+                'id, descrizione, fl_iscrizioni_chiuse, nr_max_registrations, '
+                'is_turn, nr_max_first_turn, nr_max_second_turn')
             .inFilter('id', competitionIds)
         : <Map<String, dynamic>>[];
 
@@ -112,6 +114,11 @@ class SearchService {
           comp?['fl_iscrizioni_chiuse'] as bool? ?? false;
       final nrMaxRegistrations =
           comp?['nr_max_registrations'] as int? ?? 0;
+      final isTurn = comp?['is_turn'] as bool? ?? false; // ← aggiunto
+      final nrMaxFirstTurn =
+          comp?['nr_max_first_turn'] as int? ?? 0; // ← aggiunto
+      final nrMaxSecondTurn =
+          comp?['nr_max_second_turn'] as int? ?? 0; // ← aggiunto
 
       results.add(SearchResult(
         id: r['id'] as String,
@@ -122,8 +129,11 @@ class SearchService {
         extra: {
           'competitionId': competitionId,
           'competitionName': competitionName,
-          'flIscrizioniChiuse': flIscrizioniChiuse,   // ← aggiunto
-          'nrMaxRegistrations': nrMaxRegistrations,    // ← aggiunto
+          'flIscrizioniChiuse': flIscrizioniChiuse,
+          'nrMaxRegistrations': nrMaxRegistrations,
+          'isTurn': isTurn, // ← aggiunto
+          'nrMaxFirstTurn': nrMaxFirstTurn, // ← aggiunto
+          'nrMaxSecondTurn': nrMaxSecondTurn, // ← aggiunto
         },
       ));
 
@@ -131,7 +141,7 @@ class SearchService {
     }
 
     return results;
-  }
+  } 
   // ---------------------------------------------------------------------------
   // boulders → /competitions (non esiste /boulders standalone)
   // Recuperiamo competition_id per navigare alla gara giusta.

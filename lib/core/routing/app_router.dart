@@ -1,3 +1,4 @@
+import 'package:boulder_competition/features/registrations/models/registration_model.dart';
 import 'package:boulder_competition/features/security/models/menu_translation_model.dart';
 import 'package:boulder_competition/features/security/pages/menus/menu_translation_form_page.dart';
 import 'package:boulder_competition/features/security/pages/menus/menu_translations_list_page.dart';
@@ -428,30 +429,38 @@ final GoRouter appRouter = GoRouter(
           builder: (context, state) {
             final competitionId = state.pathParameters['id']!;
 
-            // Gestisce sia CompetitionModel (navigazione normale dall'app)
-            // sia Map<String,dynamic> (navigazione dalla ricerca globale)
             final extra = state.extra;
             String competitionName = '';
-            bool flIscrizioniChiuse = false; // ← aggiunto
-            int nrMaxRegistrations = 0; // ← aggiunto
+            bool flIscrizioniChiuse = false;
+            int nrMaxRegistrations = 0;
+            bool isTurn = false; // ← aggiunto
+            int nrMaxFirstTurn = 0; // ← aggiunto
+            int nrMaxSecondTurn = 0; // ← aggiunto
 
             if (extra is CompetitionModel) {
               competitionName = extra.descrizione;
-              flIscrizioniChiuse = extra.flIscrizioniChiuse; // ← aggiunto
-              nrMaxRegistrations = extra.nrMaxRegistrations; // ← aggiunto
+              flIscrizioniChiuse = extra.flIscrizioniChiuse;
+              nrMaxRegistrations = extra.nrMaxRegistrations;
+              isTurn = extra.isTurn; // ← aggiunto
+              nrMaxFirstTurn = extra.nrMaxFirstTurn; // ← aggiunto
+              nrMaxSecondTurn = extra.nrMaxSecondTurn; // ← aggiunto
             } else if (extra is Map) {
               competitionName = extra['competitionName'] as String? ?? '';
-              flIscrizioniChiuse =
-                  extra['flIscrizioniChiuse'] as bool? ?? false; // ← aggiunto
-              nrMaxRegistrations =
-                  extra['nrMaxRegistrations'] as int? ?? 0; // ← aggiunto
+              flIscrizioniChiuse = extra['flIscrizioniChiuse'] as bool? ?? false;
+              nrMaxRegistrations = extra['nrMaxRegistrations'] as int? ?? 0;
+              isTurn = extra['isTurn'] as bool? ?? false; // ← aggiunto
+              nrMaxFirstTurn = extra['nrMaxFirstTurn'] as int? ?? 0; // ← aggiunto
+              nrMaxSecondTurn = extra['nrMaxSecondTurn'] as int? ?? 0; // ← aggiunto
             }
 
             return RegistrationsPage(
               competitionId: competitionId,
               competitionName: competitionName,
-              flIscrizioniChiuse: flIscrizioniChiuse, // ← aggiunto
-              nrMaxRegistrations: nrMaxRegistrations, // ← aggiunto
+              flIscrizioniChiuse: flIscrizioniChiuse,
+              nrMaxRegistrations: nrMaxRegistrations,
+              isTurn: isTurn, // ← aggiunto
+              nrMaxFirstTurn: nrMaxFirstTurn, // ← aggiunto
+              nrMaxSecondTurn: nrMaxSecondTurn, // ← aggiunto
             );
           },
         ),
@@ -460,10 +469,15 @@ final GoRouter appRouter = GoRouter(
           path: '/registrations/new',
           name: 'registration_create',
           builder: (context, state) {
-            final competitionId = state.extra as String;
+            final data = state.extra as Map;
 
             return RegistrationFormPage(
-              competitionId: competitionId,
+              competitionId: data['competitionId'] as String,
+              isTurn: data['isTurn'] as bool? ?? false,
+              nrMaxFirstTurn: data['nrMaxFirstTurn'] as int? ?? 0,
+              nrMaxSecondTurn: data['nrMaxSecondTurn'] as int? ?? 0,
+              firstTurnCount: data['firstTurnCount'] as int? ?? 0,
+              secondTurnCount: data['secondTurnCount'] as int? ?? 0,
             );
           },
         ),
@@ -475,12 +489,16 @@ final GoRouter appRouter = GoRouter(
             final data = state.extra as Map;
 
             return RegistrationFormPage(
-              competitionId: data['competitionId'],
-              registration: data['registration'],
+              competitionId: data['competitionId'] as String,
+              registration: data['registration'] as RegistrationModel,
+              isTurn: data['isTurn'] as bool? ?? false,
+              nrMaxFirstTurn: data['nrMaxFirstTurn'] as int? ?? 0,
+              nrMaxSecondTurn: data['nrMaxSecondTurn'] as int? ?? 0,
+              firstTurnCount: data['firstTurnCount'] as int? ?? 0,
+              secondTurnCount: data['secondTurnCount'] as int? ?? 0,
             );
           },
         ),
-
 // ======================================================
 // REALIZZAZIONI BOULDER
 // =====================================================
