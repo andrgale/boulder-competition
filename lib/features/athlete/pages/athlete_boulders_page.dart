@@ -230,11 +230,19 @@ class _AthleteBouldersPageState
 
     if (competition == null) {
       return Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Boulder Competition',
+          appBar: AppBar(
+          title: Text('Registrazione Boulder'),
+          leading: IconButton(
+            tooltip: 'Torna alla home',
+            icon: const Icon(Icons.home_outlined),
+            onPressed: () => context.go('/athlete-home'),
           ),
         ),
+        // appBar: AppBar(
+        //   title: const Text(
+        //     'Boulder Competition',
+        //   ),
+        // ),
         body: const Center(
           child: Padding(
             padding:

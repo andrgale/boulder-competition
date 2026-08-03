@@ -54,11 +54,11 @@ class _AthleteLoginPageState
       if (!mounted) return;
 
       if (profile['password_changed'] == false) {
-        context.go('/athlete-change-password');
-      } else {
-        context.go('/athlete-boulders');
+        context.go('/athlete-change-password');        
       }
-
+     else {
+        context.go('/athlete-home');
+      }  
     } catch (e) {
       if (!mounted) return;
 
