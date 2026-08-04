@@ -143,6 +143,7 @@ class RouteGuard {
     location == '/athlete-boulders' ||
     location == '/athlete-home' ||
     location == '/athlete-competition-registration' ||
+    location == '/athlete-registration' ||
     location == '/athlete-checkin';
 
     // =====================================================
@@ -169,6 +170,11 @@ class RouteGuard {
 
       if (location ==
           '/athlete-change-password') {
+        return null;
+      }
+
+      if (location ==
+          '/athlete-registration') {
         return null;
       }
 

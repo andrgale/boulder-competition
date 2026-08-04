@@ -78,6 +78,7 @@ import '../../features/checkin/pages/checkin_competitions_page.dart';
 import '../../features/athlete/pages/athlete_home_page.dart';
 import '../../features/athlete/pages/athlete_competition_registration_page.dart';
 import '../../features/athlete/pages/athlete_checkin_page.dart';
+import '../../features/athlete/pages/athlete_registration_page.dart';
 
 
 final GoRouter appRouter = GoRouter(
@@ -142,6 +143,18 @@ final GoRouter appRouter = GoRouter(
       name: 'athlete_change_password',
       builder: (context, state) {
         return const AthleteChangePasswordPage();
+      },
+    ),
+
+// =====================================================
+    // ATHLETE REGISTRATION
+    // =====================================================
+
+    GoRoute(
+      path: '/athlete-registration',
+      name: 'athlete_registration',
+      builder: (context, state) {
+        return const AthleteRegistrationPage();
       },
     ),
 

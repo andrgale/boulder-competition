@@ -240,13 +240,6 @@ class _AthleteLoginPageState
 
                       TextButton(
                         onPressed: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (_) =>
-                          //         const AthleteChangePasswordPage(),
-                          //   ),
-                          // );
                           context.go('/athlete-change-password');
                         },
                         child: const Text(
@@ -255,12 +248,24 @@ class _AthleteLoginPageState
                       ),
 
                       const SizedBox(
+                        height: 4,
+                      ),
+
+                      TextButton(
+                        onPressed: () {
+                          context.go('/athlete-registration');
+                        },
+                        child: const Text(
+                          'Non hai un account? Registrati',
+                        ),
+                      ),
+
+                      const SizedBox(
                         height: 8,
                       ),
 
                       const Text(
- //                       'Password iniziale fornita dall\'organizzazione',
-                           '', 
+                        '',
                         textAlign:
                             TextAlign.center,
                         style: TextStyle(

@@ -72,50 +72,6 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
     }
   }
 
-  // =======================================================
-  // DELETE USER
-  // =======================================================
-
-  // Future<void> deleteUser() async {
-  //   final confirm = await showDialog<bool>(
-  //     context: context,
-  //     builder: (_) => AlertDialog(
-  //       title: const Text('Cancella utente'),
-  //       content: const Text(
-  //           'Sei sicuro di voler eliminare questo utente?'),
-  //       actions: [
-  //         TextButton(
-  //           onPressed: () => Navigator.pop(context, false),
-  //           child: const Text('Annulla'),
-  //         ),
-  //         FilledButton(
-  //           onPressed: () => Navigator.pop(context, true),
-  //           child: const Text('Cancella'),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-
-  //   if (confirm != true) return;
-
-  //   setState(() => loading = true);
-
-  //   try {
-  //     await service.deleteAthleteUser(
-  //       profileId: widget.profileId!,
-  //     );
-
-  //     if (!mounted) return;
-
-  //     Navigator.pop(context, true);
-  //   } catch (e) {
-  //     if (!mounted) return;
-  //     AppSnackbar.error(context, 'Errore eliminazione: $e');
-  //   } finally {
-  //     if (mounted) setState(() => loading = false);
-  //   }
-  // }
-
   Future<void> deleteUser() async {
   if (widget.profileId == null) return;
 
