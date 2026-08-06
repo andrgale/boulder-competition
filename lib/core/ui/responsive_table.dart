@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'responsive.dart';
+import 'dart:math' as math;
 
 class ResponsiveTable extends StatelessWidget {
   final List<DataColumn> columns;
@@ -30,25 +31,55 @@ class ResponsiveTable extends StatelessWidget {
     final headingHeight = _headingHeight(responsive);
     final effectiveMinWidth = minWidth ?? _defaultMinWidth(responsive);
 
-    Widget table = Scrollbar(
-      controller: controller,
-      thumbVisibility: true,
-      child: SingleChildScrollView(
-        controller: controller,
-        scrollDirection: Axis.horizontal,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(minWidth: effectiveMinWidth),
-          child: DataTable(
-            columnSpacing: columnSpacing,
-            horizontalMargin: horizontalMargin,
-            dataRowMinHeight: rowHeight,
-            dataRowMaxHeight: rowHeight,
-            headingRowHeight: headingHeight,
-            columns: columns,
-            rows: rows,
+    // Widget table = Scrollbar(
+    //   controller: controller,
+    //   thumbVisibility: true,
+    //   child: SingleChildScrollView(
+    //     controller: controller,
+    //     scrollDirection: Axis.horizontal,
+    //     child: ConstrainedBox(
+    //       constraints: BoxConstraints(minWidth: effectiveMinWidth),
+    //       child: DataTable(
+    //         columnSpacing: columnSpacing,
+    //         horizontalMargin: horizontalMargin,
+    //         dataRowMinHeight: rowHeight,
+    //         dataRowMaxHeight: rowHeight,
+    //         headingRowHeight: headingHeight,
+    //         columns: columns,
+    //         rows: rows,
+    //       ),
+    //     ),
+    //   ),
+    // );
+
+    Widget table = LayoutBuilder(
+      builder: (context, constraints) {
+        return Scrollbar(
+          controller: controller,
+          thumbVisibility: true,
+          child: SingleChildScrollView(
+            controller: controller,
+            scrollDirection: Axis.horizontal,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minWidth: math.max(
+                  constraints.maxWidth,
+                  effectiveMinWidth,
+                ),
+              ),
+              child: DataTable(
+                columnSpacing: columnSpacing,
+                horizontalMargin: horizontalMargin,
+                dataRowMinHeight: rowHeight,
+                dataRowMaxHeight: rowHeight,
+                headingRowHeight: headingHeight,
+                columns: columns,
+                rows: rows,
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
 
     if (!showCard) return table;

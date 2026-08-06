@@ -418,7 +418,7 @@ class _TableView extends StatelessWidget {
       rows: competitions.map((c) {
         return DataRow(cells: [
           DataCell(SizedBox(
-            width: 400,
+            width: 600,
             child: Text(
               c.descrizione,
               overflow: TextOverflow.ellipsis,
