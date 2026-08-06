@@ -144,6 +144,7 @@ class RouteGuard {
     location == '/athlete-home' ||
     location == '/athlete-competition-registration' ||
     location == '/athlete-registration' ||
+    location == '/athlete-check-in-scan' ||
     location == '/athlete-checkin';
 
     // =====================================================
@@ -162,7 +163,7 @@ class RouteGuard {
         );
 
         if (isAthlete) {
-          return '/athlete-home';   // era '/athlete-boulders'
+          return '/athlete-home';
         }
 
         return '/dashboard';
@@ -209,7 +210,7 @@ class RouteGuard {
       );
 
       if (isAthlete) {
-          return '/athlete-home';   // era '/athlete-boulders'
+          return '/athlete-home';  
       }
       return '/dashboard';
     }

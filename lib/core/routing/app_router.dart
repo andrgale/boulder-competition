@@ -1,3 +1,4 @@
+import 'package:boulder_competition/features/athlete/pages/athlete_check_in_scan_page.dart';
 import 'package:boulder_competition/features/registrations/models/registration_model.dart';
 import 'package:boulder_competition/features/security/models/menu_translation_model.dart';
 import 'package:boulder_competition/features/security/pages/menus/menu_translation_form_page.dart';
@@ -191,6 +192,14 @@ final GoRouter appRouter = GoRouter(
           name: 'athlete_home',
           builder: (context, state) {
             return const AthleteHomePage();
+          },
+        ),
+
+    GoRoute(
+          path: '/athlete-check-in-scan',
+          name: 'athlete-check-in-scan',
+          builder: (context, state) {
+            return const AthleteCheckInScanPage();
           },
         ),
 
