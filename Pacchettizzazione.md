@@ -38,11 +38,40 @@ create-dmg \
   "BoulderAdmin-1.0.1.dmg" \
   "build/macos/Build/Products/Release/boulder_competition.app"
 
+ ## build Mac Console Clienti
+
+`bash
+fvm flutter build macos \
+  --release \
+  -t lib/main_client.dart
+
+
+L'output è in:
+`
+build/macos/Build/Products/Release/boulder_competition.app (va rinominata in Console_clienti.app)
+`
+
+
+ create-dmg \
+  --volname "Console Clienti" \
+  --window-size 600 400 \
+  --icon-size 110 \
+  --text-size 12 \
+  --app-drop-link 450 200 \
+  --icon "Console_clienti.app" 150 200 \
+  --hide-extension "Console_clienti.app" \
+  --background "./background_600x400.png" \
+  "ConsoleClienti-1.0.0.dmg" \
+  "build/macos/Build/Products/Release/console_clienti.app"
+
 ### Ok Windows ############
 
 brew install gh
 gh auth login
 gh workflow run build-windows.yml
+
+### comando per creare la build windows della console clienti
+gh workflow run build-windows-clienti.yml
 
 gh run view 28184095736
 
