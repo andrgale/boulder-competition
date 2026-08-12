@@ -1,4 +1,5 @@
 import 'package:boulder_competition/features/athlete/pages/athlete_check_in_scan_page.dart';
+import 'package:boulder_competition/features/email/pages/email_templates_page.dart';
 import 'package:boulder_competition/features/registrations/models/registration_model.dart';
 import 'package:boulder_competition/features/security/models/menu_translation_model.dart';
 import 'package:boulder_competition/features/security/pages/menus/menu_translation_form_page.dart';
@@ -709,6 +710,14 @@ final GoRouter appRouter = GoRouter(
             );
           },
         ),
+
+        GoRoute(
+          path: '/security/email',
+          builder: (context, state) {
+            return const EmailTemplatesPage(); 
+          },
+        ),
+
       ],
     ),
   ],

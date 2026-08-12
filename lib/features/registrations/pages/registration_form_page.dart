@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../models/registration_model.dart';
 import '../data/registration_service.dart';
 
@@ -38,8 +39,11 @@ class _RegistrationFormPageState
   late TextEditingController emailCtrl;
   late TextEditingController societaCtrl;
   late TextEditingController pettoraleCtrl;
+  late TextEditingController dataNascitaController;
 
   String? sesso;
+
+  DateTime? dataNascita;
 
   bool flPresente = false;
   bool flPagato = false;
@@ -91,6 +95,12 @@ class _RegistrationFormPageState
 
     sesso = r?.sesso;
 
+    dataNascita = r?.dataNascita;
+
+    dataNascitaController = TextEditingController(
+      text: formatDate(dataNascita),
+    );
+
     flPresente = r?.flPresente ?? false;
     flPagato = r?.flPagato ?? false;
     flOmaggio = r?.flOmaggio ?? false;
@@ -129,7 +139,32 @@ class _RegistrationFormPageState
     emailCtrl.dispose();
     societaCtrl.dispose();
     pettoraleCtrl.dispose();
+    dataNascitaController.dispose();
     super.dispose();
+  }
+
+  Future<void> _selectDataNascita() async {
+    final picked = await showDatePicker( 
+    context: context, 
+    initialDate: DateTime(2005), 
+    firstDate: DateTime(1965), 
+    lastDate: DateTime.now(), ); 
+
+    if (picked == null) return;
+
+    setState(() {
+      dataNascita = picked;
+      dataNascitaController.text = formatDate(picked);
+    });
+
+  }
+
+  // =======================================================
+  // DATE FORMAT
+  // =======================================================
+  String formatDate(DateTime? date) {
+    if (date == null) return '';
+    return DateFormat('dd/MM/yyyy').format(date);
   }
 
 // =====================================================
@@ -243,6 +278,7 @@ class _RegistrationFormPageState
               societaCtrl.text.trim(),
           pettorale: pettorale,
           sesso: sesso,
+          dataNascita: dataNascita,
           flPresente: flPresente,
           flPagato: flPagato,
           flOmaggio: flOmaggio,
@@ -280,6 +316,7 @@ class _RegistrationFormPageState
           societa: societaCtrl.text.trim(),
           pettorale: pettorale,
           sesso: sesso,
+          dataNascita: dataNascita,
           flPresente: flPresente,
           flPagato: flPagato,
           flOmaggio: flOmaggio,
@@ -417,6 +454,22 @@ class _RegistrationFormPageState
                 decoration: const InputDecoration(
                   labelText: 'Sesso',
                 ),
+              ),
+
+              TextFormField(
+                controller: dataNascitaController,
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: 'Data di nascita',
+                  suffixIcon: const Icon(Icons.calendar_today),
+                ),
+                onTap: _selectDataNascita,
+                validator: (_) {
+                  if (dataNascita == null) {
+                    return 'Campo obbligatorio';
+                  }
+                  return null;
+                },
               ),
 
               const SizedBox(height: 12),

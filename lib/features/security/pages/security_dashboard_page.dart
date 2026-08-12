@@ -42,43 +42,52 @@ class SecurityDashboardPage extends StatelessWidget {
         route: '/security/profiles',
         color: Colors.purple,
       ),
+      _SecurityCard(
+      icon: Icons.email_outlined,
+      title: 'Email',
+      description: 'Gestisci configurazioni, template e impostazioni di invio email.',
+      route: '/security/email',
+      color: Colors.teal,
+      ),
     ];
 
     return BasePage(
       title: 'Sicurezza',
       subtitle: 'Gestione ruoli, permessi, menu e utenti',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Wrap(
-            spacing: 24,
-            runSpacing: 24,
-            children: cards,
-          ),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Wrap(
+              spacing: 24,
+              runSpacing: 24,
+              children: cards,
+            ),
 
-          // =====================================================
-          // STRUMENTI DI SVILUPPO — visibili solo con flag di test
-          // =====================================================
-          if (AppConfig.mostraCampo) ...[
-            const SizedBox(height: 32),
-            const Divider(),
-            const SizedBox(height: 8),
-            const Text(
-              'Strumenti di sviluppo',
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
-            ),
-            const SizedBox(height: 12),
-            OutlinedButton.icon(
-              style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
-              icon: const Icon(Icons.logout),
-              label: const Text('Reset configurazione cliente'),
-              onPressed: () => _confirmAndReset(context),
-            ),
-             // ───── forzatura lingua per test ─────
-            const SizedBox(height: 24),
-            const _LocaleOverrideSwitcher(),
+            // =====================================================
+            // STRUMENTI DI SVILUPPO — visibili solo con flag di test
+            // =====================================================
+            if (AppConfig.mostraCampo) ...[
+              const SizedBox(height: 32),
+              const Divider(),
+              const SizedBox(height: 8),
+              const Text(
+                'Strumenti di sviluppo',
+                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
+              ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
+                icon: const Icon(Icons.logout),
+                label: const Text('Reset configurazione cliente'),
+                onPressed: () => _confirmAndReset(context),
+              ),
+              // ───── forzatura lingua per test ─────
+              const SizedBox(height: 24),
+              const _LocaleOverrideSwitcher(),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -234,7 +243,7 @@ class _SecurityCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 260,
+      width: 200,
       child: Card(
         elevation: 0,
         shape: RoundedRectangleBorder(

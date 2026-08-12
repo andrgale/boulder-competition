@@ -7,6 +7,7 @@ import 'package:boulder_competition/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 
 import 'config/app_mode.dart';
 import 'core/routing/app_router.dart';
@@ -127,6 +128,7 @@ class AdminApp extends StatelessWidget {
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
+             FlutterQuillLocalizations.delegate,
           ],
           locale: overrideLocale,
           supportedLocales: const [

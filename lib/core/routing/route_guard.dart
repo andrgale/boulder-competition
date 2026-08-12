@@ -112,7 +112,7 @@ class RouteGuard {
     '/security/profiles/roles':     'security.admin',
     '/security/profiles/new':       'security.admin',
     '/security/profiles/delete':    'security.admin',
-
+    '/security/email':              'security.admin',
 
     '/check-in': 'checkin.read',
   };

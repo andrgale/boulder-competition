@@ -32,6 +32,7 @@ class _AthleteCompetitionRegistrationPageState
   final formKey = GlobalKey<FormState>();
 
   final societaCtrl = TextEditingController();
+  final dataNascitaCtrl = TextEditingController();
 
   // ── dati gara ────────────────────────────────────────────────
   /// Id della gara con iscrizioni aperte, determinato in _loadCompetition().
@@ -52,6 +53,7 @@ class _AthleteCompetitionRegistrationPageState
   String nome = '';
   String email = '';
   String? sesso;
+  DateTime? dataNascita;
 
   bool isFirstTurn = false;
   bool isSecondTurn = false;
@@ -74,6 +76,7 @@ class _AthleteCompetitionRegistrationPageState
   @override
   void dispose() {
     societaCtrl.dispose();
+    dataNascitaCtrl.dispose();
     super.dispose();
   }
 
@@ -250,6 +253,7 @@ class _AthleteCompetitionRegistrationPageState
         societa: societaCtrl.text.trim(),
         pettorale: pettorale,
         sesso: sesso,
+        dataNascita: dataNascita,
         flPresente: false,
         flPagato: false,
         flOmaggio: false,
@@ -265,18 +269,55 @@ class _AthleteCompetitionRegistrationPageState
       // Passiamo direttamente i dati già in memoria (evitiamo un
       // ulteriore giro sul DB lato edge function).
       // ===============================================
+      // try {
+      //   await supabase.functions.invoke(
+      //     'send-mail-registration',
+      //     body: {
+      //       'email': email,
+      //       'nome': nome,
+      //       'cognome': cognome,
+      //       'competitionName': competition?['descrizione'],
+      //       'competitionDate': _formatDate(competition?['dt_gara']),
+      //       'turno': _turnoText,
+      //     },
+      //   );
+      // } catch (_) {
+      //   // TODO: valutare logging/retry lato server per l'invio mail.
+      // }
+
       try {
-        await supabase.functions.invoke(
-          'send-mail-registration',
-          body: {
-            'email': email,
-            'nome': nome,
-            'cognome': cognome,
-            'competitionName': competition?['descrizione'],
-            'competitionDate': _formatDate(competition?['dt_gara']),
-            'turno': _turnoText,
-          },
-        );
+          final turno = _turnoText?.trim();
+
+          final riepilogoParts = <String>[
+            if ((competition?['descrizione'] as String?)?.trim().isNotEmpty ?? false)
+              'Gara: ${(competition!['descrizione'] as String).trim()}',
+            if (_formatDate(competition?['dt_gara']).trim().isNotEmpty)
+              'Data: ${_formatDate(competition?['dt_gara']).trim()}',
+            if (turno?.isNotEmpty ?? false)
+              'Turno: $turno',
+          ];
+          await supabase.functions.invoke(
+            'send-template-email',
+            body: {
+              'email': email,
+              'toName': '$nome $cognome'.trim(),
+              'templateCode': 'REG_GARA',
+              'language': 'it',
+              'variables': buildEmailVariables({
+                'NOME_ATLETA': '$nome $cognome',
+                'DESC_GARA': competition?['descrizione'] as String?,
+                'DT_GARA': _formatDate(competition?['dt_gara']),
+                'TURNO': _turnoText,
+                'RIEPILOGO_GARA': riepilogoParts.isNotEmpty
+                    ? riepilogoParts.join(' — ')
+                    : null,
+                // qui in futuro aggiungi qualsiasi altro campo potenzialmente
+                // referenziabile nei testi delle mail: EMAIL_ATLETA, CATEGORIA,
+                // LUOGO_GARA, ecc. Se il template non li usa, vengono ignorati
+                // lato server senza errore.
+              }),
+            },
+          );
       } catch (_) {
         // TODO: valutare logging/retry lato server per l'invio mail.
       }
@@ -290,6 +331,22 @@ class _AthleteCompetitionRegistrationPageState
     } finally {
       if (mounted) setState(() => saving = false);
     }
+  }
+
+  /// Costruisce la mappa di variabili per la mail partendo da una lista di
+  /// coppie campo/valore. I campi con valore null o stringa vuota (dopo
+  /// trim) vengono esclusi automaticamente: se sono opzionali nel template
+  /// va bene così, se sono required lo dirà la function con un errore
+  /// esplicito ("Missing required variable: ...").
+  Map<String, String> buildEmailVariables(Map<String, String?> fields) {
+    final result = <String, String>{};
+    for (final entry in fields.entries) {
+      final value = entry.value?.trim();
+      if (value != null && value.isNotEmpty) {
+        result[entry.key] = value;
+      }
+    }
+    return result;
   }
 
   void _showSuccessAndGoHome() {
@@ -408,6 +465,55 @@ class _AthleteCompetitionRegistrationPageState
               const SizedBox(height: 12),
 
               TextFormField(
+                controller: dataNascitaCtrl,
+                readOnly: true,
+                decoration: const InputDecoration(
+                  labelText: 'Data di nascita',
+                  suffixIcon: Icon(Icons.calendar_today),
+                ),
+                onTap: _selectDataNascita,
+                validator: (_) {
+                  if (dataNascita == null) {
+                    return 'Campo obbligatorio';
+                  }
+                  return null;
+                },
+              ),
+
+              const SizedBox(height: 12),
+
+              DropdownButtonFormField<String>(
+                initialValue: sesso,
+                decoration: const InputDecoration(
+                  labelText: 'Sesso',
+                ),
+                items: const [
+                  DropdownMenuItem<String>(
+                    value: 'M',
+                    child: Text('M'),
+                  ),
+                  DropdownMenuItem<String>(
+                    value: 'F',
+                    child: Text('F'),
+                  ),
+                ],
+                onChanged: (v) {
+                  setState(() {
+                    sesso = v;
+                  });
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Campo obbligatorio';
+                  }
+                  return null;
+                },
+              ),
+
+              const SizedBox(height: 12),
+
+
+              TextFormField(
                 controller: societaCtrl,
                 decoration: const InputDecoration(
                   labelText: 'Società (facoltativo)',
@@ -488,6 +594,22 @@ class _AthleteCompetitionRegistrationPageState
       decoration: InputDecoration(labelText: label),
     );
   }
+
+  Future<void> _selectDataNascita() async {
+      final picked = await showDatePicker(
+        context: context,
+          initialDate: DateTime(2005),
+          firstDate: DateTime(1960),
+            lastDate: DateTime.now(), );
+            if (picked != null) { 
+              setState(() { 
+                dataNascita = picked;
+                dataNascitaCtrl.text = _formatDate(picked);
+            }
+        );
+      }
+    }
+  
 
   String _formatDate(dynamic raw) {
     if (raw == null) return '';

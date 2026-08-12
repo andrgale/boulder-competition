@@ -74,7 +74,7 @@ class _ClienteFormPageState extends State<ClienteFormPage> {
         'supabase_url': _urlController.text.trim(),
         'supabase_anon_key': _anonKeyController.text.trim(),
         'attivo': _attivo,
-        if (passwordHash != null) 'password_hash': passwordHash,
+        'password_hash': ?passwordHash,
       };
 
       if (_modificaEsistente) {
