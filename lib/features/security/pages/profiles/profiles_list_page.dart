@@ -1,5 +1,7 @@
+import 'package:boulder_competition/core/services/email_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/ui/responsive.dart';
 import '../../../../core/ui/responsive_table.dart';
@@ -20,7 +22,12 @@ class ProfilesListPage extends StatefulWidget {
 }
 
 class _ProfilesListPageState extends State<ProfilesListPage> {
-  final profileService = SecurityProfileService();
+  final profileService = SecurityProfileService(
+    Supabase.instance.client,
+    EmailService(Supabase.instance.client),
+  );
+
+
   final roleService = RoleService();
   final searchController = TextEditingController();
   final scrollController = ScrollController();

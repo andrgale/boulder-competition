@@ -65,6 +65,10 @@ type VariableDefinition = {
 //   }
 // }
 //
+// Header opzionale "x-registration-token": usato SOLO nel flusso di
+// auto-registrazione, quando non esiste ancora una sessione utente.
+// Vedi blocco di autenticazione/autorizzazione più sotto.
+//
 // Non esiste più alcun mapping "legacy": le chiavi di `variables` devono
 // coincidere esattamente con i variable_code dichiarati in
 // email_template_variables per quel template. Se il testo del template
@@ -103,43 +107,102 @@ Deno.serve(async (req: Request) => {
       return jsonResponse({ error: "templateCode mancante" }, 400);
     }
 
+    const resolvedTemplateCode = templateCode.trim();
+    const resolvedLanguage = language?.trim() || DEFAULT_LANGUAGE;
+
     // ── 1. Autenticazione e autorizzazione ─────────────────────────
     const authHeader = req.headers.get("authorization") ?? "";
     const jwt = authHeader.replace(/^Bearer\s+/i, "").trim();
-
-    if (!jwt) {
-      return jsonResponse({ error: "Autenticazione richiesta" }, 401);
-    }
+    const registrationToken = req.headers.get("x-registration-token")?.trim();
 
     const isServiceContext = jwt === SUPABASE_SERVICE_ROLE_KEY;
 
-    if (!isServiceContext) {
-      const supabaseAuth = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      const { data: userData, error: userError } = await supabaseAuth.auth
-        .getUser(jwt);
-
-      if (userError || !userData?.user) {
-        return jsonResponse({ error: "Token non valido" }, 401);
-      }
-
-      const authEmail = userData.user.email?.trim().toLowerCase();
-      const requestedEmail = email.trim().toLowerCase();
-
-      // Un utente autenticato può richiedere l'invio solo verso il proprio
-      // indirizzo email. Le chiamate con la service role key (contesto
-      // server-side/admin) bypassano questo controllo.
-      if (!authEmail || authEmail !== requestedEmail) {
-        return jsonResponse({
-          error: "Non autorizzato a inviare mail per questo indirizzo",
-        }, 403);
-      }
-    }
-
-    // Client con privilegi elevati per leggere le tabelle dei template.
+    // Client con service role, usato per template/variabili e per la
+    // validazione del token di registrazione (non richiede sessione utente).
     const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    const resolvedTemplateCode = templateCode.trim();
-    const resolvedLanguage = language?.trim() || DEFAULT_LANGUAGE;
+    if (!isServiceContext) {
+      const requestedEmail = email.trim().toLowerCase();
+
+      if (registrationToken) {
+        // ── Percorso auto-registrazione: nessuna sessione utente ancora
+        // attiva, autorizzazione basata su token monouso a scadenza breve.
+        const { data: tokenRow, error: tokenError } = await db
+          .from("email_send_tokens")
+          .select("token, email, purpose, expires_at")
+          .eq("token", registrationToken)
+          .maybeSingle();
+
+        if (tokenError) {
+          throw new Error(`Errore validazione token: ${tokenError.message}`);
+        }
+
+        // TEMP DEBUG - rimuovi dopo la verifica
+        console.log("registrationToken ricevuto:", registrationToken);
+        console.log("tokenRow trovato:", JSON.stringify(tokenRow));
+        console.log("requestedEmail:", requestedEmail);
+        console.log("resolvedTemplateCode:", resolvedTemplateCode);
+        if (tokenRow) {
+          console.log("email match:", tokenRow.email.toLowerCase() === requestedEmail);
+          console.log("purpose match:", tokenRow.purpose === resolvedTemplateCode);
+          console.log("expires check:", new Date(tokenRow.expires_at).getTime(), ">", Date.now());
+        }       
+
+        const isValid = tokenRow &&
+          tokenRow.email.toLowerCase() === requestedEmail &&
+          tokenRow.purpose === resolvedTemplateCode &&
+          new Date(tokenRow.expires_at).getTime() > Date.now();
+
+        if (!isValid) {
+          return jsonResponse({
+            error: "Token di registrazione non valido o scaduto",
+          }, 401);
+        }
+
+        // monouso: lo elimino subito dopo la validazione
+        await db.from("email_send_tokens").delete().eq(
+          "token",
+          registrationToken,
+        );
+      } else {
+        // ── Percorso utente autenticato (JWT di sessione) ──────────
+        if (!jwt) {
+          return jsonResponse({ error: "Autenticazione richiesta" }, 401);
+        }
+
+        // Client "come utente": necessario perché auth.uid() dentro
+        // has_role() viene risolto dal JWT presente in questo client,
+        // non dal client con service role.
+        const supabaseAsUser = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+          global: { headers: { Authorization: `Bearer ${jwt}` } },
+        });
+
+        const { data: userData, error: userError } = await supabaseAsUser
+          .auth.getUser(jwt);
+
+        if (userError || !userData?.user) {
+          return jsonResponse({ error: "Token non valido" }, 401);
+        }
+
+        const authEmail = userData.user.email?.trim().toLowerCase();
+        const isSelf = authEmail === requestedEmail;
+
+        if (!isSelf) {
+          const { data: isAdmin, error: roleError } = await supabaseAsUser
+            .rpc("has_role", { role_code: "admin" });
+
+          if (roleError) {
+            throw new Error(`Errore verifica ruolo: ${roleError.message}`);
+          }
+
+          if (!isAdmin) {
+            return jsonResponse({
+              error: "Non autorizzato a inviare mail per questo indirizzo",
+            }, 403);
+          }
+        }
+      }
+    }
 
     // ── 2. Caricamento template attivo (code + lingua, poi fallback default) ──
     const template = await loadActiveTemplate(

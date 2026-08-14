@@ -1,4 +1,6 @@
+import 'package:boulder_competition/core/services/email_service.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 //import 'package:go_router/go_router.dart';
 
 import '../../../../shared/app_snackbar.dart';
@@ -25,7 +27,11 @@ class ProfileFormPage extends StatefulWidget {
 }
 
 class _ProfileFormPageState extends State<ProfileFormPage> {
-  final service = SecurityProfileService();
+  final service = SecurityProfileService(
+    Supabase.instance.client,
+    EmailService(Supabase.instance.client),
+  );
+
 
   final formKey = GlobalKey<FormState>();
 
@@ -55,7 +61,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
     setState(() => loading = true);
 
     try {
-      await service.createAthleteUser(
+      await service.registerAthlete(
         email: emailCtrl.text.trim(),
         nome: nomeCtrl.text.trim(),
         cognome: cognomeCtrl.text.trim(),

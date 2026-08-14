@@ -1,4 +1,6 @@
+import 'package:boulder_competition/core/services/email_service.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../shared/app_snackbar.dart';
 import '../../data/security_profile_service.dart';
@@ -20,7 +22,11 @@ class ProfileRolesPage extends StatefulWidget {
 }
 
 class _ProfileRolesPageState extends State<ProfileRolesPage> {
-  final service = SecurityProfileService();
+  final service = SecurityProfileService(
+    Supabase.instance.client,
+    EmailService(Supabase.instance.client),
+  );
+
 
   Set<String> selectedRoleIds = {};
   bool loading = true;

@@ -1,5 +1,7 @@
+import 'package:boulder_competition/core/services/email_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../shared/app_snackbar.dart';
 import '../data/athlete_registration_service.dart';
@@ -14,7 +16,11 @@ class AthleteRegistrationPage extends StatefulWidget {
 
 class _AthleteRegistrationPageState
     extends State<AthleteRegistrationPage> {
-  final service = AthleteRegistrationService();
+
+  final service = AthleteRegistrationService(
+    Supabase.instance.client,
+    EmailService(Supabase.instance.client),
+  );
 
   final formKey = GlobalKey<FormState>();
 
