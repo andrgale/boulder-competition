@@ -37,7 +37,8 @@ serve(async (req) => {
     // ============================================
 
     if (!user) {
-      const tempPassword = crypto.randomUUID()
+   //   const tempPassword = crypto.randomUUID()
+      const tempPassword = "12345678";
 
       const {
         data: createdUser,

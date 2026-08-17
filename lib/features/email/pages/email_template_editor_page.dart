@@ -10,6 +10,8 @@ import 'package:boulder_competition/features/email/data/email_template_repositor
 import '../models/email_template_model.dart';
 import '../models/email_template_variable_model.dart';
 
+import 'package:html/parser.dart' as html_parser;
+import 'package:html/dom.dart' as dom;
 /// Editor dei template email.
 ///
 /// Il database continua a utilizzare HTML.
@@ -139,22 +141,17 @@ void initState() {
   // debugPrint('════════════════════════════════════════');
 
   try {
-    final sourceHtml = html.trim();
+    final sourceHtml = html.trim().isEmpty
+        ? '<p><br></p>'
+        : _normalizeHtmlForQuill(html);
 
-    if (sourceHtml.isEmpty) {
-      final document = Document();
-
-      return QuillController(
-        document: document,
-        selection: const TextSelection.collapsed(offset: 0),
-      );
-    }
+  //  debugPrint('HTML NORMALIZZATO PER QUILL:');
+  //  debugPrint(sourceHtml);
 
     final delta = HtmlToDelta().convert(
       sourceHtml,
       transformTableAsEmbed: false,
     );
-
     // debugPrint('DELTA GENERATO DA HTML:');
     // debugPrint(delta.toJson().toString());
 
@@ -215,7 +212,57 @@ void initState() {
     }
   }
 
-  /// Converte il documento Quill nell'HTML da salvare nel DB.
+  String _normalizeHtmlForQuill(String html) {
+    final document = html_parser.parseFragment(html);
+
+    void processElement(dom.Element element) {
+      final style = element.attributes['style'];
+
+      if (style != null && style.trim().isNotEmpty) {
+        final tag = element.localName?.toLowerCase();
+
+        const inlineFormattingTags = {
+          'strong',
+          'b',
+          'em',
+          'i',
+          'u',
+          's',
+          'del',
+        };
+
+        if (tag != null && inlineFormattingTags.contains(tag)) {
+          final span = dom.Element.tag('span');
+
+          span.attributes['style'] = style;
+
+          // Copia tutti i nodi figli dentro lo span.
+          span.nodes.addAll(
+            List<dom.Node>.from(element.nodes),
+          );
+
+          element.nodes.clear();
+
+          element.append(span);
+
+          // Lo style non deve più stare sul tag strong/em/u.
+          element.attributes.remove('style');
+        }
+      }
+
+      // Continuiamo ricorsivamente.
+      for (final child in List<dom.Element>.from(element.children)) {
+        processElement(child);
+      }
+    }
+
+    for (final element in document.children) {
+      processElement(element);
+    }
+
+    return document.outerHtml;
+  }
+    /// Converte il documento Quill nell'HTML da salvare nel DB.
   ///
   /// inlineStylesFlag è importante per le email: gli stili vengono
   /// prodotti direttamente nell'HTML invece di dipendere da CSS
@@ -223,21 +270,95 @@ void initState() {
   String _editorToHtml() {
     final delta = _editor.document.toDelta();
 
+    // debugPrint('======================================');
+    // debugPrint('DELTA PRIMA DEL SALVATAGGIO:');
+    // debugPrint(delta.toJson().toString());
+    // debugPrint('======================================');
+
+    // Normalizziamo i colori Quill:
+    //
+    // #AARRGGBB → #RRGGBB
+    //
+    // prima di passarli al converter.
+    final normalizedDelta = delta.toJson().map((operation) {
+      final result = Map<String, dynamic>.from(operation);
+
+      final attributes = result['attributes'];
+
+      if (attributes is Map) {
+        final normalizedAttributes =
+            Map<String, dynamic>.from(attributes);
+
+        final color = normalizedAttributes['color'];
+
+        if (color is String) {
+          normalizedAttributes['color'] =
+              _quillColorToCss(color);
+        }
+
+        final background =
+            normalizedAttributes['background'];
+
+        if (background is String) {
+          normalizedAttributes['background'] =
+              _quillColorToCss(background);
+        }
+
+        result['attributes'] = normalizedAttributes;
+      }
+
+      return result;
+    }).toList();
+
     final options = ConverterOptions.forEmail();
 
     options.converterOptions.inlineStylesFlag = true;
 
+    options.sanitizerOptions =
+        OpAttributeSanitizerOptions(
+      allow8DigitHexColors: true,
+    );
+
     final converter = QuillDeltaToHtmlConverter(
-      delta.toJson()
-          .map(
-            (operation) =>
-                Map<String, dynamic>.from(operation),
-          )
-          .toList(),
+      normalizedDelta,
       options,
     );
 
-    return converter.convert();
+    final html = converter.convert();
+
+    // debugPrint('======================================');
+    // debugPrint('DELTA NORMALIZZATO:');
+    // debugPrint(normalizedDelta.toString());
+    // debugPrint('======================================');
+
+    // debugPrint('HTML GENERATO DAL DELTA:');
+    // debugPrint(html);
+    // debugPrint('======================================');
+
+    return html;
+  }
+
+  String _quillColorToCss(String color) {
+    final value = color.trim();
+
+    // Quill Flutter usa spesso #AARRGGBB.
+    //
+    // Esempio:
+    // #FFE53935
+    //
+    // FF = alpha
+    // E5 = red
+    // 39 = green
+    // 35 = blue
+    //
+    // CSS:
+    // #E53935
+
+    if (RegExp(r'^#[0-9a-fA-F]{8}$').hasMatch(value)) {
+      return '#${value.substring(3)}';
+    }
+
+    return value;
   }
 
   Future<bool> _save() async {
@@ -745,7 +866,7 @@ void initState() {
             child: QuillSimpleToolbar(
               controller: _editor,
               config:
-                  QuillSimpleToolbarConfig(
+              QuillSimpleToolbarConfig(
                 multiRowsDisplay: true,
                 showDividers: true,
 
@@ -794,6 +915,24 @@ void initState() {
                 showSearchButton: false,
 
                 axis: Axis.horizontal,
+
+                buttonOptions: const QuillSimpleToolbarButtonOptions(
+                  fontFamily: QuillToolbarFontFamilyButtonOptions(
+                    items: {
+                      'sans-serif': 'Sans Serif',
+                      'serif': 'Serif',
+                      'monospace': 'Monospace',
+                      'Arial': 'Arial',
+                      'Helvetica': 'Helvetica',
+                      'Verdana': 'Verdana',
+                      'Tahoma': 'Tahoma',
+                      'Trebuchet MS': 'Trebuchet MS',
+                      'Georgia': 'Georgia',
+                      'Times New Roman': 'Times New Roman',
+                      'Courier New': 'Courier New',
+                    },
+                  ),
+                ),
               ),
             ),
           ),
