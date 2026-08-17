@@ -1,0 +1,13 @@
+{
+    "name": "Flutter con FVM (macOS)",
+    "type": "dart",
+    "request": "launch",
+    "program": "lib/main.dart",
+    "deviceId": "macos",
+    "args": [
+        "--flutter-sdk", "./fvm/flutter_sdk"
+    ],
+    "toolArgs": [
+        "run"
+    ]
+}
