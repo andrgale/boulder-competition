@@ -638,76 +638,76 @@ abstract class AppLocalizations {
   /// **'Competition created'**
   String get competitionMessageCustom25;
 
-  /// Custom competition message 26
+  /// Delete Competition
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 26'**
+  /// **'Delete Competition'**
   String get competitionMessageCustom26;
 
-  /// Custom competition message 27
+  /// Delete
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 27'**
+  /// **'Delete'**
   String get competitionMessageCustom27;
 
-  /// Custom competition message 28
+  /// An open competition already exists: close it before creating a new one
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 28'**
+  /// **'An open competition already exists: close it before creating a new one.'**
   String get competitionMessageCustom28;
 
-  /// Custom competition message 29
+  /// Competitions
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 29'**
+  /// **'Competitions'**
   String get competitionMessageCustom29;
 
-  /// Custom competition message 30
+  /// Close the open competition before creating a new one
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 30'**
+  /// **'Close the open competition before creating a new one'**
   String get competitionMessageCustom30;
 
-  /// Custom competition message 31
+  /// Search Competition
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 31'**
+  /// **'Search Competition'**
   String get competitionMessageCustom31;
 
-  /// Custom competition message 32
+  /// Open Competitions Only
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 32'**
+  /// **'Open Competitions Only'**
   String get competitionMessageCustom32;
 
-  /// Custom competition message 33
+  /// No Competitions
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 33'**
+  /// **'No Competitions'**
   String get competitionMessageCustom33;
 
-  /// Custom competition message 34
+  /// Closed
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 34'**
+  /// **'Closed'**
   String get competitionMessageCustom34;
 
-  /// Custom competition message 35
+  /// Open
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 35'**
+  /// **'Open'**
   String get competitionMessageCustom35;
 
-  /// Custom competition message 36
+  /// Status
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 36'**
+  /// **'Status'**
   String get competitionMessageCustom36;
 
-  /// Custom competition message 37
+  /// Actions
   ///
   /// In en, this message translates to:
-  /// **'Messaggio gara 37'**
+  /// **'Actions'**
   String get competitionMessageCustom37;
 
   /// Custom competition message 38

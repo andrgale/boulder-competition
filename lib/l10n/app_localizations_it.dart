@@ -210,7 +210,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get competitionMessageCustom2 => 'Nuova Gara';
 
   @override
-  String get competitionMessageCustom3 => 'Gestione competizione';
+  String get competitionMessageCustom3 => 'Gestione Gara';
 
   @override
   String get competitionMessageCustom4 => 'Salvataggio...';
@@ -283,40 +283,42 @@ class AppLocalizationsIt extends AppLocalizations {
   String get competitionMessageCustom25 => 'Gara creata';
 
   @override
-  String get competitionMessageCustom26 => 'Messaggio gara 26';
+  String get competitionMessageCustom26 => 'Elimina Gara';
 
   @override
-  String get competitionMessageCustom27 => 'Messaggio gara 27';
+  String get competitionMessageCustom27 => 'Eliminare';
 
   @override
-  String get competitionMessageCustom28 => 'Messaggio gara 28';
+  String get competitionMessageCustom28 =>
+      'Esiste già una gara aperta: chiudila prima di crearne una nuova.';
 
   @override
-  String get competitionMessageCustom29 => 'Messaggio gara 29';
+  String get competitionMessageCustom29 => 'Gare';
 
   @override
-  String get competitionMessageCustom30 => 'Messaggio gara 30';
+  String get competitionMessageCustom30 =>
+      'Chiudi la gara aperta prima di crearne una nuova';
 
   @override
-  String get competitionMessageCustom31 => 'Messaggio gara 31';
+  String get competitionMessageCustom31 => 'Cerca gara';
 
   @override
-  String get competitionMessageCustom32 => 'Messaggio gara 32';
+  String get competitionMessageCustom32 => 'Solo aperte';
 
   @override
-  String get competitionMessageCustom33 => 'Messaggio gara 33';
+  String get competitionMessageCustom33 => 'Nessuna gara';
 
   @override
-  String get competitionMessageCustom34 => 'Messaggio gara 34';
+  String get competitionMessageCustom34 => 'Chiusa';
 
   @override
-  String get competitionMessageCustom35 => 'Messaggio gara 35';
+  String get competitionMessageCustom35 => 'Aperta';
 
   @override
-  String get competitionMessageCustom36 => 'Messaggio gara 36';
+  String get competitionMessageCustom36 => 'Stato';
 
   @override
-  String get competitionMessageCustom37 => 'Messaggio gara 37';
+  String get competitionMessageCustom37 => 'Azioni';
 
   @override
   String get competitionMessageCustom38 => 'Messaggio gara 38';

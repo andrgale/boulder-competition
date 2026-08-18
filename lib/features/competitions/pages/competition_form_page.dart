@@ -185,7 +185,7 @@ class _CompetitionFormPageState
         dtGara: dtGara ?? c.dtGara,
       );
     } catch (e) {
-      showError('${l10n.competitionMessageCustom19} $e');
+      showError('${l10n.competitionMessageCustom19} $e'); // Errore nella generazione del cartellino:
     } finally {
       if (mounted) setState(() => _exportingCartellino = false);
     }
@@ -201,7 +201,7 @@ class _CompetitionFormPageState
 
     if (!canWrite) {
       showError(
-        l10n.competitionMessageCustom20,
+        l10n.competitionMessageCustom20, // Non hai i permessi per modificare le gare 
       );
       return;
     }
@@ -209,7 +209,7 @@ class _CompetitionFormPageState
     if (!formKey.currentState!.validate()) return;
 
     if (dtGara == null) {
-      showError(l10n.competitionMessageCustom21);
+      showError(l10n.competitionMessageCustom21); // Seleziona la data gara
       return;
     }
 
@@ -223,7 +223,7 @@ class _CompetitionFormPageState
     if (isTurn) {
       if (nrMaxRegistrations <= 0) {
         showError(
-          l10n.competitionMessageCustom22,
+          l10n.competitionMessageCustom22, // Inserisci un Nr. Massimo Iscritti maggiore di 0
         );
         return;
       }
@@ -231,7 +231,7 @@ class _CompetitionFormPageState
       if ((nrMaxFirstTurn + nrMaxSecondTurn) >
           nrMaxRegistrations) {
         showError(
-          l10n.competitionMessageCustom23,
+          l10n.competitionMessageCustom23, // La somma degli iscritti al primo e secondo turno non può superare il Nr. Massimo Iscritti
         );
         return;
       }
@@ -282,8 +282,8 @@ class _CompetitionFormPageState
         SnackBar(
           content: Text(
             isEdit
-                ? l10n.competitionMessageCustom24
-                : l10n.competitionMessageCustom25,
+                ? l10n.competitionMessageCustom24  // Gara aggiornata
+                : l10n.competitionMessageCustom25, // Gara creata
           ),
         ),
       );
@@ -313,9 +313,9 @@ class _CompetitionFormPageState
 
           return BasePage(
             title: isEdit
-                ? l10n.competitionMessageCustom1
-                : l10n.competitionMessageCustom2,
-            subtitle: l10n.competitionMessageCustom3,
+                ? l10n.competitionMessageCustom1 // Modifica Gara
+                : l10n.competitionMessageCustom2, // Nuova Gara
+            subtitle: l10n.competitionMessageCustom3, // Gestione Gara
             actions: [
               FilledButton.icon(
                 onPressed: saving ? null : save,
@@ -330,8 +330,8 @@ class _CompetitionFormPageState
                     : const Icon(Icons.save),
                 label: Text(
                   saving
-                      ? l10n.competitionMessageCustom4
-                      : l10n.commonSave,
+                      ? l10n.competitionMessageCustom4 // Salvataggio...
+                      : l10n.commonSave, // Salva
                 ),
               ),
           // ── bottone cartellino: solo in modifica ──────────
@@ -349,7 +349,7 @@ class _CompetitionFormPageState
                     ),
                   )
                 : IconButton(
-                    tooltip: l10n.competitionMessageCustom5,
+                    tooltip: l10n.competitionMessageCustom5, // Stampa cartellino QR
                     icon: const Icon(Icons.qr_code),
                     onPressed: isEdit ? printCard : null,
                   ),
@@ -367,11 +367,11 @@ class _CompetitionFormPageState
                   TextFormField(
                     controller: descrizioneController,
                     decoration: InputDecoration(
-                      labelText: l10n.competitionDescription,
+                      labelText: l10n.competitionDescription, // Descrizione
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return l10n.competitionMessageCustom6;
+                        return l10n.competitionMessageCustom6; // Campo obbligatorio
                       }
                       return null;
                     },
@@ -384,7 +384,7 @@ class _CompetitionFormPageState
                     readOnly: true,
                     onTap: pickDate,
                       decoration: InputDecoration(
-                      labelText: l10n.competitionDate,
+                      labelText: l10n.competitionDate, // Data
                       suffixIcon: const Icon(Icons.calendar_today),
                     ),
                   ),
@@ -399,11 +399,11 @@ class _CompetitionFormPageState
                           controller: nrBoulderController,
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            labelText: l10n.boulderLabelNumber,
+                            labelText: l10n.boulderLabelNumber, // Nr Boulder
                           ),
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
-                              return l10n.competitionMessageCustom6;
+                              return l10n.competitionMessageCustom6; // Campo obbligatorio
                             }
                             return null;
                           },
@@ -416,7 +416,7 @@ class _CompetitionFormPageState
                             controller: nrFinalistiController,
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
-                              labelText: l10n.competitionMessageCustom7,
+                              labelText: l10n.competitionMessageCustom7, // Nr Finalisti
                             ),
                           ),
                       ),
@@ -429,7 +429,7 @@ class _CompetitionFormPageState
                     controller: nrMaxRegistrationsController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      labelText: l10n.competitionMessageCustom8,
+                      labelText: l10n.competitionMessageCustom8, // Nr Massimo Iscritti
                     ),
                   ),
 
@@ -437,7 +437,7 @@ class _CompetitionFormPageState
 
                   SwitchListTile(
                     value: isTurn,
-                    title: Text(l10n.competitionMessageCustom9),
+                    title: Text(l10n.competitionMessageCustom9), // Abilitazione Turni
                     onChanged: (value) => setState(() => isTurn = value),
                   ),
 
@@ -451,7 +451,7 @@ class _CompetitionFormPageState
                           enabled: isTurn,
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            labelText: l10n.competitionMessageCustom10,
+                            labelText: l10n.competitionMessageCustom10, // Iscritti Primo Turno
                           ),
                         ),
                       ),
@@ -462,7 +462,7 @@ class _CompetitionFormPageState
                           enabled: isTurn,
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            labelText: l10n.competitionMessageCustom11,
+                            labelText: l10n.competitionMessageCustom11, // Iscritti Secondo Turno
                           ),
                         ),
                       ),
@@ -478,7 +478,7 @@ class _CompetitionFormPageState
                     ),
                     inputFormatters: [currencyFormatter],
                     decoration: InputDecoration(
-                      labelText: l10n.competitionMessageCustom12,
+                      labelText: l10n.competitionMessageCustom12, // Quota Iscrizione
                       prefixIcon: const Icon(Icons.euro),
                     ),
                   ),
@@ -489,7 +489,7 @@ class _CompetitionFormPageState
                     controller: noteController,
                     maxLines: 4,
                     decoration: InputDecoration(
-                      labelText: l10n.competitionMessageCustom13,
+                      labelText: l10n.competitionMessageCustom13, // Note
                     ),
                   ),
 
@@ -497,35 +497,35 @@ class _CompetitionFormPageState
 
                   SwitchListTile(
                     value: flIscrizioniChiuse,
-                    title: Text(l10n.competitionMessageCustom14),
+                    title: Text(l10n.competitionMessageCustom14), // Iscrizioni chiuse
                     onChanged: (value) =>
                         setState(() => flIscrizioniChiuse = value),
                   ),
 
                   SwitchListTile(
                     value: flGaraChiusa,
-                    title: Text(l10n.competitionMessageCustom15),
+                    title: Text(l10n.competitionMessageCustom15), // Gara chiusa
                     onChanged: (value) =>
                         setState(() => flGaraChiusa = value),
                   ),
 
                   SwitchListTile(
                     value: flGestionePresenze,
-                    title: Text(l10n.competitionMessageCustom16),
+                    title: Text(l10n.competitionMessageCustom16), // Gestione presenze
                     onChanged: (value) =>
                         setState(() => flGestionePresenze = value),
                   ),
 
                   SwitchListTile(
                     value: flGestionePagamenti,
-                    title: Text(l10n.competitionMessageCustom17),
+                    title: Text(l10n.competitionMessageCustom17), // Gestione pagamenti
                     onChanged: (value) =>
                         setState(() => flGestionePagamenti = value),
                   ),
 
                   SwitchListTile(
                     value: flGestioneOmaggi,
-                    title: Text(l10n.competitionMessageCustom18),
+                    title: Text(l10n.competitionMessageCustom18), // Gestione omaggi
                     onChanged: (value) =>
                         setState(() => flGestioneOmaggi = value),
                   ),

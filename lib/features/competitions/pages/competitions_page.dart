@@ -9,6 +9,8 @@ import '../../../core/ui/responsive_table.dart';
 import '../data/competition_service.dart';
 import '../models/competition_model.dart';
 
+import 'package:boulder_competition/l10n/app_localizations.dart';
+
 class CompetitionsPage extends StatefulWidget {
   const CompetitionsPage({super.key});
 
@@ -30,6 +32,8 @@ class _CompetitionsPageState
   bool showOnlyOpen = false;
   bool sortAsc = true;
   String sortColumn = 'dt_gara';
+
+   AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   // ── true se esiste almeno una gara aperta ──────────────────
   // Calcolato sui dati già in memoria (allCompetitions), che
@@ -95,23 +99,31 @@ class _CompetitionsPageState
 
   Future<void> deleteCompetition(
       CompetitionModel c) async {
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Elimina competizione'),
-        content: Text('Eliminare "${c.descrizione}"?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Annulla'),
+        final confirm = await showDialog<bool>(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: Text(
+              l10n.competitionMessageCustom26, // Elimina competizione
+            ),
+            content: Text(
+              '${l10n.competitionMessageCustom27} "${c.descrizione}"?', // Eliminare
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text(
+                  l10n.commonCancel, // Annulla
+                ),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text(
+                  l10n.commonDelete, // Elimina
+                ),
+              ),
+            ],
           ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Elimina'),
-          ),
-        ],
-      ),
-    );
+        );
 
     if (confirm != true) return;
 
@@ -165,16 +177,16 @@ class _CompetitionsPageState
     // ── guardia di sicurezza: non crea se esiste già una gara
     // aperta, anche se per qualche motivo il bottone fosse
     // stato chiamato comunque (es. tasto Invio, automazione test)
-    if (hasOpenCompetition) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Esiste già una gara aperta: chiudila prima di crearne una nuova.',
-          ),
+  if (hasOpenCompetition) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          l10n.competitionMessageCustom28, // Esiste già una gara aperta: chiudila prima di crearne una nuova.
         ),
-      );
-      return;
-    }
+      ),
+    );
+    return;
+  }
 
     final result =
         await context.push('/competitions/new');
@@ -186,23 +198,27 @@ class _CompetitionsPageState
     final screen = context.responsive;
 
     return BasePage(
-      title: 'Competizioni',
+      title: l10n.competitionMessageCustom29, // Competizioni
       floatingActionButton: screen.isMobile
           ? FloatingActionButton.extended(
               onPressed: hasOpenCompetition ? null : _createNew,
               icon: const Icon(Icons.add),
-              label: const Text('Nuova'),
+              label: Text(
+                l10n.competitionMessageCustom2, // Nuova
+              ),
             )
           : null,
       actions: [
         Tooltip(
           message: hasOpenCompetition
-              ? 'Chiudi la gara aperta prima di crearne una nuova'
-              : 'Crea una nuova gara',
+              ? l10n.competitionMessageCustom30 // Chiudi la gara aperta prima di crearne una nuova
+              : l10n.competitionMessageCustom2, // Nuova Gara
           child: FilledButton.icon(
             onPressed: hasOpenCompetition ? null : _createNew,
             icon: const Icon(Icons.add),
-            label: const Text('Nuova Gara'),
+            label: Text(
+              l10n.competitionMessageCustom2, // Nuova Gara
+            ),
           ),
         ),
       ],
@@ -226,15 +242,17 @@ class _CompetitionsPageState
           width: screen.isMobile ? double.infinity : 420,
           child: TextField(
             controller: searchController,
-            decoration: const InputDecoration(
-              hintText: 'Cerca competizione',
-              prefixIcon: Icon(Icons.search),
+            decoration: InputDecoration(
+              hintText: l10n.competitionMessageCustom31, // Cerca competizione
+              prefixIcon: const Icon(Icons.search),
             ),
             onChanged: (_) => applyFilters(),
           ),
         ),
         FilterChip(
-          label: const Text('Solo aperte'),
+          label: Text(
+            l10n.competitionMessageCustom32, // Solo aperte
+          ),
           selected: showOnlyOpen,
           onSelected: (v) {
             showOnlyOpen = v;
@@ -252,8 +270,11 @@ class _CompetitionsPageState
     }
 
     if (competitions.isEmpty) {
-      return const Center(
-          child: Text('Nessuna competizione'));
+      return Center(
+        child: Text(
+          l10n.competitionMessageCustom33, // Nessuna competizione
+        ),
+      );
     }
 
     switch (screen.screenSize) {
@@ -307,6 +328,7 @@ class _MobileListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return ListView.separated(
       itemCount: competitions.length,
       separatorBuilder: (_, _) =>
@@ -328,7 +350,10 @@ class _MobileListView extends StatelessWidget {
                 const SizedBox(height: 8),
                 Chip(
                   label: Text(
-                      c.flGaraChiusa ? 'Chiusa' : 'Aperta'),
+                    c.flGaraChiusa
+                        ? l10n.competitionMessageCustom34 // Chiusa
+                        : l10n.competitionMessageCustom35, // Aperta
+                  ),
                 ),
                 Row(
                   children: [
@@ -407,15 +432,32 @@ class _TableView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return ResponsiveTable(
       controller: scrollController,
-      columns: const [
-        DataColumn(label: Text('Descrizione')),
-        DataColumn(label: Text('Data')),
-        DataColumn(label: Text('Stato')),
-        DataColumn(label: Text('Azioni')),
+      columns: [
+        DataColumn(
+          label: Text(
+            l10n.competitionDescription, // Descrizione
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            l10n.competitionDate, // Data
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            l10n.competitionMessageCustom36, // Stato
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            l10n.competitionMessageCustom37, // Azioni
+          ),
+        ),
       ],
-      rows: competitions.map((c) {
+        rows: competitions.map((c) {
         return DataRow(cells: [
           DataCell(SizedBox(
             width: 600,
@@ -427,10 +469,14 @@ class _TableView extends StatelessWidget {
           DataCell(Text(
               DateFormat('dd/MM/yyyy')
                   .format(c.dtGara))),
-          DataCell(Chip(
+          DataCell(
+            Chip(
               label: Text(c.flGaraChiusa
-                  ? 'Chiusa'
-                  : 'Aperta'))),
+                   ? l10n.competitionMessageCustom34 // Chiusa
+                   : l10n.competitionMessageCustom35, // Aperta
+                  )
+                )
+              ),
           DataCell(Row(
             children: [
               IconButton(

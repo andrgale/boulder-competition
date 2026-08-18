@@ -283,40 +283,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get competitionMessageCustom25 => 'Competition created';
 
   @override
-  String get competitionMessageCustom26 => 'Messaggio gara 26';
+  String get competitionMessageCustom26 => 'Delete Competition';
 
   @override
-  String get competitionMessageCustom27 => 'Messaggio gara 27';
+  String get competitionMessageCustom27 => 'Delete';
 
   @override
-  String get competitionMessageCustom28 => 'Messaggio gara 28';
+  String get competitionMessageCustom28 =>
+      'An open competition already exists: close it before creating a new one.';
 
   @override
-  String get competitionMessageCustom29 => 'Messaggio gara 29';
+  String get competitionMessageCustom29 => 'Competitions';
 
   @override
-  String get competitionMessageCustom30 => 'Messaggio gara 30';
+  String get competitionMessageCustom30 =>
+      'Close the open competition before creating a new one';
 
   @override
-  String get competitionMessageCustom31 => 'Messaggio gara 31';
+  String get competitionMessageCustom31 => 'Search Competition';
 
   @override
-  String get competitionMessageCustom32 => 'Messaggio gara 32';
+  String get competitionMessageCustom32 => 'Open Competitions Only';
 
   @override
-  String get competitionMessageCustom33 => 'Messaggio gara 33';
+  String get competitionMessageCustom33 => 'No Competitions';
 
   @override
-  String get competitionMessageCustom34 => 'Messaggio gara 34';
+  String get competitionMessageCustom34 => 'Closed';
 
   @override
-  String get competitionMessageCustom35 => 'Messaggio gara 35';
+  String get competitionMessageCustom35 => 'Open';
 
   @override
-  String get competitionMessageCustom36 => 'Messaggio gara 36';
+  String get competitionMessageCustom36 => 'Status';
 
   @override
-  String get competitionMessageCustom37 => 'Messaggio gara 37';
+  String get competitionMessageCustom37 => 'Actions';
 
   @override
   String get competitionMessageCustom38 => 'Messaggio gara 38';

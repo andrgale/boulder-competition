@@ -368,53 +368,53 @@
   "@competitionMessageCustom25": {
     "description": "Message displayed after successfully creating a new competition"
   },
-  "competitionMessageCustom26": "Messaggio gara 26",
+  "competitionMessageCustom26": "Delete Competition",
   "@competitionMessageCustom26": {
-    "description": "Custom competition message 26"
+    "description": "Delete Competition"
   },
-  "competitionMessageCustom27": "Messaggio gara 27",
+  "competitionMessageCustom27": "Delete",
   "@competitionMessageCustom27": {
-    "description": "Custom competition message 27"
+    "description": "Delete"
   },
-  "competitionMessageCustom28": "Messaggio gara 28",
+  "competitionMessageCustom28": "An open competition already exists: close it before creating a new one.",
   "@competitionMessageCustom28": {
-    "description": "Custom competition message 28"
+    "description": "An open competition already exists: close it before creating a new one"
   },
-  "competitionMessageCustom29": "Messaggio gara 29",
+  "competitionMessageCustom29": "Competitions",
   "@competitionMessageCustom29": {
-    "description": "Custom competition message 29"
+    "description": "Competitions"
   },
-  "competitionMessageCustom30": "Messaggio gara 30",
+  "competitionMessageCustom30": "Close the open competition before creating a new one",
   "@competitionMessageCustom30": {
-    "description": "Custom competition message 30"
+    "description": "Close the open competition before creating a new one"
   },
-  "competitionMessageCustom31": "Messaggio gara 31",
+  "competitionMessageCustom31": "Search Competition",
   "@competitionMessageCustom31": {
-    "description": "Custom competition message 31"
+    "description": "Search Competition"
   },
-  "competitionMessageCustom32": "Messaggio gara 32",
+  "competitionMessageCustom32": "Open Competitions Only",
   "@competitionMessageCustom32": {
-    "description": "Custom competition message 32"
+    "description": "Open Competitions Only"
   },
-  "competitionMessageCustom33": "Messaggio gara 33",
+  "competitionMessageCustom33": "No Competitions",
   "@competitionMessageCustom33": {
-    "description": "Custom competition message 33"
+    "description": "No Competitions"
   },
-  "competitionMessageCustom34": "Messaggio gara 34",
+  "competitionMessageCustom34": "Closed",
   "@competitionMessageCustom34": {
-    "description": "Custom competition message 34"
+    "description": "Closed"
   },
-  "competitionMessageCustom35": "Messaggio gara 35",
+  "competitionMessageCustom35": "Open",
   "@competitionMessageCustom35": {
-    "description": "Custom competition message 35"
+    "description": "Open"
   },
-  "competitionMessageCustom36": "Messaggio gara 36",
+  "competitionMessageCustom36": "Status",
   "@competitionMessageCustom36": {
-    "description": "Custom competition message 36"
+    "description": "Status"
   },
-  "competitionMessageCustom37": "Messaggio gara 37",
+  "competitionMessageCustom37": "Actions",
   "@competitionMessageCustom37": {
-    "description": "Custom competition message 37"
+    "description": "Actions"
   },
   "competitionMessageCustom38": "Messaggio gara 38",
   "@competitionMessageCustom38": {
