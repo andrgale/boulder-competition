@@ -258,5 +258,193 @@
   "categoryMessageCustom15": "Crea",
   "@categoryMessageCustom15": {
     "description": "Testo del pulsante per creare una categoria"
+  },
+  "boulderMessageCustom1": "Boulder eliminato",
+  "@boulderMessageCustom1": {
+    "description": "Conferma che il boulder è stato eliminato"
+  },
+
+  "boulderMessageCustom2": "Errore: {error}",
+  "@boulderMessageCustom2": {
+    "description": "Messaggio di errore con dettaglio dell'errore",
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "boulderMessageCustom3": "Boulders - {competitionName}",
+  "@boulderMessageCustom3": {
+    "description": "Titolo della pagina boulders con il nome della competizione",
+    "placeholders": {
+      "competitionName": {}
+    }
+  },
+  "boulderMessageCustom4": "Solo finale",
+  "@boulderMessageCustom4": {
+    "description": "Etichetta del filtro per mostrare solo i boulder finali"
+  },
+  "boulderMessageCustom5": "Nessun boulder",
+  "@boulderMessageCustom5": {
+    "description": "Testo mostrato quando non ci sono boulder"
+  },
+  "boulderMessageCustom6": "Boulder {number}",
+  "@boulderMessageCustom6": {
+    "description": "Titolo di un singolo boulder con il numero",
+    "placeholders": {
+      "number": {}
+    }
+  },
+  "boulderMessageCustom7": "FINALE",
+  "@boulderMessageCustom7": {
+    "description": "Etichetta che indica che il boulder è finale"
+  },
+  "boulderMessageCustom8": "Diff: {difficulty} | Colore: {color} | Valore: {value}",
+  "@boulderMessageCustom8": {
+    "description": "Sottotitolo del boulder con difficoltà, colore e valore teorico (value formattato a 2 decimali)",
+    "placeholders": {
+      "difficulty": {},
+      "color": {},
+      "value": {}
+    }
+  },
+  "boulderMessageCustom9": "Modifica Boulder",
+  "@boulderMessageCustom9": {
+    "description": "Titolo della pagina quando si modifica un boulder"
+  },
+
+  "boulderMessageCustom10": "Nuovo Boulder",
+  "@boulderMessageCustom10": {
+    "description": "Titolo della pagina quando si crea un nuovo boulder"
+  },
+
+  "boulderMessageCustom11": "Numero Boulder",
+  "@boulderMessageCustom11": {
+    "description": "Etichetta per il campo numero del boulder"
+  },
+
+  "boulderMessageCustom12": "Obbligatorio",
+  "@boulderMessageCustom12": {
+    "description": "Messaggio di validazione per campo obbligatorio"
+  },
+
+  "boulderMessageCustom13": "Difficoltà",
+  "@boulderMessageCustom13": {
+    "description": "Etichetta per il campo difficoltà"
+  },
+
+  "boulderMessageCustom14": "Facile",
+  "@boulderMessageCustom14": {
+    "description": "Indicazione scala: facile"
+  },
+
+  "boulderMessageCustom15": "Difficile",
+  "@boulderMessageCustom15": {
+    "description": "Indicazione scala: difficile"
+  },
+
+  "boulderMessageCustom16": "Colore",
+  "@boulderMessageCustom16": {
+    "description": "Etichetta per il campo colore"
+  },
+
+  "boulderMessageCustom17": "Nessun colore",
+  "@boulderMessageCustom17": {
+    "description": "Opzione per nessun colore"
+  },
+
+  "boulderMessageCustom18": "⚪ Bianco",
+  "@boulderMessageCustom18": {
+    "description": "Opzione colore: Bianco"
+  },
+
+  "boulderMessageCustom19": "🟡 Giallo",
+  "@boulderMessageCustom19": {
+    "description": "Opzione colore: Giallo"
+  },
+
+  "boulderMessageCustom20": "🟢 Verde",
+  "@boulderMessageCustom20": {
+    "description": "Opzione colore: Verde"
+  },
+
+  "boulderMessageCustom21": "🔵 Blu",
+  "@boulderMessageCustom21": {
+    "description": "Opzione colore: Blu"
+  },
+
+  "boulderMessageCustom22": "🔴 Rosso",
+  "@boulderMessageCustom22": {
+    "description": "Opzione colore: Rosso"
+  },
+
+  "boulderMessageCustom23": "⚫ Nero",
+  "@boulderMessageCustom23": {
+    "description": "Opzione colore: Nero"
+  },
+
+  "boulderMessageCustom24": "Stampa cartellino QR",
+  "@boulderMessageCustom24": {
+    "description": "Tooltip del pulsante per stampare il cartellino con QR"
+  },
+
+  "boulderMessageCustom25": "Solo finale",
+  "@boulderMessageCustom25": {
+    "description": "Titolo dell'opzione per visualizzare solo i boulder finali"
+  },
+
+  "boulderMessageCustom26": "Il boulder sarà disponibile solo nella fase finale",
+  "@boulderMessageCustom26": {
+    "description": "Sottotitolo che spiega l'opzione solo finale"
+  },
+
+  "boulderMessageCustom27": "Valore teorico",
+  "@boulderMessageCustom27": {
+    "description": "Etichetta per il campo valore teorico"
+  },
+
+  "boulderMessageCustom28": "Boulder da creare",
+  "@boulderMessageCustom28": {
+    "description": "Etichetta per il campo multi-create (numero di boulder da creare)"
+  },
+
+  "boulderMessageCustom29": "Valori ammessi da 1 a 20",
+  "@boulderMessageCustom29": {
+    "description": "Helper text che indica i valori ammessi per il campo multi-create"
+  },
+
+  "boulderMessageCustom30": "Inserire un numero",
+  "@boulderMessageCustom30": {
+    "description": "Messaggio di validazione quando non è stato inserito un numero"
+  },
+
+  "boulderMessageCustom31": "Valore ammesso: 1-20",
+  "@boulderMessageCustom31": {
+    "description": "Messaggio di validazione quando il numero è fuori dall'intervallo ammesso"
+  },
+
+  "boulderMessageCustom32": "Aggiorna",
+  "@boulderMessageCustom32": {
+    "description": "Testo del pulsante per aggiornare un boulder"
+  },
+
+  "boulderMessageCustom33": "Crea",
+  "@boulderMessageCustom33": {
+    "description": "Testo del pulsante per creare un boulder"
+  },
+  "boulderMessageCustom34": "BOULDER",
+  "@boulderMessageCustom34": {
+    "description": "Intestazione del cartellino: 'BOULDER'"
+  },
+
+  "boulderMessageCustom35": "Difficoltà: {difficulty} / 10",
+  "@boulderMessageCustom35": {
+    "description": "Testo che mostra la difficoltà del boulder",
+    "placeholders": {
+      "difficulty": {}
+    }
+  },
+
+  "boulderMessageCustom36": "Scansiona per registrare il top",
+  "@boulderMessageCustom36": {
+    "description": "Istruzione sotto il QR per registrare il top scansionando il codice"
   }
 }

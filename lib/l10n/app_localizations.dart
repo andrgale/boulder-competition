@@ -457,6 +457,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create'**
   String get categoryMessageCustom15;
+
+  /// Confirmation that the boulder was deleted
+  ///
+  /// In en, this message translates to:
+  /// **'Boulder deleted'**
+  String get boulderMessageCustom1;
+
+  /// Error message with error detail
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String boulderMessageCustom2(Object error);
+
+  /// Page title for boulders with the competition name
+  ///
+  /// In en, this message translates to:
+  /// **'Boulders - {competitionName}'**
+  String boulderMessageCustom3(Object competitionName);
+
+  /// Label for the filter to show only final boulders
+  ///
+  /// In en, this message translates to:
+  /// **'Finals only'**
+  String get boulderMessageCustom4;
+
+  /// Text shown when there are no boulders
+  ///
+  /// In en, this message translates to:
+  /// **'No boulders'**
+  String get boulderMessageCustom5;
+
+  /// Title for a single boulder with its number
+  ///
+  /// In en, this message translates to:
+  /// **'Boulder {number}'**
+  String boulderMessageCustom6(Object number);
+
+  /// Label indicating the boulder is a final
+  ///
+  /// In en, this message translates to:
+  /// **'FINAL'**
+  String get boulderMessageCustom7;
+
+  /// Boulder subtitle with difficulty, color and theoretical value (value formatted to 2 decimals)
+  ///
+  /// In en, this message translates to:
+  /// **'Diff: {difficulty} | Color: {color} | Value: {value}'**
+  String boulderMessageCustom8(Object difficulty, Object color, Object value);
+
+  /// Title when editing a boulder
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Boulder'**
+  String get boulderMessageCustom9;
+
+  /// Title when creating a new boulder
+  ///
+  /// In en, this message translates to:
+  /// **'New Boulder'**
+  String get boulderMessageCustom10;
+
+  /// Label for the boulder number field
+  ///
+  /// In en, this message translates to:
+  /// **'Boulder number'**
+  String get boulderMessageCustom11;
+
+  /// Validation message for a required field
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get boulderMessageCustom12;
+
+  /// Label for the difficulty field
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty'**
+  String get boulderMessageCustom13;
+
+  /// Scale label: easy
+  ///
+  /// In en, this message translates to:
+  /// **'Easy'**
+  String get boulderMessageCustom14;
+
+  /// Scale label: hard
+  ///
+  /// In en, this message translates to:
+  /// **'Hard'**
+  String get boulderMessageCustom15;
+
+  /// Label for the color field
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get boulderMessageCustom16;
+
+  /// Option for no color
+  ///
+  /// In en, this message translates to:
+  /// **'No color'**
+  String get boulderMessageCustom17;
+
+  /// Color option: White
+  ///
+  /// In en, this message translates to:
+  /// **'⚪ White'**
+  String get boulderMessageCustom18;
+
+  /// Color option: Yellow
+  ///
+  /// In en, this message translates to:
+  /// **'🟡 Yellow'**
+  String get boulderMessageCustom19;
+
+  /// Color option: Green
+  ///
+  /// In en, this message translates to:
+  /// **'🟢 Green'**
+  String get boulderMessageCustom20;
+
+  /// Color option: Blue
+  ///
+  /// In en, this message translates to:
+  /// **'🔵 Blue'**
+  String get boulderMessageCustom21;
+
+  /// Color option: Red
+  ///
+  /// In en, this message translates to:
+  /// **'🔴 Red'**
+  String get boulderMessageCustom22;
+
+  /// Color option: Black
+  ///
+  /// In en, this message translates to:
+  /// **'⚫ Black'**
+  String get boulderMessageCustom23;
+
+  /// Tooltip for the button that prints the QR card
+  ///
+  /// In en, this message translates to:
+  /// **'Print QR card'**
+  String get boulderMessageCustom24;
+
+  /// Label for the option to show only final boulders
+  ///
+  /// In en, this message translates to:
+  /// **'Finals only'**
+  String get boulderMessageCustom25;
+
+  /// Subtitle that explains the finals-only option
+  ///
+  /// In en, this message translates to:
+  /// **'The boulder will be available only in the final phase'**
+  String get boulderMessageCustom26;
+
+  /// Label for the theoretical value field
+  ///
+  /// In en, this message translates to:
+  /// **'Theoretical value'**
+  String get boulderMessageCustom27;
+
+  /// Label for the multi-create field (how many boulders to create)
+  ///
+  /// In en, this message translates to:
+  /// **'Boulders to create'**
+  String get boulderMessageCustom28;
+
+  /// Helper text indicating allowed values for the multi-create field
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed values: 1 to 20'**
+  String get boulderMessageCustom29;
+
+  /// Validation message when no number was entered
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a number'**
+  String get boulderMessageCustom30;
+
+  /// Validation message when the number is out of allowed range
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed value: 1-20'**
+  String get boulderMessageCustom31;
+
+  /// Button text for updating a boulder
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get boulderMessageCustom32;
+
+  /// Button text for creating a boulder
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get boulderMessageCustom33;
+
+  /// Card header: 'BOULDER'
+  ///
+  /// In en, this message translates to:
+  /// **'BOULDER'**
+  String get boulderMessageCustom34;
+
+  /// Text that shows the boulder difficulty
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty: {difficulty} / 10'**
+  String boulderMessageCustom35(Object difficulty);
+
+  /// Instruction under the QR to register the top by scanning the code
+  ///
+  /// In en, this message translates to:
+  /// **'Scan to register the top'**
+  String get boulderMessageCustom36;
 }
 
 class _AppLocalizationsDelegate

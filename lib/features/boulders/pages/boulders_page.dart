@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../data/boulder_service.dart';
 import '../models/boulder_model.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class BouldersPage extends StatefulWidget {
   final String competitionId;
@@ -28,6 +29,7 @@ class _BouldersPageState
   bool showOnlyFinals = false;
 
   bool loading = true;
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   @override
   void initState() {
@@ -79,27 +81,26 @@ class _BouldersPageState
   Future<void> deleteBoulder(
     String id,
   ) async {
+
     try {
       await service.deleteBoulder(id);
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(
-        const SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
           content: Text(
-            'Boulder eliminato',
+            l10n.boulderMessageCustom1, // 'Boulder eliminato'
           ),
         ),
       );
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Errore: $e',
+            l10n.boulderMessageCustom2(e.toString()), // 'Errore: $e'
           ),
         ),
       );
@@ -107,7 +108,6 @@ class _BouldersPageState
 
     await refreshData();
   }
-
   // =====================================================
   // NAV CREATE
   // =====================================================
@@ -147,25 +147,19 @@ class _BouldersPageState
   // =====================================================
   // UI
   // =====================================================
-
   @override
   Widget build(BuildContext context) {
 
-    final filteredBoulders =
-    showOnlyFinals
-        ? boulders
-            .where((b) => b.isFinale)
-            .toList()
+    final filteredBoulders = showOnlyFinals
+        ? boulders.where((b) => b.isFinale).toList()
         : boulders;
 
-    final isMobile =
-        MediaQuery.of(context).size.width <
-            700;
+    final isMobile = MediaQuery.of(context).size.width < 700;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Boulders - ${widget.competitionName}',
+          l10n.boulderMessageCustom3(widget.competitionName), // 'Boulders - ${widget.competitionName}'
         ),
         actions: [
           IconButton(
@@ -182,127 +176,112 @@ class _BouldersPageState
             )
           : null,
 
-    body: loading
-        ? const Center(
-            child: CircularProgressIndicator(),
-          )
-        : Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: Row(
-                  children: [
-                    FilterChip(
-                      label: const Text(
-                        'Solo finale',
-                      ),
-                      selected: showOnlyFinals,
-                      onSelected: (value) {
-                        setState(() {
-                          showOnlyFinals = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
-
-              Expanded(
-                child: filteredBoulders.isEmpty
-                    ? const Center(
-                        child: Text(
-                          'Nessun boulder',
+      body: loading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: Row(
+                    children: [
+                      FilterChip(
+                        label: Text(
+                          l10n.boulderMessageCustom4, // 'Solo finale'
                         ),
-                      )
-                    : ListView.builder(
-                        itemCount:
-                            filteredBoulders.length,
-                        itemBuilder:
-                            (context, index) {
-                          final b =
-                              filteredBoulders[index];
-
-                          return ListTile(
-                            leading: CircleAvatar(
-                              child: Text(
-                                b.numero.toString(),
-                              ),
-                            ),
-                            title: Row(
-                              children: [
-                                Text(
-                                  'Boulder ${b.numero}',
-                                ),
-                                if (b.isFinale)
-                                  Container(
-                                    margin:
-                                        const EdgeInsets.only(
-                                      left: 8,
-                                    ),
-                                    padding:
-                                        const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 2,
-                                    ),
-                                    decoration:
-                                        BoxDecoration(
-                                      color: Colors
-                                          .orange
-                                          .shade100,
-                                      borderRadius:
-                                          BorderRadius.circular(
-                                        12,
-                                      ),
-                                    ),
-                                    child: const Text(
-                                      'FINALE',
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        fontWeight:
-                                            FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                            subtitle: Text(
-                              'Diff: ${b.difficolta} | '
-                              'Colore: ${b.colore ?? "-"} | '
-                              'Valore: ${b.valoreTeorico.toStringAsFixed(2)}',
-                            ),
-                            trailing: Row(
-                              mainAxisSize:
-                                  MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.edit,
-                                  ),
-                                  onPressed:
-                                      () => openEdit(
-                                    b,
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.delete,
-                                  ),
-                                  onPressed:
-                                      () => deleteBoulder(
-                                    b.id,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
+                        selected: showOnlyFinals,
+                        onSelected: (value) {
+                          setState(() {
+                            showOnlyFinals = value;
+                          });
                         },
                       ),
-              ),
-            ],
-          ),
+                    ],
+                  ),
+                ),
+
+                Expanded(
+                  child: filteredBoulders.isEmpty
+                      ? Center(
+                          child: Text(
+                            l10n.boulderMessageCustom5, // 'Nessun boulder'
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: filteredBoulders.length,
+                          itemBuilder: (context, index) {
+                            final b = filteredBoulders[index];
+
+                            return ListTile(
+                              leading: CircleAvatar(
+                                child: Text(
+                                  b.numero.toString(),
+                                ),
+                              ),
+                              title: Row(
+                                children: [
+                                  Text(
+                                    l10n.boulderMessageCustom6(b.numero.toString()), // 'Boulder ${b.numero}'
+                                  ),
+                                  if (b.isFinale)
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                        left: 8,
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.orange.shade100,
+                                        borderRadius: BorderRadius.circular(
+                                          12,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        l10n.boulderMessageCustom7, // 'FINALE'
+                                        style: const TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              subtitle: Text(
+                                l10n.boulderMessageCustom8(
+                                  b.difficolta.toString(), // difficulty
+                                  b.colore ?? '-', // color
+                                  b.valoreTeorico.toStringAsFixed(2), // value (formatted)
+                                ), // 'Diff: ${b.difficolta} | Colore: ${b.colore ?? "-"} | Valore: ${b.valoreTeorico.toStringAsFixed(2)}'
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.edit,
+                                    ),
+                                    onPressed: () => openEdit(b),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.delete,
+                                    ),
+                                    onPressed: () => deleteBoulder(b.id),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                ),
+              ],
+            ),
     );
   }
 }

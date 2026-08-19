@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../data/boulder_service.dart';
 import '../models/boulder_model.dart';
 import 'boulder_card_export_pdf.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class BoulderFormPage extends StatefulWidget {
   final String competitionId;
@@ -22,6 +23,8 @@ class BoulderFormPage extends StatefulWidget {
 class _BoulderFormPageState
     extends State<BoulderFormPage> {
   final service = BoulderService();
+
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   final formKey =
       GlobalKey<FormState>();
@@ -168,7 +171,7 @@ class _BoulderFormPageState
           .showSnackBar(
         SnackBar(
           content: Text(
-            'Errore: $e',
+            'Error: $e',
           ),
         ),
       );
@@ -198,6 +201,7 @@ class _BoulderFormPageState
         numero: int.tryParse(numeroCtrl.text) ?? b.numero,
         difficolta: difficolta.toInt(),
         colore: colore,
+        l10n: l10n,
       );
     } catch (e) {
       if (!mounted) return;
@@ -213,305 +217,278 @@ class _BoulderFormPageState
   // UI
   // =====================================================
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          isEdit
-              ? 'Modifica Boulder'
-              : 'Nuovo Boulder',
-        ),
-        actions: [
-          // ── bottone cartellino: solo in modifica ──────────
-          if (isEdit)
-            _exportingCartellino
-                ? const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
+
+@override
+Widget build(BuildContext context) {
+
+  return Scaffold(
+    appBar: AppBar(
+      title: Text(
+        isEdit ? l10n.boulderMessageCustom9 : l10n.boulderMessageCustom10, // 'Modifica Boulder' / 'Nuovo Boulder'
+      ),
+      actions: [
+        // ── bottone cartellino: solo in modifica ──────────
+        if (isEdit)
+          _exportingCartellino
+              ? const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              : IconButton(
+                  tooltip: l10n.boulderMessageCustom24, // 'Stampa cartellino QR'
+                  icon: const Icon(Icons.qr_code),
+                  onPressed: _printCartellino,
+                ),
+      ],
+    ),
+
+    body: SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Form(
+        key: formKey,
+        child: Column(
+          children: [
+            // =========================================
+            // NUMERO
+            // =========================================
+
+            TextFormField(
+              controller: numeroCtrl,
+              decoration: InputDecoration(
+                labelText: l10n.boulderMessageCustom11, // 'Numero Boulder'
+              ),
+              keyboardType: TextInputType.number,
+              validator: (v) {
+                if (v == null || v.isEmpty) {
+                  return l10n.boulderMessageCustom12; // 'Obbligatorio'
+                }
+                return null;
+              },
+            ),
+
+            const SizedBox(height: 16),
+
+            // =========================================
+            // DIFFICOLTA
+            // =========================================
+
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      l10n.boulderMessageCustom13, // 'Difficoltà'
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                  )
-                : IconButton(
-                    tooltip: 'Stampa cartellino QR',
-                    icon: const Icon(Icons.qr_code),
-                    onPressed: _printCartellino,
-                  ),
-        ],
-      ),
 
-      body: SingleChildScrollView(
-        padding:
-            const EdgeInsets.all(16),
-        child: Form(
-          key: formKey,
-          child: Column(
-            children: [
-              // =========================================
-              // NUMERO
-              // =========================================
-
-              TextFormField(
-                controller: numeroCtrl,
-                decoration:
-                    const InputDecoration(
-                  labelText:
-                      'Numero Boulder',
-                ),
-                keyboardType:
-                    TextInputType.number,
-                validator: (v) {
-                  if (v == null ||
-                      v.isEmpty) {
-                    return 'Obbligatorio';
-                  }
-
-                  return null;
-                },
-              ),
-
-              const SizedBox(height: 16),
-
-              // =========================================
-              // DIFFICOLTA
-              // =========================================
-
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Difficoltà',
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade50,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        difficolta.toInt().toString(),
                         style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue.shade700,
                         ),
                       ),
-
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.blue.shade50,
-                          borderRadius:
-                              BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          difficolta.toInt().toString(),
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue.shade700,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  Slider(
-                    value: difficolta,
-                    min: 1,
-                    max: 10,
-                    divisions: 9,
-                    label: difficolta.toInt().toString(),
-                    onChanged: (value) {
-                      setState(() {
-                        difficolta = value;
-                      });
-                    },
-                  ),
-
-                  Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text('Facile'),
-                      Text('Difficile'),
-                    ],
-                  ),
-                ],
-              ),
-
-              // =========================================
-              // COLORE
-              // =========================================
-              DropdownButtonFormField<String>(
-                initialValue: colore,
-                decoration: const InputDecoration(
-                  labelText: 'Colore',
-                ),
-                items: const [
-                  DropdownMenuItem(
-                    value: null,
-                    child: Text('Nessun colore'),
-                  ),
-
-                  DropdownMenuItem(
-                    value: 'Bianco',
-                    child: Text('⚪ Bianco'),
-                  ),
-
-                  DropdownMenuItem(
-                    value: 'Giallo',
-                    child: Text('🟡 Giallo'),
-                  ),
-
-                  DropdownMenuItem(
-                    value: 'Verde',
-                    child: Text('🟢 Verde'),
-                  ),
-
-                  DropdownMenuItem(
-                    value: 'Blu',
-                    child: Text('🔵 Blu'),
-                  ),
-
-                  DropdownMenuItem(
-                    value: 'Rosso',
-                    child: Text('🔴 Rosso'),
-                  ),
-
-                  DropdownMenuItem(
-                    value: 'Nero',
-                    child: Text('⚫ Nero'),
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    colore = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-
-              const SizedBox(height: 16),
-
-              // =========================================
-              // SOLO FINALE
-              // =========================================
-
-              SwitchListTile(
-                value: isFinale,
-
-                title: const Text(
-                  'Solo finale',
+                    ),
+                  ],
                 ),
 
-                subtitle: const Text(
-                  'Il boulder sarà disponibile solo nella fase finale',
-                ),
+                const SizedBox(height: 12),
 
-                contentPadding: EdgeInsets.zero,
-
-                onChanged: (value) {
-                  setState(() {
-                    isFinale = value;
-                  });
-                },
-              ),
-
-              const SizedBox(height: 16),
-
-
-              // =========================================
-              // VALORE
-              // =========================================
-
-              TextFormField(
-                controller: valoreCtrl,
-                decoration:
-                    const InputDecoration(
-                  labelText:
-                      'Valore teorico',
-                ),
-                keyboardType:
-                    const TextInputType.numberWithOptions(
-                  decimal: true,
-                ),
-                validator: (v) {
-                  if (v == null ||
-                      v.isEmpty) {
-                    return 'Obbligatorio';
-                  }
-
-                  return null;
-                },
-              ),
-
-              const SizedBox(height: 32),
-
-              // =========================================
-              // MULTI CREATE
-              // =========================================
-
-              if (!isEdit) ...[
-                TextFormField(
-                  controller: boulderDaCreareCtrl,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Boulder da creare',
-                    helperText: 'Valori ammessi da 1 a 20',
-                  ),
-
-                  validator: (value) {
-                    final n = int.tryParse(value ?? '');
-
-                    if (n == null) {
-                      return 'Inserire un numero';
-                    }
-
-                    if (n < 1 || n > 20) {
-                      return 'Valore ammesso: 1-20';
-                    }
-
-                    return null;
+                Slider(
+                  value: difficolta,
+                  min: 1,
+                  max: 10,
+                  divisions: 9,
+                  label: difficolta.toInt().toString(),
+                  onChanged: (value) {
+                    setState(() {
+                      difficolta = value;
+                    });
                   },
                 ),
 
-                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(l10n.boulderMessageCustom14), // 'Facile'
+                    Text(l10n.boulderMessageCustom15), // 'Difficile'
+                  ],
+                ),
               ],
+            ),
+
+            // =========================================
+            // COLORE
+            // =========================================
+            DropdownButtonFormField<String>(
+              initialValue: colore,
+              decoration: InputDecoration(
+                labelText: l10n.boulderMessageCustom16, // 'Colore'
+              ),
+              items: [
+                DropdownMenuItem(
+                  value: null,
+                  child: Text(l10n.boulderMessageCustom17), // 'Nessun colore'
+                ),
+                DropdownMenuItem(
+                  value: 'Bianco',
+                  child: Text(l10n.boulderMessageCustom18), // '⚪ Bianco'
+                ),
+                DropdownMenuItem(
+                  value: 'Giallo',
+                  child: Text(l10n.boulderMessageCustom19), // '🟡 Giallo'
+                ),
+                DropdownMenuItem(
+                  value: 'Verde',
+                  child: Text(l10n.boulderMessageCustom20), // '🟢 Verde'
+                ),
+                DropdownMenuItem(
+                  value: 'Blu',
+                  child: Text(l10n.boulderMessageCustom21), // '🔵 Blu'
+                ),
+                DropdownMenuItem(
+                  value: 'Rosso',
+                  child: Text(l10n.boulderMessageCustom22), // '🔴 Rosso'
+                ),
+                DropdownMenuItem(
+                  value: 'Nero',
+                  child: Text(l10n.boulderMessageCustom23), // '⚫ Nero'
+                ),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  colore = value;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+
+            const SizedBox(height: 16),
+
+            // =========================================
+            // SOLO FINALE
+            // =========================================
+
+            SwitchListTile(
+              value: isFinale,
+
+              title: Text(
+                l10n.boulderMessageCustom25, // 'Solo finale'
+              ),
+
+              subtitle: Text(
+                l10n.boulderMessageCustom26, // 'Il boulder sarà disponibile solo nella fase finale'
+              ),
+
+              contentPadding: EdgeInsets.zero,
+
+              onChanged: (value) {
+                setState(() {
+                  isFinale = value;
+                });
+              },
+            ),
+
+            const SizedBox(height: 16),
+
+            // =========================================
+            // VALORE
+            // =========================================
+
+            TextFormField(
+              controller: valoreCtrl,
+              decoration: InputDecoration(
+                labelText: l10n.boulderMessageCustom27, // 'Valore teorico'
+              ),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              validator: (v) {
+                if (v == null || v.isEmpty) {
+                  return l10n.boulderMessageCustom12; // 'Obbligatorio' (reuse)
+                }
+                return null;
+              },
+            ),
+
+            const SizedBox(height: 32),
+
+            // =========================================
+            // MULTI CREATE
+            // =========================================
+
+            if (!isEdit) ...[
+              TextFormField(
+                controller: boulderDaCreareCtrl,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: l10n.boulderMessageCustom28, // 'Boulder da creare'
+                  helperText: l10n.boulderMessageCustom29, // 'Valori ammessi da 1 a 20'
+                ),
+
+                validator: (value) {
+                  final n = int.tryParse(value ?? '');
+
+                  if (n == null) {
+                    return l10n.boulderMessageCustom30; // 'Inserire un numero'
+                  }
+
+                  if (n < 1 || n > 20) {
+                    return l10n.boulderMessageCustom31; // 'Valore ammesso: 1-20'
+                  }
+
+                  return null;
+                },
+              ),
+
+              const SizedBox(height: 24),
+            ],
 
 
-              // =========================================
-              // SAVE BUTTON
-              // =========================================
+            // =========================================
+            // SAVE BUTTON
+            // =========================================
 
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed:
-                      loading
-                          ? null
-                          : save,
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(
-                      vertical: 14,
-                    ),
-                    child: Text(
-                      isEdit
-                          ? 'Aggiorna'
-                          : 'Crea',
-                    ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: loading ? null : save,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 14,
+                  ),
+                  child: Text(
+                    isEdit ? l10n.boulderMessageCustom32 : l10n.boulderMessageCustom33, // 'Aggiorna' / 'Crea'
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

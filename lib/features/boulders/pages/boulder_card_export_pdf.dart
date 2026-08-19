@@ -11,6 +11,8 @@ import 'package:flutter/services.dart';
 //import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart' as flutter;
 
+import 'package:boulder_competition/l10n/app_localizations.dart';
+
 /// Genera il cartellino PDF di un boulder, con QR code contenente
 /// competition_id e boulder_id, da appendere sotto al boulder in palestra.
 ///
@@ -26,6 +28,7 @@ class BoulderCardExportPdf {
     required int numero,
     required int difficolta,
     required String? colore,
+    required AppLocalizations l10n,
   }) async {
     final qrImageBytes = await _generateQrImage(
       competitionId: competitionId,
@@ -37,6 +40,7 @@ class BoulderCardExportPdf {
       difficolta: difficolta,
       colore: colore,
       qrImageBytes: qrImageBytes,
+      l10n: l10n,
     );
 
     String buildSafeFileName(String value) {
@@ -113,6 +117,7 @@ class BoulderCardExportPdf {
     required int difficolta,
     required String? colore,
     required Uint8List qrImageBytes,
+    required AppLocalizations l10n,
   }) async {
     final doc = pw.Document();
 
@@ -150,7 +155,7 @@ class BoulderCardExportPdf {
           children: [
             // ── numero boulder, grande e centrale ──────────────
             pw.Text(
-              'BOULDER',
+              l10n.boulderMessageCustom34, // 'BOULDER'
               style: pw.TextStyle(
                 font: bold,
                 fontSize: 14,
@@ -159,7 +164,7 @@ class BoulderCardExportPdf {
               ),
             ),
             pw.Text(
-              '$numero',
+              '$numero', // numero (non localizzato)
               style: pw.TextStyle(
                 font: bold,
                 fontSize: 72,
@@ -187,7 +192,7 @@ class BoulderCardExportPdf {
                 ),
                 pw.SizedBox(width: 8),
                 pw.Text(
-                  colore ?? 'Nessun colore',
+                  colore ?? l10n.boulderMessageCustom17, // 'Nessun colore'
                   style: pw.TextStyle(font: regular, fontSize: 14),
                 ),
               ],
@@ -196,7 +201,7 @@ class BoulderCardExportPdf {
             pw.SizedBox(height: 4),
 
             pw.Text(
-              'Difficoltà: $difficolta / 10',
+              l10n.boulderMessageCustom35(difficolta.toString()), // 'Difficoltà: {difficulty} / 10'
               style: pw.TextStyle(
                 font: bold,
                 fontSize: 14,
@@ -214,7 +219,7 @@ class BoulderCardExportPdf {
             pw.SizedBox(height: 8),
 
             pw.Text(
-              'Scansiona per registrare il top',
+              l10n.boulderMessageCustom36, // 'Scansiona per registrare il top'
               style: pw.TextStyle(
                 font: regular,
                 fontSize: 10,
@@ -225,7 +230,6 @@ class BoulderCardExportPdf {
         ),
       ),
     );
-
     return doc.save();
   }
 }

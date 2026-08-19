@@ -199,4 +199,123 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get categoryMessageCustom15 => 'Crea';
+
+  @override
+  String get boulderMessageCustom1 => 'Boulder eliminato';
+
+  @override
+  String boulderMessageCustom2(Object error) {
+    return 'Errore: $error';
+  }
+
+  @override
+  String boulderMessageCustom3(Object competitionName) {
+    return 'Boulders - $competitionName';
+  }
+
+  @override
+  String get boulderMessageCustom4 => 'Solo finale';
+
+  @override
+  String get boulderMessageCustom5 => 'Nessun boulder';
+
+  @override
+  String boulderMessageCustom6(Object number) {
+    return 'Boulder $number';
+  }
+
+  @override
+  String get boulderMessageCustom7 => 'FINALE';
+
+  @override
+  String boulderMessageCustom8(Object difficulty, Object color, Object value) {
+    return 'Diff: $difficulty | Colore: $color | Valore: $value';
+  }
+
+  @override
+  String get boulderMessageCustom9 => 'Modifica Boulder';
+
+  @override
+  String get boulderMessageCustom10 => 'Nuovo Boulder';
+
+  @override
+  String get boulderMessageCustom11 => 'Numero Boulder';
+
+  @override
+  String get boulderMessageCustom12 => 'Obbligatorio';
+
+  @override
+  String get boulderMessageCustom13 => 'Difficoltà';
+
+  @override
+  String get boulderMessageCustom14 => 'Facile';
+
+  @override
+  String get boulderMessageCustom15 => 'Difficile';
+
+  @override
+  String get boulderMessageCustom16 => 'Colore';
+
+  @override
+  String get boulderMessageCustom17 => 'Nessun colore';
+
+  @override
+  String get boulderMessageCustom18 => '⚪ Bianco';
+
+  @override
+  String get boulderMessageCustom19 => '🟡 Giallo';
+
+  @override
+  String get boulderMessageCustom20 => '🟢 Verde';
+
+  @override
+  String get boulderMessageCustom21 => '🔵 Blu';
+
+  @override
+  String get boulderMessageCustom22 => '🔴 Rosso';
+
+  @override
+  String get boulderMessageCustom23 => '⚫ Nero';
+
+  @override
+  String get boulderMessageCustom24 => 'Stampa cartellino QR';
+
+  @override
+  String get boulderMessageCustom25 => 'Solo finale';
+
+  @override
+  String get boulderMessageCustom26 =>
+      'Il boulder sarà disponibile solo nella fase finale';
+
+  @override
+  String get boulderMessageCustom27 => 'Valore teorico';
+
+  @override
+  String get boulderMessageCustom28 => 'Boulder da creare';
+
+  @override
+  String get boulderMessageCustom29 => 'Valori ammessi da 1 a 20';
+
+  @override
+  String get boulderMessageCustom30 => 'Inserire un numero';
+
+  @override
+  String get boulderMessageCustom31 => 'Valore ammesso: 1-20';
+
+  @override
+  String get boulderMessageCustom32 => 'Aggiorna';
+
+  @override
+  String get boulderMessageCustom33 => 'Crea';
+
+  @override
+  String get boulderMessageCustom34 => 'BOULDER';
+
+  @override
+  String boulderMessageCustom35(Object difficulty) {
+    return 'Difficoltà: $difficulty / 10';
+  }
+
+  @override
+  String get boulderMessageCustom36 => 'Scansiona per registrare il top';
 }
