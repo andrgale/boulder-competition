@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../data/category_service.dart';
 import '../models/category_model.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class CategoriesPage extends StatefulWidget {
   final String competitionId;
@@ -21,6 +22,7 @@ class CategoriesPage extends StatefulWidget {
 
 class _CategoriesPageState extends State<CategoriesPage> {
   final service = CategoryService();
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   List<CategoryModel> categories = [];
   bool loading = true;
@@ -67,20 +69,24 @@ class _CategoriesPageState extends State<CategoriesPage> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Categoria eliminata'),
-          
+        SnackBar(
+          content: Text(
+            l10n.categoryMessageCustom1, // 'Categoria eliminata'
+          ),
         ),
-        
       );
     } catch (e) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Errore: $e')),
+        SnackBar(
+          content: Text(
+            l10n.categoryMessageCustom2(e.toString()), // 'Errore: $e'
+          ),
+        ),
       );
     }
-     await refreshData();
+    await refreshData();
   }
  // =====================================================
   // NAV CREATE
@@ -121,7 +127,9 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Categorie - ${widget.competitionName}'),
+        title: Text(
+          l10n.categoryMessageCustom3(widget.competitionName), // 'Categorie - ${widget.competitionName}'
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -140,7 +148,11 @@ class _CategoriesPageState extends State<CategoriesPage> {
       body: loading
           ? const Center(child: CircularProgressIndicator())
           : categories.isEmpty
-              ? const Center(child: Text('Nessuna categoria'))
+              ? Center(
+                  child: Text(
+                    l10n.categoryMessageCustom4, // 'Nessuna categoria'
+                  ),
+                )
               : ListView.builder(
                   itemCount: categories.length,
                   itemBuilder: (context, i) {

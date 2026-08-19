@@ -10,6 +10,8 @@ import 'package:qr_flutter/qr_flutter.dart' as qf;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' as flutter;
 
+import 'package:boulder_competition/l10n/app_localizations.dart';
+
 /// Genera il cartellino PDF della gara, con QR contenente il competition_id,
 /// da appendere vicino all'ingresso della palestra per il check-in atleti.
 class CompetitionCardExportPdf {
@@ -17,6 +19,7 @@ class CompetitionCardExportPdf {
     required String competitionId,
     required String descrizione,
     required DateTime dtGara,
+    required AppLocalizations l10n,
   }) async {
     final qrImageBytes = await _generateQrImage(competitionId: competitionId);
 
@@ -24,6 +27,7 @@ class CompetitionCardExportPdf {
       descrizione: descrizione,
       dtGara: dtGara,
       qrImageBytes: qrImageBytes,
+      l10n: l10n,
     );
 
     String buildSafeFileName(String value) {
@@ -96,6 +100,7 @@ class CompetitionCardExportPdf {
     required String descrizione,
     required DateTime dtGara,
     required Uint8List qrImageBytes,
+    required AppLocalizations l10n,
   }) async {
     final doc = pw.Document();
     final qrImage = pw.MemoryImage(qrImageBytes);
@@ -144,7 +149,7 @@ class CompetitionCardExportPdf {
             pw.Image(qrImage, width: 220, height: 220),
             pw.SizedBox(height: 12),
             pw.Text(
-              'Inquadra il QR con la fotocamera per il check-in',
+              l10n.competitionMessageCustom39, // 'Inquadra il QR con la fotocamera per il check-in'
               textAlign: pw.TextAlign.center,
               style: pw.TextStyle(
                 font: regular,

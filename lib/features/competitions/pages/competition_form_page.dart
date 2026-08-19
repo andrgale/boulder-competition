@@ -183,6 +183,7 @@ class _CompetitionFormPageState
         competitionId: c.id,
         descrizione: descrizioneController.text.trim(),
         dtGara: dtGara ?? c.dtGara,
+        l10n: l10n,
       );
     } catch (e) {
       showError('${l10n.competitionMessageCustom19} $e'); // Errore nella generazione del cartellino:

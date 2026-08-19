@@ -3,6 +3,7 @@ import '../models/category_model.dart';
 import '../data/category_service.dart';
 
 import '../../../core/services/permission_service.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 
 class CategoryFormPage extends StatefulWidget {
@@ -28,6 +29,8 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
   late TextEditingController nomeCtrl;
   late TextEditingController etaMinCtrl;
   late TextEditingController etaMaxCtrl;
+
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   String? sesso;
 
@@ -88,11 +91,10 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
 
     if (!canWrite) {
       showError(
-        'Non hai i permessi per modificare le gare',
+        l10n.categoryMessageCustom5, // 'Non hai i permessi per modificare le categorie'
       );
       return;
     }
-
 
 
     if (!formKey.currentState!.validate()) return;
@@ -145,9 +147,12 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEdit ? 'Modifica categoria' : 'Nuova categoria'),
+        title: Text(
+          isEdit ? l10n.categoryMessageCustom6 : l10n.categoryMessageCustom7, // 'Modifica categoria' / 'Nuova categoria'
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -157,29 +162,29 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
             children: [
               TextFormField(
                 controller: nomeCtrl,
-                decoration: const InputDecoration(labelText: 'Nome'),
+                decoration: InputDecoration(labelText: l10n.categoryMessageCustom8), // 'Nome'
                 validator: (v) =>
-                    v == null || v.isEmpty ? 'Obbligatorio' : null,
+                    v == null || v.isEmpty ? l10n.categoryMessageCustom9 : null, // 'Obbligatorio'
               ),
 
               DropdownButtonFormField<String>(
                 initialValue: sesso,
-                items: const [
-                  DropdownMenuItem(value: 'M', child: Text('M')),
-                  DropdownMenuItem(value: 'F', child: Text('F')),
+                items: [
+                  DropdownMenuItem(value: 'M', child: Text(l10n.categoryMessageCustom10)), // 'M'
+                  DropdownMenuItem(value: 'F', child: Text(l10n.categoryMessageCustom11)), // 'F'
                 ],
                 onChanged: (v) => setState(() => sesso = v),
               ),
 
               TextFormField(
                 controller: etaMinCtrl,
-                decoration: const InputDecoration(labelText: 'Età min'),
+                decoration: InputDecoration(labelText: l10n.categoryMessageCustom12), // 'Età min'
                 keyboardType: TextInputType.number,
               ),
 
               TextFormField(
                 controller: etaMaxCtrl,
-                decoration: const InputDecoration(labelText: 'Età max'),
+                decoration: InputDecoration(labelText: l10n.categoryMessageCustom13), // 'Età max'
                 keyboardType: TextInputType.number,
               ),
 
@@ -187,7 +192,7 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
 
               ElevatedButton(
                 onPressed: loading ? null : save,
-                child: Text(isEdit ? 'Aggiorna' : 'Crea'),
+                child: Text(isEdit ? l10n.categoryMessageCustom14 : l10n.categoryMessageCustom15), // 'Aggiorna' / 'Crea'
               )
             ],
           ),
