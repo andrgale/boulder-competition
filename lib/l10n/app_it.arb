@@ -80,22 +80,18 @@
   "@competitionMessageCustom14": {
     "description": "Etichetta dell'opzione per chiudere le iscrizioni alla competizione"
   },
-
   "competitionMessageCustom15": "Gara chiusa",
   "@competitionMessageCustom15": {
     "description": "Etichetta dell'opzione che indica se la competizione è chiusa"
   },
-
   "competitionMessageCustom16": "Gestione presenze",
   "@competitionMessageCustom16": {
     "description": "Etichetta dell'opzione per abilitare la gestione delle presenze"
   },
-
   "competitionMessageCustom17": "Gestione pagamenti",
   "@competitionMessageCustom17": {
     "description": "Etichetta dell'opzione per abilitare la gestione dei pagamenti"
   },
-
   "competitionMessageCustom18": "Gestione omaggi",
   "@competitionMessageCustom18": {
     "description": "Etichetta dell'opzione per abilitare la gestione degli omaggi"
@@ -214,47 +210,38 @@
   "@categoryMessageCustom6": {
     "description": "Titolo quando si modifica una categoria"
   },
-
   "categoryMessageCustom7": "Nuova categoria",
   "@categoryMessageCustom7": {
     "description": "Titolo quando si crea una nuova categoria"
   },
-
   "categoryMessageCustom8": "Nome",
   "@categoryMessageCustom8": {
     "description": "Etichetta del campo nome della categoria"
   },
-
   "categoryMessageCustom9": "Obbligatorio",
   "@categoryMessageCustom9": {
     "description": "Messaggio di validazione per campo obbligatorio"
   },
-
   "categoryMessageCustom10": "M",
   "@categoryMessageCustom10": {
     "description": "Opzione sesso: maschile"
   },
-
   "categoryMessageCustom11": "F",
   "@categoryMessageCustom11": {
     "description": "Opzione sesso: femminile"
   },
-
   "categoryMessageCustom12": "Età min",
   "@categoryMessageCustom12": {
     "description": "Etichetta del campo età minima"
   },
-
   "categoryMessageCustom13": "Età max",
   "@categoryMessageCustom13": {
     "description": "Etichetta del campo età massima"
   },
-
   "categoryMessageCustom14": "Aggiorna",
   "@categoryMessageCustom14": {
     "description": "Testo del pulsante per aggiornare una categoria"
   },
-
   "categoryMessageCustom15": "Crea",
   "@categoryMessageCustom15": {
     "description": "Testo del pulsante per creare una categoria"
@@ -263,7 +250,6 @@
   "@boulderMessageCustom1": {
     "description": "Conferma che il boulder è stato eliminato"
   },
-
   "boulderMessageCustom2": "Errore: {error}",
   "@boulderMessageCustom2": {
     "description": "Messaggio di errore con dettaglio dell'errore",
@@ -310,122 +296,98 @@
   "@boulderMessageCustom9": {
     "description": "Titolo della pagina quando si modifica un boulder"
   },
-
   "boulderMessageCustom10": "Nuovo Boulder",
   "@boulderMessageCustom10": {
     "description": "Titolo della pagina quando si crea un nuovo boulder"
   },
-
   "boulderMessageCustom11": "Numero Boulder",
   "@boulderMessageCustom11": {
     "description": "Etichetta per il campo numero del boulder"
   },
-
   "boulderMessageCustom12": "Obbligatorio",
   "@boulderMessageCustom12": {
     "description": "Messaggio di validazione per campo obbligatorio"
   },
-
   "boulderMessageCustom13": "Difficoltà",
   "@boulderMessageCustom13": {
     "description": "Etichetta per il campo difficoltà"
   },
-
   "boulderMessageCustom14": "Facile",
   "@boulderMessageCustom14": {
     "description": "Indicazione scala: facile"
   },
-
   "boulderMessageCustom15": "Difficile",
   "@boulderMessageCustom15": {
     "description": "Indicazione scala: difficile"
   },
-
   "boulderMessageCustom16": "Colore",
   "@boulderMessageCustom16": {
     "description": "Etichetta per il campo colore"
   },
-
   "boulderMessageCustom17": "Nessun colore",
   "@boulderMessageCustom17": {
     "description": "Opzione per nessun colore"
   },
-
   "boulderMessageCustom18": "⚪ Bianco",
   "@boulderMessageCustom18": {
     "description": "Opzione colore: Bianco"
   },
-
   "boulderMessageCustom19": "🟡 Giallo",
   "@boulderMessageCustom19": {
     "description": "Opzione colore: Giallo"
   },
-
   "boulderMessageCustom20": "🟢 Verde",
   "@boulderMessageCustom20": {
     "description": "Opzione colore: Verde"
   },
-
   "boulderMessageCustom21": "🔵 Blu",
   "@boulderMessageCustom21": {
     "description": "Opzione colore: Blu"
   },
-
   "boulderMessageCustom22": "🔴 Rosso",
   "@boulderMessageCustom22": {
     "description": "Opzione colore: Rosso"
   },
-
   "boulderMessageCustom23": "⚫ Nero",
   "@boulderMessageCustom23": {
     "description": "Opzione colore: Nero"
   },
-
   "boulderMessageCustom24": "Stampa cartellino QR",
   "@boulderMessageCustom24": {
     "description": "Tooltip del pulsante per stampare il cartellino con QR"
   },
-
   "boulderMessageCustom25": "Solo finale",
   "@boulderMessageCustom25": {
     "description": "Titolo dell'opzione per visualizzare solo i boulder finali"
   },
-
   "boulderMessageCustom26": "Il boulder sarà disponibile solo nella fase finale",
   "@boulderMessageCustom26": {
     "description": "Sottotitolo che spiega l'opzione solo finale"
   },
-
   "boulderMessageCustom27": "Valore teorico",
   "@boulderMessageCustom27": {
     "description": "Etichetta per il campo valore teorico"
   },
-
   "boulderMessageCustom28": "Boulder da creare",
   "@boulderMessageCustom28": {
     "description": "Etichetta per il campo multi-create (numero di boulder da creare)"
   },
-
   "boulderMessageCustom29": "Valori ammessi da 1 a 20",
   "@boulderMessageCustom29": {
     "description": "Helper text che indica i valori ammessi per il campo multi-create"
   },
-
   "boulderMessageCustom30": "Inserire un numero",
   "@boulderMessageCustom30": {
     "description": "Messaggio di validazione quando non è stato inserito un numero"
   },
-
   "boulderMessageCustom31": "Valore ammesso: 1-20",
   "@boulderMessageCustom31": {
     "description": "Messaggio di validazione quando il numero è fuori dall'intervallo ammesso"
   },
-
   "boulderMessageCustom32": "Aggiorna",
   "@boulderMessageCustom32": {
     "description": "Testo del pulsante per aggiornare un boulder"
   },
-
   "boulderMessageCustom33": "Crea",
   "@boulderMessageCustom33": {
     "description": "Testo del pulsante per creare un boulder"
@@ -434,7 +396,6 @@
   "@boulderMessageCustom34": {
     "description": "Intestazione del cartellino: 'BOULDER'"
   },
-
   "boulderMessageCustom35": "Difficoltà: {difficulty} / 10",
   "@boulderMessageCustom35": {
     "description": "Testo che mostra la difficoltà del boulder",
@@ -442,9 +403,394 @@
       "difficulty": {}
     }
   },
-
   "boulderMessageCustom36": "Scansiona per registrare il top",
   "@boulderMessageCustom36": {
     "description": "Istruzione sotto il QR per registrare il top scansionando il codice"
+  },
+  "registrationMessageCustom1": "Import completato - Inseriti: {inserted} Scartati: {discarded}",
+  "@registrationMessageCustom1": {
+    "description": "Messaggio mostrato al termine dell'importazione con il conteggio degli inseriti e scartati",
+    "placeholders": {
+      "inserted": {},
+      "discarded": {}
+    }
+  },
+  "registrationMessageCustom2": "Iscrizione eliminata",
+  "@registrationMessageCustom2": {
+    "description": "Conferma che un'iscrizione è stata eliminata"
+  },
+  "registrationMessageCustom3": "Iscrizioni chiuse: {action} non disponibile",
+  "@registrationMessageCustom3": {
+    "description": "Tooltip quando le iscrizioni sono chiuse e l'azione non è disponibile",
+    "placeholders": {
+      "action": {}
+    }
+  },
+  "registrationMessageCustom4": "Numero massimo iscritti raggiunto: {action} non disponibile",
+  "@registrationMessageCustom4": {
+    "description": "Tooltip quando il numero massimo di iscritti è raggiunto e l'azione non è disponibile",
+    "placeholders": {
+      "action": {}
+    }
+  },
+  "registrationMessageCustom5": "Importa CSV",
+  "@registrationMessageCustom5": {
+    "description": "Etichetta per l'azione di importazione CSV"
+  },
+  "registrationMessageCustom6": "Nuova iscrizione",
+  "@registrationMessageCustom6": {
+    "description": "Etichetta per l'azione di creazione di una nuova iscrizione"
+  },
+  "registrationMessageCustom7": "Iscrizioni - {competitionName}",
+  "@registrationMessageCustom7": {
+    "description": "Titolo della pagina iscrizioni con il nome della competizione",
+    "placeholders": {
+      "competitionName": {}
+    }
+  },
+  "registrationMessageCustom8": "Le iscrizioni per questa gara sono chiuse. Non è possibile aggiungere nuovi atleti o importare CSV.",
+  "@registrationMessageCustom8": {
+    "description": "Messaggio mostrato quando le iscrizioni sono chiuse"
+  },
+  "registrationMessageCustom9": "Numero massimo di iscritti raggiunto ({current}/{max}). Non è possibile aggiungere nuovi atleti o importare CSV.",
+  "@registrationMessageCustom9": {
+    "description": "Messaggio mostrato quando il numero massimo di iscritti è raggiunto, con conteggio corrente e massimo",
+    "placeholders": {
+      "current": {},
+      "max": {}
+    }
+  },
+  "registrationMessageCustom10": "Cerca pettorale, cognome o nome...",
+  "@registrationMessageCustom10": {
+    "description": "Hint per la ricerca nelle iscrizioni"
+  },
+  "registrationMessageCustom11": "Nessuna iscrizione",
+  "@registrationMessageCustom11": {
+    "description": "Testo mostrato quando non ci sono iscrizioni"
+  },
+  "registrationMessageCustom12": "Boulder",
+  "@registrationMessageCustom12": {
+    "description": "Etichetta per indicare il boulder"
+  },
+  "registrationMessageCustom13": "Atleta non presente",
+  "@registrationMessageCustom13": {
+    "description": "Messaggio che indica che l'atleta non è presente"
+  },
+  "registrationMessageCustom14": "Email non valida",
+  "@registrationMessageCustom14": {
+    "description": "Messaggio mostrato quando l'email non è valida"
+  },
+  "registrationMessageCustom15": "Email già presente in questa competizione",
+  "@registrationMessageCustom15": {
+    "description": "Messaggio mostrato quando l'email è già registrata per la competizione"
+  },
+  "registrationMessageCustom16": "Primo turno al completo, seleziona un'altra opzione",
+  "@registrationMessageCustom16": {
+    "description": "Messaggio mostrato quando il primo turno è pieno"
+  },
+  "registrationMessageCustom17": "Secondo turno al completo, seleziona un'altra opzione",
+  "@registrationMessageCustom17": {
+    "description": "Messaggio mostrato quando il secondo turno è pieno"
+  },
+  "registrationMessageCustom18": "Modifica iscrizione",
+  "@registrationMessageCustom18": {
+    "description": "Titolo quando si modifica un'iscrizione"
+  },
+  "registrationMessageCustom19": "Nuova iscrizione",
+  "@registrationMessageCustom19": {
+    "description": "Titolo quando si crea una nuova iscrizione"
+  },
+  "registrationMessageCustom20": "Cognome",
+  "@registrationMessageCustom20": {
+    "description": "Etichetta campo cognome"
+  },
+  "registrationMessageCustom21": "Nome",
+  "@registrationMessageCustom21": {
+    "description": "Etichetta campo nome"
+  },
+  "registrationMessageCustom22": "Obbligatorio",
+  "@registrationMessageCustom22": {
+    "description": "Messaggio di validazione per campo obbligatorio (registro)"
+  },
+  "registrationMessageCustom23": "Email",
+  "@registrationMessageCustom23": {
+    "description": "Etichetta campo email"
+  },
+  "registrationMessageCustom24": "Email obbligatoria",
+  "@registrationMessageCustom24": {
+    "description": "Messaggio di validazione quando l'email è vuota"
+  },
+  "registrationMessageCustom25": "Formato email non valido",
+  "@registrationMessageCustom25": {
+    "description": "Messaggio di validazione quando il formato dell'email non è valido"
+  },
+  "registrationMessageCustom26": "Società",
+  "@registrationMessageCustom26": {
+    "description": "Etichetta campo società"
+  },
+  "registrationMessageCustom27": "Pettorale",
+  "@registrationMessageCustom27": {
+    "description": "Etichetta campo pettorale"
+  },
+  "registrationMessageCustom28": "Sesso",
+  "@registrationMessageCustom28": {
+    "description": "Etichetta campo sesso"
+  },
+  "registrationMessageCustom29": "M",
+  "@registrationMessageCustom29": {
+    "description": "Opzione sesso: maschile (registro)"
+  },
+  "registrationMessageCustom30": "F",
+  "@registrationMessageCustom30": {
+    "description": "Opzione sesso: femminile (registro)"
+  },
+  "registrationMessageCustom31": "Data di nascita",
+  "@registrationMessageCustom31": {
+    "description": "Etichetta campo data di nascita"
+  },
+  "registrationMessageCustom32": "Campo obbligatorio",
+  "@registrationMessageCustom32": {
+    "description": "Messaggio di validazione quando la data di nascita non è impostata"
+  },
+  "registrationMessageCustom33": "Primo turno",
+  "@registrationMessageCustom33": {
+    "description": "Titolo switch per il primo turno"
+  },
+  "registrationMessageCustom34": "Gestione turni non attiva per questa gara",
+  "@registrationMessageCustom34": {
+    "description": "Sottotitolo quando la gestione turni non è attiva"
+  },
+  "registrationMessageCustom35": "Turno al completo",
+  "@registrationMessageCustom35": {
+    "description": "Sottotitolo quando il turno è pieno"
+  },
+  "registrationMessageCustom36": "Secondo turno",
+  "@registrationMessageCustom36": {
+    "description": "Titolo switch per il secondo turno"
+  },
+  "registrationMessageCustom37": "Presente",
+  "@registrationMessageCustom37": {
+    "description": "Titolo switch per indicare presenza"
+  },
+  "registrationMessageCustom38": "Pagato",
+  "@registrationMessageCustom38": {
+    "description": "Titolo switch per indicare pagamento"
+  },
+  "registrationMessageCustom39": "Omaggio",
+  "@registrationMessageCustom39": {
+    "description": "Titolo switch per indicare omaggio"
+  },
+  "registrationMessageCustom40": "Aggiorna",
+  "@registrationMessageCustom40": {
+    "description": "Testo del pulsante per aggiornare l'iscrizione"
+  },
+  "registrationMessageCustom41": "Crea",
+  "@registrationMessageCustom41": {
+    "description": "Testo del pulsante per creare l'iscrizione"
+  },
+  "checkinMessageCustom1": "Esporta PDF",
+  "@checkinMessageCustom1": {
+    "description": "Tooltip del pulsante per esportare in PDF nella pagina di check-in"
+  },
+  "checkinMessageCustom2": "Cerca pettorale, cognome, nome...",
+  "@checkinMessageCustom2": {
+    "description": "Hint per la ricerca nella pagina di check-in"
+  },
+  "checkinMessageCustom3": "Nessuna iscrizione trovata",
+  "@checkinMessageCustom3": {
+    "description": "Testo mostrato quando la ricerca non trova iscrizioni"
+  },
+  "checkinMessageCustom4": "Iscritti",
+  "@checkinMessageCustom4": {
+    "description": "Etichetta statistica: numero totale degli iscritti"
+  },
+  "checkinMessageCustom5": "Presenti",
+  "@checkinMessageCustom5": {
+    "description": "Etichetta statistica: numero di presenti"
+  },
+  "checkinMessageCustom6": "Pagati",
+  "@checkinMessageCustom6": {
+    "description": "Etichetta statistica: numero di iscritti che hanno pagato"
+  },
+  "checkinMessageCustom7": "Omaggi",
+  "@checkinMessageCustom7": {
+    "description": "Etichetta statistica: numero di omaggi"
+  },
+  "checkinMessageCustom8": "Tocca le icone per aggiornare: ",
+  "@checkinMessageCustom8": {
+    "description": "Istruzione della legenda che invita a toccare le icone per aggiornare lo stato"
+  },
+  "checkinMessageCustom9": "Gestione check-in disabilitata per questa gara",
+  "@checkinMessageCustom9": {
+    "description": "Messaggio mostrato quando la gestione del check-in è disabilitata per la gara"
+  },
+  "checkinMessageCustom10": "Rimuovi presenza",
+  "@checkinMessageCustom10": {
+    "description": "Tooltip per rimuovere la presenza"
+  },
+  "checkinMessageCustom11": "Segna presente",
+  "@checkinMessageCustom11": {
+    "description": "Tooltip per segnare come presente"
+  },
+  "checkinMessageCustom12": "Gestione presenze non abilitata",
+  "@checkinMessageCustom12": {
+    "description": "Tooltip quando la gestione delle presenze non è abilitata"
+  },
+  "checkinMessageCustom13": "Annulla pagamento",
+  "@checkinMessageCustom13": {
+    "description": "Tooltip per annullare il pagamento"
+  },
+  "checkinMessageCustom14": "Segna pagato",
+  "@checkinMessageCustom14": {
+    "description": "Tooltip per segnare come pagato"
+  },
+  "checkinMessageCustom15": "Gestione pagamenti non abilitata",
+  "@checkinMessageCustom15": {
+    "description": "Tooltip quando la gestione dei pagamenti non è abilitata"
+  },
+  "checkinMessageCustom16": "Annulla omaggio",
+  "@checkinMessageCustom16": {
+    "description": "Tooltip per annullare l'omaggio"
+  },
+  "checkinMessageCustom17": "Segna omaggio",
+  "@checkinMessageCustom17": {
+    "description": "Tooltip per segnare come omaggio"
+  },
+  "checkinMessageCustom18": "Gestione omaggi non abilitata",
+  "@checkinMessageCustom18": {
+    "description": "Tooltip quando la gestione degli omaggi non è abilitata"
+  },
+  "checkinMessageCustom19": "Check-in gare",
+  "@checkinMessageCustom19": {
+    "description": "Titolo della pagina di check-in"
+  },
+  "checkinMessageCustom20": "Gestione presenze, pagamenti e omaggi",
+  "@checkinMessageCustom20": {
+    "description": "Sottotitolo della pagina di check-in"
+  },
+  "checkinMessageCustom21": "Cerca gara",
+  "@checkinMessageCustom21": {
+    "description": "Hint per la ricerca delle gare nella pagina di check-in"
+  },
+  "checkinMessageCustom22": "Solo aperte",
+  "@checkinMessageCustom22": {
+    "description": "Etichetta del filtro per mostrare solo gare aperte"
+  },
+  "checkinMessageCustom23": "Nessuna gara trovata",
+  "@checkinMessageCustom23": {
+    "description": "Testo mostrato quando non vengono trovate gare"
+  },
+  "checkinMessageCustom24": "Iscritti",
+  "@checkinMessageCustom24": {
+    "description": "Tooltip per il pulsante che apre la pagina delle iscrizioni"
+  },
+  "checkinMessageCustom25": "Descrizione",
+  "@checkinMessageCustom25": {
+    "description": "Intestazione colonna: descrizione della competizione"
+  },
+  "checkinMessageCustom26": "Data Gara",
+  "@checkinMessageCustom26": {
+    "description": "Intestazione colonna: data della gara"
+  },
+  "checkinMessageCustom27": "Stato",
+  "@checkinMessageCustom27": {
+    "description": "Intestazione colonna: stato della competizione"
+  },
+  "checkinMessageCustom28": "Presenze",
+  "@checkinMessageCustom28": {
+    "description": "Intestazione colonna: presenze"
+  },
+  "checkinMessageCustom29": "Pagamenti",
+  "@checkinMessageCustom29": {
+    "description": "Intestazione colonna: pagamenti"
+  },
+  "checkinMessageCustom30": "Omaggi",
+  "@checkinMessageCustom30": {
+    "description": "Intestazione colonna: omaggi"
+  },
+  "checkinMessageCustom31": "Azioni",
+  "@checkinMessageCustom31": {
+    "description": "Intestazione colonna: azioni"
+  },
+  "checkinMessageCustom32": "Disabilita gestione presenze",
+  "@checkinMessageCustom32": {
+    "description": "Tooltip per disabilitare la gestione delle presenze"
+  },
+  "checkinMessageCustom33": "Abilita gestione presenze",
+  "@checkinMessageCustom33": {
+    "description": "Tooltip per abilitare la gestione delle presenze"
+  },
+  "checkinMessageCustom34": "Disabilita gestione pagamenti",
+  "@checkinMessageCustom34": {
+    "description": "Tooltip per disabilitare la gestione dei pagamenti"
+  },
+  "checkinMessageCustom35": "Abilita gestione pagamenti",
+  "@checkinMessageCustom35": {
+    "description": "Tooltip per abilitare la gestione dei pagamenti"
+  },
+  "checkinMessageCustom36": "Disabilita gestione omaggi",
+  "@checkinMessageCustom36": {
+    "description": "Tooltip per disabilitare la gestione degli omaggi"
+  },
+  "checkinMessageCustom37": "Abilita gestione omaggi",
+  "@checkinMessageCustom37": {
+    "description": "Tooltip per abilitare la gestione degli omaggi"
+  },
+  "checkinMessageCustom38": "Aperta",
+  "@checkinMessageCustom38": {
+    "description": "Stato della competizione: aperta"
+  },
+  "checkinMessageCustom39": "Chiusa",
+  "@checkinMessageCustom39": {
+    "description": "Stato della competizione: chiusa"
+  },
+  "checkinMessageCustom40": "Gestione Presenze",
+  "@checkinMessageCustom40": {
+    "description": "Legenda: gestione presenze"
+  },
+  "checkinMessageCustom41": "Gestione Pagamenti",
+  "@checkinMessageCustom41": {
+    "description": "Legenda: gestione pagamenti"
+  },
+  "checkinMessageCustom42": "Gestione Omaggi",
+  "@checkinMessageCustom42": {
+    "description": "Legenda: gestione omaggi"
+  },
+  "checkinMessageCustom43": "Tocca le icone per attivare/disattivare",
+  "@checkinMessageCustom43": {
+    "description": "Istruzione nella legenda per attivare/disattivare i flag"
+  },
+  "checkinMessageCustom44": "TOTALI",
+  "@checkinMessageCustom44": {
+    "description": "Intestazione del riepilogo totale nel PDF"
+  },
+  "checkinMessageCustom45": "Importo totale incassato: {amount}",
+  "@checkinMessageCustom45": {
+    "description": "Riga nel PDF che mostra l'importo totale incassato",
+    "placeholders": {
+      "amount": {}
+    }
+  },
+  "checkinMessageCustom46": "Check-in atleti — {date}",
+  "@checkinMessageCustom46": {
+    "description": "Intestazione del PDF: Check-in atleti con la data della gara",
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "checkinMessageCustom47": "Generato il {datetime}",
+  "@checkinMessageCustom47": {
+    "description": "Riga del PDF che mostra data/ora di generazione",
+    "placeholders": {
+      "datetime": {}
+    }
+  },
+  "checkinMessageCustom48": "Pagina {page} di {total}",
+  "@checkinMessageCustom48": {
+    "description": "Footer PDF: mostra numero pagina corrente e numero totale pagine",
+    "placeholders": {
+      "page": {},
+      "total": {}
+    }
   }
-}
+}  

@@ -8,6 +8,7 @@ import '../data/checkin_competition_service.dart';
 import '../models/checkin_competition_model.dart';
 import 'checkin_registrations_page.dart';
 import 'dart:math';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class CheckinCompetitionsPage extends StatefulWidget {
   const CheckinCompetitionsPage({super.key});
@@ -24,6 +25,8 @@ class _CheckinCompetitionsPageState
 
   List<CheckinCompetitionModel> allCompetitions = [];
   List<CheckinCompetitionModel> competitions = [];
+
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   bool loading = true;
   bool showOnlyOpen = false;
@@ -171,70 +174,71 @@ class _CheckinCompetitionsPageState
   // BUILD
   // =========================================================
 
-  @override
-  Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 700;
+    @override
+    Widget build(BuildContext context) {
+      final isMobile = MediaQuery.of(context).size.width < 700;
 
-    return BasePage(
-      title: 'Check-in Competizioni',
-      subtitle: 'Gestione presenze, pagamenti e omaggi',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // ── filtri ──────────────────────────────────────
-          Wrap(
-            spacing: 16,
-            runSpacing: 16,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              SizedBox(
-                width: isMobile ? 320 : 420,
-                child: TextField(
-                  controller: searchController,
-                  decoration: const InputDecoration(
-                    hintText: 'Cerca competizione',
-                    prefixIcon: Icon(Icons.search),
+      return BasePage(
+        title: l10n.checkinMessageCustom19, // 'Check-in Competizioni'
+        subtitle: l10n.checkinMessageCustom20, // 'Gestione presenze, pagamenti e omaggi'
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ── filtri ──────────────────────────────────────
+            Wrap(
+              spacing: 16,
+              runSpacing: 16,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                SizedBox(
+                  width: isMobile ? 320 : 420,
+                  child: TextField(
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      hintText: l10n.checkinMessageCustom21, // 'Cerca competizione'
+                      prefixIcon: const Icon(Icons.search),
+                    ),
+                    onChanged: (_) => applyFilters(),
                   ),
-                  onChanged: (_) => applyFilters(),
                 ),
-              ),
-              FilterChip(
-                label: const Text('Solo aperte'),
-                selected: showOnlyOpen,
-                onSelected: (value) {
-                  setState(() => showOnlyOpen = value);
-                  applyFilters();
-                },
-              ),
-            ],
-          ),
+                FilterChip(
+                  label: Text(l10n.checkinMessageCustom22), // 'Solo aperte'
+                  selected: showOnlyOpen,
+                  onSelected: (value) {
+                    setState(() => showOnlyOpen = value);
+                    applyFilters();
+                  },
+                ),
+              ],
+            ),
 
-          const SizedBox(height: 24),
+            const SizedBox(height: 24),
 
-          // ── legenda flag ─────────────────────────────────
-          _FlagLegend(),
+            // ── legenda flag ─────────────────────────────────
+            _FlagLegend(),
 
-          const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-          // ── tabella ──────────────────────────────────────
-          Expanded(
-            child: loading
-                ? const Center(child: CircularProgressIndicator())
-                : _buildTable(),
-          ),
-        ],
-      ),
-    );
-  }
-
+            // ── tabella ──────────────────────────────────────
+            Expanded(
+              child: loading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _buildTable(),
+            ),
+          ],
+        ),
+      );
+    }
   // =========================================================
   // TABLE ROUTER
   // =========================================================
 
   Widget _buildTable() {
     if (competitions.isEmpty) {
-      return const Center(
-        child: Text('Nessuna competizione trovata'),
+      return Center(
+        child: Text(
+          l10n.checkinMessageCustom23, // 'Nessuna competizione trovata'
+        ),
       );
     }
 
@@ -273,7 +277,7 @@ class _CheckinCompetitionsPageState
                 const SizedBox(height: 8),
                 Text(DateFormat('dd/MM/yyyy').format(c.dtGara)),
                 const SizedBox(height: 8),
-                _StatusChip(chiusa: c.flGaraChiusa),
+                _StatusChip(chiusa: c.flGaraChiusa, l10n: l10n),
                 const SizedBox(height: 16),
                 // ── flag toggles ────────────────────────────
                 _FlagTogglesRow(
@@ -285,22 +289,22 @@ class _CheckinCompetitionsPageState
                 Row(
                   children: [
                     IconButton(
-                      tooltip: 'Iscritti',
+                      tooltip: l10n.checkinMessageCustom24, // 'Iscritti'
                       icon: const Icon(Icons.how_to_reg),
-                        onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => CheckinRegistrationsPage(
-                              competitionId: c.id,
-                              competitionName: c.descrizione,
-                              quotaIscrizione: c.quotaIscrizione,
-                              flGestionePresenze: c.flGestionePresenze,
-                              flGestionePagamenti: c.flGestionePagamenti,
-                              flGestioneOmaggi: c.flGestioneOmaggi,
-                            ),
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => CheckinRegistrationsPage(
+                            competitionId: c.id,
+                            competitionName: c.descrizione,
+                            quotaIscrizione: c.quotaIscrizione,
+                            flGestionePresenze: c.flGestionePresenze,
+                            flGestionePagamenti: c.flGestionePagamenti,
+                            flGestioneOmaggi: c.flGestioneOmaggi,
                           ),
-                        ),              
+                        ),
                       ),
+                    ),
                   ],
                 ),
               ],
@@ -310,82 +314,6 @@ class _CheckinCompetitionsPageState
       },
     );
   }
-
-  // =========================================================
-  // DESKTOP
-  // =========================================================
-
-  // Widget _buildDesktopTable() {
-  //   final verticalController = ScrollController();
-
-  //   return Card(
-  //     elevation: 0,
-  //     shape: RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.circular(20),
-  //       side: const BorderSide(color: Color(0xFFE5E7EB)),
-  //     ),
-  //     clipBehavior: Clip.antiAlias,
-  //     child: Scrollbar(
-  //       controller: verticalController,
-  //       thumbVisibility: true,
-  //       child: SingleChildScrollView(
-  //         controller: verticalController,
-  //         scrollDirection: Axis.vertical,
-  //         child: SingleChildScrollView(
-  //           scrollDirection: Axis.horizontal,
-  //           child: ConstrainedBox(
-  //             constraints: BoxConstraints(
-  //               minWidth: MediaQuery.of(context).size.width - 360,
-  //             ),
-  //             child: DataTable(
-  //               columnSpacing: 32,
-  //               horizontalMargin: 32,
-  //               dataRowMinHeight: 72,
-  //               dataRowMaxHeight: 72,
-  //               headingRowHeight: 64,
-  //               sortAscending: sortAsc,
-  //               columns: [
-  //                 DataColumn(
-  //                   label: const Text('Descrizione'),
-  //                   onSort: (_, _) => updateSort('descrizione'),
-  //                 ),
-  //                 DataColumn(
-  //                   label: const Text('Data Gara'),
-  //                   onSort: (_, _) => updateSort('dt_gara'),
-  //                 ),
-  //                 const DataColumn(label: Text('Stato')),
-  //                 // i tre flag come colonne dedicate
-  //                 const DataColumn(
-  //                   label: _FlagColumnHeader(
-  //                     icon: Icons.person_pin,
-  //                     label: 'Presenze',
-  //                     color: Colors.blue,
-  //                   ),
-  //                 ),
-  //                 const DataColumn(
-  //                   label: _FlagColumnHeader(
-  //                     icon: Icons.payments_outlined,
-  //                     label: 'Pagamenti',
-  //                     color: Colors.green,
-  //                   ),
-  //                 ),
-  //                 const DataColumn(
-  //                   label: _FlagColumnHeader(
-  //                     icon: Icons.card_giftcard,
-  //                     label: 'Omaggi',
-  //                     color: Colors.orange,
-  //                   ),
-  //                 ),
-  //                 const DataColumn(label: Text('Azioni')),
-  //               ],
-  //               rows: competitions.map((c) => _buildRow(c)).toList(),
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 
     Widget _buildDesktopTable() {
     final verticalController = ScrollController();
@@ -413,9 +341,6 @@ class _CheckinCompetitionsPageState
               controller: horizontalController,
               scrollDirection: Axis.horizontal,
               child: ConstrainedBox(
-                // constraints: BoxConstraints(
-                //   minWidth: MediaQuery.of(context).size.width - 360,
-                // ),
                 constraints: BoxConstraints(
                   minWidth: max(
                     1200,
@@ -431,36 +356,36 @@ class _CheckinCompetitionsPageState
                   sortAscending: sortAsc,
                   columns: [
                     DataColumn(
-                      label: const Text('Descrizione'),
+                      label: Text(l10n.checkinMessageCustom25), // 'Descrizione'
                       onSort: (_, _) => updateSort('descrizione'),
                     ),
                     DataColumn(
-                      label: const Text('Data Gara'),
+                      label: Text(l10n.checkinMessageCustom26), // 'Data Gara'
                       onSort: (_, _) => updateSort('dt_gara'),
                     ),
-                    const DataColumn(label: Text('Stato')),
-                    const DataColumn(
+                    DataColumn(label: Text(l10n.checkinMessageCustom27)), // 'Stato'
+                    DataColumn(
                       label: _FlagColumnHeader(
                         icon: Icons.person_pin,
-                        label: 'Presenze',
+                        label: l10n.checkinMessageCustom28, // 'Presenze'
                         color: Colors.blue,
                       ),
                     ),
-                    const DataColumn(
+                    DataColumn(
                       label: _FlagColumnHeader(
                         icon: Icons.payments_outlined,
-                        label: 'Pagamenti',
+                        label: l10n.checkinMessageCustom29, // 'Pagamenti'
                         color: Colors.green,
                       ),
                     ),
-                    const DataColumn(
+                    DataColumn(
                       label: _FlagColumnHeader(
                         icon: Icons.card_giftcard,
-                        label: 'Omaggi',
+                        label: l10n.checkinMessageCustom30, // 'Omaggi'
                         color: Colors.orange,
                       ),
                     ),
-                    const DataColumn(label: Text('Azioni')),
+                    DataColumn(label: Text(l10n.checkinMessageCustom31)), // 'Azioni'
                   ],
                   rows: competitions.map((c) => _buildRow(c)).toList(),
                 ),
@@ -491,7 +416,7 @@ class _CheckinCompetitionsPageState
         DataCell(Text(DateFormat('dd/MM/yyyy').format(c.dtGara))),
 
         // stato
-        DataCell(_StatusChip(chiusa: c.flGaraChiusa)),
+        DataCell(_StatusChip(chiusa: c.flGaraChiusa,l10n: l10n)),
 
         // toggle presenze
         DataCell(
@@ -501,8 +426,8 @@ class _CheckinCompetitionsPageState
             activeIcon: Icons.person_pin,
             inactiveIcon: Icons.person_pin_outlined,
             tooltip: c.flGestionePresenze
-                ? 'Disabilita gestione presenze'
-                : 'Abilita gestione presenze',
+                ? l10n.checkinMessageCustom32 // 'Disabilita gestione presenze'
+                : l10n.checkinMessageCustom33, // 'Abilita gestione presenze'
             onTap: () => _toggleFlag(
               competition: c,
               flag: 'presenze',
@@ -518,8 +443,8 @@ class _CheckinCompetitionsPageState
             activeIcon: Icons.payments,
             inactiveIcon: Icons.payments_outlined,
             tooltip: c.flGestionePagamenti
-                ? 'Disabilita gestione pagamenti'
-                : 'Abilita gestione pagamenti',
+                ? l10n.checkinMessageCustom34 // 'Disabilita gestione pagamenti'
+                : l10n.checkinMessageCustom35, // 'Abilita gestione pagamenti'
             onTap: () => _toggleFlag(
               competition: c,
               flag: 'pagamenti',
@@ -535,8 +460,8 @@ class _CheckinCompetitionsPageState
             activeIcon: Icons.card_giftcard,
             inactiveIcon: Icons.card_giftcard_outlined,
             tooltip: c.flGestioneOmaggi
-                ? 'Disabilita gestione omaggi'
-                : 'Abilita gestione omaggi',
+                ? l10n.checkinMessageCustom36 // 'Disabilita gestione omaggi'
+                : l10n.checkinMessageCustom37, // 'Abilita gestione omaggi'
             onTap: () => _toggleFlag(
               competition: c,
               flag: 'omaggi',
@@ -547,7 +472,7 @@ class _CheckinCompetitionsPageState
         // azioni — solo iscritti
         DataCell(
           IconButton(
-            tooltip: 'Iscritti',
+            tooltip: l10n.checkinMessageCustom24, // 'Iscritti'
             icon: const Icon(Icons.how_to_reg),
             onPressed: () => Navigator.push(
               context,
@@ -564,7 +489,7 @@ class _CheckinCompetitionsPageState
             ),
           ),
         ),
-      ],
+              ],
     );
   }
 }
@@ -640,6 +565,7 @@ class _FlagTogglesRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final c = competition;
     return Row(
       children: [
@@ -648,7 +574,7 @@ class _FlagTogglesRow extends StatelessWidget {
           activeColor: Colors.blue,
           activeIcon: Icons.person_pin,
           inactiveIcon: Icons.person_pin_outlined,
-          tooltip: 'Presenze',
+          tooltip: l10n.checkinMessageCustom28, // 'Presenze'
           onTap: () => onToggle(competition: c, flag: 'presenze'),
         ),
         const SizedBox(width: 8),
@@ -657,7 +583,7 @@ class _FlagTogglesRow extends StatelessWidget {
           activeColor: Colors.green,
           activeIcon: Icons.payments,
           inactiveIcon: Icons.payments_outlined,
-          tooltip: 'Pagamenti',
+          tooltip: l10n.checkinMessageCustom29, // 'Pagamenti'
           onTap: () => onToggle(competition: c, flag: 'pagamenti'),
         ),
         const SizedBox(width: 8),
@@ -666,7 +592,7 @@ class _FlagTogglesRow extends StatelessWidget {
           activeColor: Colors.orange,
           activeIcon: Icons.card_giftcard,
           inactiveIcon: Icons.card_giftcard_outlined,
-          tooltip: 'Omaggi',
+          tooltip: l10n.checkinMessageCustom30, // 'Omaggi'
           onTap: () => onToggle(competition: c, flag: 'omaggi'),
         ),
         const SizedBox(width: 16),
@@ -680,15 +606,15 @@ class _FlagTogglesRow extends StatelessWidget {
     );
   }
 }
-
 // ──────────────────────────────────────────────────────────────
 // STATUS CHIP
 // ──────────────────────────────────────────────────────────────
 
 class _StatusChip extends StatelessWidget {
   final bool chiusa;
+  final AppLocalizations l10n;
 
-  const _StatusChip({required this.chiusa});
+  const _StatusChip({required this.chiusa, required this.l10n});
 
   @override
   Widget build(BuildContext context) {
@@ -706,7 +632,7 @@ class _StatusChip extends StatelessWidget {
         ),
       ),
       child: Text(
-        chiusa ? 'Chiusa' : 'Aperta',
+        chiusa ? l10n.checkinMessageCustom39 : l10n.checkinMessageCustom38, // 'Chiusa' / 'Aperta'
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w600,
@@ -748,40 +674,40 @@ class _FlagColumnHeader extends StatelessWidget {
 // ──────────────────────────────────────────────────────────────
 // LEGENDA FLAG  (sopra la tabella)
 // ──────────────────────────────────────────────────────────────
+  class _FlagLegend extends StatelessWidget {
+    const _FlagLegend();
 
-class _FlagLegend extends StatelessWidget {
-  const _FlagLegend();
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 16,
-      runSpacing: 8,
-      children: const [
-        _LegendItem(
-          icon: Icons.person_pin,
-          label: 'Gestione Presenze',
-          color: Colors.blue,
-        ),
-        _LegendItem(
-          icon: Icons.payments,
-          label: 'Gestione Pagamenti',
-          color: Colors.green,
-        ),
-        _LegendItem(
-          icon: Icons.card_giftcard,
-          label: 'Gestione Omaggi',
-          color: Colors.orange,
-        ),
-        _LegendItem(
-          icon: Icons.touch_app,
-          label: 'Tocca le icone per attivare/disattivare',
-          color: Colors.grey,
-        ),
-      ],
-    );
+    @override
+    Widget build(BuildContext context) {
+      final l10n = AppLocalizations.of(context)!;
+      return Wrap(
+        spacing: 16,
+        runSpacing: 8,
+        children: [
+          _LegendItem(
+            icon: Icons.person_pin,
+            label: l10n.checkinMessageCustom40, // 'Gestione Presenze'
+            color: Colors.blue,
+          ),
+          _LegendItem(
+            icon: Icons.payments,
+            label: l10n.checkinMessageCustom41, // 'Gestione Pagamenti'
+            color: Colors.green,
+          ),
+          _LegendItem(
+            icon: Icons.card_giftcard,
+            label: l10n.checkinMessageCustom42, // 'Gestione Omaggi'
+            color: Colors.orange,
+          ),
+          _LegendItem(
+            icon: Icons.touch_app,
+            label: l10n.checkinMessageCustom43, // 'Tocca le icone per attivare/disattivare'
+            color: Colors.grey,
+          ),
+        ],
+      );
+    }
   }
-}
 
 class _LegendItem extends StatelessWidget {
   final IconData icon;

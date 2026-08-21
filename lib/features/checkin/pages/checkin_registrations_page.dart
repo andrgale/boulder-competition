@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../data/checkin_registration_service.dart';
 import '../models/checkin_registration_model.dart';
 import 'checkin_pdf_export.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class CheckinRegistrationsPage extends StatefulWidget {
   final String competitionId;
@@ -34,6 +35,8 @@ class _CheckinRegistrationsPageState
   final service = CheckinRegistrationService();
   final searchController = TextEditingController();
   final _horizontalController = ScrollController();
+
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   List<CheckinRegistrationModel> registrations = [];
   bool loading = true;
@@ -159,6 +162,7 @@ class _CheckinRegistrationsPageState
         showPresente: widget.flGestionePresenze,
         showPagato: widget.flGestionePagamenti,
         showOmaggio: widget.flGestioneOmaggi,
+        l10n: l10n,
       );
     } catch (e) {
       if (!mounted) return;
@@ -193,11 +197,11 @@ class _CheckinRegistrationsPageState
                       ),
                     ),
                   )
-                : IconButton(
-                    tooltip: 'Esporta PDF',
-                    icon: const Icon(Icons.picture_as_pdf),
-                    onPressed: _exportPdf,
-                  ),
+          :IconButton(
+            tooltip: l10n.checkinMessageCustom1, // 'Esporta PDF'
+            icon: const Icon(Icons.picture_as_pdf),
+            onPressed: _exportPdf,
+          ),
         ],
       ),
       body: loading
@@ -211,6 +215,7 @@ class _CheckinRegistrationsPageState
                   pagati: totalePagati,
                   omaggi: totaleOmaggi,
                   importoIncassato: importoIncassato,
+                  l10n: l10n,
                 ),
 
                 // ── ricerca ───────────────────────────────
@@ -219,7 +224,7 @@ class _CheckinRegistrationsPageState
                   child: TextField(
                     controller: searchController,
                     decoration: InputDecoration(
-                      hintText: 'Cerca pettorale, cognome, nome...',
+                      hintText: l10n.checkinMessageCustom2, // 'Cerca pettorale, cognome, nome...'
                       prefixIcon: const Icon(Icons.search),
                       suffixIcon: searchController.text.isNotEmpty
                           ? IconButton(
@@ -237,7 +242,6 @@ class _CheckinRegistrationsPageState
                     onChanged: (_) => setState(() {}),
                   ),
                 ),
-
                 // ── legenda ───────────────────────────────
                 _CheckinLegend(
                   showPresente: widget.flGestionePresenze,
@@ -247,8 +251,10 @@ class _CheckinRegistrationsPageState
               // ── lista ─────────────────────────────────
                 Expanded(
                   child: filtered.isEmpty
-                      ? const Center(
-                          child: Text('Nessuna iscrizione trovata'),
+                      ? Center(
+                          child: Text(
+                            l10n.checkinMessageCustom3, // 'Nessuna iscrizione trovata'
+                          ),
                         )
                       : LayoutBuilder(
                           builder: (context, constraints) {
@@ -280,6 +286,7 @@ class _CheckinRegistrationsPageState
                                           widget.flGestionePagamenti,
                                       enableOmaggio:
                                           widget.flGestioneOmaggi,
+                                      l10n: l10n,    
                                     ),
                                   ),
                                 ),
@@ -304,6 +311,7 @@ class _StatsBar extends StatelessWidget {
   final int pagati;
   final int omaggi;
   final double importoIncassato;
+  final AppLocalizations l10n;
 
   const _StatsBar({
     required this.totale,
@@ -311,6 +319,7 @@ class _StatsBar extends StatelessWidget {
     required this.pagati,
     required this.omaggi,
     required this.importoIncassato,
+    required this.l10n,
   });
 
   /// Formatta il doppio come valuta italiana: € 1.250,00
@@ -340,7 +349,7 @@ class _StatsBar extends StatelessWidget {
         children: [
           Expanded(
             child: _StatItem(
-              label: 'Iscritti',
+              label: l10n.checkinMessageCustom4, // 'Iscritti'
               value: totale,
               color: Colors.blue.shade700,
               icon: Icons.people,
@@ -349,7 +358,7 @@ class _StatsBar extends StatelessWidget {
           _VerticalDivider(),
           Expanded(
             child: _StatItem(
-              label: 'Presenti',
+              label: l10n.checkinMessageCustom5, // 'Presenti'
               value: presenti,
               color: Colors.green.shade700,
               icon: Icons.person_pin,
@@ -362,7 +371,7 @@ class _StatsBar extends StatelessWidget {
           // ── Pagati + importo incassato ───────────────────
           Expanded(
             child: _StatItem(
-              label: 'Pagati',
+              label: l10n.checkinMessageCustom6, // 'Pagati'
               value: pagati,
               color: Colors.teal.shade700,
               icon: Icons.payments,
@@ -374,7 +383,7 @@ class _StatsBar extends StatelessWidget {
           _VerticalDivider(),
           Expanded(
             child: _StatItem(
-              label: 'Omaggi',
+              label: l10n.checkinMessageCustom7, // 'Omaggi'
               value: omaggi,
               color: Colors.orange.shade700,
               icon: Icons.card_giftcard,
@@ -466,6 +475,7 @@ class _CheckinLegend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final hasAny = showPresente || showPagato || showOmaggio;
 
     return Padding(
@@ -476,27 +486,27 @@ class _CheckinLegend extends StatelessWidget {
           const SizedBox(width: 4),
           Text(
             hasAny
-                ? 'Tocca le icone per aggiornare: '
-                : 'Gestione check-in disabilitata per questa gara',
+                ? l10n.checkinMessageCustom8 // 'Tocca le icone per aggiornare: '
+                : l10n.checkinMessageCustom9, // 'Gestione check-in disabilitata per questa gara'
             style: const TextStyle(fontSize: 12, color: Colors.grey),
           ),
           if (showPresente) ...[
             const SizedBox(width: 8),
-            _LegendDot(color: Colors.green.shade600, label: 'Presente'),
+            _LegendDot(color: Colors.green.shade600, label: l10n.registrationMessageCustom37), // 'Presente'
           ],
           if (showPagato) ...[
             const SizedBox(width: 8),
-            _LegendDot(color: Colors.teal.shade600, label: 'Pagato'),
+            _LegendDot(color: Colors.teal.shade600, label: l10n.registrationMessageCustom38), // 'Pagato'
           ],
           if (showOmaggio) ...[
             const SizedBox(width: 8),
-            _LegendDot(color: Colors.orange.shade600, label: 'Omaggio'),
+            _LegendDot(color: Colors.orange.shade600, label: l10n.registrationMessageCustom39), // 'Omaggio'
           ],
         ],
       ),
     );
   }
-}
+ }
 
 class _LegendDot extends StatelessWidget {
   final Color color;
@@ -536,6 +546,7 @@ class _RegistrationTile extends StatelessWidget {
   final bool enablePresente;
   final bool enablePagato;
   final bool enableOmaggio;
+  final AppLocalizations l10n;
 
   const _RegistrationTile({
     required this.registration,
@@ -543,6 +554,7 @@ class _RegistrationTile extends StatelessWidget {
     required this.enablePresente,
     required this.enablePagato,
     required this.enableOmaggio,
+    required this.l10n,
   });
 
   @override
@@ -622,16 +634,13 @@ class _RegistrationTile extends StatelessWidget {
               inactiveIcon: Icons.person_pin_outlined,
               activeColor: Colors.green,
               tooltip: enablePresente
-                  ? (r.flPresente ? 'Rimuovi presenza' : 'Segna presente')
-                  : 'Gestione presenze non abilitata',
-              onTap: enablePresente
-                  ? () => onToggle(reg: r, flag: 'presente')
-                  : null,
+                  ? (r.flPresente ? l10n.checkinMessageCustom10 : l10n.checkinMessageCustom11) // 'Rimuovi presenza' / 'Segna presente'
+                  : l10n.checkinMessageCustom12, // 'Gestione presenze non abilitata'
+              onTap: enablePresente ? () => onToggle(reg: r, flag: 'presente') : null,
             ),
 
             const SizedBox(width: 4),
 
-            // ── toggle pagamenti ──────────────────────────
             _CheckinToggle(
               value: r.flPagato,
               enabled: enablePagato,
@@ -639,16 +648,13 @@ class _RegistrationTile extends StatelessWidget {
               inactiveIcon: Icons.payments_outlined,
               activeColor: Colors.teal,
               tooltip: enablePagato
-                  ? (r.flPagato ? 'Annulla pagamento' : 'Segna pagato')
-                  : 'Gestione pagamenti non abilitata',
-              onTap: enablePagato
-                  ? () => onToggle(reg: r, flag: 'pagato')
-                  : null,
+                  ? (r.flPagato ? l10n.checkinMessageCustom13 : l10n.checkinMessageCustom14) // 'Annulla pagamento' / 'Segna pagato'
+                  : l10n.checkinMessageCustom15, // 'Gestione pagamenti non abilitata'
+              onTap: enablePagato ? () => onToggle(reg: r, flag: 'pagato') : null,
             ),
 
             const SizedBox(width: 4),
 
-            // ── toggle omaggi ─────────────────────────────
             _CheckinToggle(
               value: r.flOmaggio,
               enabled: enableOmaggio,
@@ -656,11 +662,9 @@ class _RegistrationTile extends StatelessWidget {
               inactiveIcon: Icons.card_giftcard_outlined,
               activeColor: Colors.orange,
               tooltip: enableOmaggio
-                  ? (r.flOmaggio ? 'Annulla omaggio' : 'Segna omaggio')
-                  : 'Gestione omaggi non abilitata',
-              onTap: enableOmaggio
-                  ? () => onToggle(reg: r, flag: 'omaggio')
-                  : null,
+                  ? (r.flOmaggio ? l10n.checkinMessageCustom16 : l10n.checkinMessageCustom17) // 'Annulla omaggio' / 'Segna omaggio'
+                  : l10n.checkinMessageCustom18, // 'Gestione omaggi non abilitata'
+              onTap: enableOmaggio ? () => onToggle(reg: r, flag: 'omaggio') : null,
             ),
           ],
         ),

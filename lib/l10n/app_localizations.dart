@@ -673,6 +673,540 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scan to register the top'**
   String get boulderMessageCustom36;
+
+  /// Message shown at the end of import with counts of inserted and discarded records
+  ///
+  /// In en, this message translates to:
+  /// **'Import completed - Inserted: {inserted} Discarded: {discarded}'**
+  String registrationMessageCustom1(Object inserted, Object discarded);
+
+  /// Confirmation that a registration was deleted
+  ///
+  /// In en, this message translates to:
+  /// **'Registration deleted'**
+  String get registrationMessageCustom2;
+
+  /// Tooltip when registrations are closed and the action is not available
+  ///
+  /// In en, this message translates to:
+  /// **'Registrations closed: {action} not available'**
+  String registrationMessageCustom3(Object action);
+
+  /// Tooltip when the maximum number of registrations is reached and the action is not available
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum registrations reached: {action} not available'**
+  String registrationMessageCustom4(Object action);
+
+  /// Label for the import CSV action
+  ///
+  /// In en, this message translates to:
+  /// **'Import CSV'**
+  String get registrationMessageCustom5;
+
+  /// Label for the action to create a new registration
+  ///
+  /// In en, this message translates to:
+  /// **'New registration'**
+  String get registrationMessageCustom6;
+
+  /// Page title for registrations with the competition name
+  ///
+  /// In en, this message translates to:
+  /// **'Registrations - {competitionName}'**
+  String registrationMessageCustom7(Object competitionName);
+
+  /// Message shown when registrations are closed
+  ///
+  /// In en, this message translates to:
+  /// **'Registrations for this competition are closed. It is not possible to add new athletes or import CSV.'**
+  String get registrationMessageCustom8;
+
+  /// Message shown when the maximum number of registrations is reached, with current and max counts
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum number of registrations reached ({current}/{max}). It is not possible to add new athletes or import CSV.'**
+  String registrationMessageCustom9(Object current, Object max);
+
+  /// Hint for searching registrations
+  ///
+  /// In en, this message translates to:
+  /// **'Search bib, lastname or given firstname...'**
+  String get registrationMessageCustom10;
+
+  /// Text shown when there are no registrations
+  ///
+  /// In en, this message translates to:
+  /// **'No registrations'**
+  String get registrationMessageCustom11;
+
+  /// Label to indicate the boulder
+  ///
+  /// In en, this message translates to:
+  /// **'Boulder'**
+  String get registrationMessageCustom12;
+
+  /// Message indicating the athlete is not present
+  ///
+  /// In en, this message translates to:
+  /// **'Athlete not present'**
+  String get registrationMessageCustom13;
+
+  /// Message shown when the email is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email'**
+  String get registrationMessageCustom14;
+
+  /// Message shown when the email is already registered for the competition
+  ///
+  /// In en, this message translates to:
+  /// **'Email already present in this competition'**
+  String get registrationMessageCustom15;
+
+  /// Message shown when the first turn is full
+  ///
+  /// In en, this message translates to:
+  /// **'First turn is full, please select another option'**
+  String get registrationMessageCustom16;
+
+  /// Message shown when the second turn is full
+  ///
+  /// In en, this message translates to:
+  /// **'Second turn is full, please select another option'**
+  String get registrationMessageCustom17;
+
+  /// Title when editing a registration
+  ///
+  /// In en, this message translates to:
+  /// **'Edit registration'**
+  String get registrationMessageCustom18;
+
+  /// Title when creating a new registration
+  ///
+  /// In en, this message translates to:
+  /// **'New registration'**
+  String get registrationMessageCustom19;
+
+  /// Label for surname field
+  ///
+  /// In en, this message translates to:
+  /// **'Lastname'**
+  String get registrationMessageCustom20;
+
+  /// Label for given name field
+  ///
+  /// In en, this message translates to:
+  /// **'Firstname'**
+  String get registrationMessageCustom21;
+
+  /// Validation message for required field (registration)
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get registrationMessageCustom22;
+
+  /// Label for email field
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get registrationMessageCustom23;
+
+  /// Validation message when email is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Email required'**
+  String get registrationMessageCustom24;
+
+  /// Validation message when email format is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email format'**
+  String get registrationMessageCustom25;
+
+  /// Label for club/society field
+  ///
+  /// In en, this message translates to:
+  /// **'Club'**
+  String get registrationMessageCustom26;
+
+  /// Label for bib number field
+  ///
+  /// In en, this message translates to:
+  /// **'Bib'**
+  String get registrationMessageCustom27;
+
+  /// Label for sex field
+  ///
+  /// In en, this message translates to:
+  /// **'Sex'**
+  String get registrationMessageCustom28;
+
+  /// Sex option: male (registration)
+  ///
+  /// In en, this message translates to:
+  /// **'M'**
+  String get registrationMessageCustom29;
+
+  /// Sex option: female (registration)
+  ///
+  /// In en, this message translates to:
+  /// **'F'**
+  String get registrationMessageCustom30;
+
+  /// Label for birth date field
+  ///
+  /// In en, this message translates to:
+  /// **'Birth date'**
+  String get registrationMessageCustom31;
+
+  /// Validation message when birth date is not set
+  ///
+  /// In en, this message translates to:
+  /// **'Required field'**
+  String get registrationMessageCustom32;
+
+  /// Title for the first turn switch
+  ///
+  /// In en, this message translates to:
+  /// **'First turn'**
+  String get registrationMessageCustom33;
+
+  /// Subtitle when turn management is not active
+  ///
+  /// In en, this message translates to:
+  /// **'Turn management not active for this competition'**
+  String get registrationMessageCustom34;
+
+  /// Subtitle when the turn is full
+  ///
+  /// In en, this message translates to:
+  /// **'Turn is full'**
+  String get registrationMessageCustom35;
+
+  /// Title for the second turn switch
+  ///
+  /// In en, this message translates to:
+  /// **'Second turn'**
+  String get registrationMessageCustom36;
+
+  /// Title for the present switch
+  ///
+  /// In en, this message translates to:
+  /// **'Present'**
+  String get registrationMessageCustom37;
+
+  /// Title for the paid switch
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get registrationMessageCustom38;
+
+  /// Title for the free/complimentary switch
+  ///
+  /// In en, this message translates to:
+  /// **'Gift'**
+  String get registrationMessageCustom39;
+
+  /// Button text to update the registration
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get registrationMessageCustom40;
+
+  /// Button text to create the registration
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get registrationMessageCustom41;
+
+  /// Tooltip for the button that exports to PDF on the check-in page
+  ///
+  /// In en, this message translates to:
+  /// **'Export PDF'**
+  String get checkinMessageCustom1;
+
+  /// Hint for searching on the check-in page
+  ///
+  /// In en, this message translates to:
+  /// **'Search bib, lastname, firstname...'**
+  String get checkinMessageCustom2;
+
+  /// Text shown when the search finds no registrations
+  ///
+  /// In en, this message translates to:
+  /// **'No registrations found'**
+  String get checkinMessageCustom3;
+
+  /// Stat label: total registered
+  ///
+  /// In en, this message translates to:
+  /// **'Registered'**
+  String get checkinMessageCustom4;
+
+  /// Stat label: number of present athletes
+  ///
+  /// In en, this message translates to:
+  /// **'Present'**
+  String get checkinMessageCustom5;
+
+  /// Stat label: number of paid registrations
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get checkinMessageCustom6;
+
+  /// Stat label: number of complimentary/free registrations
+  ///
+  /// In en, this message translates to:
+  /// **'Gift'**
+  String get checkinMessageCustom7;
+
+  /// Legend instruction inviting to tap icons to update state
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the icons to update: '**
+  String get checkinMessageCustom8;
+
+  /// Message shown when check-in management is disabled for the competition
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in management disabled for this competition'**
+  String get checkinMessageCustom9;
+
+  /// Tooltip to remove presence
+  ///
+  /// In en, this message translates to:
+  /// **'Remove presence'**
+  String get checkinMessageCustom10;
+
+  /// Tooltip to mark as present
+  ///
+  /// In en, this message translates to:
+  /// **'Mark present'**
+  String get checkinMessageCustom11;
+
+  /// Tooltip when presence management is not enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Presence management not enabled'**
+  String get checkinMessageCustom12;
+
+  /// Tooltip to cancel payment
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel payment'**
+  String get checkinMessageCustom13;
+
+  /// Tooltip to mark as paid
+  ///
+  /// In en, this message translates to:
+  /// **'Mark paid'**
+  String get checkinMessageCustom14;
+
+  /// Tooltip when payment management is not enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Payment management not enabled'**
+  String get checkinMessageCustom15;
+
+  /// Tooltip to cancel free/complimentary status
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel gift'**
+  String get checkinMessageCustom16;
+
+  /// Tooltip to mark as free/complimentary
+  ///
+  /// In en, this message translates to:
+  /// **'Mark gift'**
+  String get checkinMessageCustom17;
+
+  /// Tooltip when free/complimentary management is not enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Gifts not enabled'**
+  String get checkinMessageCustom18;
+
+  /// Title of the check-in page
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in Race'**
+  String get checkinMessageCustom19;
+
+  /// Subtitle of the check-in page
+  ///
+  /// In en, this message translates to:
+  /// **'Manage presence, payments and gifts'**
+  String get checkinMessageCustom20;
+
+  /// Hint for searching competitions on the check-in page
+  ///
+  /// In en, this message translates to:
+  /// **'Search race'**
+  String get checkinMessageCustom21;
+
+  /// Label for the filter to show only open competitions
+  ///
+  /// In en, this message translates to:
+  /// **'Open only'**
+  String get checkinMessageCustom22;
+
+  /// Text shown when no competitions are found
+  ///
+  /// In en, this message translates to:
+  /// **'No races found'**
+  String get checkinMessageCustom23;
+
+  /// Tooltip for the button that opens the registrations page
+  ///
+  /// In en, this message translates to:
+  /// **'Registrations'**
+  String get checkinMessageCustom24;
+
+  /// Column header: competition description
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get checkinMessageCustom25;
+
+  /// Column header: competition date
+  ///
+  /// In en, this message translates to:
+  /// **'Race date'**
+  String get checkinMessageCustom26;
+
+  /// Column header: competition status
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get checkinMessageCustom27;
+
+  /// Column header: presences
+  ///
+  /// In en, this message translates to:
+  /// **'Presence'**
+  String get checkinMessageCustom28;
+
+  /// Column header: payments
+  ///
+  /// In en, this message translates to:
+  /// **'Payments'**
+  String get checkinMessageCustom29;
+
+  /// Column header: freebies/complimentary
+  ///
+  /// In en, this message translates to:
+  /// **'Gifts'**
+  String get checkinMessageCustom30;
+
+  /// Column header: actions
+  ///
+  /// In en, this message translates to:
+  /// **'Actions'**
+  String get checkinMessageCustom31;
+
+  /// Tooltip to disable presence management
+  ///
+  /// In en, this message translates to:
+  /// **'Disable presence management'**
+  String get checkinMessageCustom32;
+
+  /// Tooltip to enable presence management
+  ///
+  /// In en, this message translates to:
+  /// **'Enable presence management'**
+  String get checkinMessageCustom33;
+
+  /// Tooltip to disable payment management
+  ///
+  /// In en, this message translates to:
+  /// **'Disable payment management'**
+  String get checkinMessageCustom34;
+
+  /// Tooltip to enable payment management
+  ///
+  /// In en, this message translates to:
+  /// **'Enable payment management'**
+  String get checkinMessageCustom35;
+
+  /// Tooltip to disable gifts management
+  ///
+  /// In en, this message translates to:
+  /// **'Disable gifts management'**
+  String get checkinMessageCustom36;
+
+  /// Tooltip to enable gifts management
+  ///
+  /// In en, this message translates to:
+  /// **'Enable gifts management'**
+  String get checkinMessageCustom37;
+
+  /// Competition status: open
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get checkinMessageCustom38;
+
+  /// Competition status: closed
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get checkinMessageCustom39;
+
+  /// Legend: presence management
+  ///
+  /// In en, this message translates to:
+  /// **'Presence management'**
+  String get checkinMessageCustom40;
+
+  /// Legend: payment management
+  ///
+  /// In en, this message translates to:
+  /// **'Payment management'**
+  String get checkinMessageCustom41;
+
+  /// Legend: gifts management
+  ///
+  /// In en, this message translates to:
+  /// **'Gifts management'**
+  String get checkinMessageCustom42;
+
+  /// Instruction in the legend to enable/disable flags
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the icons to enable/disable'**
+  String get checkinMessageCustom43;
+
+  /// Header for totals summary in the PDF
+  ///
+  /// In en, this message translates to:
+  /// **'TOTALS'**
+  String get checkinMessageCustom44;
+
+  /// Line in the PDF that shows the total amount collected
+  ///
+  /// In en, this message translates to:
+  /// **'Total amount collected: {amount}'**
+  String checkinMessageCustom45(Object amount);
+
+  /// PDF header: Athletes check-in with competition date
+  ///
+  /// In en, this message translates to:
+  /// **'Athletes check-in — {date}'**
+  String checkinMessageCustom46(Object date);
+
+  /// PDF line showing generation date/time
+  ///
+  /// In en, this message translates to:
+  /// **'Generated on {datetime}'**
+  String checkinMessageCustom47(Object datetime);
+
+  /// PDF footer: shows current page number and total pages
+  ///
+  /// In en, this message translates to:
+  /// **'Page {page} of {total}'**
+  String checkinMessageCustom48(Object page, Object total);
 }
 
 class _AppLocalizationsDelegate

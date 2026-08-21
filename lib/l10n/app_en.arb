@@ -80,22 +80,18 @@
   "@competitionMessageCustom14": {
     "description": "Label of the option to close competition registrations"
   },
-
   "competitionMessageCustom15": "Competition closed",
   "@competitionMessageCustom15": {
     "description": "Label of the option indicating that the competition is closed"
   },
-
   "competitionMessageCustom16": "Attendance management",
   "@competitionMessageCustom16": {
     "description": "Label of the option to enable attendance management"
   },
-
   "competitionMessageCustom17": "Payment management",
   "@competitionMessageCustom17": {
     "description": "Label of the option to enable payment management"
   },
-
   "competitionMessageCustom18": "Gift management",
   "@competitionMessageCustom18": {
     "description": "Label of the option to enable complimentary registrations management"
@@ -254,7 +250,6 @@
   "@boulderMessageCustom1": {
     "description": "Confirmation that the boulder was deleted"
   },
-
   "boulderMessageCustom2": "Error: {error}",
   "@boulderMessageCustom2": {
     "description": "Error message with error detail",
@@ -301,122 +296,98 @@
   "@boulderMessageCustom9": {
     "description": "Title when editing a boulder"
   },
-
   "boulderMessageCustom10": "New Boulder",
   "@boulderMessageCustom10": {
     "description": "Title when creating a new boulder"
   },
-
   "boulderMessageCustom11": "Boulder number",
   "@boulderMessageCustom11": {
     "description": "Label for the boulder number field"
   },
-
   "boulderMessageCustom12": "Required",
   "@boulderMessageCustom12": {
     "description": "Validation message for a required field"
   },
-
   "boulderMessageCustom13": "Difficulty",
   "@boulderMessageCustom13": {
     "description": "Label for the difficulty field"
   },
-
   "boulderMessageCustom14": "Easy",
   "@boulderMessageCustom14": {
     "description": "Scale label: easy"
   },
-
   "boulderMessageCustom15": "Hard",
   "@boulderMessageCustom15": {
     "description": "Scale label: hard"
   },
-
   "boulderMessageCustom16": "Color",
   "@boulderMessageCustom16": {
     "description": "Label for the color field"
   },
-
   "boulderMessageCustom17": "No color",
   "@boulderMessageCustom17": {
     "description": "Option for no color"
   },
-
   "boulderMessageCustom18": "⚪ White",
   "@boulderMessageCustom18": {
     "description": "Color option: White"
   },
-
   "boulderMessageCustom19": "🟡 Yellow",
   "@boulderMessageCustom19": {
     "description": "Color option: Yellow"
   },
-
   "boulderMessageCustom20": "🟢 Green",
   "@boulderMessageCustom20": {
     "description": "Color option: Green"
   },
-
   "boulderMessageCustom21": "🔵 Blue",
   "@boulderMessageCustom21": {
     "description": "Color option: Blue"
   },
-
   "boulderMessageCustom22": "🔴 Red",
   "@boulderMessageCustom22": {
     "description": "Color option: Red"
   },
-
   "boulderMessageCustom23": "⚫ Black",
   "@boulderMessageCustom23": {
     "description": "Color option: Black"
   },
-
   "boulderMessageCustom24": "Print QR card",
   "@boulderMessageCustom24": {
     "description": "Tooltip for the button that prints the QR card"
   },
-
   "boulderMessageCustom25": "Finals only",
   "@boulderMessageCustom25": {
     "description": "Label for the option to show only final boulders"
   },
-
   "boulderMessageCustom26": "The boulder will be available only in the final phase",
   "@boulderMessageCustom26": {
     "description": "Subtitle that explains the finals-only option"
   },
-
   "boulderMessageCustom27": "Theoretical value",
   "@boulderMessageCustom27": {
     "description": "Label for the theoretical value field"
   },
-
   "boulderMessageCustom28": "Boulders to create",
   "@boulderMessageCustom28": {
     "description": "Label for the multi-create field (how many boulders to create)"
   },
-
   "boulderMessageCustom29": "Allowed values: 1 to 20",
   "@boulderMessageCustom29": {
     "description": "Helper text indicating allowed values for the multi-create field"
   },
-
   "boulderMessageCustom30": "Enter a number",
   "@boulderMessageCustom30": {
     "description": "Validation message when no number was entered"
   },
-
   "boulderMessageCustom31": "Allowed value: 1-20",
   "@boulderMessageCustom31": {
     "description": "Validation message when the number is out of allowed range"
   },
-
   "boulderMessageCustom32": "Update",
   "@boulderMessageCustom32": {
     "description": "Button text for updating a boulder"
   },
-
   "boulderMessageCustom33": "Create",
   "@boulderMessageCustom33": {
     "description": "Button text for creating a boulder"
@@ -425,7 +396,6 @@
   "@boulderMessageCustom34": {
     "description": "Card header: 'BOULDER'"
   },
-
   "boulderMessageCustom35": "Difficulty: {difficulty} / 10",
   "@boulderMessageCustom35": {
     "description": "Text that shows the boulder difficulty",
@@ -433,9 +403,393 @@
       "difficulty": {}
     }
   },
-
   "boulderMessageCustom36": "Scan to register the top",
   "@boulderMessageCustom36": {
     "description": "Instruction under the QR to register the top by scanning the code"
-  }
+  },
+  "registrationMessageCustom1": "Import completed - Inserted: {inserted} Discarded: {discarded}",
+  "@registrationMessageCustom1": {
+    "description": "Message shown at the end of import with counts of inserted and discarded records",
+    "placeholders": {
+      "inserted": {},
+      "discarded": {}
+    }
+  },
+  "registrationMessageCustom2": "Registration deleted",
+  "@registrationMessageCustom2": {
+    "description": "Confirmation that a registration was deleted"
+  },
+  "registrationMessageCustom3": "Registrations closed: {action} not available",
+  "@registrationMessageCustom3": {
+    "description": "Tooltip when registrations are closed and the action is not available",
+    "placeholders": {
+      "action": {}
+    }
+  },
+  "registrationMessageCustom4": "Maximum registrations reached: {action} not available",
+  "@registrationMessageCustom4": {
+    "description": "Tooltip when the maximum number of registrations is reached and the action is not available",
+    "placeholders": {
+      "action": {}
+    }
+  },
+  "registrationMessageCustom5": "Import CSV",
+  "@registrationMessageCustom5": {
+    "description": "Label for the import CSV action"
+  },
+  "registrationMessageCustom6": "New registration",
+  "@registrationMessageCustom6": {
+    "description": "Label for the action to create a new registration"
+  },
+  "registrationMessageCustom7": "Registrations - {competitionName}",
+  "@registrationMessageCustom7": {
+    "description": "Page title for registrations with the competition name",
+    "placeholders": {
+      "competitionName": {}
+    }
+  },
+  "registrationMessageCustom8": "Registrations for this competition are closed. It is not possible to add new athletes or import CSV.",
+  "@registrationMessageCustom8": {
+    "description": "Message shown when registrations are closed"
+  },
+  "registrationMessageCustom9": "Maximum number of registrations reached ({current}/{max}). It is not possible to add new athletes or import CSV.",
+  "@registrationMessageCustom9": {
+    "description": "Message shown when the maximum number of registrations is reached, with current and max counts",
+    "placeholders": {
+      "current": {},
+      "max": {}
+    }
+  },
+  "registrationMessageCustom10": "Search bib, lastname or given firstname...",
+  "@registrationMessageCustom10": {
+    "description": "Hint for searching registrations"
+  },
+  "registrationMessageCustom11": "No registrations",
+  "@registrationMessageCustom11": {
+    "description": "Text shown when there are no registrations"
+  },
+  "registrationMessageCustom12": "Boulder",
+  "@registrationMessageCustom12": {
+    "description": "Label to indicate the boulder"
+  },
+  "registrationMessageCustom13": "Athlete not present",
+  "@registrationMessageCustom13": {
+    "description": "Message indicating the athlete is not present"
+  },
+  "registrationMessageCustom14": "Invalid email",
+  "@registrationMessageCustom14": {
+    "description": "Message shown when the email is invalid"
+  },
+  "registrationMessageCustom15": "Email already present in this competition",
+  "@registrationMessageCustom15": {
+    "description": "Message shown when the email is already registered for the competition"
+  },
+  "registrationMessageCustom16": "First turn is full, please select another option",
+  "@registrationMessageCustom16": {
+    "description": "Message shown when the first turn is full"
+  },
+  "registrationMessageCustom17": "Second turn is full, please select another option",
+  "@registrationMessageCustom17": {
+    "description": "Message shown when the second turn is full"
+  },
+  "registrationMessageCustom18": "Edit registration",
+  "@registrationMessageCustom18": {
+    "description": "Title when editing a registration"
+  },
+  "registrationMessageCustom19": "New registration",
+  "@registrationMessageCustom19": {
+    "description": "Title when creating a new registration"
+  },
+  "registrationMessageCustom20": "Lastname",
+  "@registrationMessageCustom20": {
+    "description": "Label for surname field"
+  },
+  "registrationMessageCustom21": "Firstname",
+  "@registrationMessageCustom21": {
+    "description": "Label for given name field"
+  },
+  "registrationMessageCustom22": "Required",
+  "@registrationMessageCustom22": {
+    "description": "Validation message for required field (registration)"
+  },
+  "registrationMessageCustom23": "Email",
+  "@registrationMessageCustom23": {
+    "description": "Label for email field"
+  },
+  "registrationMessageCustom24": "Email required",
+  "@registrationMessageCustom24": {
+    "description": "Validation message when email is empty"
+  },
+  "registrationMessageCustom25": "Invalid email format",
+  "@registrationMessageCustom25": {
+    "description": "Validation message when email format is invalid"
+  },
+  "registrationMessageCustom26": "Club",
+  "@registrationMessageCustom26": {
+    "description": "Label for club/society field"
+  },
+  "registrationMessageCustom27": "Bib",
+  "@registrationMessageCustom27": {
+    "description": "Label for bib number field"
+  },
+  "registrationMessageCustom28": "Sex",
+  "@registrationMessageCustom28": {
+    "description": "Label for sex field"
+  },
+  "registrationMessageCustom29": "M",
+  "@registrationMessageCustom29": {
+    "description": "Sex option: male (registration)"
+  },
+  "registrationMessageCustom30": "F",
+  "@registrationMessageCustom30": {
+    "description": "Sex option: female (registration)"
+  },
+  "registrationMessageCustom31": "Birth date",
+  "@registrationMessageCustom31": {
+    "description": "Label for birth date field"
+  },
+  "registrationMessageCustom32": "Required field",
+  "@registrationMessageCustom32": {
+    "description": "Validation message when birth date is not set"
+  },
+  "registrationMessageCustom33": "First turn",
+  "@registrationMessageCustom33": {
+    "description": "Title for the first turn switch"
+  },
+  "registrationMessageCustom34": "Turn management not active for this competition",
+  "@registrationMessageCustom34": {
+    "description": "Subtitle when turn management is not active"
+  },
+  "registrationMessageCustom35": "Turn is full",
+  "@registrationMessageCustom35": {
+    "description": "Subtitle when the turn is full"
+  },
+  "registrationMessageCustom36": "Second turn",
+  "@registrationMessageCustom36": {
+    "description": "Title for the second turn switch"
+  },
+  "registrationMessageCustom37": "Present",
+  "@registrationMessageCustom37": {
+    "description": "Title for the present switch"
+  },
+  "registrationMessageCustom38": "Paid",
+  "@registrationMessageCustom38": {
+    "description": "Title for the paid switch"
+  },
+  "registrationMessageCustom39": "Gift",
+  "@registrationMessageCustom39": {
+    "description": "Title for the free/complimentary switch"
+  },
+  "registrationMessageCustom40": "Update",
+  "@registrationMessageCustom40": {
+    "description": "Button text to update the registration"
+  },
+  "registrationMessageCustom41": "Create",
+  "@registrationMessageCustom41": {
+    "description": "Button text to create the registration"
+  },
+  "checkinMessageCustom1": "Export PDF",
+  "@checkinMessageCustom1": {
+    "description": "Tooltip for the button that exports to PDF on the check-in page"
+  },
+  "checkinMessageCustom2": "Search bib, lastname, firstname...",
+  "@checkinMessageCustom2": {
+    "description": "Hint for searching on the check-in page"
+  },
+  "checkinMessageCustom3": "No registrations found",
+  "@checkinMessageCustom3": {
+    "description": "Text shown when the search finds no registrations"
+  },
+  "checkinMessageCustom4": "Registered",
+  "@checkinMessageCustom4": {
+    "description": "Stat label: total registered"
+  },
+  "checkinMessageCustom5": "Present",
+  "@checkinMessageCustom5": {
+    "description": "Stat label: number of present athletes"
+  },
+  "checkinMessageCustom6": "Paid",
+  "@checkinMessageCustom6": {
+    "description": "Stat label: number of paid registrations"
+  },
+  "checkinMessageCustom7": "Gift",  "@checkinMessageCustom7": {
+    "description": "Stat label: number of complimentary/free registrations"
+  },
+  "checkinMessageCustom8": "Tap the icons to update: ",
+  "@checkinMessageCustom8": {
+    "description": "Legend instruction inviting to tap icons to update state"
+  },
+  "checkinMessageCustom9": "Check-in management disabled for this competition",
+  "@checkinMessageCustom9": {
+    "description": "Message shown when check-in management is disabled for the competition"
+  },
+  "checkinMessageCustom10": "Remove presence",
+  "@checkinMessageCustom10": {
+    "description": "Tooltip to remove presence"
+  },
+  "checkinMessageCustom11": "Mark present",
+  "@checkinMessageCustom11": {
+    "description": "Tooltip to mark as present"
+  },
+  "checkinMessageCustom12": "Presence management not enabled",
+  "@checkinMessageCustom12": {
+    "description": "Tooltip when presence management is not enabled"
+  },
+  "checkinMessageCustom13": "Cancel payment",
+  "@checkinMessageCustom13": {
+    "description": "Tooltip to cancel payment"
+  },
+  "checkinMessageCustom14": "Mark paid",
+  "@checkinMessageCustom14": {
+    "description": "Tooltip to mark as paid"
+  },
+  "checkinMessageCustom15": "Payment management not enabled",
+  "@checkinMessageCustom15": {
+    "description": "Tooltip when payment management is not enabled"
+  },
+  "checkinMessageCustom16": "Cancel gift",
+  "@checkinMessageCustom16": {
+    "description": "Tooltip to cancel free/complimentary status"
+  },
+  "checkinMessageCustom17": "Mark gift",
+  "@checkinMessageCustom17": {
+    "description": "Tooltip to mark as free/complimentary"
+  },
+  "checkinMessageCustom18": "Gifts not enabled",
+  "@checkinMessageCustom18": {
+    "description": "Tooltip when free/complimentary management is not enabled"
+  },
+  "checkinMessageCustom19": "Check-in Race",
+  "@checkinMessageCustom19": {
+    "description": "Title of the check-in page"
+  },
+  "checkinMessageCustom20": "Manage presence, payments and gifts",
+  "@checkinMessageCustom20": {
+    "description": "Subtitle of the check-in page"
+  },
+  "checkinMessageCustom21": "Search race",
+  "@checkinMessageCustom21": {
+    "description": "Hint for searching competitions on the check-in page"
+  },
+  "checkinMessageCustom22": "Open only",
+  "@checkinMessageCustom22": {
+    "description": "Label for the filter to show only open competitions"
+  },
+  "checkinMessageCustom23": "No races found",
+  "@checkinMessageCustom23": {
+    "description": "Text shown when no competitions are found"
+  },
+  "checkinMessageCustom24": "Registrations",
+  "@checkinMessageCustom24": {
+    "description": "Tooltip for the button that opens the registrations page"
+  },
+  "checkinMessageCustom25": "Description",
+  "@checkinMessageCustom25": {
+    "description": "Column header: competition description"
+  },
+  "checkinMessageCustom26": "Race date",
+  "@checkinMessageCustom26": {
+    "description": "Column header: competition date"
+  },
+  "checkinMessageCustom27": "Status",
+  "@checkinMessageCustom27": {
+    "description": "Column header: competition status"
+  },
+  "checkinMessageCustom28": "Presence",
+  "@checkinMessageCustom28": {
+    "description": "Column header: presences"
+  },
+  "checkinMessageCustom29": "Payments",
+  "@checkinMessageCustom29": {
+    "description": "Column header: payments"
+  },
+  "checkinMessageCustom30": "Gifts",
+  "@checkinMessageCustom30": {
+    "description": "Column header: freebies/complimentary"
+  },
+  "checkinMessageCustom31": "Actions",
+  "@checkinMessageCustom31": {
+    "description": "Column header: actions"
+  },
+  "checkinMessageCustom32": "Disable presence management",
+  "@checkinMessageCustom32": {
+    "description": "Tooltip to disable presence management"
+  },
+  "checkinMessageCustom33": "Enable presence management",
+  "@checkinMessageCustom33": {
+    "description": "Tooltip to enable presence management"
+  },
+  "checkinMessageCustom34": "Disable payment management",
+  "@checkinMessageCustom34": {
+    "description": "Tooltip to disable payment management"
+  },
+  "checkinMessageCustom35": "Enable payment management",
+  "@checkinMessageCustom35": {
+    "description": "Tooltip to enable payment management"
+  },
+  "checkinMessageCustom36": "Disable gifts management",
+  "@checkinMessageCustom36": {
+    "description": "Tooltip to disable gifts management"
+  },
+  "checkinMessageCustom37": "Enable gifts management",
+  "@checkinMessageCustom37": {
+    "description": "Tooltip to enable gifts management"
+  },
+  "checkinMessageCustom38": "Open",
+  "@checkinMessageCustom38": {
+    "description": "Competition status: open"
+  },
+  "checkinMessageCustom39": "Closed",
+  "@checkinMessageCustom39": {
+    "description": "Competition status: closed"
+  },
+  "checkinMessageCustom40": "Presence management",
+  "@checkinMessageCustom40": {
+    "description": "Legend: presence management"
+  },
+  "checkinMessageCustom41": "Payment management",
+  "@checkinMessageCustom41": {
+    "description": "Legend: payment management"
+  },
+  "checkinMessageCustom42": "Gifts management",
+  "@checkinMessageCustom42": {
+    "description": "Legend: gifts management"
+  },
+  "checkinMessageCustom43": "Tap the icons to enable/disable",
+  "@checkinMessageCustom43": {
+    "description": "Instruction in the legend to enable/disable flags"
+  },
+ "checkinMessageCustom44": "TOTALS",
+  "@checkinMessageCustom44": {
+    "description": "Header for totals summary in the PDF"
+  },
+"checkinMessageCustom45": "Total amount collected: {amount}",
+  "@checkinMessageCustom45": {
+    "description": "Line in the PDF that shows the total amount collected",
+    "placeholders": {
+      "amount": {}
+    }
+  },
+  "checkinMessageCustom46": "Athletes check-in — {date}",
+  "@checkinMessageCustom46": {
+    "description": "PDF header: Athletes check-in with competition date",
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "checkinMessageCustom47": "Generated on {datetime}",
+  "@checkinMessageCustom47": {
+    "description": "PDF line showing generation date/time",
+    "placeholders": {
+      "datetime": {}
+    }
+  },
+  "checkinMessageCustom48": "Page {page} of {total}",
+  "@checkinMessageCustom48": {
+    "description": "PDF footer: shows current page number and total pages",
+    "placeholders": {
+      "page": {},
+      "total": {}
+    }
+  }    
 }

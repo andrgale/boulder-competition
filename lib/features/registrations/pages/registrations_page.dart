@@ -7,6 +7,7 @@ import '../models/registration_model.dart';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class RegistrationsPage extends StatefulWidget {
   final String competitionId;
@@ -41,6 +42,8 @@ class RegistrationsPage extends StatefulWidget {
 class _RegistrationsPageState
     extends State<RegistrationsPage> {
   final service = RegistrationService();
+
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   List<RegistrationModel> registrations = [];
 
@@ -139,9 +142,9 @@ class _RegistrationsPageState
         loading = true;
       });
 
-      debugPrint(
-        'IMPORT CSV competitionId=${widget.competitionId}',
-      );
+      // debugPrint(
+      //   'IMPORT CSV competitionId=${widget.competitionId}',
+      // );
 
       final response =
           await Supabase.instance.client.functions
@@ -156,7 +159,7 @@ class _RegistrationsPageState
 
       if (!mounted) return;
 
-      debugPrint(response.data.toString());
+      // debugPrint(response.data.toString());
 
       if (response.data != null) {
         final inserted =
@@ -165,13 +168,14 @@ class _RegistrationsPageState
         final discarded =
             response.data['discarded'] ?? 0;
 
-        ScaffoldMessenger.of(context)
-            .showSnackBar(
+
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Import completato - '
-              'Inseriti: $inserted '
-              'Scartati: $discarded',
+              l10n.registrationMessageCustom1(
+                inserted.toString(),
+                discarded.toString(),
+              ), // 'Import completato - Inseriti: $inserted Scartati: $discarded'
             ),
           ),
         );
@@ -185,7 +189,7 @@ class _RegistrationsPageState
           .showSnackBar(
         SnackBar(
           content: Text(
-            'Errore import CSV: $e',
+            'Error import CSV: $e',
           ),
         ),
       );
@@ -247,9 +251,9 @@ class _RegistrationsPageState
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'Iscrizione eliminata',
+            l10n.registrationMessageCustom2, // 'Iscrizione eliminata'
           ),
         ),
       );
@@ -259,7 +263,7 @@ class _RegistrationsPageState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Errore: $e',
+            'Error: $e',
           ),
         ),
       );
@@ -328,21 +332,21 @@ class _RegistrationsPageState
     final full = isFull;
     final blocked = closed || full;
 
-    String tooltipMessage(String actionLabel) {
-      if (closed) return 'Iscrizioni chiuse: $actionLabel non disponibile';
-      if (full) return 'Numero massimo iscritti raggiunto: $actionLabel non disponibile';
-      return actionLabel;
-    }
+   String tooltipMessage(String actionLabel) {
+    if (closed) return l10n.registrationMessageCustom3(actionLabel); // 'Iscrizioni chiuse: $actionLabel non disponibile'
+    if (full) return l10n.registrationMessageCustom4(actionLabel); // 'Numero massimo iscritti raggiunto: $actionLabel non disponibile'
+    return actionLabel;
+  }
 
-    return Scaffold(
+  return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Iscrizioni - ${widget.competitionName}',
+          l10n.registrationMessageCustom7(widget.competitionName), // 'Iscrizioni - ${widget.competitionName}'
         ),
 
         actions: [
           Tooltip(
-            message: tooltipMessage('Importa CSV'),
+            message: tooltipMessage(l10n.registrationMessageCustom5), // 'Importa CSV'
             child: IconButton(
               icon: const Icon(Icons.upload_file),
               onPressed: blocked ? null : importCsv,
@@ -350,7 +354,7 @@ class _RegistrationsPageState
           ),
 
           Tooltip(
-            message: tooltipMessage('Nuova iscrizione'),
+            message: tooltipMessage(l10n.registrationMessageCustom6), // 'Nuova iscrizione'
             child: IconButton(
               icon: const Icon(Icons.add),
               onPressed: blocked ? null : openCreate,
@@ -358,7 +362,6 @@ class _RegistrationsPageState
           ),
         ],
       ),
-
       floatingActionButton: isMobile
           ? FloatingActionButton(
               onPressed: blocked ? null : openCreate,
@@ -397,11 +400,11 @@ class _RegistrationsPageState
                       Expanded(
                         child: Text(
                           closed
-                              ? 'Le iscrizioni per questa gara sono chiuse. '
-                                'Non è possibile aggiungere nuovi atleti o importare CSV.'
-                              : 'Numero massimo di iscritti raggiunto '
-                                '(${registrations.length}/${widget.nrMaxRegistrations}). '
-                                'Non è possibile aggiungere nuovi atleti o importare CSV.',
+                              ? l10n.registrationMessageCustom8 // 'Le iscrizioni per questa gara sono chiuse. Non è possibile aggiungere nuovi atleti o importare CSV.'
+                              : l10n.registrationMessageCustom9(
+                                  registrations.length.toString(),
+                                  widget.nrMaxRegistrations.toString(),
+                                ), // 'Numero massimo di iscritti raggiunto (${registrations.length}/${widget.nrMaxRegistrations}). Non è possibile aggiungere nuovi atleti o importare CSV.'
                           style: TextStyle(
                             fontSize: 13,
                             color: Colors.orange.shade900,
@@ -420,8 +423,7 @@ class _RegistrationsPageState
                       searchController,
                   decoration:
                       InputDecoration(
-                    hintText:
-                        'Cerca pettorale, cognome o nome...',
+                       hintText: l10n.registrationMessageCustom10, // 'Cerca pettorale, cognome o nome...'
                     prefixIcon:
                         const Icon(
                       Icons.search,
@@ -460,9 +462,9 @@ class _RegistrationsPageState
               Expanded(
                 child: filtered.isEmpty
 
-              ? const Center(
+              ? Center(
                   child: Text(
-                    'Nessuna iscrizione',
+                    l10n.registrationMessageCustom11, // 'Nessuna iscrizione'
                   ),
                 )
               : ListView.builder(
@@ -536,8 +538,8 @@ class _RegistrationsPageState
                               Icons.terrain,
                             ),
                             tooltip: r.flPresente
-                                ? 'Boulder'
-                                : 'Atleta non presente',
+                                ? l10n.registrationMessageCustom12 // 'Boulder'
+                                : l10n.registrationMessageCustom13, // 'Atleta non presente'
                             onPressed: r.flPresente
                                 ? () {
                                     context.push(

@@ -9,14 +9,8 @@ import 'package:printing/printing.dart';
 import '../models/checkin_registration_model.dart';
 
 import 'package:flutter/services.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
-//import 'package:flutter/material.dart';
-
-/// Genera e condivide/stampa il PDF di check-in.
-///
-/// Dipendenze da aggiungere in pubspec.yaml:
-///   pdf: ^3.11.0
-///   printing: ^5.13.0
 class CheckinPdfExport {
   /// Formatta un double come valuta italiana: € 1.250,00
   static String _formatEuro(double value) {
@@ -39,6 +33,7 @@ class CheckinPdfExport {
     required bool showPresente,
     required bool showPagato,
     required bool showOmaggio,
+    required l10n,
   }) async {
     final bytes = await _buildPdf(
       competitionName: competitionName,
@@ -48,6 +43,7 @@ class CheckinPdfExport {
       showPresente: showPresente,
       showPagato: showPagato,
       showOmaggio: showOmaggio,
+      l10n: l10n,
     );
 
       String buildSafeFileName(String value) {
@@ -96,6 +92,7 @@ class CheckinPdfExport {
     required bool showPresente,
     required bool showPagato,
     required bool showOmaggio,
+    required AppLocalizations l10n,
   }) async {
     final doc = pw.Document();
 
@@ -134,11 +131,16 @@ class CheckinPdfExport {
 
 
     // ── intestazioni colonne dinamiche ───────────────────────
-    final colHeaders = <String>['#', 'Pett.', 'Cognome e Nome', 'Società'];
-    if (showPresente) colHeaders.add('Presente');
-    if (showPagato)   colHeaders.add('Pagato');
-    if (showOmaggio)  colHeaders.add('Omaggio');
+    final colHeaders = <String>[
+      '#',
+      l10n.registrationMessageCustom27, // 'Pettorale'
+      '${l10n.registrationMessageCustom20} ${l10n.registrationMessageCustom21}', // 'Cognome Nome'
+      l10n.registrationMessageCustom26, // 'Società'
+    ];
 
+    if (showPresente) colHeaders.add(l10n.registrationMessageCustom37); // 'Presente'
+    if (showPagato)   colHeaders.add(l10n.registrationMessageCustom38); // 'Pagato'
+    if (showOmaggio)  colHeaders.add(l10n.registrationMessageCustom39); // 'Omaggio'
     // ── larghezze colonne (in punti) ─────────────────────────
     // A4 landscape usable width ≈ 770pt
     // Fisse: #(25), pett(45), nome(flexible), società(flexible)
@@ -228,8 +230,9 @@ class CheckinPdfExport {
           bold: bold,
           regular: regular,
           headerBg: headerBg,
+          l10n: l10n,
         ),
-        footer: (ctx) => _buildFooter(ctx, regular, grey),
+        footer: (ctx) => _buildFooter(ctx, regular, grey, l10n),
         build: (ctx) => [
           // ── box statistiche ────────────────────────────────
           pw.Container(
@@ -245,23 +248,38 @@ class CheckinPdfExport {
             child: pw.Row(
               mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
               children: [
-                _statBox('Iscritti', '$totale',
-                    const PdfColor.fromInt(0xFF1D4ED8), bold, regular),
+                _statBox(
+                  l10n.checkinMessageCustom4, // 'Iscritti'
+                  '$totale',
+                  const PdfColor.fromInt(0xFF1D4ED8),
+                  bold,
+                  regular,
+                ),
                 if (showPresente)
                   _statBox(
-                    'Presenti',
+                    l10n.checkinMessageCustom5, // 'Presenti'
                     '$presenti / $totale'
                     '${totale > 0 ? ' (${(presenti / totale * 100).toStringAsFixed(0)}%)' : ''}',
-                    green, bold, regular,
+                    green,
+                    bold,
+                    regular,
                   ),
                 if (showPagato)
                   _statBox(
-                    'Pagati',
+                    l10n.checkinMessageCustom6, // 'Pagati'
                     '$pagati - ${_formatEuro(importoIncassato)}',
-                    teal, bold, regular,
+                    teal,
+                    bold,
+                    regular,
                   ),
                 if (showOmaggio)
-                  _statBox('Omaggi', '$omaggi', orange, bold, regular),
+                  _statBox(
+                    l10n.checkinMessageCustom7, // 'Omaggi'
+                    '$omaggi',
+                    orange,
+                    bold,
+                    regular,
+                  ),
               ],
             ),
           ),
@@ -333,22 +351,21 @@ class CheckinPdfExport {
                   pw.SizedBox(),
                   // nome — etichetta TOTALI
                   pw.Padding(
-                    padding: const pw.EdgeInsets.symmetric(
-                      horizontal: 6, vertical: 8),
+                    padding: const pw.EdgeInsets.symmetric(horizontal: 6, vertical: 8),
                     child: pw.Text(
-                      'TOTALI',
+                      l10n.checkinMessageCustom44, // 'TOTALI'
                       style: pw.TextStyle(
-                        font: bold, fontSize: 9,
+                        font: bold,
+                        fontSize: 9,
                         color: const PdfColor.fromInt(0xFF1E40AF),
                       ),
                     ),
                   ),
                   // società
                   pw.Padding(
-                    padding: const pw.EdgeInsets.symmetric(
-                      horizontal: 6, vertical: 8),
+                    padding: const pw.EdgeInsets.symmetric(horizontal: 6, vertical: 8),
                     child: pw.Text(
-                      '$totale iscritti',
+                      '$totale ${l10n.checkinMessageCustom4.toLowerCase()}', // 'Iscritti' riutilizzato
                       style: pw.TextStyle(font: bold, fontSize: 9),
                     ),
                   ),
@@ -393,17 +410,17 @@ class CheckinPdfExport {
 
           // ── nota importo incassato ─────────────────────────
           if (showPagato && importoIncassato > 0)
-            pw.Padding(
-              padding: const pw.EdgeInsets.only(top: 8),
-              child: pw.Text(
-                'Importo totale incassato: ${_formatEuro(importoIncassato)}',
-                style: pw.TextStyle(
-                  font: bold,
-                  fontSize: 10,
-                  color: teal,
-                ),
+          pw.Padding(
+            padding: const pw.EdgeInsets.only(top: 8),
+            child: pw.Text(
+              l10n.checkinMessageCustom45(_formatEuro(importoIncassato)),
+              style: pw.TextStyle(
+                font: bold,
+                fontSize: 10,
+                color: teal,
               ),
             ),
+          ),
         ],
       ),
     );
@@ -419,6 +436,7 @@ class CheckinPdfExport {
     required pw.Font bold,
     required pw.Font regular,
     required PdfColor headerBg,
+    required AppLocalizations l10n,
   }) {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -439,7 +457,7 @@ class CheckinPdfExport {
                 ),
                 pw.SizedBox(height: 2),
                 pw.Text(
-                  'Check-in atleti — ${DateFormat('dd/MM/yyyy').format(dtGara)}',
+                  l10n.checkinMessageCustom46(DateFormat('dd/MM/yyyy').format(dtGara)),  // 'Check-in atleti — ${DateFormat('dd/MM/yyyy').format(dtGara)}'
                   style: pw.TextStyle(
                     font: regular,
                     fontSize: 10,
@@ -449,7 +467,9 @@ class CheckinPdfExport {
               ],
             ),
             pw.Text(
-              'Generato il ${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now())}',
+              l10n.checkinMessageCustom47( // 'Generato il ${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now())}'
+                DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now()),
+              ),
               style: pw.TextStyle(
                 font: regular,
                 fontSize: 8,
@@ -471,6 +491,7 @@ class CheckinPdfExport {
     pw.Context ctx,
     pw.Font regular,
     PdfColor grey,
+    AppLocalizations l10n,
   ) {
     return pw.Column(
       children: [
@@ -484,7 +505,7 @@ class CheckinPdfExport {
               style: pw.TextStyle(font: regular, fontSize: 8, color: grey),
             ),
             pw.Text(
-              'Pagina ${ctx.pageNumber} di ${ctx.pagesCount}',
+              l10n.checkinMessageCustom48(ctx.pageNumber.toString(), ctx.pagesCount.toString()), // 'Pagina ${ctx.pageNumber} di ${ctx.pagesCount}'
               style: pw.TextStyle(font: regular, fontSize: 8, color: grey),
             ),
           ],

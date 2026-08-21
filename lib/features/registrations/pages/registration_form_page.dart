@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/registration_model.dart';
 import '../data/registration_service.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class RegistrationFormPage extends StatefulWidget {
   final String competitionId;
@@ -32,6 +33,8 @@ class _RegistrationFormPageState
     extends State<RegistrationFormPage> {
   final service = RegistrationService();
 
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
+  
   final formKey = GlobalKey<FormState>();
 
   late TextEditingController cognomeCtrl;
@@ -188,9 +191,9 @@ class _RegistrationFormPageState
 
     if (!emailRegex.hasMatch(email)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'Email non valida',
+            l10n.registrationMessageCustom14, // 'Email non valida'
           ),
         ),
       );
@@ -220,11 +223,10 @@ class _RegistrationFormPageState
       if (exists) {
         if (!mounted) return;
 
-        ScaffoldMessenger.of(context)
-            .showSnackBar(
-          const SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
             content: Text(
-              'Email già presente in questa competizione',
+              l10n.registrationMessageCustom15, // 'Email già presente in questa competizione'
             ),
           ),
         );
@@ -238,8 +240,10 @@ class _RegistrationFormPageState
 
       if (isFirstTurn && !firstTurnAvailable) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Primo turno al completo, seleziona un\'altra opzione'),
+          SnackBar(
+            content: Text(
+              l10n.registrationMessageCustom16, // 'Primo turno al completo, seleziona un\'altra opzione'
+            ),
           ),
         );
         setState(() => loading = false);
@@ -248,8 +252,10 @@ class _RegistrationFormPageState
 
       if (isSecondTurn && !secondTurnAvailable) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Secondo turno al completo, seleziona un\'altra opzione'),
+          SnackBar(
+            content: Text(
+              l10n.registrationMessageCustom17, // 'Secondo turno al completo, seleziona un\'altra opzione'
+            ),
           ),
         );
         setState(() => loading = false);
@@ -340,7 +346,7 @@ class _RegistrationFormPageState
           .showSnackBar(
         SnackBar(
           content: Text(
-            'Errore: $e',
+            'Error: $e',
           ),
         ),
       );
@@ -360,13 +366,14 @@ class _RegistrationFormPageState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isNew = !isEdit;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEdit
-            ? 'Modifica iscrizione'
-            : 'Nuova iscrizione'),
+        title: Text(
+          isEdit ? l10n.registrationMessageCustom18 : l10n.registrationMessageCustom19, // 'Modifica iscrizione' / 'Nuova iscrizione'
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -376,37 +383,33 @@ class _RegistrationFormPageState
             children: [
               TextFormField(
                 controller: cognomeCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Cognome',
+                decoration: InputDecoration(
+                  labelText: l10n.registrationMessageCustom20, // 'Cognome'
                 ),
                 validator: (v) =>
-                    v == null || v.isEmpty
-                        ? 'Obbligatorio'
-                        : null,
+                    v == null || v.isEmpty ? l10n.registrationMessageCustom22 : null, // 'Obbligatorio'
               ),
 
               TextFormField(
                 controller: nomeCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Nome',
+                decoration: InputDecoration(
+                  labelText: l10n.registrationMessageCustom21, // 'Nome'
                 ),
                 validator: (v) =>
-                    v == null || v.isEmpty
-                        ? 'Obbligatorio'
-                        : null,
+                    v == null || v.isEmpty ? l10n.registrationMessageCustom22 : null, // 'Obbligatorio'
               ),
 
               TextFormField(
                 controller: emailCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
+                decoration: InputDecoration(
+                  labelText: l10n.registrationMessageCustom23, // 'Email'
                 ),
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   final email = value?.trim() ?? '';
 
                   if (email.isEmpty) {
-                    return 'Email obbligatoria';
+                    return l10n.registrationMessageCustom24; // 'Email obbligatoria'
                   }
 
                   final emailRegex = RegExp(
@@ -414,7 +417,7 @@ class _RegistrationFormPageState
                   );
 
                   if (!emailRegex.hasMatch(email)) {
-                    return 'Formato email non valido';
+                    return l10n.registrationMessageCustom25; // 'Formato email non valido'
                   }
 
                   return null;
@@ -422,8 +425,8 @@ class _RegistrationFormPageState
               ),
               TextFormField(
                 controller: societaCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Società',
+                decoration: InputDecoration(
+                  labelText: l10n.registrationMessageCustom26, // 'Società'
                 ),
               ),
 
@@ -433,8 +436,8 @@ class _RegistrationFormPageState
               TextFormField(
                 controller: pettoraleCtrl,
                 enabled: !isNew, // 🔥 blocco edit in NEW
-                decoration: const InputDecoration(
-                  labelText: 'Pettorale',
+                decoration: InputDecoration(
+                  labelText: l10n.registrationMessageCustom27, // 'Pettorale'
                 ),
                 keyboardType: TextInputType.number,
               ),
@@ -443,16 +446,13 @@ class _RegistrationFormPageState
 
               DropdownButtonFormField<String>(
                 initialValue: sesso,
-                items: const [
-                  DropdownMenuItem(
-                      value: 'M', child: Text('M')),
-                  DropdownMenuItem(
-                      value: 'F', child: Text('F')),
+                items: [
+                  DropdownMenuItem(value: 'M', child: Text(l10n.registrationMessageCustom29)), // 'M'
+                  DropdownMenuItem(value: 'F', child: Text(l10n.registrationMessageCustom30)), // 'F'
                 ],
-                onChanged: (v) =>
-                    setState(() => sesso = v),
-                decoration: const InputDecoration(
-                  labelText: 'Sesso',
+                onChanged: (v) => setState(() => sesso = v),
+                decoration: InputDecoration(
+                  labelText: l10n.registrationMessageCustom28, // 'Sesso'
                 ),
               ),
 
@@ -460,13 +460,13 @@ class _RegistrationFormPageState
                 controller: dataNascitaController,
                 readOnly: true,
                 decoration: InputDecoration(
-                  labelText: 'Data di nascita',
+                  labelText: l10n.registrationMessageCustom31, // 'Data di nascita'
                   suffixIcon: const Icon(Icons.calendar_today),
                 ),
                 onTap: _selectDataNascita,
                 validator: (_) {
                   if (dataNascita == null) {
-                    return 'Campo obbligatorio';
+                    return l10n.registrationMessageCustom32; // 'Campo obbligatorio'
                   }
                   return null;
                 },
@@ -475,12 +475,10 @@ class _RegistrationFormPageState
               const SizedBox(height: 12),
 
               SwitchListTile(
-                title: const Text('Primo turno'),
+                title: Text(l10n.registrationMessageCustom33), // 'Primo turno'
                 subtitle: !widget.isTurn
-                    ? const Text('Gestione turni non attiva per questa gara')
-                    : (!firstTurnAvailable
-                        ? const Text('Turno al completo')
-                        : null),
+                    ? Text(l10n.registrationMessageCustom34) // 'Gestione turni non attiva per questa gara'
+                    : (!firstTurnAvailable ? Text(l10n.registrationMessageCustom35) : null), // 'Turno al completo'
                 value: isFirstTurn,
                 onChanged: firstTurnAvailable
                     ? (v) {
@@ -493,12 +491,10 @@ class _RegistrationFormPageState
               ),
 
               SwitchListTile(
-                title: const Text('Secondo turno'),
+                title: Text(l10n.registrationMessageCustom36), // 'Secondo turno'
                 subtitle: !widget.isTurn
-                    ? const Text('Gestione turni non attiva per questa gara')
-                    : (!secondTurnAvailable
-                        ? const Text('Turno al completo')
-                        : null),
+                    ? Text(l10n.registrationMessageCustom34) // 'Gestione turni non attiva per questa gara'
+                    : (!secondTurnAvailable ? Text(l10n.registrationMessageCustom35) : null), // 'Turno al completo'
                 value: isSecondTurn,
                 onChanged: secondTurnAvailable
                     ? (v) {
@@ -508,29 +504,26 @@ class _RegistrationFormPageState
                         });
                       }
                     : null,
-              ), 
+              ),
 
               const SizedBox(height: 12),
 
               SwitchListTile(
-                title: const Text('Presente'),
+                title: Text(l10n.registrationMessageCustom37), // 'Presente'
                 value: flPresente,
-                onChanged: (v) =>
-                    setState(() => flPresente = v),
+                onChanged: (v) => setState(() => flPresente = v),
               ),
 
               SwitchListTile(
-                title: const Text('Pagato'),
+                title: Text(l10n.registrationMessageCustom38), // 'Pagato'
                 value: flPagato,
-                onChanged: (v) =>
-                    setState(() => flPagato = v),
+                onChanged: (v) => setState(() => flPagato = v),
               ),
 
               SwitchListTile(
-                title: const Text('Omaggio'),
+                title: Text(l10n.registrationMessageCustom39), // 'Omaggio'
                 value: flOmaggio,
-                onChanged: (v) =>
-                    setState(() => flOmaggio = v),
+                onChanged: (v) => setState(() => flOmaggio = v),
               ),
 
               const SizedBox(height: 20),
@@ -540,12 +533,11 @@ class _RegistrationFormPageState
                 child: ElevatedButton(
                   onPressed: loading ? null : save,
                   child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                       vertical: 14,
                     ),
                     child: Text(
-                      isEdit ? 'Aggiorna' : 'Crea',
+                      isEdit ? l10n.registrationMessageCustom40 : l10n.registrationMessageCustom41, // 'Aggiorna' / 'Crea'
                     ),
                   ),
                 ),
@@ -556,4 +548,5 @@ class _RegistrationFormPageState
       ),
     );
   }
+
 }

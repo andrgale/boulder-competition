@@ -317,4 +317,296 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get boulderMessageCustom36 => 'Scan to register the top';
+
+  @override
+  String registrationMessageCustom1(Object inserted, Object discarded) {
+    return 'Import completed - Inserted: $inserted Discarded: $discarded';
+  }
+
+  @override
+  String get registrationMessageCustom2 => 'Registration deleted';
+
+  @override
+  String registrationMessageCustom3(Object action) {
+    return 'Registrations closed: $action not available';
+  }
+
+  @override
+  String registrationMessageCustom4(Object action) {
+    return 'Maximum registrations reached: $action not available';
+  }
+
+  @override
+  String get registrationMessageCustom5 => 'Import CSV';
+
+  @override
+  String get registrationMessageCustom6 => 'New registration';
+
+  @override
+  String registrationMessageCustom7(Object competitionName) {
+    return 'Registrations - $competitionName';
+  }
+
+  @override
+  String get registrationMessageCustom8 =>
+      'Registrations for this competition are closed. It is not possible to add new athletes or import CSV.';
+
+  @override
+  String registrationMessageCustom9(Object current, Object max) {
+    return 'Maximum number of registrations reached ($current/$max). It is not possible to add new athletes or import CSV.';
+  }
+
+  @override
+  String get registrationMessageCustom10 =>
+      'Search bib, lastname or given firstname...';
+
+  @override
+  String get registrationMessageCustom11 => 'No registrations';
+
+  @override
+  String get registrationMessageCustom12 => 'Boulder';
+
+  @override
+  String get registrationMessageCustom13 => 'Athlete not present';
+
+  @override
+  String get registrationMessageCustom14 => 'Invalid email';
+
+  @override
+  String get registrationMessageCustom15 =>
+      'Email already present in this competition';
+
+  @override
+  String get registrationMessageCustom16 =>
+      'First turn is full, please select another option';
+
+  @override
+  String get registrationMessageCustom17 =>
+      'Second turn is full, please select another option';
+
+  @override
+  String get registrationMessageCustom18 => 'Edit registration';
+
+  @override
+  String get registrationMessageCustom19 => 'New registration';
+
+  @override
+  String get registrationMessageCustom20 => 'Lastname';
+
+  @override
+  String get registrationMessageCustom21 => 'Firstname';
+
+  @override
+  String get registrationMessageCustom22 => 'Required';
+
+  @override
+  String get registrationMessageCustom23 => 'Email';
+
+  @override
+  String get registrationMessageCustom24 => 'Email required';
+
+  @override
+  String get registrationMessageCustom25 => 'Invalid email format';
+
+  @override
+  String get registrationMessageCustom26 => 'Club';
+
+  @override
+  String get registrationMessageCustom27 => 'Bib';
+
+  @override
+  String get registrationMessageCustom28 => 'Sex';
+
+  @override
+  String get registrationMessageCustom29 => 'M';
+
+  @override
+  String get registrationMessageCustom30 => 'F';
+
+  @override
+  String get registrationMessageCustom31 => 'Birth date';
+
+  @override
+  String get registrationMessageCustom32 => 'Required field';
+
+  @override
+  String get registrationMessageCustom33 => 'First turn';
+
+  @override
+  String get registrationMessageCustom34 =>
+      'Turn management not active for this competition';
+
+  @override
+  String get registrationMessageCustom35 => 'Turn is full';
+
+  @override
+  String get registrationMessageCustom36 => 'Second turn';
+
+  @override
+  String get registrationMessageCustom37 => 'Present';
+
+  @override
+  String get registrationMessageCustom38 => 'Paid';
+
+  @override
+  String get registrationMessageCustom39 => 'Gift';
+
+  @override
+  String get registrationMessageCustom40 => 'Update';
+
+  @override
+  String get registrationMessageCustom41 => 'Create';
+
+  @override
+  String get checkinMessageCustom1 => 'Export PDF';
+
+  @override
+  String get checkinMessageCustom2 => 'Search bib, lastname, firstname...';
+
+  @override
+  String get checkinMessageCustom3 => 'No registrations found';
+
+  @override
+  String get checkinMessageCustom4 => 'Registered';
+
+  @override
+  String get checkinMessageCustom5 => 'Present';
+
+  @override
+  String get checkinMessageCustom6 => 'Paid';
+
+  @override
+  String get checkinMessageCustom7 => 'Gift';
+
+  @override
+  String get checkinMessageCustom8 => 'Tap the icons to update: ';
+
+  @override
+  String get checkinMessageCustom9 =>
+      'Check-in management disabled for this competition';
+
+  @override
+  String get checkinMessageCustom10 => 'Remove presence';
+
+  @override
+  String get checkinMessageCustom11 => 'Mark present';
+
+  @override
+  String get checkinMessageCustom12 => 'Presence management not enabled';
+
+  @override
+  String get checkinMessageCustom13 => 'Cancel payment';
+
+  @override
+  String get checkinMessageCustom14 => 'Mark paid';
+
+  @override
+  String get checkinMessageCustom15 => 'Payment management not enabled';
+
+  @override
+  String get checkinMessageCustom16 => 'Cancel gift';
+
+  @override
+  String get checkinMessageCustom17 => 'Mark gift';
+
+  @override
+  String get checkinMessageCustom18 => 'Gifts not enabled';
+
+  @override
+  String get checkinMessageCustom19 => 'Check-in Race';
+
+  @override
+  String get checkinMessageCustom20 => 'Manage presence, payments and gifts';
+
+  @override
+  String get checkinMessageCustom21 => 'Search race';
+
+  @override
+  String get checkinMessageCustom22 => 'Open only';
+
+  @override
+  String get checkinMessageCustom23 => 'No races found';
+
+  @override
+  String get checkinMessageCustom24 => 'Registrations';
+
+  @override
+  String get checkinMessageCustom25 => 'Description';
+
+  @override
+  String get checkinMessageCustom26 => 'Race date';
+
+  @override
+  String get checkinMessageCustom27 => 'Status';
+
+  @override
+  String get checkinMessageCustom28 => 'Presence';
+
+  @override
+  String get checkinMessageCustom29 => 'Payments';
+
+  @override
+  String get checkinMessageCustom30 => 'Gifts';
+
+  @override
+  String get checkinMessageCustom31 => 'Actions';
+
+  @override
+  String get checkinMessageCustom32 => 'Disable presence management';
+
+  @override
+  String get checkinMessageCustom33 => 'Enable presence management';
+
+  @override
+  String get checkinMessageCustom34 => 'Disable payment management';
+
+  @override
+  String get checkinMessageCustom35 => 'Enable payment management';
+
+  @override
+  String get checkinMessageCustom36 => 'Disable gifts management';
+
+  @override
+  String get checkinMessageCustom37 => 'Enable gifts management';
+
+  @override
+  String get checkinMessageCustom38 => 'Open';
+
+  @override
+  String get checkinMessageCustom39 => 'Closed';
+
+  @override
+  String get checkinMessageCustom40 => 'Presence management';
+
+  @override
+  String get checkinMessageCustom41 => 'Payment management';
+
+  @override
+  String get checkinMessageCustom42 => 'Gifts management';
+
+  @override
+  String get checkinMessageCustom43 => 'Tap the icons to enable/disable';
+
+  @override
+  String get checkinMessageCustom44 => 'TOTALS';
+
+  @override
+  String checkinMessageCustom45(Object amount) {
+    return 'Total amount collected: $amount';
+  }
+
+  @override
+  String checkinMessageCustom46(Object date) {
+    return 'Athletes check-in — $date';
+  }
+
+  @override
+  String checkinMessageCustom47(Object datetime) {
+    return 'Generated on $datetime';
+  }
+
+  @override
+  String checkinMessageCustom48(Object page, Object total) {
+    return 'Page $page of $total';
+  }
 }
