@@ -7,6 +7,7 @@ import '../../data/menu_service_admin.dart';
 import '../../models/role_model.dart';
 import '../../models/permission_model.dart';
 import '../../models/menu_model.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class RoleManagePage extends StatefulWidget {
   final RoleModel role;
@@ -22,6 +23,8 @@ class _RoleManagePageState extends State<RoleManagePage>
   final roleService = RoleService();
   final permService = admin_ps.PermissionService();
   final menuService = MenuServiceAdmin();
+
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   late TabController tabController;
 
@@ -72,7 +75,7 @@ class _RoleManagePageState extends State<RoleManagePage>
     } catch (e) {
       if (!mounted) return;
       setState(() => loading = false);
-      AppSnackbar.error(context, 'Errore caricamento: $e');
+      AppSnackbar.error(context, l10n.administrationMessageCustom148(e.toString())); // 'Errore caricamento: {error}'
     }
   }
 
@@ -84,10 +87,10 @@ class _RoleManagePageState extends State<RoleManagePage>
         permissionIds: selectedPermIds.toList(),
       );
       if (!mounted) return;
-      AppSnackbar.success(context, 'Permessi salvati');
+      AppSnackbar.success(context, l10n.administrationMessageCustom149); // 'Permessi salvati'
     } catch (e) {
       if (!mounted) return;
-      AppSnackbar.error(context, 'Errore salvataggio permessi: $e');
+      AppSnackbar.error(context, l10n.administrationMessageCustom150(e.toString())); // 'Errore salvataggio permessi: {error}'
     } finally {
       if (mounted) setState(() => saving = false);
     }
@@ -101,10 +104,10 @@ class _RoleManagePageState extends State<RoleManagePage>
         menuIds: selectedMenuIds.toList(),
       );
       if (!mounted) return;
-      AppSnackbar.success(context, 'Menu salvati');
+      AppSnackbar.success(context, l10n.administrationMessageCustom151); // 'Menu salvati'
     } catch (e) {
       if (!mounted) return;
-      AppSnackbar.error(context, 'Errore salvataggio menu: $e');
+      AppSnackbar.error(context, l10n.administrationMessageCustom152(e.toString())); // 'Errore salvataggio menu: {error}'
     } finally {
       if (mounted) setState(() => saving = false);
     }
@@ -127,13 +130,13 @@ class _RoleManagePageState extends State<RoleManagePage>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Gestione ruolo: ${widget.role.name}',
+                        l10n.administrationMessageCustom144(widget.role.name), // 'Gestione ruolo: ${widget.role.name}'
                         style: const TextStyle(
                             fontSize: 28, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        'Codice: ${widget.role.code}',
+                        l10n.administrationMessageCustom145(widget.role.code), // 'Codice: ${widget.role.code}'
                         style: const TextStyle(
                             fontFamily: 'monospace', color: Colors.grey),
                       ),
@@ -156,9 +159,9 @@ class _RoleManagePageState extends State<RoleManagePage>
           TabBar(
             controller: tabController,
             padding: const EdgeInsets.symmetric(horizontal: 32),
-            tabs: const [
-              Tab(icon: Icon(Icons.lock_outline), text: 'Permessi'),
-              Tab(icon: Icon(Icons.menu_book_outlined), text: 'Menu'),
+            tabs: [
+              Tab(icon: const Icon(Icons.lock_outline), text: l10n.administrationMessageCustom146), // 'Permessi'
+              Tab(icon: const Icon(Icons.menu_book_outlined), text: l10n.administrationMessageCustom147), // 'Menu'
             ],
           ),
           const Divider(height: 1),
@@ -221,6 +224,7 @@ class _PermissionsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+        final l10n = AppLocalizations.of(context)!;
     // raggruppa per prefisso (parte prima del '.')
     final Map<String, List<PermissionModel>> groups = {};
     for (final p in permissions) {
@@ -279,7 +283,7 @@ class _PermissionsTab extends StatelessWidget {
             }).toList(),
           ),
         ),
-        _SaveBar(onSave: onSave, label: 'Salva Permessi'),
+        _SaveBar(onSave: onSave, label: l10n.administrationMessageCustom153), // 'Salva Permessi'
       ],
     );
   }
@@ -304,6 +308,7 @@ class _MenusTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     // radici (parent_id null)
     final roots = menus.where((m) => m.parentId == null).toList();
     final children = menus.where((m) => m.parentId != null).toList();
@@ -378,7 +383,7 @@ class _MenusTab extends StatelessWidget {
             }).toList(),
           ),
         ),
-        _SaveBar(onSave: onSave, label: 'Salva Menu'),
+        _SaveBar(onSave: onSave, label: l10n.administrationMessageCustom154), // 'Salva Menu'
       ],
     );
   }

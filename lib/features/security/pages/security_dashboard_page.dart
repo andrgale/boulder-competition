@@ -13,47 +13,49 @@ class SecurityDashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final cards = [
       _SecurityCard(
         icon: Icons.manage_accounts,
-        title: 'Ruoli',
-        description: 'Definisci i ruoli applicativi e assegna menu e permessi.',
+        title: l10n.administrationMessaggeCustom1, // 'Ruoli'
+        description: l10n.administrationMessaggeCustom2, // 'Definisci i ruoli applicativi e assegna menu e permessi.'
         route: '/security/roles',
         color: Colors.blue,
       ),
       _SecurityCard(
         icon: Icons.lock_outline,
-        title: 'Permessi',
-        description: 'Gestisci i codici permesso e le attività associate.',
+        title: l10n.administrationMessaggeCustom3, // 'Permessi'
+        description: l10n.administrationMessaggeCustom4, // 'Gestisci i codici permesso e le attività associate.'
         route: '/security/permissions',
         color: Colors.orange,
       ),
       _SecurityCard(
         icon: Icons.menu_book_outlined,
-        title: 'Menu',
-        description: 'Configura la struttura del menu e la visibilità per piattaforma.',
+        title: l10n.administrationMessaggeCustom5, // 'Menu'
+        description: l10n.administrationMessaggeCustom6, // 'Configura la struttura del menu e la visibilità per piattaforma.'
         route: '/security/menus',
         color: Colors.green,
       ),
       _SecurityCard(
         icon: Icons.people_outline,
-        title: 'Utenti',
-        description: 'Assegna ruoli agli utenti registrati.',
+        title: l10n.administrationMessaggeCustom7, // 'Utenti'
+        description: l10n.administrationMessaggeCustom8, // 'Assegna ruoli agli utenti registrati.'
         route: '/security/profiles',
         color: Colors.purple,
       ),
       _SecurityCard(
-      icon: Icons.email_outlined,
-      title: 'Email',
-      description: 'Gestisci configurazioni, template e impostazioni di invio email.',
-      route: '/security/email',
-      color: Colors.teal,
+        icon: Icons.email_outlined,
+        title: l10n.administrationMessaggeCustom9, // 'Email'
+        description: l10n.administrationMessaggeCustom10, // 'Gestisci configurazioni, template e impostazioni di invio email.'
+        route: '/security/email',
+        color: Colors.teal,
       ),
     ];
 
     return BasePage(
-      title: 'Sicurezza',
-      subtitle: 'Gestione ruoli, permessi, menu e utenti',
+      title: l10n.administrationMessaggeCustom11, // 'Sicurezza'
+      subtitle: l10n.administrationMessaggeCustom12, // 'Gestione ruoli, permessi, menu e utenti'
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,15 +73,15 @@ class SecurityDashboardPage extends StatelessWidget {
               const SizedBox(height: 32),
               const Divider(),
               const SizedBox(height: 8),
-              const Text(
-                'Strumenti di sviluppo',
-                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
+              Text(
+                l10n.administrationMessaggeCustom13, // 'Strumenti di sviluppo'
+                style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
               ),
               const SizedBox(height: 12),
               OutlinedButton.icon(
                 style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
                 icon: const Icon(Icons.logout),
-                label: const Text('Reset configurazione cliente'),
+                label: Text(l10n.administrationMessaggeCustom14), // 'Reset configurazione cliente'
                 onPressed: () => _confirmAndReset(context),
               ),
               // ───── forzatura lingua per test ─────
@@ -93,24 +95,24 @@ class SecurityDashboardPage extends StatelessWidget {
   }
 
   Future<void> _confirmAndReset(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Reset configurazione cliente'),
-        content: const Text(
-          'Il dispositivo verrà scollegato dal cliente attuale. '
-          "L'applicazione si chiuderà automaticamente: al riavvio dovrai "
-          'inserire nuovamente codice cliente e password.',
+        title: Text(l10n.administrationMessaggeCustom14), // 'Reset configurazione cliente'
+        content: Text(
+          l10n.administrationMessaggeCustom15, // 'Il dispositivo verrà scollegato dal cliente attuale. L\'applicazione si chiuderà automaticamente: al riavvio dovrai inserire nuovamente codice cliente e password.'
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Annulla'),
+            child: Text(l10n.administrationMessaggeCustom16), // 'Annulla'
           ),
           FilledButton(
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Conferma reset'),
+            child: Text(l10n.administrationMessaggeCustom17), // 'Conferma reset'
           ),
         ],
       ),
@@ -129,15 +131,14 @@ class SecurityDashboardPage extends StatelessWidget {
       context: context,
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
-        title: const Text('Reset completato'),
-        content: const Text(
-          "L'applicazione verrà chiusa. Riaprila per inserire il nuovo "
-          'codice cliente e la password.',
+        title: Text(l10n.administrationMessaggeCustom18), // 'Reset completato'
+        content: Text(
+          l10n.administrationMessaggeCustom19, // 'L\'applicazione verrà chiusa. Riaprila per inserire il nuovo codice cliente e la password.'
         ),
         actions: [
           FilledButton(
             onPressed: () => _closeApp(),
-            child: const Text('Chiudi ora'),
+            child: Text(l10n.administrationMessaggeCustom20), // 'Chiudi ora'
           ),
         ],
       ),
@@ -164,6 +165,7 @@ class _LocaleOverrideSwitcher extends StatelessWidget {
     return ValueListenableBuilder<Locale?>(
       valueListenable: localeOverrideNotifier,
       builder: (context, currentOverride, _) {
+        final l10n = AppLocalizations.of(context)!;
         return Card(
           elevation: 0,
           shape: RoundedRectangleBorder(
@@ -175,21 +177,21 @@ class _LocaleOverrideSwitcher extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
+                Row(
                   children: [
-                    Icon(Icons.translate, size: 18, color: Colors.orange),
-                    SizedBox(width: 8),
+                    const Icon(Icons.translate, size: 18, color: Colors.orange),
+                    const SizedBox(width: 8),
                     Text(
-                      'Forza lingua (solo test)',
-                      style: TextStyle(fontWeight: FontWeight.w600),
+                      l10n.administrationMessaggeCustom21, // 'Forza lingua (solo test)'
+                      style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
                 const SizedBox(height: 4),
                 Text(
                   currentOverride == null
-                      ? 'Lingua attuale: automatica (sistema operativo)'
-                      : 'Lingua forzata: ${currentOverride.languageCode.toUpperCase()}',
+                      ? l10n.administrationMessaggeCustom22 // 'Lingua attuale: automatica (sistema operativo)'
+                      : l10n.administrationMessaggeCustom23(currentOverride.languageCode.toUpperCase()), // 'Lingua forzata: ${currentOverride.languageCode.toUpperCase()}'
                   style: const TextStyle(color: Colors.grey, fontSize: 12),
                 ),
                 const SizedBox(height: 12),
@@ -199,7 +201,7 @@ class _LocaleOverrideSwitcher extends StatelessWidget {
                   children: [
                     // opzione "automatica" per tornare al comportamento normale
                     ChoiceChip(
-                      label: const Text('Automatica'),
+                      label: Text(l10n.administrationMessaggeCustom24), // 'Automatica'
                       selected: currentOverride == null,
                       onSelected: (_) => LocaleOverrideController.set(null),
                     ),
@@ -223,7 +225,6 @@ class _LocaleOverrideSwitcher extends StatelessWidget {
     );
   }
 }
-
 
 class _SecurityCard extends StatelessWidget {
   final IconData icon;

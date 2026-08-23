@@ -5,6 +5,7 @@ import '../../../../shared/app_snackbar.dart';
 import '../../data/menu_translation_service_admin.dart';
 import '../../models/menu_model.dart';
 import '../../models/menu_translation_model.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class MenuTranslationFormPage extends StatefulWidget {
   final MenuModel menu;
@@ -25,6 +26,8 @@ class _MenuTranslationFormPageState extends State<MenuTranslationFormPage> {
   final service = MenuTranslationServiceAdmin();
   final formKey = GlobalKey<FormState>();
   final labelController = TextEditingController();
+
+    AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   String? locale;
   bool saving = false;
@@ -69,12 +72,16 @@ class _MenuTranslationFormPageState extends State<MenuTranslationFormPage> {
 
       if (!mounted) return;
       AppSnackbar.success(
-          context, isEdit ? 'Traduzione aggiornata' : 'Traduzione creata');
+        context,
+        isEdit
+            ? l10n.administrationMessaggeCustom59 // 'Traduzione aggiornata'
+            : l10n.administrationMessaggeCustom60, // 'Traduzione creata'
+      );
       Navigator.pop(context, true);
     } catch (e) {
       if (!mounted) return;
       // errore tipico: violazione unique (menu_id, locale)
-      AppSnackbar.error(context, 'Errore: $e');
+      AppSnackbar.error(context, AppLocalizations.of(context)!.administrationMessaggeCustom27(e.toString())); // 'Errore: $e' (riutilizzata)
     } finally {
       if (mounted) setState(() => saving = false);
     }
@@ -83,8 +90,8 @@ class _MenuTranslationFormPageState extends State<MenuTranslationFormPage> {
   @override
   Widget build(BuildContext context) {
     return BasePage(
-      title: isEdit ? 'Modifica Traduzione' : 'Nuova Traduzione',
-      subtitle: '"${widget.menu.label}" — ${widget.menu.route}',
+      title: isEdit ? l10n.administrationMessaggeCustom61 : l10n.administrationMessaggeCustom62, // 'Modifica Traduzione' / 'Nuova Traduzione'
+      subtitle: l10n.administrationMessaggeCustom63(widget.menu.label, widget.menu.route), // '"${widget.menu.label}" — ${widget.menu.route}'
       actions: [
         FilledButton.icon(
           onPressed: saving ? null : save,
@@ -94,7 +101,7 @@ class _MenuTranslationFormPageState extends State<MenuTranslationFormPage> {
                   height: 18,
                   child: CircularProgressIndicator(strokeWidth: 2))
               : const Icon(Icons.save),
-          label: Text(saving ? 'Salvataggio...' : 'Salva'),
+          label: Text(saving ? l10n.administrationMessaggeCustom40 : l10n.administrationMessaggeCustom41), // 'Salvataggio...' / 'Salva'
         ),
       ],
       child: SizedBox(
@@ -109,7 +116,7 @@ class _MenuTranslationFormPageState extends State<MenuTranslationFormPage> {
                   // ── Lingua ─────────────────────────────
                   DropdownButtonFormField<String>(
                     initialValue: locale,
-                    decoration: const InputDecoration(labelText: 'Lingua'),
+                    decoration: InputDecoration(labelText: l10n.administrationMessaggeCustom64), // 'Lingua'
                     items: MenuTranslationServiceAdmin.supportedLocales
                         .map((l) => DropdownMenuItem(
                               value: l,
@@ -117,7 +124,7 @@ class _MenuTranslationFormPageState extends State<MenuTranslationFormPage> {
                             ))
                         .toList(),
                     validator: (v) =>
-                        v == null ? 'Seleziona una lingua' : null,
+                        v == null ? l10n.administrationMessaggeCustom65 : null, // 'Seleziona una lingua'
                     onChanged: isEdit
                         ? null // non permettere di cambiare lingua in edit,
                                // per evitare conflitti con unique(menu_id, locale);
@@ -129,14 +136,14 @@ class _MenuTranslationFormPageState extends State<MenuTranslationFormPage> {
                   // ── Label ──────────────────────────────
                   TextFormField(
                     controller: labelController,
-                    decoration: const InputDecoration(labelText: 'Etichetta tradotta'),
+                    decoration: InputDecoration(labelText: l10n.administrationMessaggeCustom66), // 'Etichetta tradotta'
                     validator: (v) => (v == null || v.trim().isEmpty)
-                        ? 'Campo obbligatorio'
+                        ? l10n.administrationMessaggeCustom43 // 'Campo obbligatorio' (riutilizzata)
                         : null,
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Se lasci vuota questa lingua, verrà mostrata la label predefinita: "${widget.menu.label}"',
+                    l10n.administrationMessaggeCustom67(widget.menu.label), // 'Se lasci vuota questa lingua, verrà mostrata la label predefinita: "${widget.menu.label}"'
                     style: const TextStyle(color: Colors.grey, fontSize: 12),
                   ),
                 ],

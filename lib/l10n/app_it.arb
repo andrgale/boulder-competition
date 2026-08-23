@@ -792,5 +792,602 @@
       "page": {},
       "total": {}
     }
+  },
+  "administrationMessaggeCustom1": "Ruoli",
+  "@administrationMessaggeCustom1": {
+    "description": "Titolo card: Ruoli"
+  },
+  "administrationMessaggeCustom2": "Definisci i ruoli applicativi e assegna menu e permessi.",
+  "@administrationMessaggeCustom2": {
+    "description": "Descrizione card: Ruoli"
+  },
+  "administrationMessaggeCustom3": "Permessi",
+  "@administrationMessaggeCustom3": {
+    "description": "Titolo card: Permessi"
+  },
+  "administrationMessaggeCustom4": "Gestisci i codici permesso e le attività associate.",
+  "@administrationMessaggeCustom4": {
+    "description": "Descrizione card: Permessi"
+  },
+  "administrationMessaggeCustom5": "Menu",
+  "@administrationMessaggeCustom5": {
+    "description": "Titolo card: Menu"
+  },
+  "administrationMessaggeCustom6": "Configura la struttura del menu e la visibilità per piattaforma.",
+  "@administrationMessaggeCustom6": {
+    "description": "Descrizione card: Menu"
+  },
+  "administrationMessaggeCustom7": "Utenti",
+  "@administrationMessaggeCustom7": {
+    "description": "Titolo card: Utenti"
+  },
+  "administrationMessaggeCustom8": "Assegna ruoli agli utenti registrati.",
+  "@administrationMessaggeCustom8": {
+    "description": "Descrizione card: Utenti"
+  },
+  "administrationMessaggeCustom9": "Email",
+  "@administrationMessaggeCustom9": {
+    "description": "Titolo card: Email"
+  },
+  "administrationMessaggeCustom10": "Gestisci configurazioni, template e impostazioni di invio email.",
+  "@administrationMessaggeCustom10": {
+    "description": "Descrizione card: Email"
+  },
+  "administrationMessaggeCustom11": "Sicurezza",
+  "@administrationMessaggeCustom11": {
+    "description": "Titolo della pagina di amministrazione: Sicurezza"
+  },
+  "administrationMessaggeCustom12": "Gestione ruoli, permessi, menu e utenti",
+  "@administrationMessaggeCustom12": {
+    "description": "Sottotitolo della pagina di amministrazione"
+  },
+  "administrationMessaggeCustom13": "Strumenti di sviluppo",
+  "@administrationMessaggeCustom13": {
+    "description": "Header della sezione strumenti di sviluppo"
+  },
+  "administrationMessaggeCustom14": "Reset configurazione cliente",
+  "@administrationMessaggeCustom14": {
+    "description": "Etichetta del pulsante per resettare la configurazione cliente" 
+  },
+  "administrationMessaggeCustom15": "Il dispositivo verrà scollegato dal cliente attuale. L'applicazione si chiuderà automaticamente: al riavvio dovrai inserire nuovamente codice cliente e password.",
+  "@administrationMessaggeCustom15": {
+    "description": "Messaggio nel dialog di conferma reset che avvisa dello scollegamento e della chiusura dell'app"
+  },
+  "administrationMessaggeCustom16": "Annulla",
+  "@administrationMessaggeCustom16": {
+    "description": "Etichetta pulsante annulla nel dialog di conferma reset"
+  },
+  "administrationMessaggeCustom17": "Conferma reset",
+  "@administrationMessaggeCustom17": {
+    "description": "Etichetta pulsante di conferma nel dialog di reset"
+  },
+  "administrationMessaggeCustom18": "Reset completato",
+  "@administrationMessaggeCustom18": {
+    "description": "Titolo del dialog mostrato dopo il reset completato"
+  },
+  "administrationMessaggeCustom19": "L'applicazione verrà chiusa. Riaprila per inserire il nuovo codice cliente e la password.",
+  "@administrationMessaggeCustom19": {
+    "description": "Messaggio finale che informa l'utente della chiusura dell'app e della necessità di reinserire le credenziali"
+  },
+  "administrationMessaggeCustom20": "Chiudi ora",
+  "@administrationMessaggeCustom20": {
+    "description": "Etichetta del pulsante che chiude subito l'app dopo il reset"
+  },
+  "administrationMessaggeCustom21": "Forza lingua (solo test)",
+  "@administrationMessaggeCustom21": {
+    "description": "Titolo della card per forzare la lingua (uso solo test)"
+  },
+  "administrationMessaggeCustom22": "Lingua attuale: automatica (sistema operativo)",
+  "@administrationMessaggeCustom22": {
+    "description": "Testo che indica che la lingua è automatica (sistema operativo)"
+  },
+  "administrationMessaggeCustom23": "Lingua forzata: {code}",
+  "@administrationMessaggeCustom23": {
+    "description": "Testo che mostra la lingua forzata con il codice della lingua (es. IT/EN)",
+    "placeholders": {
+      "code": {}
+    }
+  },
+  "administrationMessaggeCustom24": "Automatica",
+  "@administrationMessaggeCustom24": {
+    "description": "Etichetta per l'opzione di scelta: automatica (sistema)"
+  },
+  "administrationMessaggeCustom25": "Elimina voce menu",
+  "@administrationMessaggeCustom25": {
+    "description": "Titolo dialog per eliminare una voce di menu"
+  },
+  "administrationMessaggeCustom26": "Vuoi eliminare \"{label}\"?\nI sottomenu figli verranno eliminati a cascata.",
+  "@administrationMessaggeCustom26": {
+    "description": "Messaggio di conferma eliminazione menu con il label della voce",
+    "placeholders": {
+      "label": {}
+    }
+  },
+  "administrationMessaggeCustom27": "Errore: {error}",
+  "@administrationMessaggeCustom27": {
+    "description": "Messaggio di errore generico con dettaglio",
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "administrationMessaggeCustom28": "Nuova Voce",
+  "@administrationMessaggeCustom28": {
+    "description": "Etichetta del pulsante per creare una nuova voce menu"
+  },
+  "administrationMessaggeCustom29": "Traduzioni",
+  "@administrationMessaggeCustom29": {
+    "description": "Tooltip per il pulsante traduzioni"
+  },
+  "administrationMessaggeCustom30": "Aggiungi figlio",
+  "@administrationMessaggeCustom30": {
+    "description": "Tooltip per il pulsante che aggiunge una voce figlia"
+  },
+  "administrationMessaggeCustom31": "Modifica",
+  "@administrationMessaggeCustom31": {
+    "description": "Tooltip per il pulsante di modifica"
+  },
+  "administrationMessaggeCustom32": "Elimina",
+  "@administrationMessaggeCustom32": {
+    "description": "Tooltip per il pulsante di eliminazione"
+  },
+  "administrationMessaggeCustom33": "Nessuna voce menu configurata",
+  "@administrationMessaggeCustom33": {
+    "description": "Messaggio mostrato quando non ci sono voci di menu"
+  },
+  "administrationMessaggeCustom34": "Voce eliminata",
+  "@administrationMessaggeCustom34": {
+    "description": "Messaggio di successo dopo aver eliminato una voce di menu"
+  },
+  "administrationMessaggeCustom36": "Struttura di navigazione",
+  "@administrationMessaggeCustom36": {
+    "description": "Sottotitolo della pagina menu: struttura di navigazione"
+  },
+  "administrationMessaggeCustom37": "Modifica Voce Menu",
+  "@administrationMessaggeCustom37": {
+    "description": "Titolo pagina: modifica voce menu"
+  },
+  "administrationMessaggeCustom38": "Nuova Voce Menu",
+  "@administrationMessaggeCustom38": {
+    "description": "Titolo pagina: nuova voce menu"
+  },
+  "administrationMessaggeCustom39": "Configurazione voce di navigazione",
+  "@administrationMessaggeCustom39": {
+    "description": "Sottotitolo della pagina form menu"
+  },
+  "administrationMessaggeCustom40": "Salvataggio...",
+  "@administrationMessaggeCustom40": {
+    "description": "Etichetta mostrata quando è in corso il salvataggio"
+  },
+  "administrationMessaggeCustom41": "Salva",
+  "@administrationMessaggeCustom41": {
+    "description": "Etichetta del pulsante salva"
+  },
+  "administrationMessaggeCustom42": "Etichetta",
+  "@administrationMessaggeCustom42": {
+    "description": "Label campo etichetta menu"
+  },
+  "administrationMessaggeCustom43": "Campo obbligatorio",
+  "@administrationMessaggeCustom43": {
+    "description": "Messaggio di validazione per campo obbligatorio"
+  },
+  "administrationMessaggeCustom44": "Route",
+  "@administrationMessaggeCustom44": {
+    "description": "Label campo route"
+  },
+  "administrationMessaggeCustom45": "/dashboard",
+  "@administrationMessaggeCustom45": {
+    "description": "Hint per il campo route"
+  },
+  "administrationMessaggeCustom46": "Deve iniziare con /",
+  "@administrationMessaggeCustom46": {
+    "description": "Messaggio di validazione: la route deve iniziare con /"
+  },
+  "administrationMessaggeCustom47": "Icona",
+  "@administrationMessaggeCustom47": {
+    "description": "Label campo icona"
+  },
+  "administrationMessaggeCustom48": "— nessuna —",
+  "@administrationMessaggeCustom48": {
+    "description": "Opzione per nessuna icona"
+  },
+  "administrationMessaggeCustom49": "{icon} (non standard)",
+  "@administrationMessaggeCustom49": {
+    "description": "Label per icona non standard",
+    "placeholders": {
+      "icon": {}
+    }
+  },
+  "administrationMessaggeCustom50": "Ordine",
+  "@administrationMessaggeCustom50": {
+    "description": "Label campo ordine"
+  },
+  "administrationMessaggeCustom51": "Voce parent",
+  "@administrationMessaggeCustom51": {
+    "description": "Label campo parent"
+  },
+  "administrationMessaggeCustom52": "Lascia vuoto per voce di primo livello",
+  "@administrationMessaggeCustom52": {
+    "description": "Helper text per il campo parent"
+  },
+  "administrationMessaggeCustom53": "— Primo livello —",
+  "@administrationMessaggeCustom53": {
+    "description": "Opzione per primo livello (nessun parent)"
+  },
+  "administrationMessaggeCustom54": "Visibile",
+  "@administrationMessaggeCustom54": {
+    "description": "Label switch: visibile"
+  },
+  "administrationMessaggeCustom55": "Mostra su Mobile",
+  "@administrationMessaggeCustom55": {
+    "description": "Label switch: mostra su mobile"
+  },
+  "administrationMessaggeCustom56": "Mostra su Desktop",
+  "@administrationMessaggeCustom56": {
+    "description": "Label switch: mostra su desktop"
+  },
+  "administrationMessaggeCustom57": "Voce aggiornata",
+  "@administrationMessaggeCustom57": {
+    "description": "Messaggio successo per voce aggiornata"
+  },
+  "administrationMessaggeCustom58": "Voce creata",
+  "@administrationMessaggeCustom58": {
+    "description": "Messaggio successo per voce creata"
+  },
+  "administrationMessaggeCustom59": "Traduzione aggiornata",
+  "@administrationMessaggeCustom59": {
+    "description": "Messaggio di successo: traduzione aggiornata"
+  },
+  "administrationMessaggeCustom60": "Traduzione creata",
+  "@administrationMessaggeCustom60": {
+    "description": "Messaggio di successo: traduzione creata"
+  },
+  "administrationMessaggeCustom61": "Modifica Traduzione",
+  "@administrationMessaggeCustom61": {
+    "description": "Titolo pagina: modifica traduzione"
+  },
+  "administrationMessaggeCustom62": "Nuova Traduzione",
+  "@administrationMessaggeCustom62": {
+    "description": "Titolo pagina: nuova traduzione"
+  },
+  "administrationMessaggeCustom63": "\"{label}\" — {route}",
+  "@administrationMessaggeCustom63": {
+    "description": "Sottotitolo: mostra la label originale e la route",
+    "placeholders": {
+      "label": {},
+      "route": {}
+    }
+  },
+  "administrationMessaggeCustom64": "Lingua",
+  "@administrationMessaggeCustom64": {
+    "description": "Label campo lingua"
+  },
+  "administrationMessaggeCustom65": "Seleziona una lingua",
+  "@administrationMessaggeCustom65": {
+    "description": "Messaggio di validazione per selezione lingua"
+  },
+  "administrationMessaggeCustom66": "Etichetta tradotta",
+  "@administrationMessaggeCustom66": {
+    "description": "Label campo: etichetta tradotta"
+  },
+  "administrationMessaggeCustom67": "Se lasci vuota questa lingua, verrà mostrata la label predefinita: \"{label}\"",
+  "@administrationMessaggeCustom67": {
+    "description": "Nota informativa che indica che la label predefinita verrà usata se si lascia vuoto",
+    "placeholders": {
+      "label": {}
+    }
+  },
+  "administrationMessaggeCustom68": "Elimina traduzione",
+  "@administrationMessaggeCustom68": {
+    "description": "Titolo dialog per eliminare una traduzione"
+  },
+  "administrationMessaggeCustom69": "Vuoi eliminare la traduzione \"{locale}\" (\"{label}\")?",
+  "@administrationMessaggeCustom69": {
+    "description": "Messaggio di conferma per eliminare una traduzione con locale e label",
+    "placeholders": {
+      "locale": {},
+      "label": {}
+    }
+  },
+  "administrationMessaggeCustom70": "Traduzione eliminata",
+  "@administrationMessaggeCustom70": {
+    "description": "Messaggio di successo dopo aver eliminato una traduzione"
+  },
+  "administrationMessaggeCustom71": "Traduzioni",
+  "@administrationMessaggeCustom71": {
+    "description": "Titolo pagina: traduzioni"
+  },
+  "administrationMessaggeCustom72": "Nessuna traduzione configurata (viene usata la label predefinita)",
+  "@administrationMessaggeCustom72": {
+    "description": "Messaggio mostrato quando non ci sono traduzioni"
+  },
+  "administrationMessaggeCustom73": "Label predefinita (fallback): \"{label}\"",
+  "@administrationMessaggeCustom73": {
+    "description": "Riga informativa che mostra la label predefinita usata come fallback",
+    "placeholders": {
+      "label": {}
+    }
+  },
+  "administrationMessaggeCustom74": "Elimina permesso",
+  "@administrationMessaggeCustom74": {
+    "description": "Titolo dialog per eliminare un permesso"
+  },
+  "administrationMessaggeCustom75": "Nuovo Permesso",
+  "@administrationMessaggeCustom75": {
+    "description": "Etichetta del pulsante per creare un nuovo permesso"
+  },
+  "administrationMessaggeCustom76": "Permessi",
+  "@administrationMessaggeCustom76": {
+    "description": "Titolo della pagina: Permessi"
+  },
+  "administrationMessaggeCustom77": "Codici permesso e attività associate",
+  "@administrationMessaggeCustom77": {
+    "description": "Sottotitolo della pagina permessi"
+  },
+  "administrationMessaggeCustom78": "Nessun permesso trovato",
+  "@administrationMessaggeCustom78": {
+    "description": "Messaggio mostrato quando non vengono trovati permessi"
+  },
+  "administrationMessaggeCustom79": "Cerca codice o attività",
+  "@administrationMessaggeCustom79": {
+    "description": "Hint text per la ricerca dei permessi"
+  },
+  "administrationMessaggeCustom80": "Codice Permesso",
+  "@administrationMessaggeCustom80": {
+    "description": "Header tabella: codice permesso"
+  },
+  "administrationMessaggeCustom81": "Attività",
+  "@administrationMessaggeCustom81": {
+    "description": "Header tabella: attività"
+  },
+  "administrationMessaggeCustom82": "Azioni",
+  "@administrationMessaggeCustom82": {
+    "description": "Header tabella: azioni"
+  },
+  "administrationMessaggeCustom83": "Vuoi eliminare \"{code}\"?",
+  "@administrationMessaggeCustom83": {
+    "description": "Messaggio di conferma per eliminare un permesso con il codice",
+    "placeholders": {
+      "code": {}
+    }
+  },
+  "administrationMessaggeCustom84": "Permesso eliminato",
+  "@administrationMessaggeCustom84": {
+    "description": "Messaggio di successo dopo l'eliminazione di un permesso"
+  },
+  "administrationMessageCustom85": "Permesso aggiornato",
+  "@administrationMessageCustom85": {
+    "description": "Messaggio di successo: permesso aggiornato"
+  },
+  "administrationMessageCustom86": "Permesso creato",
+  "@administrationMessageCustom86": {
+    "description": "Messaggio di successo: permesso creato"
+  },
+  "administrationMessageCustom87": "Modifica Permesso",
+  "@administrationMessageCustom87": {
+    "description": "Titolo pagina: modifica permesso"
+  },
+  "administrationMessageCustom88": "Definizione del codice permesso",
+  "@administrationMessageCustom88": {
+    "description": "Sottotitolo della pagina form permesso"
+  },
+  "administrationMessageCustom89": "es. competition.read, boulder.write",
+  "@administrationMessageCustom89": {
+    "description": "Hint per il campo codice permesso"
+  },
+  "administrationMessageCustom90": "Formato suggerito: risorsa.azione",
+  "@administrationMessageCustom90": {
+    "description": "Helper text per il campo codice permesso"
+  },
+  "administrationMessageCustom91": "es. Lettura lista competizioni",
+  "@administrationMessageCustom91": {
+    "description": "Hint per il campo attività"
+  },
+  "administrationMessageCustom92": "Descrizione leggibile del permesso",
+  "@administrationMessageCustom92": {
+    "description": "Helper text per il campo attività"
+  },
+  "administrationMessageCustom27": "Errore: {error}",
+  "@administrationMessageCustom27": {
+    "description": "Messaggio di errore generico con dettaglio",
+    "placeholders": { "error": {} }
+  },
+  "administrationMessageCustom93": "Utenti",
+  "@administrationMessageCustom93": { "description": "Titolo pagina: Utenti" },
+  "administrationMessageCustom94": "Assegnazione ruoli agli utenti registrati",
+  "@administrationMessageCustom94": { "description": "Sottotitolo pagina Utenti" },
+  "administrationMessageCustom95": "Nessun utente trovato",
+  "@administrationMessageCustom95": { "description": "Messaggio shown when no users found" },
+  "administrationMessageCustom96": "Nuovo Utente",
+  "@administrationMessageCustom96": { "description": "Label for new user button" },
+  "administrationMessageCustom97": "Cerca per nome o email",
+  "@administrationMessageCustom97": { "description": "Search hint text" },
+  "administrationMessageCustom98": "Ruoli",
+  "@administrationMessageCustom98": { "description": "Tooltip/label for roles action" },
+  "administrationMessageCustom99": "Nome",
+  "@administrationMessageCustom99": { "description": "Table header: Nome" },
+  "administrationMessageCustom100": "Email",
+  "@administrationMessageCustom100": { "description": "Table header: Email" },
+  "administrationMessageCustom101": "Creato il",
+  "@administrationMessageCustom101": { "description": "Table header: Creato il" },
+  "administrationMessageCustom102": "Password",
+  "@administrationMessageCustom102": { "description": "Table header: Password" },
+  "administrationMessageCustom103": "Ruoli",
+  "@administrationMessageCustom103": { "description": "Table header: Ruoli" },
+  "administrationMessageCustom104": "Azioni",
+  "@administrationMessageCustom104": { "description": "Table header: Azioni" },
+  "administrationMessageCustom105": "Sì",
+  "@administrationMessageCustom105": { "description": "Yes (Italian)" },
+  "administrationMessageCustom106": "No",
+  "@administrationMessageCustom106": { "description": "No (Italian)" },
+  "administrationMessageCustom107": "Errore creazione: {error}",
+"@administrationMessageCustom107": {
+  "description": "Messaggio di errore durante la creazione utente",
+  "placeholders": { "error": {} }
+},
+"administrationMessageCustom108": "Errore eliminazione: {error}",
+"@administrationMessageCustom108": {
+  "description": "Messaggio di errore durante l'eliminazione utente",
+  "placeholders": { "error": {} }
+},
+"administrationMessageCustom109": "Cancella Utente",
+"@administrationMessageCustom109": {
+  "description": "Titolo appbar per la pagina di cancellazione utente"
+},
+"administrationMessageCustom110": "Cognome",
+"@administrationMessageCustom110": { "description": "Label campo cognome" },
+"administrationMessageCustom111": "Obbligatorio",
+"@administrationMessageCustom111": { "description": "Messaggio validazione: obbligatorio" },
+"administrationMessageCustom112": "Nome",
+"@administrationMessageCustom112": { "description": "Label campo nome" },
+"administrationMessageCustom113": "Email",
+"@administrationMessageCustom113": { "description": "Label campo email" },
+"administrationMessageCustom114": "Email obbligatoria",
+"@administrationMessageCustom114": { "description": "Messaggio validazione: email obbligatoria" },
+"administrationMessageCustom115": "Formato email non valido",
+"@administrationMessageCustom115": { "description": "Messaggio validazione: formato email non valido" },
+"administrationMessageCustom116": "Crea utente",
+"@administrationMessageCustom116": { "description": "Etichetta del pulsante per creare utente" },
+"administrationMessageCustom117": "Conferma eliminazione utente",
+"@administrationMessageCustom117": { "description": "Titolo della vista di cancellazione utente" },
+"administrationMessageCustom118": "Annulla",
+"@administrationMessageCustom118": { "description": "Etichetta pulsante annulla" },
+"administrationMessageCustom119": "Cancella",
+"@administrationMessageCustom119": { "description": "Etichetta pulsante cancella" },
+"administrationMessageCustom120": "Ruoli aggiornati",
+"@administrationMessageCustom120": {
+  "description": "Messaggio di successo quando i ruoli del profilo sono stati salvati"
+},
+"administrationMessageCustom121": "RUOLI ASSEGNATI",
+"@administrationMessageCustom121": {
+  "description": "Intestazione della sezione che mostra i ruoli assegnati"
+},
+"administrationMessageCustom122": "Salva Ruoli",
+"@administrationMessageCustom122": {
+  "description": "Etichetta del pulsante per salvare i ruoli assegnati"
+},
+"administrationMessageCustom123": "Ruoli",
+"@administrationMessageCustom123": { "description": "Titolo pagina: Ruoli" },
+"administrationMessageCustom124": "Gestione ruoli applicativi",
+"@administrationMessageCustom124": { "description": "Sottotitolo della pagina ruoli" },
+"administrationMessageCustom125": "Nessun ruolo configurato",
+"@administrationMessageCustom125": { "description": "Messaggio mostrato quando non ci sono ruoli" },
+"administrationMessageCustom126": "Nuovo Ruolo",
+"@administrationMessageCustom126": { "description": "Etichetta del pulsante per creare un nuovo ruolo" },
+"administrationMessageCustom127": "Errore caricamento ruoli: {error}",
+"@administrationMessageCustom127": {
+  "description": "Messaggio d'errore quando il caricamento dei ruoli fallisce",
+  "placeholders": { "error": {} }
+},
+"administrationMessageCustom128": "Elimina ruolo",
+"@administrationMessageCustom128": { "description": "Titolo dialog per eliminare un ruolo" },
+"administrationMessageCustom129": "Vuoi eliminare il ruolo \"{name}\"?\nTutti gli utenti e i menu associati perderanno questo ruolo.",
+"@administrationMessageCustom129": {
+  "description": "Messaggio di conferma eliminazione ruolo con il nome del ruolo",
+  "placeholders": { "name": {} }
+},
+"administrationMessageCustom130": "Ruolo eliminato",
+"@administrationMessageCustom130": { "description": "Messaggio di successo dopo eliminazione ruolo" },
+"administrationMessageCustom131": "Errore eliminazione: {error}",
+"@administrationMessageCustom131": {
+  "description": "Messaggio d'errore quando l'eliminazione del ruolo fallisce",
+  "placeholders": { "error": {} }
+},
+"administrationMessageCustom132": "Codice",
+"@administrationMessageCustom132": { "description": "Header tabella: Codice" },
+"administrationMessageCustom133": "Nome",
+"@administrationMessageCustom133": { "description": "Header tabella: Nome" },
+"administrationMessageCustom134": "Azioni",
+"@administrationMessageCustom134": { "description": "Header tabella: Azioni" },
+"administrationMessageCustom135": "Ruolo aggiornato",
+"@administrationMessageCustom135": { "description": "Messaggio di successo: ruolo aggiornato" },
+"administrationMessageCustom136": "Ruolo creato",
+"@administrationMessageCustom136": { "description": "Messaggio di successo: ruolo creato" },
+"administrationMessageCustom137": "Modifica Ruolo",
+"@administrationMessageCustom137": { "description": "Titolo pagina: modifica ruolo" },
+"administrationMessageCustom138": "Nuovo Ruolo",
+"@administrationMessageCustom138": { "description": "Titolo pagina: nuovo ruolo" },
+"administrationMessageCustom139": "Dati del ruolo applicativo",
+"@administrationMessageCustom139": { "description": "Sottotitolo pagina ruolo" },
+"administrationMessageCustom140": "es. admin, athlete, judge",
+"@administrationMessageCustom140": { "description": "Hint per il campo codice ruolo" },
+"administrationMessageCustom141": "Identificatore univoco, solo lettere minuscole e underscore",
+"@administrationMessageCustom141": { "description": "Helper text per il campo codice ruolo" },
+"administrationMessageCustom142": "Solo lettere minuscole e underscore",
+"@administrationMessageCustom142": { "description": "Messaggio di validazione per il formato del codice ruolo" },
+"administrationMessageCustom143": "es. Amministratore, Atleta, Giudice",
+"@administrationMessageCustom143": { "description": "Hint per il campo nome ruolo" },
+"administrationMessageCustom144": "Gestione ruolo: {name}",
+"@administrationMessageCustom144": {
+  "description": "Header: gestione ruolo con nome del ruolo",
+  "placeholders": { "name": {} }
+},
+"administrationMessageCustom145": "Codice: {code}",
+"@administrationMessageCustom145": {
+  "description": "Riga che mostra il codice del ruolo",
+  "placeholders": { "code": {} }
+},
+"administrationMessageCustom146": "Permessi",
+"@administrationMessageCustom146": { "description": "Tab label: Permessi" },
+"administrationMessageCustom147": "Menu",
+"@administrationMessageCustom147": { "description": "Tab label: Menu" },
+"administrationMessageCustom148": "Errore caricamento: {error}",
+"@administrationMessageCustom148": {
+  "description": "Messaggio di errore generico per il caricamento",
+  "placeholders": { "error": {} }
+},
+"administrationMessageCustom149": "Permessi salvati",
+"@administrationMessageCustom149": { "description": "Messaggio di successo: permessi salvati" },
+"administrationMessageCustom150": "Errore salvataggio permessi: {error}",
+"@administrationMessageCustom150": {
+  "description": "Errore durante il salvataggio dei permessi",
+  "placeholders": { "error": {} }
+},
+"administrationMessageCustom151": "Menu salvati",
+"@administrationMessageCustom151": { "description": "Messaggio di successo: menu salvati" },
+"administrationMessageCustom152": "Errore salvataggio menu: {error}",
+"@administrationMessageCustom152": {
+  "description": "Errore durante il salvataggio dei menu",
+  "placeholders": { "error": {} }
+},
+"administrationMessageCustom153": "Salva Permessi",
+"@administrationMessageCustom153": { "description": "Etichetta pulsante salva permessi" },
+"administrationMessageCustom154": "Salva Menu",
+"@administrationMessageCustom154": { "description": "Etichetta pulsante salva menu" },
+"administrationMessageCustom155": "Cerca competizioni, atleti…",
+"@administrationMessageCustom155": {
+  "description": "Hint per la barra di ricerca globale"
+},
+"administrationMessageCustom156": "Nessun risultato per \"{query}\"",
+"@administrationMessageCustom156": {
+  "description": "Messaggio mostrato quando la ricerca non restituisce risultati",
+  "placeholders": {
+    "query": {}
   }
+},
+"administrationMessageCustom157": "Dashboard",
+"@administrationMessageCustom157": { "description": "Titolo pagina: Dashboard" },
+"administrationMessageCustom158": "Panoramica generale competizione",
+"@administrationMessageCustom158": { "description": "Sottotitolo pagina Dashboard" },
+"administrationMessageCustom159": "Aggiorna",
+"@administrationMessageCustom159": { "description": "Tooltip bottone aggiorna" },
+"administrationMessageCustom160": "Errore nel caricamento dei dati",
+"@administrationMessageCustom160": { "description": "Titolo mostrato quando il caricamento dati fallisce" },
+"administrationMessageCustom161": "Riprova",
+"@administrationMessageCustom161": { "description": "Etichetta bottone per riprovare il caricamento" },
+"administrationMessageCustom162": "Competizioni",
+"@administrationMessageCustom162": { "description": "Dashboard card title: Competizioni" },
+"administrationMessageCustom163": "Atleti",
+"@administrationMessageCustom163": { "description": "Dashboard card title: Atleti" },
+"administrationMessageCustom164": "Boulder",
+"@administrationMessageCustom164": { "description": "Dashboard card title: Boulder" },
+"administrationMessageCustom165": "Ascents",
+"@administrationMessageCustom165": { "description": "Dashboard card title: Ascents" },
+"administrationMessageCustom166": "Competizione",
+"@administrationMessageCustom166": { "description": "Tipo risultati ricerca: Competizione" },
+"administrationMessageCustom167": "Atleta",
+"@administrationMessageCustom167": { "description": "Tipo risultati ricerca: Atleta" },
+"administrationMessageCustom168": "Boulder",
+"@administrationMessageCustom168": { "description": "Tipo risultati ricerca: Boulder" },
+"administrationMessageCustom169": "Ascent",
+"@administrationMessageCustom169": { "description": "Tipo risultati ricerca: Ascent" }
 }  

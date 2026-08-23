@@ -6,6 +6,7 @@ import '../../../../shared/app_snackbar.dart';
 import '../../data/security_profile_service.dart';
 import '../../models/security_profile_model.dart';
 import '../../models/role_model.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class ProfileRolesPage extends StatefulWidget {
   final SecurityProfileModel profile;
@@ -27,7 +28,8 @@ class _ProfileRolesPageState extends State<ProfileRolesPage> {
     EmailService(Supabase.instance.client),
   );
 
-
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
+  
   Set<String> selectedRoleIds = {};
   bool loading = true;
   bool saving = false;
@@ -49,7 +51,7 @@ class _ProfileRolesPageState extends State<ProfileRolesPage> {
     } catch (e) {
       if (!mounted) return;
       setState(() => loading = false);
-      AppSnackbar.error(context, 'Errore: $e');
+      AppSnackbar.error(context, l10n.administrationMessageCustom27(e.toString())); // 'Errore: $e'
     }
   }
 
@@ -61,11 +63,11 @@ class _ProfileRolesPageState extends State<ProfileRolesPage> {
         roleIds: selectedRoleIds.toList(),
       );
       if (!mounted) return;
-      AppSnackbar.success(context, 'Ruoli aggiornati');
+      AppSnackbar.success(context, l10n.administrationMessageCustom120); // 'Ruoli aggiornati'
       Navigator.pop(context, true);
     } catch (e) {
       if (!mounted) return;
-      AppSnackbar.error(context, 'Errore: $e');
+      AppSnackbar.error(context, l10n.administrationMessageCustom27(e.toString())); // 'Errore: $e'
     } finally {
       if (mounted) setState(() => saving = false);
     }
@@ -126,9 +128,9 @@ class _ProfileRolesPageState extends State<ProfileRolesPage> {
                 : ListView(
                     padding: const EdgeInsets.all(24),
                     children: [
-                      const Text(
-                        'RUOLI ASSEGNATI',
-                        style: TextStyle(
+                      Text(
+                        l10n.administrationMessageCustom121, // 'RUOLI ASSEGNATI'
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 12,
                           color: Colors.grey,
@@ -144,8 +146,7 @@ class _ProfileRolesPageState extends State<ProfileRolesPage> {
                         ),
                         child: Column(
                           children: widget.roles.map((role) {
-                            final isSelected =
-                                selectedRoleIds.contains(role.id);
+                            final isSelected = selectedRoleIds.contains(role.id);
                             return CheckboxListTile(
                               title: Text(role.name,
                                   style: const TextStyle(
@@ -185,7 +186,7 @@ class _ProfileRolesPageState extends State<ProfileRolesPage> {
                 FilledButton.icon(
                   onPressed: saving ? null : save,
                   icon: const Icon(Icons.save),
-                  label: const Text('Salva Ruoli'),
+                  label: Text(l10n.administrationMessageCustom122), // 'Salva Ruoli'
                 ),
               ],
             ),

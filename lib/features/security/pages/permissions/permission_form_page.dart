@@ -4,6 +4,7 @@ import '../../../../shared/widgets/base_page.dart';
 import '../../../../shared/app_snackbar.dart';
 import '../../data/permission_service.dart';
 import '../../models/permission_model.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class PermissionFormPage extends StatefulWidget {
   final PermissionModel? permission;
@@ -19,6 +20,7 @@ class _PermissionFormPageState extends State<PermissionFormPage> {
   final formKey = GlobalKey<FormState>();
   final codeController = TextEditingController();
   final activityController = TextEditingController();
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   bool saving = false;
   bool get isEdit => widget.permission != null;
@@ -59,11 +61,15 @@ class _PermissionFormPageState extends State<PermissionFormPage> {
 
       if (!mounted) return;
       AppSnackbar.success(
-          context, isEdit ? 'Permesso aggiornato' : 'Permesso creato');
+        context,
+        isEdit
+            ? l10n.administrationMessageCustom85 // 'Permesso aggiornato'
+            : l10n.administrationMessageCustom86, // 'Permesso creato'
+      );
       Navigator.pop(context, true);
     } catch (e) {
       if (!mounted) return;
-      AppSnackbar.error(context, 'Errore: $e');
+      AppSnackbar.error(context, AppLocalizations.of(context)!.administrationMessaggeCustom27(e.toString())); // 'Errore: $e' (riutilizzata)
     } finally {
       if (mounted) setState(() => saving = false);
     }
@@ -72,8 +78,8 @@ class _PermissionFormPageState extends State<PermissionFormPage> {
   @override
   Widget build(BuildContext context) {
     return BasePage(
-      title: isEdit ? 'Modifica Permesso' : 'Nuovo Permesso',
-      subtitle: 'Definizione del codice permesso',
+      title: isEdit ? l10n.administrationMessageCustom87 : l10n.administrationMessaggeCustom75, // 'Modifica Permesso' / 'Nuovo Permesso'
+      subtitle: l10n.administrationMessageCustom88, // 'Definizione del codice permesso'
       actions: [
         FilledButton.icon(
           onPressed: saving ? null : save,
@@ -83,7 +89,7 @@ class _PermissionFormPageState extends State<PermissionFormPage> {
                   height: 18,
                   child: CircularProgressIndicator(strokeWidth: 2))
               : const Icon(Icons.save),
-          label: Text(saving ? 'Salvataggio...' : 'Salva'),
+          label: Text(saving ? l10n.administrationMessaggeCustom40 : l10n.administrationMessaggeCustom41), // 'Salvataggio...' / 'Salva' (riutilizzate)
         ),
       ],
       child: SizedBox(
@@ -98,14 +104,14 @@ class _PermissionFormPageState extends State<PermissionFormPage> {
                 children: [
                   TextFormField(
                     controller: codeController,
-                    decoration: const InputDecoration(
-                      labelText: 'Codice Permesso',
-                      hintText: 'es. competition.read, boulder.write',
-                      helperText: 'Formato suggerito: risorsa.azione',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.administrationMessaggeCustom80, // 'Codice Permesso'
+                      hintText: l10n.administrationMessageCustom89, // 'es. competition.read, boulder.write'
+                      helperText: l10n.administrationMessageCustom90, // 'Formato suggerito: risorsa.azione'
                     ),
                     validator: (v) {
                       if (v == null || v.trim().isEmpty) {
-                        return 'Campo obbligatorio';
+                        return l10n.administrationMessaggeCustom43; // 'Campo obbligatorio' (riutilizzata)
                       }
                       return null;
                     },
@@ -114,14 +120,14 @@ class _PermissionFormPageState extends State<PermissionFormPage> {
                   TextFormField(
                     controller: activityController,
                     maxLines: 3,
-                    decoration: const InputDecoration(
-                      labelText: 'Attività',
-                      hintText: 'es. Lettura lista competizioni',
-                      helperText: 'Descrizione leggibile del permesso',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.administrationMessaggeCustom81, // 'Attività'
+                      hintText: l10n.administrationMessageCustom91, // 'es. Lettura lista competizioni'
+                      helperText: l10n.administrationMessageCustom92, // 'Descrizione leggibile del permesso'
                     ),
                     validator: (v) {
                       if (v == null || v.trim().isEmpty) {
-                        return 'Campo obbligatorio';
+                        return l10n.administrationMessaggeCustom43; // 'Campo obbligatorio' (riutilizzata)
                       }
                       return null;
                     },

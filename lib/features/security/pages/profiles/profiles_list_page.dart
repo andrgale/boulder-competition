@@ -12,7 +12,7 @@ import '../../data/security_profile_service.dart';
 import '../../data/role_service.dart';
 import '../../models/security_profile_model.dart';
 import '../../models/role_model.dart';
-
+import 'package:boulder_competition/l10n/app_localizations.dart';
 class ProfilesListPage extends StatefulWidget {
   const ProfilesListPage({super.key});
 
@@ -27,6 +27,7 @@ class _ProfilesListPageState extends State<ProfilesListPage> {
     EmailService(Supabase.instance.client),
   );
 
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   final roleService = RoleService();
   final searchController = TextEditingController();
@@ -71,7 +72,10 @@ class _ProfilesListPageState extends State<ProfilesListPage> {
     } catch (e) {
       if (!mounted) return;
       setState(() => loading = false);
-      AppSnackbar.error(context, 'Errore: $e');
+      AppSnackbar.error(
+        context,
+        AppLocalizations.of(context)!.administrationMessageCustom27(e.toString()), // 'Errore: $e'
+      );
     }
   }
 
@@ -125,24 +129,24 @@ class _ProfilesListPageState extends State<ProfilesListPage> {
     final screen = context.responsive;
 
     return BasePage(
-      title: 'Utenti',
-      subtitle: 'Assegnazione ruoli agli utenti registrati',
+      title: l10n.administrationMessageCustom93, // 'Utenti'
+      subtitle: l10n.administrationMessageCustom94, // 'Assegnazione ruoli agli utenti registrati'
       loading: loading,
       empty: !loading && filtered.isEmpty,
-      emptyMessage: 'Nessun utente trovato',
+      emptyMessage: l10n.administrationMessageCustom95, // 'Nessun utente trovato'
       actions: [
         FilledButton.icon(
           onPressed: _openNewUser,
           icon: const Icon(Icons.add),
-          label: const Text('Nuovo Utente'),
+          label: Text(l10n.administrationMessageCustom96), // 'Nuovo Utente'
         ),
       ],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSearch(screen),
+          _buildSearch(screen, l10n),
           const SizedBox(height: 24),
-          Expanded(child: _buildContent(screen)),
+          Expanded(child: _buildContent(screen, l10n)),
         ],
       ),
     );
@@ -150,14 +154,14 @@ class _ProfilesListPageState extends State<ProfilesListPage> {
 
   // SEARCH
 
-  Widget _buildSearch(Responsive screen) {
+  Widget _buildSearch(Responsive screen, AppLocalizations l10n) {
     return SizedBox(
       width: screen.isMobile ? double.infinity : 420,
       child: TextField(
         controller: searchController,
-        decoration: const InputDecoration(
-          hintText: 'Cerca per nome o email',
-          prefixIcon: Icon(Icons.search),
+        decoration: InputDecoration(
+          hintText: l10n.administrationMessageCustom97, // 'Cerca per nome o email'
+          prefixIcon: const Icon(Icons.search),
         ),
         onChanged: (_) => applyFilter(),
       ),
@@ -166,16 +170,16 @@ class _ProfilesListPageState extends State<ProfilesListPage> {
 
   // CONTENT
 
-  Widget _buildContent(Responsive screen) {
+  Widget _buildContent(Responsive screen, AppLocalizations l10n) {
     if (screen.isMobile) {
-      return _buildMobileList();
+      return _buildMobileList(l10n);
     }
-    return _buildTable();
+    return _buildTable(l10n);
   }
 
   // MOBILE
 
-  Widget _buildMobileList() {
+  Widget _buildMobileList(AppLocalizations l10n) {
     return ListView.separated(
       itemCount: filtered.length,
       separatorBuilder: (_, _) =>
@@ -202,10 +206,12 @@ class _ProfilesListPageState extends State<ProfilesListPage> {
                 IconButton(
                   icon: const Icon(Icons.manage_accounts),
                   onPressed: () => _openRoles(p),
+                  tooltip: l10n.administrationMessageCustom98, // 'Ruoli'
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete, color: Colors.red),
                   onPressed: () => _deleteUser(p),
+                  tooltip: l10n.administrationMessaggeCustom32, // 'Elimina' (riutilizzata)
                 ),
               ],
             ),
@@ -216,7 +222,7 @@ class _ProfilesListPageState extends State<ProfilesListPage> {
   }
 
   // TABLE
-  Widget _buildTable() {
+  Widget _buildTable(AppLocalizations l10n) {
     return Scrollbar(
       thumbVisibility: true,
       child: SingleChildScrollView(
@@ -224,13 +230,13 @@ class _ProfilesListPageState extends State<ProfilesListPage> {
         child: ResponsiveTable(
           controller: scrollController, // ✅ solo orizzontale
           minWidth: 1200,
-          columns: const [
-            DataColumn(label: Text('Nome')),
-            DataColumn(label: Text('Email')),
-            DataColumn(label: Text('Creato il')),
-            DataColumn(label: Text('Password')),
-            DataColumn(label: Text('Ruoli')),
-            DataColumn(label: Text('Azioni')),
+          columns: [
+            DataColumn(label: Text(l10n.administrationMessageCustom99)), // 'Nome'
+            DataColumn(label: Text(l10n.administrationMessageCustom100)), // 'Email'
+            DataColumn(label: Text(l10n.administrationMessageCustom101)), // 'Creato il'
+            DataColumn(label: Text(l10n.administrationMessageCustom102)), // 'Password'
+            DataColumn(label: Text(l10n.administrationMessageCustom103)), // 'Ruoli'
+            DataColumn(label: Text(l10n.administrationMessageCustom104)), // 'Azioni'
           ],
           rows: filtered.map(_buildRow).toList(),
         ),
@@ -284,7 +290,7 @@ class _ProfilesListPageState extends State<ProfilesListPage> {
                     : Colors.red,
               ),
               const SizedBox(width: 6),
-              Text(p.passwordChanged ? 'Sì' : 'No'),
+              Text(p.passwordChanged ? l10n.administrationMessageCustom105 : l10n.administrationMessageCustom106), // 'Sì' / 'No'
             ],
           ),
         ),
@@ -322,11 +328,13 @@ class _ProfilesListPageState extends State<ProfilesListPage> {
           IconButton(
             icon: const Icon(Icons.manage_accounts),
             onPressed: () => _openRoles(p),
+            tooltip: l10n.administrationMessageCustom98, // 'Ruoli'
           ),
           IconButton(
 //            icon: const Icon(Icons.delete, color: Colors.red),
             icon: const Icon(Icons.delete),
             onPressed: () => _deleteUser(p),
+            tooltip: l10n.administrationMessaggeCustom32, // 'Elimina' (riutilizzata)
           ),
         ],
       )),

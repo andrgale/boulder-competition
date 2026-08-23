@@ -609,4 +609,572 @@ class AppLocalizationsEn extends AppLocalizations {
   String checkinMessageCustom48(Object page, Object total) {
     return 'Page $page of $total';
   }
+
+  @override
+  String get administrationMessaggeCustom1 => 'Roles';
+
+  @override
+  String get administrationMessaggeCustom2 =>
+      'Define application roles and assign menus and permissions.';
+
+  @override
+  String get administrationMessaggeCustom3 => 'Permissions';
+
+  @override
+  String get administrationMessaggeCustom4 =>
+      'Manage permission codes and associated activities.';
+
+  @override
+  String get administrationMessaggeCustom5 => 'Menu';
+
+  @override
+  String get administrationMessaggeCustom6 =>
+      'Configure menu structure and platform visibility.';
+
+  @override
+  String get administrationMessaggeCustom7 => 'Users';
+
+  @override
+  String get administrationMessaggeCustom8 =>
+      'Assign roles to registered users.';
+
+  @override
+  String get administrationMessaggeCustom9 => 'Email';
+
+  @override
+  String get administrationMessaggeCustom10 =>
+      'Manage configurations, templates and email sending settings.';
+
+  @override
+  String get administrationMessaggeCustom11 => 'Security';
+
+  @override
+  String get administrationMessaggeCustom12 =>
+      'Manage roles, permissions, menu and users';
+
+  @override
+  String get administrationMessaggeCustom13 => 'Development tools';
+
+  @override
+  String get administrationMessaggeCustom14 => 'Reset client configuration';
+
+  @override
+  String get administrationMessaggeCustom15 =>
+      'The device will be disconnected from the current client. The application will close automatically: at restart you will need to enter the client code and password again.';
+
+  @override
+  String get administrationMessaggeCustom16 => 'Cancel';
+
+  @override
+  String get administrationMessaggeCustom17 => 'Confirm reset';
+
+  @override
+  String get administrationMessaggeCustom18 => 'Reset completed';
+
+  @override
+  String get administrationMessaggeCustom19 =>
+      'The application will be closed. Reopen it to enter the new client code and password.';
+
+  @override
+  String get administrationMessaggeCustom20 => 'Close now';
+
+  @override
+  String get administrationMessaggeCustom21 => 'Force language (test only)';
+
+  @override
+  String get administrationMessaggeCustom22 =>
+      'Current language: automatic (operating system)';
+
+  @override
+  String administrationMessaggeCustom23(Object code) {
+    return 'Forced language: $code';
+  }
+
+  @override
+  String get administrationMessaggeCustom24 => 'Automatic';
+
+  @override
+  String get administrationMessaggeCustom25 => 'Delete menu item';
+
+  @override
+  String administrationMessaggeCustom26(Object label) {
+    return 'Do you want to delete \"$label\"?\nChild submenus will be deleted in cascade.';
+  }
+
+  @override
+  String administrationMessaggeCustom27(Object error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String get administrationMessaggeCustom28 => 'New Item';
+
+  @override
+  String get administrationMessaggeCustom29 => 'Translations';
+
+  @override
+  String get administrationMessaggeCustom30 => 'Add child';
+
+  @override
+  String get administrationMessaggeCustom31 => 'Edit';
+
+  @override
+  String get administrationMessaggeCustom32 => 'Delete';
+
+  @override
+  String get administrationMessaggeCustom33 => 'No menu items configured';
+
+  @override
+  String get administrationMessaggeCustom34 => 'Item deleted';
+
+  @override
+  String get administrationMessaggeCustom36 => 'Navigation structure';
+
+  @override
+  String get administrationMessaggeCustom37 => 'Edit Menu Item';
+
+  @override
+  String get administrationMessaggeCustom38 => 'New Menu Item';
+
+  @override
+  String get administrationMessaggeCustom39 => 'Navigation item configuration';
+
+  @override
+  String get administrationMessaggeCustom40 => 'Saving...';
+
+  @override
+  String get administrationMessaggeCustom41 => 'Save';
+
+  @override
+  String get administrationMessaggeCustom42 => 'Label';
+
+  @override
+  String get administrationMessaggeCustom43 => 'Required field';
+
+  @override
+  String get administrationMessaggeCustom44 => 'Route';
+
+  @override
+  String get administrationMessaggeCustom45 => '/dashboard';
+
+  @override
+  String get administrationMessaggeCustom46 => 'Must start with /';
+
+  @override
+  String get administrationMessaggeCustom47 => 'Icon';
+
+  @override
+  String get administrationMessaggeCustom48 => '— none —';
+
+  @override
+  String administrationMessaggeCustom49(Object icon) {
+    return '$icon (non standard)';
+  }
+
+  @override
+  String get administrationMessaggeCustom50 => 'Order';
+
+  @override
+  String get administrationMessaggeCustom51 => 'Parent item';
+
+  @override
+  String get administrationMessaggeCustom52 =>
+      'Leave empty to create a top-level item';
+
+  @override
+  String get administrationMessaggeCustom53 => '— Top level —';
+
+  @override
+  String get administrationMessaggeCustom54 => 'Visible';
+
+  @override
+  String get administrationMessaggeCustom55 => 'Show on Mobile';
+
+  @override
+  String get administrationMessaggeCustom56 => 'Show on Desktop';
+
+  @override
+  String get administrationMessaggeCustom57 => 'Item updated';
+
+  @override
+  String get administrationMessaggeCustom58 => 'Item created';
+
+  @override
+  String get administrationMessaggeCustom59 => 'Translation updated';
+
+  @override
+  String get administrationMessaggeCustom60 => 'Translation created';
+
+  @override
+  String get administrationMessaggeCustom61 => 'Edit Translation';
+
+  @override
+  String get administrationMessaggeCustom62 => 'New Translation';
+
+  @override
+  String administrationMessaggeCustom63(Object label, Object route) {
+    return '\"$label\" — $route';
+  }
+
+  @override
+  String get administrationMessaggeCustom64 => 'Language';
+
+  @override
+  String get administrationMessaggeCustom65 => 'Select a language';
+
+  @override
+  String get administrationMessaggeCustom66 => 'Translated label';
+
+  @override
+  String administrationMessaggeCustom67(Object label) {
+    return 'If left empty, the default label will be shown: \"$label\"';
+  }
+
+  @override
+  String get administrationMessaggeCustom68 => 'Delete translation';
+
+  @override
+  String administrationMessaggeCustom69(Object locale, Object label) {
+    return 'Do you want to delete the translation \"$locale\" (\"$label\")?';
+  }
+
+  @override
+  String get administrationMessaggeCustom70 => 'Translation deleted';
+
+  @override
+  String get administrationMessaggeCustom71 => 'Translations';
+
+  @override
+  String get administrationMessaggeCustom72 =>
+      'No translations configured (the default label will be used)';
+
+  @override
+  String administrationMessaggeCustom73(Object label) {
+    return 'Default label (fallback): \"$label\"';
+  }
+
+  @override
+  String get administrationMessaggeCustom74 => 'Delete permission';
+
+  @override
+  String get administrationMessaggeCustom75 => 'New Permission';
+
+  @override
+  String get administrationMessaggeCustom76 => 'Permissions';
+
+  @override
+  String get administrationMessaggeCustom77 =>
+      'Permission codes and associated activities';
+
+  @override
+  String get administrationMessaggeCustom78 => 'No permissions found';
+
+  @override
+  String get administrationMessaggeCustom79 => 'Search code or activity';
+
+  @override
+  String get administrationMessaggeCustom80 => 'Permission Code';
+
+  @override
+  String get administrationMessaggeCustom81 => 'Activity';
+
+  @override
+  String get administrationMessaggeCustom82 => 'Actions';
+
+  @override
+  String administrationMessaggeCustom83(Object code) {
+    return 'Do you want to delete \"$code\"?';
+  }
+
+  @override
+  String get administrationMessaggeCustom84 => 'Permission deleted';
+
+  @override
+  String get administrationMessageCustom85 => 'Permission updated';
+
+  @override
+  String get administrationMessageCustom86 => 'Permission created';
+
+  @override
+  String get administrationMessageCustom87 => 'Edit Permission';
+
+  @override
+  String get administrationMessageCustom88 => 'Permission code definition';
+
+  @override
+  String get administrationMessageCustom89 =>
+      'e.g. competition.read, boulder.write';
+
+  @override
+  String get administrationMessageCustom90 =>
+      'Suggested format: resource.action';
+
+  @override
+  String get administrationMessageCustom91 => 'e.g. Read competitions list';
+
+  @override
+  String get administrationMessageCustom92 =>
+      'Human-readable description of the permission';
+
+  @override
+  String administrationMessageCustom27(Object error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String get administrationMessageCustom93 => 'Users';
+
+  @override
+  String get administrationMessageCustom94 =>
+      'Assign roles to registered users';
+
+  @override
+  String get administrationMessageCustom95 => 'No users found';
+
+  @override
+  String get administrationMessageCustom96 => 'New User';
+
+  @override
+  String get administrationMessageCustom97 => 'Search by name or email';
+
+  @override
+  String get administrationMessageCustom98 => 'Roles';
+
+  @override
+  String get administrationMessageCustom99 => 'Name';
+
+  @override
+  String get administrationMessageCustom100 => 'Email';
+
+  @override
+  String get administrationMessageCustom101 => 'Created at';
+
+  @override
+  String get administrationMessageCustom102 => 'Password';
+
+  @override
+  String get administrationMessageCustom103 => 'Roles';
+
+  @override
+  String get administrationMessageCustom104 => 'Actions';
+
+  @override
+  String get administrationMessageCustom105 => 'Yes';
+
+  @override
+  String get administrationMessageCustom106 => 'No';
+
+  @override
+  String administrationMessageCustom107(Object error) {
+    return 'Creation error: $error';
+  }
+
+  @override
+  String administrationMessageCustom108(Object error) {
+    return 'Deletion error: $error';
+  }
+
+  @override
+  String get administrationMessageCustom109 => 'Delete User';
+
+  @override
+  String get administrationMessageCustom110 => 'Last name';
+
+  @override
+  String get administrationMessageCustom111 => 'Required';
+
+  @override
+  String get administrationMessageCustom112 => 'First name';
+
+  @override
+  String get administrationMessageCustom113 => 'Email';
+
+  @override
+  String get administrationMessageCustom114 => 'Email is required';
+
+  @override
+  String get administrationMessageCustom115 => 'Invalid email format';
+
+  @override
+  String get administrationMessageCustom116 => 'Create user';
+
+  @override
+  String get administrationMessageCustom117 => 'Confirm user deletion';
+
+  @override
+  String get administrationMessageCustom118 => 'Cancel';
+
+  @override
+  String get administrationMessageCustom119 => 'Delete';
+
+  @override
+  String get administrationMessageCustom120 => 'Roles updated';
+
+  @override
+  String get administrationMessageCustom121 => 'ASSIGNED ROLES';
+
+  @override
+  String get administrationMessageCustom122 => 'Save Roles';
+
+  @override
+  String get administrationMessageCustom123 => 'Roles';
+
+  @override
+  String get administrationMessageCustom124 => 'Manage application roles';
+
+  @override
+  String get administrationMessageCustom125 => 'No roles configured';
+
+  @override
+  String get administrationMessageCustom126 => 'New Role';
+
+  @override
+  String administrationMessageCustom127(Object error) {
+    return 'Error loading roles: $error';
+  }
+
+  @override
+  String get administrationMessageCustom128 => 'Delete role';
+
+  @override
+  String administrationMessageCustom129(Object name) {
+    return 'Do you want to delete the role \"$name\"?\nAll users and associated menus will lose this role.';
+  }
+
+  @override
+  String get administrationMessageCustom130 => 'Role deleted';
+
+  @override
+  String administrationMessageCustom131(Object error) {
+    return 'Error deleting: $error';
+  }
+
+  @override
+  String get administrationMessageCustom132 => 'Code';
+
+  @override
+  String get administrationMessageCustom133 => 'Name';
+
+  @override
+  String get administrationMessageCustom134 => 'Actions';
+
+  @override
+  String get administrationMessageCustom135 => 'Role updated';
+
+  @override
+  String get administrationMessageCustom136 => 'Role created';
+
+  @override
+  String get administrationMessageCustom137 => 'Edit Role';
+
+  @override
+  String get administrationMessageCustom138 => 'New Role';
+
+  @override
+  String get administrationMessageCustom139 => 'Application role data';
+
+  @override
+  String get administrationMessageCustom140 => 'e.g. admin, athlete, judge';
+
+  @override
+  String get administrationMessageCustom141 =>
+      'Unique identifier, lowercase letters and underscore only';
+
+  @override
+  String get administrationMessageCustom142 =>
+      'Only lowercase letters and underscore are allowed';
+
+  @override
+  String get administrationMessageCustom143 =>
+      'e.g. Administrator, Athlete, Judge';
+
+  @override
+  String administrationMessageCustom144(Object name) {
+    return 'Manage role: $name';
+  }
+
+  @override
+  String administrationMessageCustom145(Object code) {
+    return 'Code: $code';
+  }
+
+  @override
+  String get administrationMessageCustom146 => 'Permissions';
+
+  @override
+  String get administrationMessageCustom147 => 'Menu';
+
+  @override
+  String administrationMessageCustom148(Object error) {
+    return 'Error loading: $error';
+  }
+
+  @override
+  String get administrationMessageCustom149 => 'Permissions saved';
+
+  @override
+  String administrationMessageCustom150(Object error) {
+    return 'Error saving permissions: $error';
+  }
+
+  @override
+  String get administrationMessageCustom151 => 'Menus saved';
+
+  @override
+  String administrationMessageCustom152(Object error) {
+    return 'Error saving menus: $error';
+  }
+
+  @override
+  String get administrationMessageCustom153 => 'Save Permissions';
+
+  @override
+  String get administrationMessageCustom154 => 'Save Menus';
+
+  @override
+  String get administrationMessageCustom155 => 'Search competitions, athletes…';
+
+  @override
+  String administrationMessageCustom156(Object query) {
+    return 'No results for \"$query\"';
+  }
+
+  @override
+  String get administrationMessageCustom157 => 'Dashboard';
+
+  @override
+  String get administrationMessageCustom158 => 'Competition overview';
+
+  @override
+  String get administrationMessageCustom159 => 'Refresh';
+
+  @override
+  String get administrationMessageCustom160 => 'Error loading data';
+
+  @override
+  String get administrationMessageCustom161 => 'Retry';
+
+  @override
+  String get administrationMessageCustom162 => 'Competitions';
+
+  @override
+  String get administrationMessageCustom163 => 'Athletes';
+
+  @override
+  String get administrationMessageCustom164 => 'Boulders';
+
+  @override
+  String get administrationMessageCustom165 => 'Ascents';
+
+  @override
+  String get administrationMessageCustom166 => 'Competition';
+
+  @override
+  String get administrationMessageCustom167 => 'Athlete';
+
+  @override
+  String get administrationMessageCustom168 => 'Boulder';
+
+  @override
+  String get administrationMessageCustom169 => 'Ascent';
 }

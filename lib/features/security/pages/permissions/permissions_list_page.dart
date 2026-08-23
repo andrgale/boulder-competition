@@ -6,6 +6,7 @@ import '../../../../shared/dialogs/app_confirm_dialog.dart';
 import '../../../../shared/app_snackbar.dart';
 import '../../data/permission_service.dart';
 import '../../models/permission_model.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class PermissionsListPage extends StatefulWidget {
   const PermissionsListPage({super.key});
@@ -17,6 +18,7 @@ class PermissionsListPage extends StatefulWidget {
 class _PermissionsListPageState extends State<PermissionsListPage> {
   final service = PermissionService();
   final searchController = TextEditingController();
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   // controller condiviso tra Scrollbar e SingleChildScrollView
   final _verticalScrollController = ScrollController();
@@ -50,7 +52,10 @@ class _PermissionsListPageState extends State<PermissionsListPage> {
     } catch (e) {
       if (!mounted) return;
       setState(() => loading = false);
-      AppSnackbar.error(context, 'Errore: $e');
+      AppSnackbar.error(
+        context,
+        AppLocalizations.of(context)!.administrationMessaggeCustom27(e.toString()), // 'Errore: $e'
+      );
     }
   }
 
@@ -67,29 +72,29 @@ class _PermissionsListPageState extends State<PermissionsListPage> {
   Future<void> deletePermission(PermissionModel p) async {
     final confirm = await AppConfirmDialog.showDelete(
       context: context,
-      title: 'Elimina permesso',
-      message: 'Vuoi eliminare "${p.permissionCode}"?',
+      title: l10n.administrationMessaggeCustom74, // 'Elimina permesso'
+      message: l10n.administrationMessaggeCustom83(p.permissionCode), // 'Vuoi eliminare "{code}"?'
     );
     if (!confirm || !mounted) return;
 
     try {
       await service.deletePermission(p.id);
-      AppSnackbar.success(context, 'Permesso eliminato');
+      AppSnackbar.success(context, l10n.administrationMessaggeCustom84); // 'Permesso eliminato'
       await loadPermissions();
     } catch (e) {
       if (!mounted) return;
-      AppSnackbar.error(context, 'Errore: $e');
+      AppSnackbar.error(context, l10n.administrationMessaggeCustom27(e.toString())); // 'Errore: $e'
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return BasePage(
-      title: 'Permessi',
-      subtitle: 'Codici permesso e attività associate',
+      title: l10n.administrationMessaggeCustom76, // 'Permessi'
+      subtitle: l10n.administrationMessaggeCustom77, // 'Codici permesso e attività associate'
       loading: loading,
       empty: !loading && filtered.isEmpty,
-      emptyMessage: 'Nessun permesso trovato',
+      emptyMessage: l10n.administrationMessaggeCustom78, // 'Nessun permesso trovato'
       actions: [
         FilledButton.icon(
           onPressed: () async {
@@ -97,7 +102,7 @@ class _PermissionsListPageState extends State<PermissionsListPage> {
             await loadPermissions();
           },
           icon: const Icon(Icons.add),
-          label: const Text('Nuovo Permesso'),
+          label: Text(l10n.administrationMessaggeCustom75), // 'Nuovo Permesso'
         ),
       ],
       child: Column(
@@ -108,9 +113,9 @@ class _PermissionsListPageState extends State<PermissionsListPage> {
             width: 360,
             child: TextField(
               controller: searchController,
-              decoration: const InputDecoration(
-                hintText: 'Cerca codice o attività',
-                prefixIcon: Icon(Icons.search),
+              decoration: InputDecoration(
+                hintText: l10n.administrationMessaggeCustom79, // 'Cerca codice o attività'
+                prefixIcon: const Icon(Icons.search),
               ),
               onChanged: (_) => applyFilter(),
             ),
@@ -126,6 +131,7 @@ class _PermissionsListPageState extends State<PermissionsListPage> {
   }
 
   Widget _buildTable() {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -135,7 +141,7 @@ class _PermissionsListPageState extends State<PermissionsListPage> {
       clipBehavior: Clip.antiAlias,
       child: Scrollbar(
         controller: _verticalScrollController,
-        thumbVisibility: true,      // barra sempre visibile
+        thumbVisibility: true, // barra sempre visibile
         child: SingleChildScrollView(
           controller: _verticalScrollController,
           scrollDirection: Axis.vertical,
@@ -152,10 +158,10 @@ class _PermissionsListPageState extends State<PermissionsListPage> {
                 dataRowMinHeight: 60,
                 dataRowMaxHeight: 60,
                 headingRowHeight: 56,
-                columns: const [
-                  DataColumn(label: Text('Codice Permesso')),
-                  DataColumn(label: Text('Attività')),
-                  DataColumn(label: Text('Azioni')),
+                columns: [
+                  DataColumn(label: Text(l10n.administrationMessaggeCustom80)), // 'Codice Permesso'
+                  DataColumn(label: Text(l10n.administrationMessaggeCustom81)), // 'Attività'
+                  DataColumn(label: Text(l10n.administrationMessaggeCustom82)), // 'Azioni'
                 ],
                 rows: filtered.map((p) => _buildRow(p)).toList(),
               ),
@@ -194,7 +200,7 @@ class _PermissionsListPageState extends State<PermissionsListPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                tooltip: 'Modifica',
+                tooltip: l10n.administrationMessaggeCustom31, // 'Modifica'
                 icon: const Icon(Icons.edit),
                 onPressed: () async {
                   await context.push(
@@ -205,7 +211,7 @@ class _PermissionsListPageState extends State<PermissionsListPage> {
                 },
               ),
               IconButton(
-                tooltip: 'Elimina',
+                tooltip: l10n.administrationMessaggeCustom32, // 'Elimina'
                 icon: const Icon(Icons.delete),
                 onPressed: () => deletePermission(p),
               ),

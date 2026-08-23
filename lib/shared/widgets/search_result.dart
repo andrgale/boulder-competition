@@ -1,3 +1,4 @@
+import 'package:boulder_competition/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 enum SearchResultType { competition, athlete, boulder, ascent }
@@ -34,16 +35,34 @@ class SearchResult {
     }
   }
 
+  // RETROCOMPATIBLE getter (keeps original text as comment)
+  // Prefer using localizedTypeLabel(context) instead.
   String get typeLabel {
     switch (type) {
       case SearchResultType.competition:
-        return 'Competizione';
+        return 'Competizione'; // original: 'Competizione'
       case SearchResultType.athlete:
-        return 'Atleta';
+        return 'Atleta'; // original: 'Atleta'
       case SearchResultType.boulder:
-        return 'Boulder';
+        return 'Boulder'; // original: 'Boulder'
       case SearchResultType.ascent:
-        return 'Ascent';
+        return 'Ascent'; // original: 'Ascent'
+    }
+  }
+
+  // NEW: localized label using BuildContext / AppLocalizations
+  // Call like: group.first.localizedTypeLabel(context)
+  String localizedTypeLabel(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (type) {
+      case SearchResultType.competition:
+        return l10n.administrationMessageCustom166; // 'Competizione' / 'Competition'
+      case SearchResultType.athlete:
+        return l10n.administrationMessageCustom167; // 'Atleta' / 'Athlete'
+      case SearchResultType.boulder:
+        return l10n.administrationMessageCustom168; // 'Boulder' / 'Boulder'
+      case SearchResultType.ascent:
+        return l10n.administrationMessageCustom169; // 'Ascent' / 'Ascent'
     }
   }
 }

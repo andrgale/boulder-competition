@@ -7,6 +7,7 @@ import '../../../../shared/app_snackbar.dart';
 import '../../data/menu_translation_service_admin.dart';
 import '../../models/menu_model.dart';
 import '../../models/menu_translation_model.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class MenuTranslationsListPage extends StatefulWidget {
   final MenuModel menu;
@@ -23,6 +24,7 @@ class _MenuTranslationsListPageState extends State<MenuTranslationsListPage> {
 
   List<MenuTranslationModel> translations = [];
   bool loading = true;
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   @override
   void initState() {
@@ -41,26 +43,25 @@ class _MenuTranslationsListPageState extends State<MenuTranslationsListPage> {
     } catch (e) {
       if (!mounted) return;
       setState(() => loading = false);
-      AppSnackbar.error(context, 'Errore: $e');
+      AppSnackbar.error(context, AppLocalizations.of(context)!.administrationMessaggeCustom27(e.toString())); // 'Errore: $e'
     }
   }
 
   Future<void> deleteTranslation(MenuTranslationModel t) async {
     final confirm = await AppConfirmDialog.showDelete(
       context: context,
-      title: 'Elimina traduzione',
-      message:
-          'Vuoi eliminare la traduzione "${t.locale}" ("${t.label}")?',
+      title: l10n.administrationMessaggeCustom68, // 'Elimina traduzione'
+      message: l10n.administrationMessaggeCustom69(t.locale, t.label), // 'Vuoi eliminare la traduzione "{locale}" ("{label}")?'
     );
     if (!confirm || !mounted) return;
 
     try {
       await service.deleteTranslation(t.id);
-      AppSnackbar.success(context, 'Traduzione eliminata');
+      AppSnackbar.success(context, l10n.administrationMessaggeCustom70); // 'Traduzione eliminata'
       await loadTranslations();
     } catch (e) {
       if (!mounted) return;
-      AppSnackbar.error(context, 'Errore: $e');
+      AppSnackbar.error(context, l10n.administrationMessaggeCustom27(e.toString())); // 'Errore: $e'
     }
   }
 
@@ -77,11 +78,11 @@ class _MenuTranslationsListPageState extends State<MenuTranslationsListPage> {
     final canAdd = _availableLocales.isNotEmpty;
 
     return BasePage(
-      title: 'Traduzioni',
-      subtitle: '"${widget.menu.label}" — ${widget.menu.route}',
+      title: l10n.administrationMessaggeCustom71, // 'Traduzioni'
+      subtitle: l10n.administrationMessaggeCustom63(widget.menu.label, widget.menu.route), // '"${widget.menu.label}" — ${widget.menu.route}'
       loading: loading,
       empty: !loading && translations.isEmpty,
-      emptyMessage: 'Nessuna traduzione configurata (viene usata la label predefinita)',
+      emptyMessage: l10n.administrationMessaggeCustom72, // 'Nessuna traduzione configurata (viene usata la label predefinita)'
       actions: [
         FilledButton.icon(
           onPressed: canAdd
@@ -94,7 +95,7 @@ class _MenuTranslationsListPageState extends State<MenuTranslationsListPage> {
                 }
               : null,
           icon: const Icon(Icons.add),
-          label: const Text('Nuova Traduzione'),
+          label: Text(l10n.administrationMessaggeCustom62), // 'Nuova Traduzione'
         ),
       ],
       child: Card(
@@ -117,7 +118,7 @@ class _MenuTranslationsListPageState extends State<MenuTranslationsListPage> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'Label predefinita (fallback): "${widget.menu.label}"',
+                      l10n.administrationMessaggeCustom73(widget.menu.label), // 'Label predefinita (fallback): "${widget.menu.label}"'
                       style: const TextStyle(color: Colors.grey, fontSize: 13),
                     ),
                   ),
@@ -158,6 +159,7 @@ class _TranslationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: Color(0xFFE5E7EB))),
@@ -180,12 +182,12 @@ class _TranslationTile extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              tooltip: 'Modifica',
+              tooltip: l10n.administrationMessaggeCustom31, // 'Modifica'
               icon: const Icon(Icons.edit),
               onPressed: onEdit,
             ),
             IconButton(
-              tooltip: 'Elimina',
+              tooltip: l10n.administrationMessaggeCustom32, // 'Elimina'
               icon: const Icon(Icons.delete),
               onPressed: onDelete,
             ),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../shared/widgets/base_page.dart';
+import '../../../../shared/widgets/base_page.dart';
 import '../dashboard/models/dashboard_model.dart';
 import '../dashboard/data/dashboard_service.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -13,6 +14,7 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   final _service = DashboardService();
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   late Future<DashboardStats> _statsFuture;
 
@@ -29,20 +31,15 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return BasePage(
-      title: 'Dashboard',
-      subtitle: 'Panoramica generale competizione',
+      title: l10n.administrationMessageCustom157, // 'Dashboard'
+      subtitle: l10n.administrationMessageCustom158, // 'Panoramica generale competizione'
       actions: [
         IconButton(
           onPressed: _refresh,
           icon: const Icon(Icons.refresh),
-          tooltip: 'Aggiorna',
+          tooltip: l10n.administrationMessageCustom159, // 'Aggiorna'
         ),
         const SizedBox(width: 8),
-        // FilledButton.icon(
-        //   onPressed: () {},
-        //   icon: const Icon(Icons.add),
-        //   label: const Text('Nuova Gara'),
-        // ),
       ],
       child: FutureBuilder<DashboardStats>(
         future: _statsFuture,
@@ -59,7 +56,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   const Icon(Icons.error_outline, size: 48, color: Colors.red),
                   const SizedBox(height: 16),
                   Text(
-                    'Errore nel caricamento dei dati',
+                    l10n.administrationMessageCustom160, // 'Errore nel caricamento dei dati'
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 8),
@@ -72,7 +69,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   FilledButton.icon(
                     onPressed: _refresh,
                     icon: const Icon(Icons.refresh),
-                    label: const Text('Riprova'),
+                    label: Text(l10n.administrationMessageCustom161), // 'Riprova'
                   ),
                 ],
               ),
@@ -87,22 +84,22 @@ class _DashboardPageState extends State<DashboardPage> {
             mainAxisSpacing: 16,
             children: [
               DashboardCard(
-                title: 'Competizioni',
+                title: l10n.administrationMessageCustom162, // 'Competizioni'
                 value: stats.competitions.toString(),
                 icon: Icons.emoji_events,
               ),
               DashboardCard(
-                title: 'Atleti',
+                title: l10n.administrationMessageCustom163, // 'Atleti'
                 value: stats.athletes.toString(),
                 icon: Icons.groups,
               ),
               DashboardCard(
-                title: 'Boulder',
+                title: l10n.administrationMessageCustom164, // 'Boulder'
                 value: stats.boulders.toString(),
                 icon: Icons.terrain,
               ),
               DashboardCard(
-                title: 'Ascents',
+                title: l10n.administrationMessageCustom165, // 'Ascents'
                 value: stats.ascents.toString(),
                 icon: Icons.sports_score,
               ),

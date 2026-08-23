@@ -1207,6 +1207,1020 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Page {page} of {total}'**
   String checkinMessageCustom48(Object page, Object total);
+
+  /// Card title: Roles
+  ///
+  /// In en, this message translates to:
+  /// **'Roles'**
+  String get administrationMessaggeCustom1;
+
+  /// Card description: Roles
+  ///
+  /// In en, this message translates to:
+  /// **'Define application roles and assign menus and permissions.'**
+  String get administrationMessaggeCustom2;
+
+  /// Card title: Permissions
+  ///
+  /// In en, this message translates to:
+  /// **'Permissions'**
+  String get administrationMessaggeCustom3;
+
+  /// Card description: Permissions
+  ///
+  /// In en, this message translates to:
+  /// **'Manage permission codes and associated activities.'**
+  String get administrationMessaggeCustom4;
+
+  /// Card title: Menu
+  ///
+  /// In en, this message translates to:
+  /// **'Menu'**
+  String get administrationMessaggeCustom5;
+
+  /// Card description: Menu
+  ///
+  /// In en, this message translates to:
+  /// **'Configure menu structure and platform visibility.'**
+  String get administrationMessaggeCustom6;
+
+  /// Card title: Users
+  ///
+  /// In en, this message translates to:
+  /// **'Users'**
+  String get administrationMessaggeCustom7;
+
+  /// Card description: Users
+  ///
+  /// In en, this message translates to:
+  /// **'Assign roles to registered users.'**
+  String get administrationMessaggeCustom8;
+
+  /// Card title: Email
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get administrationMessaggeCustom9;
+
+  /// Card description: Email
+  ///
+  /// In en, this message translates to:
+  /// **'Manage configurations, templates and email sending settings.'**
+  String get administrationMessaggeCustom10;
+
+  /// Administration page title: Security
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get administrationMessaggeCustom11;
+
+  /// Administration page subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Manage roles, permissions, menu and users'**
+  String get administrationMessaggeCustom12;
+
+  /// Header for development tools section
+  ///
+  /// In en, this message translates to:
+  /// **'Development tools'**
+  String get administrationMessaggeCustom13;
+
+  /// Label for the button resetting client configuration
+  ///
+  /// In en, this message translates to:
+  /// **'Reset client configuration'**
+  String get administrationMessaggeCustom14;
+
+  /// Confirmation dialog message warning about disconnection and app closure
+  ///
+  /// In en, this message translates to:
+  /// **'The device will be disconnected from the current client. The application will close automatically: at restart you will need to enter the client code and password again.'**
+  String get administrationMessaggeCustom15;
+
+  /// Label for the cancel button in the reset confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get administrationMessaggeCustom16;
+
+  /// Label for the confirm button in the reset dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm reset'**
+  String get administrationMessaggeCustom17;
+
+  /// Title of the dialog shown after reset completes
+  ///
+  /// In en, this message translates to:
+  /// **'Reset completed'**
+  String get administrationMessaggeCustom18;
+
+  /// Final message informing the user the app will close and credentials must be re-entered
+  ///
+  /// In en, this message translates to:
+  /// **'The application will be closed. Reopen it to enter the new client code and password.'**
+  String get administrationMessaggeCustom19;
+
+  /// Label for the button that closes the app immediately after reset
+  ///
+  /// In en, this message translates to:
+  /// **'Close now'**
+  String get administrationMessaggeCustom20;
+
+  /// Title of the card to force the language (test only)
+  ///
+  /// In en, this message translates to:
+  /// **'Force language (test only)'**
+  String get administrationMessaggeCustom21;
+
+  /// Text indicating language is automatic (OS)
+  ///
+  /// In en, this message translates to:
+  /// **'Current language: automatic (operating system)'**
+  String get administrationMessaggeCustom22;
+
+  /// Text showing forced language with the language code (e.g. IT/EN)
+  ///
+  /// In en, this message translates to:
+  /// **'Forced language: {code}'**
+  String administrationMessaggeCustom23(Object code);
+
+  /// Label for the automatic (system) option
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic'**
+  String get administrationMessaggeCustom24;
+
+  /// Dialog title for deleting a menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Delete menu item'**
+  String get administrationMessaggeCustom25;
+
+  /// Confirmation message for deleting a menu, including the label of the item
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to delete \"{label}\"?\nChild submenus will be deleted in cascade.'**
+  String administrationMessaggeCustom26(Object label);
+
+  /// Generic error message with detail
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String administrationMessaggeCustom27(Object error);
+
+  /// Label for the button that creates a new menu item
+  ///
+  /// In en, this message translates to:
+  /// **'New Item'**
+  String get administrationMessaggeCustom28;
+
+  /// Tooltip for the translations button
+  ///
+  /// In en, this message translates to:
+  /// **'Translations'**
+  String get administrationMessaggeCustom29;
+
+  /// Tooltip for the button that adds a child item
+  ///
+  /// In en, this message translates to:
+  /// **'Add child'**
+  String get administrationMessaggeCustom30;
+
+  /// Tooltip for the edit button
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get administrationMessaggeCustom31;
+
+  /// Tooltip for the delete button
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get administrationMessaggeCustom32;
+
+  /// Message shown when there are no menu items
+  ///
+  /// In en, this message translates to:
+  /// **'No menu items configured'**
+  String get administrationMessaggeCustom33;
+
+  /// Success message after deleting a menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Item deleted'**
+  String get administrationMessaggeCustom34;
+
+  /// Subtitle for the menu page: navigation structure
+  ///
+  /// In en, this message translates to:
+  /// **'Navigation structure'**
+  String get administrationMessaggeCustom36;
+
+  /// Page title: edit menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Menu Item'**
+  String get administrationMessaggeCustom37;
+
+  /// Page title: new menu item
+  ///
+  /// In en, this message translates to:
+  /// **'New Menu Item'**
+  String get administrationMessaggeCustom38;
+
+  /// Subtitle for the menu form page
+  ///
+  /// In en, this message translates to:
+  /// **'Navigation item configuration'**
+  String get administrationMessaggeCustom39;
+
+  /// Label shown while saving is in progress
+  ///
+  /// In en, this message translates to:
+  /// **'Saving...'**
+  String get administrationMessaggeCustom40;
+
+  /// Save button label
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get administrationMessaggeCustom41;
+
+  /// Menu label field
+  ///
+  /// In en, this message translates to:
+  /// **'Label'**
+  String get administrationMessaggeCustom42;
+
+  /// Validation message for required field
+  ///
+  /// In en, this message translates to:
+  /// **'Required field'**
+  String get administrationMessaggeCustom43;
+
+  /// Route field label
+  ///
+  /// In en, this message translates to:
+  /// **'Route'**
+  String get administrationMessaggeCustom44;
+
+  /// Hint for route field
+  ///
+  /// In en, this message translates to:
+  /// **'/dashboard'**
+  String get administrationMessaggeCustom45;
+
+  /// Validation message: route must start with /
+  ///
+  /// In en, this message translates to:
+  /// **'Must start with /'**
+  String get administrationMessaggeCustom46;
+
+  /// Icon field label
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get administrationMessaggeCustom47;
+
+  /// Option for no icon
+  ///
+  /// In en, this message translates to:
+  /// **'— none —'**
+  String get administrationMessaggeCustom48;
+
+  /// Label for non-standard icon
+  ///
+  /// In en, this message translates to:
+  /// **'{icon} (non standard)'**
+  String administrationMessaggeCustom49(Object icon);
+
+  /// Order field label
+  ///
+  /// In en, this message translates to:
+  /// **'Order'**
+  String get administrationMessaggeCustom50;
+
+  /// Parent field label
+  ///
+  /// In en, this message translates to:
+  /// **'Parent item'**
+  String get administrationMessaggeCustom51;
+
+  /// Helper text for parent field
+  ///
+  /// In en, this message translates to:
+  /// **'Leave empty to create a top-level item'**
+  String get administrationMessaggeCustom52;
+
+  /// Option for top-level (no parent)
+  ///
+  /// In en, this message translates to:
+  /// **'— Top level —'**
+  String get administrationMessaggeCustom53;
+
+  /// Switch label: visible
+  ///
+  /// In en, this message translates to:
+  /// **'Visible'**
+  String get administrationMessaggeCustom54;
+
+  /// Switch label: show on mobile
+  ///
+  /// In en, this message translates to:
+  /// **'Show on Mobile'**
+  String get administrationMessaggeCustom55;
+
+  /// Switch label: show on desktop
+  ///
+  /// In en, this message translates to:
+  /// **'Show on Desktop'**
+  String get administrationMessaggeCustom56;
+
+  /// Success message for item updated
+  ///
+  /// In en, this message translates to:
+  /// **'Item updated'**
+  String get administrationMessaggeCustom57;
+
+  /// Success message for item created
+  ///
+  /// In en, this message translates to:
+  /// **'Item created'**
+  String get administrationMessaggeCustom58;
+
+  /// Success message: translation updated
+  ///
+  /// In en, this message translates to:
+  /// **'Translation updated'**
+  String get administrationMessaggeCustom59;
+
+  /// Success message: translation created
+  ///
+  /// In en, this message translates to:
+  /// **'Translation created'**
+  String get administrationMessaggeCustom60;
+
+  /// Page title: edit translation
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Translation'**
+  String get administrationMessaggeCustom61;
+
+  /// Page title: new translation
+  ///
+  /// In en, this message translates to:
+  /// **'New Translation'**
+  String get administrationMessaggeCustom62;
+
+  /// Subtitle: shows original label and route
+  ///
+  /// In en, this message translates to:
+  /// **'\"{label}\" — {route}'**
+  String administrationMessaggeCustom63(Object label, Object route);
+
+  /// Language field label
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get administrationMessaggeCustom64;
+
+  /// Validation message for language selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select a language'**
+  String get administrationMessaggeCustom65;
+
+  /// Label for translated label field
+  ///
+  /// In en, this message translates to:
+  /// **'Translated label'**
+  String get administrationMessaggeCustom66;
+
+  /// Informative note telling that default label will be used if left empty
+  ///
+  /// In en, this message translates to:
+  /// **'If left empty, the default label will be shown: \"{label}\"'**
+  String administrationMessaggeCustom67(Object label);
+
+  /// Dialog title for deleting a translation
+  ///
+  /// In en, this message translates to:
+  /// **'Delete translation'**
+  String get administrationMessaggeCustom68;
+
+  /// Confirmation message for deleting a translation with locale and label
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to delete the translation \"{locale}\" (\"{label}\")?'**
+  String administrationMessaggeCustom69(Object locale, Object label);
+
+  /// Success message after deleting a translation
+  ///
+  /// In en, this message translates to:
+  /// **'Translation deleted'**
+  String get administrationMessaggeCustom70;
+
+  /// Page title: translations
+  ///
+  /// In en, this message translates to:
+  /// **'Translations'**
+  String get administrationMessaggeCustom71;
+
+  /// Message shown when there are no translations
+  ///
+  /// In en, this message translates to:
+  /// **'No translations configured (the default label will be used)'**
+  String get administrationMessaggeCustom72;
+
+  /// Informative line showing the default label used as fallback
+  ///
+  /// In en, this message translates to:
+  /// **'Default label (fallback): \"{label}\"'**
+  String administrationMessaggeCustom73(Object label);
+
+  /// Dialog title for deleting a permission
+  ///
+  /// In en, this message translates to:
+  /// **'Delete permission'**
+  String get administrationMessaggeCustom74;
+
+  /// Label for the button that creates a new permission
+  ///
+  /// In en, this message translates to:
+  /// **'New Permission'**
+  String get administrationMessaggeCustom75;
+
+  /// Page title: Permissions
+  ///
+  /// In en, this message translates to:
+  /// **'Permissions'**
+  String get administrationMessaggeCustom76;
+
+  /// Page subtitle for permissions
+  ///
+  /// In en, this message translates to:
+  /// **'Permission codes and associated activities'**
+  String get administrationMessaggeCustom77;
+
+  /// Message shown when no permissions match the query
+  ///
+  /// In en, this message translates to:
+  /// **'No permissions found'**
+  String get administrationMessaggeCustom78;
+
+  /// Hint text for the permissions search field
+  ///
+  /// In en, this message translates to:
+  /// **'Search code or activity'**
+  String get administrationMessaggeCustom79;
+
+  /// Table header: permission code
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Code'**
+  String get administrationMessaggeCustom80;
+
+  /// Table header: activity
+  ///
+  /// In en, this message translates to:
+  /// **'Activity'**
+  String get administrationMessaggeCustom81;
+
+  /// Table header: actions
+  ///
+  /// In en, this message translates to:
+  /// **'Actions'**
+  String get administrationMessaggeCustom82;
+
+  /// Confirmation message to delete a permission including the code
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to delete \"{code}\"?'**
+  String administrationMessaggeCustom83(Object code);
+
+  /// Success message after deleting a permission
+  ///
+  /// In en, this message translates to:
+  /// **'Permission deleted'**
+  String get administrationMessaggeCustom84;
+
+  /// Success message: permission updated
+  ///
+  /// In en, this message translates to:
+  /// **'Permission updated'**
+  String get administrationMessageCustom85;
+
+  /// Success message: permission created
+  ///
+  /// In en, this message translates to:
+  /// **'Permission created'**
+  String get administrationMessageCustom86;
+
+  /// Page title: edit permission
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Permission'**
+  String get administrationMessageCustom87;
+
+  /// Subtitle for the permission form page
+  ///
+  /// In en, this message translates to:
+  /// **'Permission code definition'**
+  String get administrationMessageCustom88;
+
+  /// Hint for the permission code field
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. competition.read, boulder.write'**
+  String get administrationMessageCustom89;
+
+  /// Helper text for the permission code field
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested format: resource.action'**
+  String get administrationMessageCustom90;
+
+  /// Hint for the activity field
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Read competitions list'**
+  String get administrationMessageCustom91;
+
+  /// Helper text for the activity field
+  ///
+  /// In en, this message translates to:
+  /// **'Human-readable description of the permission'**
+  String get administrationMessageCustom92;
+
+  /// Generic error message with detail
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String administrationMessageCustom27(Object error);
+
+  /// Page title: Users
+  ///
+  /// In en, this message translates to:
+  /// **'Users'**
+  String get administrationMessageCustom93;
+
+  /// Page subtitle: assign roles to users
+  ///
+  /// In en, this message translates to:
+  /// **'Assign roles to registered users'**
+  String get administrationMessageCustom94;
+
+  /// Message shown when no users found
+  ///
+  /// In en, this message translates to:
+  /// **'No users found'**
+  String get administrationMessageCustom95;
+
+  /// Label for new user button
+  ///
+  /// In en, this message translates to:
+  /// **'New User'**
+  String get administrationMessageCustom96;
+
+  /// Search hint text
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name or email'**
+  String get administrationMessageCustom97;
+
+  /// Tooltip/label for roles action
+  ///
+  /// In en, this message translates to:
+  /// **'Roles'**
+  String get administrationMessageCustom98;
+
+  /// Table header: Name
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get administrationMessageCustom99;
+
+  /// Table header: Email
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get administrationMessageCustom100;
+
+  /// Table header: Created at
+  ///
+  /// In en, this message translates to:
+  /// **'Created at'**
+  String get administrationMessageCustom101;
+
+  /// Table header: Password
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get administrationMessageCustom102;
+
+  /// Table header: Roles
+  ///
+  /// In en, this message translates to:
+  /// **'Roles'**
+  String get administrationMessageCustom103;
+
+  /// Table header: Actions
+  ///
+  /// In en, this message translates to:
+  /// **'Actions'**
+  String get administrationMessageCustom104;
+
+  /// Yes
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get administrationMessageCustom105;
+
+  /// No
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get administrationMessageCustom106;
+
+  /// Error message during user creation
+  ///
+  /// In en, this message translates to:
+  /// **'Creation error: {error}'**
+  String administrationMessageCustom107(Object error);
+
+  /// Error message during user deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Deletion error: {error}'**
+  String administrationMessageCustom108(Object error);
+
+  /// Appbar title for delete user page
+  ///
+  /// In en, this message translates to:
+  /// **'Delete User'**
+  String get administrationMessageCustom109;
+
+  /// Label for last name field
+  ///
+  /// In en, this message translates to:
+  /// **'Last name'**
+  String get administrationMessageCustom110;
+
+  /// Validation message: required
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get administrationMessageCustom111;
+
+  /// Label for first name field
+  ///
+  /// In en, this message translates to:
+  /// **'First name'**
+  String get administrationMessageCustom112;
+
+  /// Label for email field
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get administrationMessageCustom113;
+
+  /// Validation message: email required
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required'**
+  String get administrationMessageCustom114;
+
+  /// Validation message: invalid email format
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email format'**
+  String get administrationMessageCustom115;
+
+  /// Label for create user button
+  ///
+  /// In en, this message translates to:
+  /// **'Create user'**
+  String get administrationMessageCustom116;
+
+  /// Title for user deletion view
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm user deletion'**
+  String get administrationMessageCustom117;
+
+  /// Label for cancel button
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get administrationMessageCustom118;
+
+  /// Label for delete button
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get administrationMessageCustom119;
+
+  /// Success message when profile roles are saved
+  ///
+  /// In en, this message translates to:
+  /// **'Roles updated'**
+  String get administrationMessageCustom120;
+
+  /// Header for the assigned roles section
+  ///
+  /// In en, this message translates to:
+  /// **'ASSIGNED ROLES'**
+  String get administrationMessageCustom121;
+
+  /// Label for the button that saves assigned roles
+  ///
+  /// In en, this message translates to:
+  /// **'Save Roles'**
+  String get administrationMessageCustom122;
+
+  /// Page title: Roles
+  ///
+  /// In en, this message translates to:
+  /// **'Roles'**
+  String get administrationMessageCustom123;
+
+  /// Page subtitle for roles
+  ///
+  /// In en, this message translates to:
+  /// **'Manage application roles'**
+  String get administrationMessageCustom124;
+
+  /// Message shown when no roles exist
+  ///
+  /// In en, this message translates to:
+  /// **'No roles configured'**
+  String get administrationMessageCustom125;
+
+  /// Label for button creating a new role
+  ///
+  /// In en, this message translates to:
+  /// **'New Role'**
+  String get administrationMessageCustom126;
+
+  /// Error message when loading roles fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading roles: {error}'**
+  String administrationMessageCustom127(Object error);
+
+  /// Dialog title for deleting a role
+  ///
+  /// In en, this message translates to:
+  /// **'Delete role'**
+  String get administrationMessageCustom128;
+
+  /// Confirmation message for deleting a role with role name
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to delete the role \"{name}\"?\nAll users and associated menus will lose this role.'**
+  String administrationMessageCustom129(Object name);
+
+  /// Success message after role deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Role deleted'**
+  String get administrationMessageCustom130;
+
+  /// Error message when role deletion fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting: {error}'**
+  String administrationMessageCustom131(Object error);
+
+  /// Table header: Code
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get administrationMessageCustom132;
+
+  /// Table header: Name
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get administrationMessageCustom133;
+
+  /// Table header: Actions
+  ///
+  /// In en, this message translates to:
+  /// **'Actions'**
+  String get administrationMessageCustom134;
+
+  /// Success message: role updated
+  ///
+  /// In en, this message translates to:
+  /// **'Role updated'**
+  String get administrationMessageCustom135;
+
+  /// Success message: role created
+  ///
+  /// In en, this message translates to:
+  /// **'Role created'**
+  String get administrationMessageCustom136;
+
+  /// Page title: edit role
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Role'**
+  String get administrationMessageCustom137;
+
+  /// Page title: new role
+  ///
+  /// In en, this message translates to:
+  /// **'New Role'**
+  String get administrationMessageCustom138;
+
+  /// Subtitle for role page
+  ///
+  /// In en, this message translates to:
+  /// **'Application role data'**
+  String get administrationMessageCustom139;
+
+  /// Hint for role code field
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. admin, athlete, judge'**
+  String get administrationMessageCustom140;
+
+  /// Helper text for role code field
+  ///
+  /// In en, this message translates to:
+  /// **'Unique identifier, lowercase letters and underscore only'**
+  String get administrationMessageCustom141;
+
+  /// Validation message for role code format
+  ///
+  /// In en, this message translates to:
+  /// **'Only lowercase letters and underscore are allowed'**
+  String get administrationMessageCustom142;
+
+  /// Hint for role name field
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Administrator, Athlete, Judge'**
+  String get administrationMessageCustom143;
+
+  /// Header: manage role with role name
+  ///
+  /// In en, this message translates to:
+  /// **'Manage role: {name}'**
+  String administrationMessageCustom144(Object name);
+
+  /// Line showing the role code
+  ///
+  /// In en, this message translates to:
+  /// **'Code: {code}'**
+  String administrationMessageCustom145(Object code);
+
+  /// Tab label: Permissions
+  ///
+  /// In en, this message translates to:
+  /// **'Permissions'**
+  String get administrationMessageCustom146;
+
+  /// Tab label: Menu
+  ///
+  /// In en, this message translates to:
+  /// **'Menu'**
+  String get administrationMessageCustom147;
+
+  /// Generic error message for loading
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading: {error}'**
+  String administrationMessageCustom148(Object error);
+
+  /// Success message: permissions saved
+  ///
+  /// In en, this message translates to:
+  /// **'Permissions saved'**
+  String get administrationMessageCustom149;
+
+  /// Error while saving permissions
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving permissions: {error}'**
+  String administrationMessageCustom150(Object error);
+
+  /// Success message: menus saved
+  ///
+  /// In en, this message translates to:
+  /// **'Menus saved'**
+  String get administrationMessageCustom151;
+
+  /// Error while saving menus
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving menus: {error}'**
+  String administrationMessageCustom152(Object error);
+
+  /// Label for save permissions button
+  ///
+  /// In en, this message translates to:
+  /// **'Save Permissions'**
+  String get administrationMessageCustom153;
+
+  /// Label for save menus button
+  ///
+  /// In en, this message translates to:
+  /// **'Save Menus'**
+  String get administrationMessageCustom154;
+
+  /// Hint for the global search bar
+  ///
+  /// In en, this message translates to:
+  /// **'Search competitions, athletes…'**
+  String get administrationMessageCustom155;
+
+  /// Message shown when search returns no results
+  ///
+  /// In en, this message translates to:
+  /// **'No results for \"{query}\"'**
+  String administrationMessageCustom156(Object query);
+
+  /// Page title: Dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard'**
+  String get administrationMessageCustom157;
+
+  /// Dashboard page subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Competition overview'**
+  String get administrationMessageCustom158;
+
+  /// Tooltip for refresh button
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get administrationMessageCustom159;
+
+  /// Title shown when data loading fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading data'**
+  String get administrationMessageCustom160;
+
+  /// Label for retry button
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get administrationMessageCustom161;
+
+  /// Dashboard card title: Competitions
+  ///
+  /// In en, this message translates to:
+  /// **'Competitions'**
+  String get administrationMessageCustom162;
+
+  /// Dashboard card title: Athletes
+  ///
+  /// In en, this message translates to:
+  /// **'Athletes'**
+  String get administrationMessageCustom163;
+
+  /// Dashboard card title: Boulders
+  ///
+  /// In en, this message translates to:
+  /// **'Boulders'**
+  String get administrationMessageCustom164;
+
+  /// Dashboard card title: Ascents
+  ///
+  /// In en, this message translates to:
+  /// **'Ascents'**
+  String get administrationMessageCustom165;
+
+  /// Search result type: Competition
+  ///
+  /// In en, this message translates to:
+  /// **'Competition'**
+  String get administrationMessageCustom166;
+
+  /// Search result type: Athlete
+  ///
+  /// In en, this message translates to:
+  /// **'Athlete'**
+  String get administrationMessageCustom167;
+
+  /// Search result type: Boulder
+  ///
+  /// In en, this message translates to:
+  /// **'Boulder'**
+  String get administrationMessageCustom168;
+
+  /// Search result type: Ascent
+  ///
+  /// In en, this message translates to:
+  /// **'Ascent'**
+  String get administrationMessageCustom169;
 }
 
 class _AppLocalizationsDelegate

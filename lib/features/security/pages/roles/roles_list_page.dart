@@ -9,6 +9,7 @@ import '../../../../core/ui/responsive.dart';
 
 import '../../data/role_service.dart';
 import '../../models/role_model.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class RolesListPage extends StatefulWidget {
   const RolesListPage({super.key});
@@ -24,6 +25,8 @@ class _RolesListPageState extends State<RolesListPage> {
   List<RoleModel> roles = [];
   bool loading = true;
 
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
+  
   @override
   void initState() {
     super.initState();
@@ -47,38 +50,37 @@ class _RolesListPageState extends State<RolesListPage> {
     } catch (e) {
       if (!mounted) return;
       setState(() => loading = false);
-      AppSnackbar.error(context, 'Errore caricamento ruoli: $e');
+      AppSnackbar.error(context, l10n.administrationMessageCustom127(e.toString())); // 'Errore caricamento ruoli: $e'
     }
   }
 
   Future<void> deleteRole(RoleModel role) async {
     final confirm = await AppConfirmDialog.showDelete(
       context: context,
-      title: 'Elimina ruolo',
-      message: 'Vuoi eliminare il ruolo "${role.name}"?\n'
-          'Tutti gli utenti e i menu associati perderanno questo ruolo.',
+      title: l10n.administrationMessageCustom128, // 'Elimina ruolo'
+      message: l10n.administrationMessageCustom129(role.name), // 'Vuoi eliminare il ruolo "{name}"?\nTutti gli utenti e i menu associati perderanno questo ruolo.'
     );
 
     if (!confirm || !mounted) return;
 
     try {
       await service.deleteRole(role.id);
-      AppSnackbar.success(context, 'Ruolo eliminato');
+      AppSnackbar.success(context, l10n.administrationMessageCustom130); // 'Ruolo eliminato'
       await loadRoles();
     } catch (e) {
       if (!mounted) return;
-      AppSnackbar.error(context, 'Errore eliminazione: $e');
+      AppSnackbar.error(context, l10n.administrationMessageCustom131(e.toString())); // 'Errore eliminazione: $e'
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return BasePage(
-      title: 'Ruoli',
-      subtitle: 'Gestione ruoli applicativi',
+      title: l10n.administrationMessageCustom123, // 'Ruoli'
+      subtitle: l10n.administrationMessageCustom124, // 'Gestione ruoli applicativi'
       loading: loading,
       empty: !loading && roles.isEmpty,
-      emptyMessage: 'Nessun ruolo configurato',
+      emptyMessage: l10n.administrationMessageCustom125, // 'Nessun ruolo configurato'
       actions: [
         FilledButton.icon(
           onPressed: () async {
@@ -86,7 +88,7 @@ class _RolesListPageState extends State<RolesListPage> {
             await loadRoles();
           },
           icon: const Icon(Icons.add),
-          label: const Text('Nuovo Ruolo'),
+          label: Text(l10n.administrationMessageCustom126), // 'Nuovo Ruolo'
         ),
       ],
       child: _RolesContent(
@@ -200,12 +202,13 @@ class _RolesTabletView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return ResponsiveTable(
       controller: scrollController,
-      columns: const [
-        DataColumn(label: Text('Codice')),
-        DataColumn(label: Text('Nome')),
-        DataColumn(label: Text('Azioni')),
+      columns: [
+        DataColumn(label: Text(l10n.administrationMessageCustom132)), // 'Codice'
+        DataColumn(label: Text(l10n.administrationMessageCustom133)), // 'Nome'
+        DataColumn(label: Text(l10n.administrationMessageCustom134)), // 'Azioni'
       ],
       rows: roles.map((role) {
         return DataRow(
@@ -261,12 +264,13 @@ class _RolesDesktopView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return ResponsiveTable(
       controller: scrollController,
-      columns: const [
-        DataColumn(label: Text('Codice')),
-        DataColumn(label: Text('Nome')),
-        DataColumn(label: Text('Azioni')),
+      columns: [
+        DataColumn(label: Text(l10n.administrationMessageCustom132)), // 'Codice'
+        DataColumn(label: Text(l10n.administrationMessageCustom133)), // 'Nome'
+        DataColumn(label: Text(l10n.administrationMessageCustom134)), // 'Azioni'
       ],
       rows: roles.map((role) {
         return DataRow(
@@ -339,8 +343,7 @@ class _RoleMobileCard extends StatelessWidget {
               children: [
                 IconButton(icon: const Icon(Icons.tune), onPressed: onManage),
                 IconButton(icon: const Icon(Icons.edit), onPressed: onEdit),
-                IconButton(
-                    icon: const Icon(Icons.delete), onPressed: onDelete),
+                IconButton(icon: const Icon(Icons.delete), onPressed: onDelete),
               ],
             )
           ],

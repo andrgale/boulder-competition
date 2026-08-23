@@ -6,6 +6,7 @@ import '../../../../shared/dialogs/app_confirm_dialog.dart';
 import '../../../../shared/app_snackbar.dart';
 import '../../data/menu_service_admin.dart';
 import '../../models/menu_model.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class MenusListPage extends StatefulWidget {
   const MenusListPage({super.key});
@@ -46,26 +47,26 @@ class _MenusListPageState extends State<MenusListPage> {
     } catch (e) {
       if (!mounted) return;
       setState(() => loading = false);
-      AppSnackbar.error(context, 'Errore: $e');
+      AppSnackbar.error(context, AppLocalizations.of(context)!.administrationMessaggeCustom27(e.toString())); // 'Errore: $e'
     }
   }
 
   Future<void> deleteMenu(MenuModel m) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirm = await AppConfirmDialog.showDelete(
       context: context,
-      title: 'Elimina voce menu',
-      message: 'Vuoi eliminare "${m.label}"?\n'
-          'I sottomenu figli verranno eliminati a cascata.',
+      title: l10n.administrationMessaggeCustom25, // 'Elimina voce menu'
+      message: l10n.administrationMessaggeCustom26(m.label), // 'Vuoi eliminare "{label}"?\nI sottomenu figli verranno eliminati a cascata.'
     );
     if (!confirm || !mounted) return;
 
     try {
       await service.deleteMenu(m.id);
-      AppSnackbar.success(context, 'Voce eliminata');
+      AppSnackbar.success(context, l10n.administrationMessaggeCustom34); // 'Voce eliminata'
       await loadMenus();
     } catch (e) {
       if (!mounted) return;
-      AppSnackbar.error(context, 'Errore: $e');
+      AppSnackbar.error(context, l10n.administrationMessaggeCustom27(e.toString())); // 'Errore: $e'
     }
   }
 
@@ -92,9 +93,9 @@ class _MenusListPageState extends State<MenusListPage> {
             await context.push('/security/menus/new', extra: root.id);
             await loadMenus();
           },
-          onTranslations: () async { 
-          await context.push('/security/menus/translations', extra: root);
-          await loadMenus();
+          onTranslations: () async {
+            await context.push('/security/menus/translations', extra: root);
+            await loadMenus();
           },
         ),
         ...kids.map(
@@ -108,8 +109,8 @@ class _MenusListPageState extends State<MenusListPage> {
             onDelete: () => deleteMenu(kid),
             onAddChild: null,
             onTranslations: () async {
-            await context.push('/security/menus/translations', extra: kid);
-            await loadMenus();
+              await context.push('/security/menus/translations', extra: kid);
+              await loadMenus();
             },
           ),
         ),
@@ -119,12 +120,14 @@ class _MenusListPageState extends State<MenusListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return BasePage(
-      title: 'Menu',
-      subtitle: 'Struttura di navigazione',
+      title: l10n.administrationMessaggeCustom5, // 'Menu'
+      subtitle: l10n.administrationMessaggeCustom36, // 'Struttura di navigazione'
       loading: loading,
       empty: !loading && menus.isEmpty,
-      emptyMessage: 'Nessuna voce menu configurata',
+      emptyMessage: l10n.administrationMessaggeCustom33, // 'Nessuna voce menu configurata'
       actions: [
         FilledButton.icon(
           onPressed: () async {
@@ -132,7 +135,7 @@ class _MenusListPageState extends State<MenusListPage> {
             await loadMenus();
           },
           icon: const Icon(Icons.add),
-          label: const Text('Nuova Voce'),
+          label: Text(l10n.administrationMessaggeCustom28), // 'Nuova Voce'
         ),
       ],
       child: Card(
@@ -179,6 +182,7 @@ class _MenuTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: const BoxDecoration(
         border: Border(
@@ -224,23 +228,23 @@ class _MenuTile extends StatelessWidget {
               visualDensity: VisualDensity.compact,
             ),
             IconButton(
-              tooltip: 'Traduzioni',
+              tooltip: l10n.administrationMessaggeCustom29, // 'Traduzioni'
               icon: const Icon(Icons.translate),
               onPressed: onTranslations,
             ),
             if (onAddChild != null)
               IconButton(
-                tooltip: 'Aggiungi figlio',
+                tooltip: l10n.administrationMessaggeCustom30, // 'Aggiungi figlio'
                 icon: const Icon(Icons.add),
                 onPressed: onAddChild,
               ),
             IconButton(
-              tooltip: 'Modifica',
+              tooltip: l10n.administrationMessaggeCustom31, // 'Modifica'
               icon: const Icon(Icons.edit),
               onPressed: onEdit,
             ),
             IconButton(
-              tooltip: 'Elimina',
+              tooltip: l10n.administrationMessaggeCustom32, // 'Elimina'
               icon: const Icon(Icons.delete),
               onPressed: onDelete,
             ),

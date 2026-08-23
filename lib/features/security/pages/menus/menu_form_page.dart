@@ -4,7 +4,7 @@ import '../../../../shared/widgets/base_page.dart';
 import '../../../../shared/app_snackbar.dart';
 import '../../data/menu_service_admin.dart';
 import '../../models/menu_model.dart';
-
+import 'package:boulder_competition/l10n/app_localizations.dart';
 class MenuFormPage extends StatefulWidget {
   final MenuModel? menu;
   final String? parentId; // per creare un figlio direttamente
@@ -23,6 +23,8 @@ class _MenuFormPageState extends State<MenuFormPage> {
   final routeController = TextEditingController();
   final iconController = TextEditingController();
   final orderController = TextEditingController(text: '0');
+
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   bool visible = true;
   bool mobile = true;
@@ -125,11 +127,11 @@ class _MenuFormPageState extends State<MenuFormPage> {
 
       if (!mounted) return;
       AppSnackbar.success(
-          context, isEdit ? 'Voce aggiornata' : 'Voce creata');
+          context, isEdit ? l10n.administrationMessaggeCustom56 : l10n.administrationMessaggeCustom57); // 'Voce aggiornata' / 'Voce creata'
       Navigator.pop(context, true);
     } catch (e) {
       if (!mounted) return;
-      AppSnackbar.error(context, 'Errore: $e');
+      AppSnackbar.error(context, AppLocalizations.of(context)!.administrationMessaggeCustom27(e.toString())); // 'Errore: $e' (riutilizzata)
     } finally {
       if (mounted) setState(() => saving = false);
     }
@@ -138,8 +140,8 @@ class _MenuFormPageState extends State<MenuFormPage> {
   @override
   Widget build(BuildContext context) {
     return BasePage(
-      title: isEdit ? 'Modifica Voce Menu' : 'Nuova Voce Menu',
-      subtitle: 'Configurazione voce di navigazione',
+      title: isEdit ? l10n.administrationMessaggeCustom37 : l10n.administrationMessaggeCustom38, // 'Modifica Voce Menu' / 'Nuova Voce Menu'
+      subtitle: l10n.administrationMessaggeCustom39, // 'Configurazione voce di navigazione'
       actions: [
         FilledButton.icon(
           onPressed: saving ? null : save,
@@ -148,7 +150,7 @@ class _MenuFormPageState extends State<MenuFormPage> {
                   width: 18, height: 18,
                   child: CircularProgressIndicator(strokeWidth: 2))
               : const Icon(Icons.save),
-          label: Text(saving ? 'Salvataggio...' : 'Salva'),
+          label: Text(saving ? l10n.administrationMessaggeCustom40 : l10n.administrationMessaggeCustom41), // 'Salvataggio...' / 'Salva'
         ),
       ],
       child: SizedBox(
@@ -163,9 +165,9 @@ class _MenuFormPageState extends State<MenuFormPage> {
                   // ── Label ──────────────────────────────
                   TextFormField(
                     controller: labelController,
-                    decoration: const InputDecoration(labelText: 'Etichetta'),
+                    decoration: InputDecoration(labelText: l10n.administrationMessaggeCustom42), // 'Etichetta'
                     validator: (v) => (v == null || v.trim().isEmpty)
-                        ? 'Campo obbligatorio'
+                        ? l10n.administrationMessaggeCustom43 // 'Campo obbligatorio'
                         : null,
                   ),
                   const SizedBox(height: 24),
@@ -173,16 +175,16 @@ class _MenuFormPageState extends State<MenuFormPage> {
                   // ── Route ──────────────────────────────
                   TextFormField(
                     controller: routeController,
-                    decoration: const InputDecoration(
-                      labelText: 'Route',
-                      hintText: '/dashboard',
+                    decoration: InputDecoration(
+                      labelText: l10n.administrationMessaggeCustom44, // 'Route'
+                      hintText: l10n.administrationMessaggeCustom45, // '/dashboard'
                     ),
                     validator: (v) {
                       if (v == null || v.trim().isEmpty) {
-                        return 'Campo obbligatorio';
+                        return l10n.administrationMessaggeCustom43; // 'Campo obbligatorio'
                       }
                       if (!v.trim().startsWith('/')) {
-                        return 'Deve iniziare con /';
+                        return l10n.administrationMessaggeCustom46; // 'Deve iniziare con /'
                       }
                       return null;
                     },
@@ -198,10 +200,9 @@ class _MenuFormPageState extends State<MenuFormPage> {
                           initialValue: iconController.text.isEmpty
                               ? null
                               : iconController.text,
-                          decoration: const InputDecoration(labelText: 'Icona'),
+                          decoration: InputDecoration(labelText: l10n.administrationMessaggeCustom47), // 'Icona'
                           items: [
-                            const DropdownMenuItem(
-                                value: null, child: Text('— nessuna —')),
+                            DropdownMenuItem(value: null, child: Text(l10n.administrationMessaggeCustom48)), // '— nessuna —'
                             ..._iconOptions.map((name) => DropdownMenuItem(
                                   value: name,
                                   child: Text(name),
@@ -212,7 +213,7 @@ class _MenuFormPageState extends State<MenuFormPage> {
                                 !_iconOptions.contains(iconController.text))
                               DropdownMenuItem(
                                 value: iconController.text,
-                                child: Text('${iconController.text} (non standard)'),
+                                child: Text(l10n.administrationMessaggeCustom49(iconController.text)), // '{icon} (non standard)'
                               ),
                           ],
                           onChanged: (val) {
@@ -226,7 +227,7 @@ class _MenuFormPageState extends State<MenuFormPage> {
                           controller: orderController,
                           keyboardType: TextInputType.number,
                           decoration:
-                              const InputDecoration(labelText: 'Ordine'),
+                              InputDecoration(labelText: l10n.administrationMessaggeCustom50), // 'Ordine'
                         ),
                       ),
                     ],
@@ -237,13 +238,12 @@ class _MenuFormPageState extends State<MenuFormPage> {
                   if (!loadingMenus)
                     DropdownButtonFormField<String?>(
                       initialValue: parentId,
-                      decoration: const InputDecoration(
-                        labelText: 'Voce parent',
-                        helperText: 'Lascia vuoto per voce di primo livello',
+                      decoration: InputDecoration(
+                        labelText: l10n.administrationMessaggeCustom51, // 'Voce parent'
+                        helperText: l10n.administrationMessaggeCustom52, // 'Lascia vuoto per voce di primo livello'
                       ),
                       items: [
-                        const DropdownMenuItem(
-                            value: null, child: Text('— Primo livello —')),
+                        DropdownMenuItem(value: null, child: Text(l10n.administrationMessaggeCustom53)), // '— Primo livello —'
                         ...allMenus.map((m) => DropdownMenuItem(
                               value: m.id,
                               child: Text(m.label),
@@ -255,17 +255,17 @@ class _MenuFormPageState extends State<MenuFormPage> {
 
                   // ── Flags ──────────────────────────────
                   SwitchListTile(
-                    title: const Text('Visibile'),
+                    title: Text(l10n.administrationMessaggeCustom54), // 'Visibile'
                     value: visible,
                     onChanged: (v) => setState(() => visible = v),
                   ),
                   SwitchListTile(
-                    title: const Text('Mostra su Mobile'),
+                    title: Text(l10n.administrationMessaggeCustom55), // 'Mostra su Mobile'
                     value: mobile,
                     onChanged: (v) => setState(() => mobile = v),
                   ),
                   SwitchListTile(
-                    title: const Text('Mostra su Desktop'),
+                    title: Text(l10n.administrationMessaggeCustom56), // 'Mostra su Desktop'
                     value: desktop,
                     onChanged: (v) => setState(() => desktop = v),
                   ),

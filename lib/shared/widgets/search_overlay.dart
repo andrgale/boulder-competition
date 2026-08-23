@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'search_result.dart';
 import 'search_service.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 /// Campo di ricerca con overlay dropdown.
 ///
@@ -30,6 +31,8 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
   final _focusNode = FocusNode();
   final _service = SearchService();
   final _layerLink = LayerLink();
+
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   OverlayEntry? _overlay;
   Timer? _debounce;
@@ -167,6 +170,7 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
 
   @override
   Widget build(BuildContext context) {
+   // final l10n = AppLocalizations.of(context)!;
     return CompositedTransformTarget(
       link: _layerLink,
       child: SizedBox(
@@ -177,7 +181,7 @@ class _GlobalSearchBarState extends State<GlobalSearchBar> {
           focusNode: _focusNode,
           onChanged: _onChanged,
           decoration: InputDecoration(
-            hintText: 'Cerca competizioni, atleti…',
+            hintText: l10n.administrationMessageCustom155, // 'Cerca competizioni, atleti…'
             filled: true,
             fillColor: const Color(0xFFF3F4F6),
             border: OutlineInputBorder(
@@ -233,6 +237,8 @@ class _SearchDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final grouped = <SearchResultType, List<SearchResult>>{};
     for (final r in results) {
       grouped.putIfAbsent(r.type, () => []).add(r);
@@ -249,7 +255,7 @@ class _SearchDropdown extends StatelessWidget {
       children.add(Padding(
         padding: const EdgeInsets.all(16),
         child: Text(
-          'Nessun risultato per "$query"',
+          l10n.administrationMessageCustom156(query), // 'Nessun risultato per "{query}"'
           style: const TextStyle(color: Colors.grey),
         ),
       ));
