@@ -1,8 +1,10 @@
+import 'package:boulder_competition/features/rankings/models/ranking_sex_model_l10n.dart';
 import 'package:flutter/material.dart';
 
 import '../data/ranking_qualification_service.dart';
 import '../models/ranking_qualification_model.dart';
 import 'ranking_qualification_export_pdf.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 enum _RankingFilter { maschile, femminile, generale }
 
@@ -32,6 +34,8 @@ class _RankingQualificazionePageState
   List<RankingQualificationModel> rankings = [];
   bool loading = true;
   bool _exporting = false;
+
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   // ── filtro classifica: parte da Maschile come richiesto ────
   _RankingFilter _filter = _RankingFilter.maschile;
@@ -65,7 +69,7 @@ class _RankingQualificazionePageState
       if (!mounted) return;
       setState(() => loading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Errore caricamento classifica: $e')),
+        SnackBar(content: Text(l10n.rankingMessageCustom10(e.toString()))), // 'Errore caricamento classifica: {error}'
       );
     }
   }
@@ -108,11 +112,12 @@ class _RankingQualificazionePageState
         dtGara: DateTime.now(), // sostituisci con la data gara reale se disponibile
         rankings: rankings, // usa la lista completa, non filtered
         nrFinalisti: widget.nrFinalisti,
+        l10n: l10n,
       );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Errore esportazione PDF: $e')),
+        SnackBar(content: Text(l10n.rankingMessageCustom11(e.toString()))), // 'Errore esportazione PDF: {error}'
       );
     } finally {
       if (mounted) setState(() => _exporting = false);
@@ -128,7 +133,7 @@ class _RankingQualificazionePageState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Classifica qualificazioni - ${widget.competitionName}',
+          l10n.rankingMessageCustom31(widget.competitionName), // 'Classifica qualificazioni - {competition}'
         ),
         actions: [
           if (!loading)
@@ -145,7 +150,7 @@ class _RankingQualificazionePageState
                     ),
                   )
                 : IconButton(
-                    tooltip: 'Esporta PDF',
+                    tooltip: l10n.rankingMessageCustom2, // 'Esporta PDF' (riutilizzata)
                     icon: const Icon(Icons.picture_as_pdf),
                     onPressed: _exportPdf,
                   ),
@@ -167,7 +172,7 @@ class _RankingQualificazionePageState
                   child: TextField(
                     controller: searchController,
                     decoration: InputDecoration(
-                      hintText: 'Cerca pettorale, cognome, nome...',
+                      hintText: l10n.rankingMessageCustom3, // 'Cerca pettorale, cognome, nome...' (riutilizzata)
                       prefixIcon: const Icon(Icons.search),
                       suffixIcon: searchController.text.isNotEmpty
                           ? IconButton(
@@ -187,30 +192,10 @@ class _RankingQualificazionePageState
                 ),
 
                 // ── lista classifica ───────────────────────
-                // Expanded(
-                //   child: filtered.isEmpty
-                //       ? const Center(
-                //           child: Text('Nessun atleta in classifica'),
-                //         )
-                //       : ListView.builder(
-                //           itemCount: filtered.length,
-                //           itemBuilder: (_, i) => _RankingTile(
-                //             ranking: filtered[i],
-                //             // La posizione qui rispecchia l'ordine
-                //             // dell'elenco FILTRATO, ma il colore finalisti
-                //             // si basa sull'ordine GENERALE per coerenza
-                //             // con la classifica reale, non con il filtro
-                //             // sesso applicato. Vedi nota sotto.
-                //             position: i + 1,
-                //             isFinalist: _isFinalist(filtered[i]),
-                //           ),
-                //         ),
-                // ),
-                // ── lista classifica ───────────────────────
                 Expanded(
                   child: filtered.isEmpty
-                      ? const Center(
-                          child: Text('Nessun atleta in classifica'),
+                      ? Center(
+                          child: Text(l10n.rankingMessageCustom4), // 'Nessun atleta in classifica' (riutilizzata)
                         )
                       : LayoutBuilder(
                           builder: (context, constraints) {
@@ -221,7 +206,7 @@ class _RankingQualificazionePageState
                                     : minContentWidth;
 
                             return Scrollbar(
-                              controller: _horizontalController,
+                              controller: _horizontalController, // keep consistent name
                               thumbVisibility: true,
                               notificationPredicate: (notif) =>
                                   notif.metrics.axis == Axis.horizontal,
@@ -285,6 +270,7 @@ class _RankingFilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
       child: Wrap(
@@ -292,21 +278,21 @@ class _RankingFilterBar extends StatelessWidget {
         runSpacing: 8,
         children: [
           _FilterChip(
-            label: 'Classifica Maschile',
+            label: l10n.rankingMessageCustom5, // 'Classifica Maschile'
             icon: Icons.male,
             selected: current == _RankingFilter.maschile,
             color: Colors.blue,
             onTap: () => onChanged(_RankingFilter.maschile),
           ),
           _FilterChip(
-            label: 'Classifica Femminile',
+            label: l10n.rankingMessageCustom6, // 'Classifica Femminile'
             icon: Icons.female,
             selected: current == _RankingFilter.femminile,
             color: Colors.pink,
             onTap: () => onChanged(_RankingFilter.femminile),
           ),
           _FilterChip(
-            label: 'Classifica Generale',
+            label: l10n.rankingMessageCustom7, // 'Classifica Generale'
             icon: Icons.groups,
             selected: current == _RankingFilter.generale,
             color: Colors.indigo,
@@ -390,6 +376,7 @@ class _RankingTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final r = ranking;
+    final l10n = AppLocalizations.of(context)!;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
@@ -454,7 +441,7 @@ class _RankingTile extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     [
-                      r.sessoLabel,
+                      r.localizedSessoLabel(context),
                       if (r.societa != null && r.societa!.isNotEmpty)
                         r.societa!,
                     ].join(' · '),
@@ -480,7 +467,7 @@ class _RankingTile extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Top',
+                  l10n.rankingMessageCustom32, // 'Top'
                   style: TextStyle(fontSize: 10, color: Colors.teal.shade700),
                 ),
               ],
@@ -501,9 +488,9 @@ class _RankingTile extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const Text(
-                    'punti',
-                    style: TextStyle(fontSize: 10, color: Colors.grey),
+                  Text(
+                    l10n.rankingMessageCustom33, // 'punti'
+                    style: const TextStyle(fontSize: 10, color: Colors.grey),
                   ),
                 ],
               ),

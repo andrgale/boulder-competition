@@ -2221,6 +2221,474 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ascent'**
   String get administrationMessageCustom169;
+
+  /// Page title: import CSV details
+  ///
+  /// In en, this message translates to:
+  /// **'Import CSV details'**
+  String get importMessageCustom1;
+
+  /// Chip: total import rows
+  ///
+  /// In en, this message translates to:
+  /// **'Total {total}'**
+  String importMessageCustom3(Object total);
+
+  /// Chip: inserted rows
+  ///
+  /// In en, this message translates to:
+  /// **'Inserted {inserted}'**
+  String importMessageCustom4(Object inserted);
+
+  /// Chip: discarded rows
+  ///
+  /// In en, this message translates to:
+  /// **'Discarded {discarded}'**
+  String importMessageCustom5(Object discarded);
+
+  /// Switch: show only discarded rows
+  ///
+  /// In en, this message translates to:
+  /// **'Show only discarded'**
+  String get importMessageCustom6;
+
+  /// Message when there are no rows to show
+  ///
+  /// In en, this message translates to:
+  /// **'No rows found'**
+  String get importMessageCustom7;
+
+  /// Row status: inserted
+  ///
+  /// In en, this message translates to:
+  /// **'Inserted'**
+  String get importMessageCustom8;
+
+  /// Row status: discarded
+  ///
+  /// In en, this message translates to:
+  /// **'Discarded'**
+  String get importMessageCustom9;
+
+  /// Row subtitle with number
+  ///
+  /// In en, this message translates to:
+  /// **'Row {number}'**
+  String importMessageCustom10(Object number);
+
+  /// Header for the CSV row section
+  ///
+  /// In en, this message translates to:
+  /// **'CSV row'**
+  String get importMessageCustom11;
+
+  /// Header for the discard reason section
+  ///
+  /// In en, this message translates to:
+  /// **'Discard reason'**
+  String get importMessageCustom12;
+
+  /// Page title: CSV imports
+  ///
+  /// In en, this message translates to:
+  /// **'CSV Imports'**
+  String get importMessageCustom13;
+
+  /// Message shown when no imports are available
+  ///
+  /// In en, this message translates to:
+  /// **'No import found'**
+  String get importMessageCustom14;
+
+  /// Table header: import date
+  ///
+  /// In en, this message translates to:
+  /// **'Import date'**
+  String get importMessageCustom15;
+
+  /// Table header: competition
+  ///
+  /// In en, this message translates to:
+  /// **'Competition'**
+  String get importMessageCustom16;
+
+  /// Table header: file
+  ///
+  /// In en, this message translates to:
+  /// **'File'**
+  String get importMessageCustom17;
+
+  /// Table header: total
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get importMessageCustom18;
+
+  /// Table header: inserted
+  ///
+  /// In en, this message translates to:
+  /// **'Inserted'**
+  String get importMessageCustom19;
+
+  /// Table header: discarded
+  ///
+  /// In en, this message translates to:
+  /// **'Discarded'**
+  String get importMessageCustom20;
+
+  /// Table header: status
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get importMessageCustom21;
+
+  /// Table header / tooltip: detail
+  ///
+  /// In en, this message translates to:
+  /// **'Detail'**
+  String get importMessageCustom22;
+
+  /// Page title: final ranking with competition name
+  ///
+  /// In en, this message translates to:
+  /// **'Final ranking - {competition}'**
+  String rankingMessageCustom1(Object competition);
+
+  /// Tooltip for export PDF
+  ///
+  /// In en, this message translates to:
+  /// **'Export PDF'**
+  String get rankingMessageCustom2;
+
+  /// Hint for ranking search
+  ///
+  /// In en, this message translates to:
+  /// **'Search bib, last name, first name...'**
+  String get rankingMessageCustom3;
+
+  /// Message shown when ranking is empty
+  ///
+  /// In en, this message translates to:
+  /// **'No athletes in ranking'**
+  String get rankingMessageCustom4;
+
+  /// Filter label: male
+  ///
+  /// In en, this message translates to:
+  /// **'Male ranking'**
+  String get rankingMessageCustom5;
+
+  /// Filter label: female
+  ///
+  /// In en, this message translates to:
+  /// **'Female ranking'**
+  String get rankingMessageCustom6;
+
+  /// Filter label: overall
+  ///
+  /// In en, this message translates to:
+  /// **'Overall ranking'**
+  String get rankingMessageCustom7;
+
+  /// Label for Top attempts with placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Top ({attempts})'**
+  String rankingMessageCustom8(Object attempts);
+
+  /// Label for Zone attempts with placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Zone ({attempts})'**
+  String rankingMessageCustom9(Object attempts);
+
+  /// Error message when loading ranking fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading ranking: {error}'**
+  String rankingMessageCustom10(Object error);
+
+  /// Error message when PDF export fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error exporting PDF: {error}'**
+  String rankingMessageCustom11(Object error);
+
+  /// Error message when updating competition
+  ///
+  /// In en, this message translates to:
+  /// **'Update error: {error}'**
+  String rankingMessageCustom12(Object error);
+
+  /// Page title: Rankings
+  ///
+  /// In en, this message translates to:
+  /// **'Rankings'**
+  String get rankingMessageCustom13;
+
+  /// Page subtitle: manage rankings
+  ///
+  /// In en, this message translates to:
+  /// **'Manage rankings'**
+  String get rankingMessageCustom14;
+
+  /// Search hint for competitions
+  ///
+  /// In en, this message translates to:
+  /// **'Search competition'**
+  String get rankingMessageCustom15;
+
+  /// Filter chip: only open competitions
+  ///
+  /// In en, this message translates to:
+  /// **'Only open'**
+  String get rankingMessageCustom16;
+
+  /// Message when no competitions are found
+  ///
+  /// In en, this message translates to:
+  /// **'No competitions found'**
+  String get rankingMessageCustom17;
+
+  /// Button label: qualifications
+  ///
+  /// In en, this message translates to:
+  /// **'Qualifications ranking'**
+  String get rankingMessageCustom18;
+
+  /// Button label: final
+  ///
+  /// In en, this message translates to:
+  /// **'Final ranking'**
+  String get rankingMessageCustom19;
+
+  /// Button label: top and zone
+  ///
+  /// In en, this message translates to:
+  /// **'Top & Zone ranking'**
+  String get rankingMessageCustom20;
+
+  /// Table header: description
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get rankingMessageCustom21;
+
+  /// Table header: competition date
+  ///
+  /// In en, this message translates to:
+  /// **'Competition date'**
+  String get rankingMessageCustom22;
+
+  /// Table header: status
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get rankingMessageCustom23;
+
+  /// Table header: qualifications
+  ///
+  /// In en, this message translates to:
+  /// **'Qualifications'**
+  String get rankingMessageCustom24;
+
+  /// Table header: final
+  ///
+  /// In en, this message translates to:
+  /// **'Final'**
+  String get rankingMessageCustom25;
+
+  /// Table header: top & zone
+  ///
+  /// In en, this message translates to:
+  /// **'Top & Zone'**
+  String get rankingMessageCustom26;
+
+  /// Tooltip: reopen competition
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to reopen competition'**
+  String get rankingMessageCustom27;
+
+  /// Tooltip: close competition
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to close competition'**
+  String get rankingMessageCustom28;
+
+  /// Status label: closed
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get rankingMessageCustom29;
+
+  /// Status label: open
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get rankingMessageCustom30;
+
+  /// Page title: qualifications ranking with competition name
+  ///
+  /// In en, this message translates to:
+  /// **'Qualifications ranking - {competition}'**
+  String rankingMessageCustom31(Object competition);
+
+  /// Label: Top
+  ///
+  /// In en, this message translates to:
+  /// **'Top'**
+  String get rankingMessageCustom32;
+
+  /// Unit: points
+  ///
+  /// In en, this message translates to:
+  /// **'points'**
+  String get rankingMessageCustom33;
+
+  /// Page title: top & zone ranking with competition name
+  ///
+  /// In en, this message translates to:
+  /// **'Top & Zone ranking - {competition}'**
+  String rankingMessageCustom34(Object competition);
+
+  /// PDF section title: Male ranking
+  ///
+  /// In en, this message translates to:
+  /// **'Male ranking'**
+  String get rankingMessageCustom35;
+
+  /// PDF section title: Female ranking
+  ///
+  /// In en, this message translates to:
+  /// **'Female ranking'**
+  String get rankingMessageCustom36;
+
+  /// PDF section title: Overall ranking
+  ///
+  /// In en, this message translates to:
+  /// **'Overall ranking'**
+  String get rankingMessageCustom37;
+
+  /// Statistic label: athletes
+  ///
+  /// In en, this message translates to:
+  /// **'Athletes'**
+  String get rankingMessageCustom38;
+
+  /// Statistic label: finalists
+  ///
+  /// In en, this message translates to:
+  /// **'Finalists'**
+  String get rankingMessageCustom39;
+
+  /// Message when no athletes in section
+  ///
+  /// In en, this message translates to:
+  /// **'No athletes in this category'**
+  String get rankingMessageCustom40;
+
+  /// Legend for finalists with placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Green bib = athlete qualified to final (first {nr})'**
+  String rankingMessageCustom41(Object nr);
+
+  /// Branding footer
+  ///
+  /// In en, this message translates to:
+  /// **'Boulder Competition Management'**
+  String get rankingMessageCustom42;
+
+  /// PDF generation date label
+  ///
+  /// In en, this message translates to:
+  /// **'Generated on {date}'**
+  String rankingMessageCustom43(Object date);
+
+  /// PDF page numbering
+  ///
+  /// In en, this message translates to:
+  /// **'Page {page} of {count}'**
+  String rankingMessageCustom44(Object page, Object count);
+
+  /// Table header: position
+  ///
+  /// In en, this message translates to:
+  /// **'#'**
+  String get rankingMessageCustom45;
+
+  /// Table header: bib (abbrev.)
+  ///
+  /// In en, this message translates to:
+  /// **'Bib'**
+  String get rankingMessageCustom46;
+
+  /// Table header: last name and first name
+  ///
+  /// In en, this message translates to:
+  /// **'Last name · First name'**
+  String get rankingMessageCustom47;
+
+  /// Table header: sex
+  ///
+  /// In en, this message translates to:
+  /// **'Sex'**
+  String get rankingMessageCustom48;
+
+  /// Table header: club
+  ///
+  /// In en, this message translates to:
+  /// **'Club'**
+  String get rankingMessageCustom49;
+
+  /// Table header: attempts top
+  ///
+  /// In en, this message translates to:
+  /// **'Attempts Top'**
+  String get rankingMessageCustom51;
+
+  /// Table header: zones
+  ///
+  /// In en, this message translates to:
+  /// **'Zones'**
+  String get rankingMessageCustom52;
+
+  /// Table header: attempts zone
+  ///
+  /// In en, this message translates to:
+  /// **'Attempts Zone'**
+  String get rankingMessageCustom53;
+
+  /// Podium legend: first place
+  ///
+  /// In en, this message translates to:
+  /// **'1st place'**
+  String get rankingMessageCustom54;
+
+  /// Podium legend: second place
+  ///
+  /// In en, this message translates to:
+  /// **'2nd place'**
+  String get rankingMessageCustom55;
+
+  /// Podium legend: third place
+  ///
+  /// In en, this message translates to:
+  /// **'3rd place'**
+  String get rankingMessageCustom56;
+
+  /// Sex: male
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get rankingMessageCustom57;
+
+  /// Sex: female
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get rankingMessageCustom58;
 }
 
 class _AppLocalizationsDelegate

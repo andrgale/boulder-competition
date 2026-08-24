@@ -5,7 +5,7 @@ class RankingFinalModel {
   final int? pettorale;
   final String cognome;
   final String nome;
-  final String? sesso;
+  final String? sesso; // 'M' | 'F' | null
   final String? societa;
   final int nrTop;
   final int nrZone;
@@ -29,15 +29,15 @@ class RankingFinalModel {
 
   String get fullName => '$cognome $nome';
 
-  /// Descrizione leggibile del sesso ('Maschio' / 'Femmina' / '—')
-  String get sessoLabel {
+  /// Enum helper per il sesso — utile per localizzare in UI senza toccare il model.
+  Sesso get sessoEnum {
     switch (sesso) {
       case 'M':
-        return 'Maschio';
+        return Sesso.male;
       case 'F':
-        return 'Femmina';
+        return Sesso.female;
       default:
-        return '—';
+        return Sesso.unknown;
     }
   }
 
@@ -58,3 +58,5 @@ class RankingFinalModel {
     );
   }
 }
+
+enum Sesso { male, female, unknown }

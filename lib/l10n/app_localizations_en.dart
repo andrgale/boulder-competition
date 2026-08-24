@@ -1177,4 +1177,268 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get administrationMessageCustom169 => 'Ascent';
+
+  @override
+  String get importMessageCustom1 => 'Import CSV details';
+
+  @override
+  String importMessageCustom3(Object total) {
+    return 'Total $total';
+  }
+
+  @override
+  String importMessageCustom4(Object inserted) {
+    return 'Inserted $inserted';
+  }
+
+  @override
+  String importMessageCustom5(Object discarded) {
+    return 'Discarded $discarded';
+  }
+
+  @override
+  String get importMessageCustom6 => 'Show only discarded';
+
+  @override
+  String get importMessageCustom7 => 'No rows found';
+
+  @override
+  String get importMessageCustom8 => 'Inserted';
+
+  @override
+  String get importMessageCustom9 => 'Discarded';
+
+  @override
+  String importMessageCustom10(Object number) {
+    return 'Row $number';
+  }
+
+  @override
+  String get importMessageCustom11 => 'CSV row';
+
+  @override
+  String get importMessageCustom12 => 'Discard reason';
+
+  @override
+  String get importMessageCustom13 => 'CSV Imports';
+
+  @override
+  String get importMessageCustom14 => 'No import found';
+
+  @override
+  String get importMessageCustom15 => 'Import date';
+
+  @override
+  String get importMessageCustom16 => 'Competition';
+
+  @override
+  String get importMessageCustom17 => 'File';
+
+  @override
+  String get importMessageCustom18 => 'Total';
+
+  @override
+  String get importMessageCustom19 => 'Inserted';
+
+  @override
+  String get importMessageCustom20 => 'Discarded';
+
+  @override
+  String get importMessageCustom21 => 'Status';
+
+  @override
+  String get importMessageCustom22 => 'Detail';
+
+  @override
+  String rankingMessageCustom1(Object competition) {
+    return 'Final ranking - $competition';
+  }
+
+  @override
+  String get rankingMessageCustom2 => 'Export PDF';
+
+  @override
+  String get rankingMessageCustom3 => 'Search bib, last name, first name...';
+
+  @override
+  String get rankingMessageCustom4 => 'No athletes in ranking';
+
+  @override
+  String get rankingMessageCustom5 => 'Male ranking';
+
+  @override
+  String get rankingMessageCustom6 => 'Female ranking';
+
+  @override
+  String get rankingMessageCustom7 => 'Overall ranking';
+
+  @override
+  String rankingMessageCustom8(Object attempts) {
+    return 'Top ($attempts)';
+  }
+
+  @override
+  String rankingMessageCustom9(Object attempts) {
+    return 'Zone ($attempts)';
+  }
+
+  @override
+  String rankingMessageCustom10(Object error) {
+    return 'Error loading ranking: $error';
+  }
+
+  @override
+  String rankingMessageCustom11(Object error) {
+    return 'Error exporting PDF: $error';
+  }
+
+  @override
+  String rankingMessageCustom12(Object error) {
+    return 'Update error: $error';
+  }
+
+  @override
+  String get rankingMessageCustom13 => 'Rankings';
+
+  @override
+  String get rankingMessageCustom14 => 'Manage rankings';
+
+  @override
+  String get rankingMessageCustom15 => 'Search competition';
+
+  @override
+  String get rankingMessageCustom16 => 'Only open';
+
+  @override
+  String get rankingMessageCustom17 => 'No competitions found';
+
+  @override
+  String get rankingMessageCustom18 => 'Qualifications ranking';
+
+  @override
+  String get rankingMessageCustom19 => 'Final ranking';
+
+  @override
+  String get rankingMessageCustom20 => 'Top & Zone ranking';
+
+  @override
+  String get rankingMessageCustom21 => 'Description';
+
+  @override
+  String get rankingMessageCustom22 => 'Competition date';
+
+  @override
+  String get rankingMessageCustom23 => 'Status';
+
+  @override
+  String get rankingMessageCustom24 => 'Qualifications';
+
+  @override
+  String get rankingMessageCustom25 => 'Final';
+
+  @override
+  String get rankingMessageCustom26 => 'Top & Zone';
+
+  @override
+  String get rankingMessageCustom27 => 'Tap to reopen competition';
+
+  @override
+  String get rankingMessageCustom28 => 'Tap to close competition';
+
+  @override
+  String get rankingMessageCustom29 => 'Closed';
+
+  @override
+  String get rankingMessageCustom30 => 'Open';
+
+  @override
+  String rankingMessageCustom31(Object competition) {
+    return 'Qualifications ranking - $competition';
+  }
+
+  @override
+  String get rankingMessageCustom32 => 'Top';
+
+  @override
+  String get rankingMessageCustom33 => 'points';
+
+  @override
+  String rankingMessageCustom34(Object competition) {
+    return 'Top & Zone ranking - $competition';
+  }
+
+  @override
+  String get rankingMessageCustom35 => 'Male ranking';
+
+  @override
+  String get rankingMessageCustom36 => 'Female ranking';
+
+  @override
+  String get rankingMessageCustom37 => 'Overall ranking';
+
+  @override
+  String get rankingMessageCustom38 => 'Athletes';
+
+  @override
+  String get rankingMessageCustom39 => 'Finalists';
+
+  @override
+  String get rankingMessageCustom40 => 'No athletes in this category';
+
+  @override
+  String rankingMessageCustom41(Object nr) {
+    return 'Green bib = athlete qualified to final (first $nr)';
+  }
+
+  @override
+  String get rankingMessageCustom42 => 'Boulder Competition Management';
+
+  @override
+  String rankingMessageCustom43(Object date) {
+    return 'Generated on $date';
+  }
+
+  @override
+  String rankingMessageCustom44(Object page, Object count) {
+    return 'Page $page of $count';
+  }
+
+  @override
+  String get rankingMessageCustom45 => '#';
+
+  @override
+  String get rankingMessageCustom46 => 'Bib';
+
+  @override
+  String get rankingMessageCustom47 => 'Last name · First name';
+
+  @override
+  String get rankingMessageCustom48 => 'Sex';
+
+  @override
+  String get rankingMessageCustom49 => 'Club';
+
+  @override
+  String get rankingMessageCustom51 => 'Attempts Top';
+
+  @override
+  String get rankingMessageCustom52 => 'Zones';
+
+  @override
+  String get rankingMessageCustom53 => 'Attempts Zone';
+
+  @override
+  String get rankingMessageCustom54 => '1st place';
+
+  @override
+  String get rankingMessageCustom55 => '2nd place';
+
+  @override
+  String get rankingMessageCustom56 => '3rd place';
+
+  @override
+  String get rankingMessageCustom57 => 'Male';
+
+  @override
+  String get rankingMessageCustom58 => 'Female';
 }

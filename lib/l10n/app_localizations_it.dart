@@ -1182,4 +1182,268 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get administrationMessageCustom169 => 'Ascent';
+
+  @override
+  String get importMessageCustom1 => 'Dettaglio import CSV';
+
+  @override
+  String importMessageCustom3(Object total) {
+    return 'Totali $total';
+  }
+
+  @override
+  String importMessageCustom4(Object inserted) {
+    return 'Inseriti $inserted';
+  }
+
+  @override
+  String importMessageCustom5(Object discarded) {
+    return 'Scartati $discarded';
+  }
+
+  @override
+  String get importMessageCustom6 => 'Mostra solo gli scarti';
+
+  @override
+  String get importMessageCustom7 => 'Nessuna riga trovata';
+
+  @override
+  String get importMessageCustom8 => 'Importata';
+
+  @override
+  String get importMessageCustom9 => 'Scartata';
+
+  @override
+  String importMessageCustom10(Object number) {
+    return 'Riga $number';
+  }
+
+  @override
+  String get importMessageCustom11 => 'Riga CSV';
+
+  @override
+  String get importMessageCustom12 => 'Motivo scarto';
+
+  @override
+  String get importMessageCustom13 => 'Importazioni CSV';
+
+  @override
+  String get importMessageCustom14 => 'Nessuna importazione trovata';
+
+  @override
+  String get importMessageCustom15 => 'Data importazione';
+
+  @override
+  String get importMessageCustom16 => 'Gara';
+
+  @override
+  String get importMessageCustom17 => 'File';
+
+  @override
+  String get importMessageCustom18 => 'Totali';
+
+  @override
+  String get importMessageCustom19 => 'Inseriti';
+
+  @override
+  String get importMessageCustom20 => 'Scartati';
+
+  @override
+  String get importMessageCustom21 => 'Stato';
+
+  @override
+  String get importMessageCustom22 => 'Dettaglio';
+
+  @override
+  String rankingMessageCustom1(Object competition) {
+    return 'Classifica finale - $competition';
+  }
+
+  @override
+  String get rankingMessageCustom2 => 'Esporta PDF';
+
+  @override
+  String get rankingMessageCustom3 => 'Cerca pettorale, cognome, nome...';
+
+  @override
+  String get rankingMessageCustom4 => 'Nessun atleta in classifica';
+
+  @override
+  String get rankingMessageCustom5 => 'Classifica Maschile';
+
+  @override
+  String get rankingMessageCustom6 => 'Classifica Femminile';
+
+  @override
+  String get rankingMessageCustom7 => 'Classifica Generale';
+
+  @override
+  String rankingMessageCustom8(Object attempts) {
+    return 'Top ($attempts)';
+  }
+
+  @override
+  String rankingMessageCustom9(Object attempts) {
+    return 'Zone ($attempts)';
+  }
+
+  @override
+  String rankingMessageCustom10(Object error) {
+    return 'Errore caricamento classifica: $error';
+  }
+
+  @override
+  String rankingMessageCustom11(Object error) {
+    return 'Errore esportazione PDF: $error';
+  }
+
+  @override
+  String rankingMessageCustom12(Object error) {
+    return 'Errore aggiornamento: $error';
+  }
+
+  @override
+  String get rankingMessageCustom13 => 'Classifiche';
+
+  @override
+  String get rankingMessageCustom14 => 'Gestione classifiche';
+
+  @override
+  String get rankingMessageCustom15 => 'Cerca competizione';
+
+  @override
+  String get rankingMessageCustom16 => 'Solo aperte';
+
+  @override
+  String get rankingMessageCustom17 => 'Nessuna competizione trovata';
+
+  @override
+  String get rankingMessageCustom18 => 'Classifica qualificazioni';
+
+  @override
+  String get rankingMessageCustom19 => 'Classifica finale';
+
+  @override
+  String get rankingMessageCustom20 => 'Classifica Top e Zone';
+
+  @override
+  String get rankingMessageCustom21 => 'Descrizione';
+
+  @override
+  String get rankingMessageCustom22 => 'Data Gara';
+
+  @override
+  String get rankingMessageCustom23 => 'Stato';
+
+  @override
+  String get rankingMessageCustom24 => 'Qualificazioni';
+
+  @override
+  String get rankingMessageCustom25 => 'Finale';
+
+  @override
+  String get rankingMessageCustom26 => 'Top e Zone';
+
+  @override
+  String get rankingMessageCustom27 => 'Tocca per riaprire la gara';
+
+  @override
+  String get rankingMessageCustom28 => 'Tocca per chiudere la gara';
+
+  @override
+  String get rankingMessageCustom29 => 'Chiusa';
+
+  @override
+  String get rankingMessageCustom30 => 'Aperta';
+
+  @override
+  String rankingMessageCustom31(Object competition) {
+    return 'Classifica qualificazioni - $competition';
+  }
+
+  @override
+  String get rankingMessageCustom32 => 'Top';
+
+  @override
+  String get rankingMessageCustom33 => 'punti';
+
+  @override
+  String rankingMessageCustom34(Object competition) {
+    return 'Classifica Top e Zone - $competition';
+  }
+
+  @override
+  String get rankingMessageCustom35 => 'Classifica Maschile';
+
+  @override
+  String get rankingMessageCustom36 => 'Classifica Femminile';
+
+  @override
+  String get rankingMessageCustom37 => 'Classifica Generale';
+
+  @override
+  String get rankingMessageCustom38 => 'Atleti';
+
+  @override
+  String get rankingMessageCustom39 => 'Finalisti';
+
+  @override
+  String get rankingMessageCustom40 => 'Nessun atleta in questa categoria';
+
+  @override
+  String rankingMessageCustom41(Object nr) {
+    return 'Pettorale verde = atleta qualificato alla finale (primi $nr)';
+  }
+
+  @override
+  String get rankingMessageCustom42 => 'Boulder Competition Management';
+
+  @override
+  String rankingMessageCustom43(Object date) {
+    return 'Generato il $date';
+  }
+
+  @override
+  String rankingMessageCustom44(Object page, Object count) {
+    return 'Pagina $page di $count';
+  }
+
+  @override
+  String get rankingMessageCustom45 => '#';
+
+  @override
+  String get rankingMessageCustom46 => 'Pett.';
+
+  @override
+  String get rankingMessageCustom47 => 'Cognome e Nome';
+
+  @override
+  String get rankingMessageCustom48 => 'Sesso';
+
+  @override
+  String get rankingMessageCustom49 => 'Società';
+
+  @override
+  String get rankingMessageCustom51 => 'Tent. Top';
+
+  @override
+  String get rankingMessageCustom52 => 'Zone';
+
+  @override
+  String get rankingMessageCustom53 => 'Tent. Zone';
+
+  @override
+  String get rankingMessageCustom54 => '1° posto';
+
+  @override
+  String get rankingMessageCustom55 => '2° posto';
+
+  @override
+  String get rankingMessageCustom56 => '3° posto';
+
+  @override
+  String get rankingMessageCustom57 => 'Maschio';
+
+  @override
+  String get rankingMessageCustom58 => 'Femmina';
 }

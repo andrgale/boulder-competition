@@ -268,7 +268,7 @@ class _SearchDropdown extends StatelessWidget {
         children.add(Padding(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
           child: Text(
-            group.first.typeLabel.toUpperCase(),
+            group.first.localizedTypeLabel(context).toUpperCase(),
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w700,

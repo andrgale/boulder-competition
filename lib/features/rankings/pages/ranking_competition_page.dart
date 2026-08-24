@@ -6,6 +6,7 @@ import '../../../shared/widgets/base_page.dart';
 import '../../../shared/app_snackbar.dart';
 import '../data/ranking_competition_service.dart';
 import '../models/ranking_competition_model.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class RankingsCompetitionsPage extends StatefulWidget {
   const RankingsCompetitionsPage({super.key});
@@ -15,16 +16,16 @@ class RankingsCompetitionsPage extends StatefulWidget {
       _RankingsCompetitionsPageState();
 }
 
-class _RankingsCompetitionsPageState
-    extends State<RankingsCompetitionsPage> {
+class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
   final service = RankingsCompetitionService();
   final searchController = TextEditingController();
-  final _verticalController = ScrollController();   // ← nuovo
-  final _horizontalController = ScrollController();  // ← nuovo
-
+  final _verticalController = ScrollController(); // ← nuovo
+  final _horizontalController = ScrollController(); // ← nuovo
 
   List<RankingCompetitionModel> allCompetitions = [];
   List<RankingCompetitionModel> competitions = [];
+
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   bool loading = true;
   bool showOnlyOpen = false;
@@ -40,8 +41,8 @@ class _RankingsCompetitionsPageState
   @override
   void dispose() {
     searchController.dispose();
-    _verticalController.dispose();   // ← nuovo
-    _horizontalController.dispose(); // ← nuovo
+    _verticalController.dispose(); // ← nuovo
+    _horizontalController.dispose(); // keep consistent variable name
     super.dispose();
   }
 
@@ -119,8 +120,7 @@ class _RankingsCompetitionsPageState
       flGaraChiusa: !competition.flGaraChiusa,
     );
 
-    final allIdx =
-        allCompetitions.indexWhere((c) => c.id == competition.id);
+    final allIdx = allCompetitions.indexWhere((c) => c.id == competition.id);
 
     setState(() {
       competitions[idx] = updated;
@@ -139,7 +139,7 @@ class _RankingsCompetitionsPageState
         if (allIdx >= 0) allCompetitions[allIdx] = competition;
       });
       if (!mounted) return;
-      AppSnackbar.error(context, 'Errore aggiornamento: $e');
+      AppSnackbar.error(context, l10n.rankingMessageCustom12(e.toString())); // 'Errore aggiornamento: {error}'
     }
   }
 
@@ -179,8 +179,8 @@ class _RankingsCompetitionsPageState
     final isMobile = MediaQuery.of(context).size.width < 700;
 
     return BasePage(
-      title: 'Classifiche',
-      subtitle: 'Gestione classifiche',
+      title: l10n.rankingMessageCustom13, // 'Classifiche'
+      subtitle: l10n.rankingMessageCustom14, // 'Gestione classifiche'
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -194,15 +194,15 @@ class _RankingsCompetitionsPageState
                 width: isMobile ? 320 : 420,
                 child: TextField(
                   controller: searchController,
-                  decoration: const InputDecoration(
-                    hintText: 'Cerca competizione',
-                    prefixIcon: Icon(Icons.search),
+                  decoration: InputDecoration(
+                    hintText: l10n.rankingMessageCustom15, // 'Cerca competizione'
+                    prefixIcon: const Icon(Icons.search),
                   ),
                   onChanged: (_) => applyFilters(),
                 ),
               ),
               FilterChip(
-                label: const Text('Solo aperte'),
+                label: Text(l10n.rankingMessageCustom16), // 'Solo aperte'
                 selected: showOnlyOpen,
                 onSelected: (value) {
                   setState(() => showOnlyOpen = value);
@@ -231,8 +231,8 @@ class _RankingsCompetitionsPageState
 
   Widget _buildTable() {
     if (competitions.isEmpty) {
-      return const Center(
-        child: Text('Nessuna competizione trovata'),
+      return Center(
+        child: Text(l10n.rankingMessageCustom17), // 'Nessuna competizione trovata'
       );
     }
 
@@ -283,19 +283,19 @@ class _RankingsCompetitionsPageState
                   runSpacing: 8,
                   children: [
                     _RankingButton(
-                      label: 'Classifica qualificazioni',
+                      label: l10n.rankingMessageCustom18, // 'Classifica qualificazioni'
                       icon: Icons.format_list_numbered,
                       color: Colors.indigo,
                       onTap: () => _goToQualifications(c),
                     ),
                     _RankingButton(
-                      label: 'Classifica finale',
+                      label: l10n.rankingMessageCustom19, // 'Classifica finale'
                       icon: Icons.emoji_events,
                       color: Colors.amber.shade800,
                       onTap: () => _goToFinal(c),
                     ),
                     _RankingButton(
-                      label: 'Classifica Top e Zone',
+                      label: l10n.rankingMessageCustom20, // 'Classifica Top e Zone'
                       icon: Icons.terrain,
                       color: Colors.teal,
                       onTap: () => _goToTopZone(c),
@@ -356,17 +356,17 @@ class _RankingsCompetitionsPageState
                       sortAscending: sortAsc,
                       columns: [
                         DataColumn(
-                          label: const Text('Descrizione'),
+                          label: Text(l10n.rankingMessageCustom21), // 'Descrizione'
                           onSort: (_, _) => updateSort('descrizione'),
                         ),
                         DataColumn(
-                          label: const Text('Data Gara'),
+                          label: Text(l10n.rankingMessageCustom22), // 'Data Gara'
                           onSort: (_, _) => updateSort('dt_gara'),
                         ),
-                        const DataColumn(label: Text('Stato')),
-                        const DataColumn(label: Text('Qualificazioni')),
-                        const DataColumn(label: Text('Finale')),
-                        const DataColumn(label: Text('Top e Zone')),
+                        DataColumn(label: Text(l10n.rankingMessageCustom23)), // 'Stato'
+                        DataColumn(label: Text(l10n.rankingMessageCustom24)), // 'Qualificazioni'
+                        DataColumn(label: Text(l10n.rankingMessageCustom25)), // 'Finale'
+                        DataColumn(label: Text(l10n.rankingMessageCustom26)), // 'Top e Zone'
                       ],
                       rows: competitions.map((c) => _buildRow(c)).toList(),
                     ),
@@ -409,7 +409,7 @@ class _RankingsCompetitionsPageState
         // classifica qualificazioni
         DataCell(
           _RankingButton(
-            label: 'Qualificazioni',
+            label: l10n.rankingMessageCustom18, // 'Qualificazioni' / reuse mobile label
             icon: Icons.format_list_numbered,
             color: Colors.indigo,
             onTap: () => _goToQualifications(c),
@@ -419,7 +419,7 @@ class _RankingsCompetitionsPageState
         // classifica finale
         DataCell(
           _RankingButton(
-            label: 'Finale',
+            label: l10n.rankingMessageCustom19, // 'Finale'
             icon: Icons.emoji_events,
             color: Colors.amber.shade800,
             onTap: () => _goToFinal(c),
@@ -429,7 +429,7 @@ class _RankingsCompetitionsPageState
         // classifica top e zone
         DataCell(
           _RankingButton(
-            label: 'Top e Zone',
+            label: l10n.rankingMessageCustom20, // 'Top e Zone'
             icon: Icons.terrain,
             color: Colors.teal,
             onTap: () => _goToTopZone(c),
@@ -491,8 +491,9 @@ class _StatusChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Tooltip(
-      message: chiusa ? 'Tocca per riaprire la gara' : 'Tocca per chiudere la gara',
+      message: chiusa ? l10n.rankingMessageCustom27 : l10n.rankingMessageCustom28, // 'Tocca per riaprire la gara' / 'Tocca per chiudere la gara'
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(20),
@@ -515,7 +516,7 @@ class _StatusChip extends StatelessWidget {
               ),
               const SizedBox(width: 6),
               Text(
-                chiusa ? 'Chiusa' : 'Aperta',
+                chiusa ? l10n.rankingMessageCustom29 : l10n.rankingMessageCustom30, // 'Chiusa' / 'Aperta'
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,

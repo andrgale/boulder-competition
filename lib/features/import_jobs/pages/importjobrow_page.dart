@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../data/import_job_row_service.dart';
 import '../models/import_job_model.dart';
 import '../models/import_job_row_model.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class ImportJobRowsPage extends StatefulWidget {
   final ImportJobModel job;
@@ -24,6 +25,8 @@ class _ImportJobRowsPageState
   List<ImportJobRowModel> rows = [];
   bool loading = true;
   bool onlyDiscarded = false;
+
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   @override
   void initState() {
@@ -94,7 +97,7 @@ class _ImportJobRowsPageState
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dettaglio import CSV'),
+        title: Text(l10n.importMessageCustom1), // 'Dettaglio import CSV'
       ),
       body: loading
           ? const Center(child: CircularProgressIndicator())
@@ -118,9 +121,21 @@ class _ImportJobRowsPageState
                           spacing: 12,
                           runSpacing: 8,
                           children: [
-                            Chip(label: Text('Totali ${widget.job.totalRows}')),
-                            Chip(label: Text('Inseriti ${widget.job.insertedRows}')),
-                            Chip(label: Text('Scartati ${widget.job.discardedRows}')),
+                            Chip(
+                              label: Text(
+                                l10n.importMessageCustom3(widget.job.totalRows.toString()), // 'Totali {total}'
+                              ),
+                            ),
+                            Chip(
+                              label: Text(
+                                l10n.importMessageCustom4(widget.job.insertedRows.toString()), // 'Inseriti {inserted}'
+                              ),
+                            ),
+                            Chip(
+                              label: Text(
+                                l10n.importMessageCustom5(widget.job.discardedRows.toString()), // 'Scartati {discarded}'
+                              ),
+                            ),
                           ],
                         ),
                       ],
@@ -128,7 +143,7 @@ class _ImportJobRowsPageState
                   ),
                 ),
                 SwitchListTile(
-                  title: const Text('Mostra solo gli scarti'),
+                  title: Text(l10n.importMessageCustom6), // 'Mostra solo gli scarti'
                   value: onlyDiscarded,
                   onChanged: (v) {
                     setState(() {
@@ -139,8 +154,8 @@ class _ImportJobRowsPageState
                 const Divider(height: 1),
                 Expanded(
                   child: filteredRows.isEmpty
-                      ? const Center(
-                          child: Text('Nessuna riga trovata'),
+                      ? Center(
+                          child: Text(l10n.importMessageCustom7), // 'Nessuna riga trovata'
                         )
                       : ListView.builder(
                           itemCount: filteredRows.length,
@@ -163,19 +178,21 @@ class _ImportJobRowsPageState
                                 ),
                                 title: Text(
                                   row.status == 'INSERTED'
-                                      ? 'Importata'
-                                      : 'Scartata',
+                                      ? l10n.importMessageCustom8 // 'Importata'
+                                      : l10n.importMessageCustom9, // 'Scartata'
                                 ),
-                                subtitle: Text('Riga ${row.rowNumber}'),
+                                subtitle: Text(
+                                  l10n.importMessageCustom10(row.rowNumber.toString()), // 'Riga {number}'
+                                ),
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.all(16),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        const Text(
-                                          'Riga CSV',
-                                          style: TextStyle(
+                                        Text(
+                                          l10n.importMessageCustom11, // 'Riga CSV'
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -183,15 +200,15 @@ class _ImportJobRowsPageState
                                         SingleChildScrollView(
                                           scrollDirection: Axis.horizontal,
                                           child: SelectableText(row.rawRow),
-                                        ), 
+                                        ),
                                         const SizedBox(height: 4),
                                         SelectableText(row.rawRow),
                                         if (row.errorMessage != null &&
                                             row.errorMessage!.isNotEmpty) ...[
                                           const SizedBox(height: 16),
-                                          const Text(
-                                            'Motivo scarto',
-                                            style: TextStyle(
+                                          Text(
+                                            l10n.importMessageCustom12, // 'Motivo scarto'
+                                            style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
