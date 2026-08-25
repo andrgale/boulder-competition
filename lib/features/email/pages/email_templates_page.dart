@@ -1,4 +1,5 @@
 import 'package:boulder_competition/features/email/data/email_template_repository.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import '../models/email_template_model.dart';
@@ -15,6 +16,7 @@ class EmailTemplatesPage extends StatefulWidget {
 class _EmailTemplatesPageState extends State<EmailTemplatesPage> {
   final _repository = EmailTemplateRepository();
   late Future<List<EmailTemplateModel>> _templates;
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   @override
   void initState() {
@@ -29,23 +31,12 @@ class _EmailTemplatesPageState extends State<EmailTemplatesPage> {
 
     await _templates;
   }
-  
+
   Future<void> _open(EmailTemplateModel template) async {
     try {
-      // debugPrint('======================================');
-      // debugPrint('APERTURA TEMPLATE DALLA LISTA');
-      // debugPrint('ID: ${template.id}');
-      // debugPrint('MODELLO LISTA HTML:');
-      // debugPrint(template.htmlBody);
-
       final freshTemplate = await _repository.getTemplate(
         template.id,
       );
-
-      // debugPrint('--------------------------------------');
-      // debugPrint('MODELLO FRESCO DAL DB HTML:');
-      // debugPrint(freshTemplate.htmlBody);
-      // debugPrint('======================================');
 
       if (!mounted) return;
 
@@ -69,7 +60,7 @@ class _EmailTemplatesPageState extends State<EmailTemplatesPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Impossibile aprire il template: $error',
+            l10n.emailMessageCustom4(error.toString()), // 'Impossibile aprire il template: {error}'
           ),
         ),
       );
@@ -99,99 +90,129 @@ class _EmailTemplatesPageState extends State<EmailTemplatesPage> {
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Impossibile creare la bozza: $error')),
+        SnackBar(content: Text(l10n.emailMessageCustom5(error.toString()))), // 'Impossibile creare la bozza: {error}'
       );
     }
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Template email'),
-      actions: [
-        IconButton(
-          onPressed: _reload,
-          icon: const Icon(Icons.refresh),
-          tooltip: 'Aggiorna',
-        ),
-        const SizedBox(width: 8),
-      ],
-    ),
-    floatingActionButton: FloatingActionButton.extended(
-      onPressed: _create,
-      icon: const Icon(Icons.add),
-      label: const Text('Nuovo template'),
-    ),
-    body: FutureBuilder<List<EmailTemplateModel>>(
-      future: _templates,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Center(
-            child: Text('Errore nel caricamento: ${snapshot.error}'),
-          );
-        }
-        final templates = snapshot.data ?? [];
-        if (templates.isEmpty) {
-          return const Center(
-            child: Text('Non hai ancora creato template email.'),
-          );
-        }
-        return RefreshIndicator(
-          onRefresh: () async => _reload(),
-          child: ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemCount: templates.length,
-            separatorBuilder: (_, _) => const SizedBox(height: 8),
-            itemBuilder: (context, index) {
-              final template = templates[index];
-              return Card(
-                child: ListTile(
-                  onTap: () => _open(template),
-                  leading: CircleAvatar(child: Text('v${template.version}')),
-                  title: Text(template.templateCode),
-                  subtitle: Text(
-                    '${template.language} · ${template.subject.isEmpty ? 'Senza oggetto' : template.subject}'
-                    '${template.description == null ? '' : '\n${template.description}'}',
-                  ),
-                  isThreeLine: template.description != null,
-                  trailing: Wrap(
-                    spacing: 6,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      _StatusChip(status: template.status),
-                      if (template.isDefault)
-                        const Chip(label: Text('Predefinito')),
-                      const Icon(Icons.chevron_right),
-                    ],
-                  ),
-                ),
-              );
-            },
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(l10n.emailMessageCustom1), // 'Template email'
+        actions: [
+          IconButton(
+            onPressed: _reload,
+            icon: const Icon(Icons.refresh),
+            tooltip: l10n.emailMessageCustom2, // 'Aggiorna'
           ),
-        );
-      },
-    ),
-  );
+          const SizedBox(width: 8),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _create,
+        icon: const Icon(Icons.add),
+        label: Text(l10n.emailMessageCustom3), // 'Nuovo template'
+      ),
+      body: FutureBuilder<List<EmailTemplateModel>>(
+        future: _templates,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(l10n.emailMessageCustom6(snapshot.error.toString())), // 'Errore nel caricamento: {error}'
+            );
+          }
+          final templates = snapshot.data ?? [];
+          if (templates.isEmpty) {
+            return Center(
+              child: Text(l10n.emailMessageCustom7), // 'Non hai ancora creato template email.'
+            );
+          }
+          return RefreshIndicator(
+            onRefresh: () async => _reload(),
+            child: ListView.separated(
+              padding: const EdgeInsets.all(16),
+              itemCount: templates.length,
+              separatorBuilder: (_, _) => const SizedBox(height: 8),
+              itemBuilder: (context, index) {
+                final template = templates[index];
+                final subjectLabel = template.subject.isEmpty
+                    ? l10n.emailMessageCustom16 // 'Senza oggetto'
+                    : template.subject;
+                final descriptionPart = template.description == null
+                    ? ''
+                    : '\n${template.description}';
+                return Card(
+                  child: ListTile(
+                    onTap: () => _open(template),
+                    leading:
+                        CircleAvatar(child: Text('v${template.version}')),
+                    title: Text(template.templateCode),
+                    subtitle: Text(
+                      '${template.language} · $subjectLabel$descriptionPart',
+                    ),
+                    isThreeLine: template.description != null,
+                    trailing: Wrap(
+                      spacing: 6,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        _StatusChip(status: template.status),
+                        if (template.isDefault)
+                          Chip(label: Text(l10n.emailMessageCustom17)), // 'Predefinito' / 'Default'                        const Icon(Icons.chevron_right),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
 }
 
 class _StatusChip extends StatelessWidget {
   const _StatusChip({required this.status});
   final String status;
 
+ String _localizedStatusLabel(String status, AppLocalizations l10n) {
+  switch (status) {
+    case 'active':
+      return l10n.emailMessageCustom18; // 'Attivo' / 'Active'
+    case 'draft':
+      return l10n.emailMessageCustom19; // 'Bozza' / 'Draft'
+    case 'archived':
+      return l10n.emailMessageCustom64; // 'Archiviato' / 'Archived' (nuova chiave)
+    default:
+      return l10n.emailMessageCustom20; // 'Sconosciuto' / 'Unknown'
+  }
+}
+
+Color _statusColor(String status) {
+  switch (status) {
+    case 'active':
+      return Colors.green;
+    case 'draft':
+      return Colors.orange;
+    case 'archived':
+      return Colors.grey; // o un colore specifico se preferisci
+    default:
+      return Colors.grey;
+  }
+}
+
   @override
   Widget build(BuildContext context) {
-    final color = switch (status) {
-      'active' => Colors.green,
-      'draft' => Colors.orange,
-      _ => Colors.grey,
-    };
+    final l10n = AppLocalizations.of(context)!;
+    final color = _statusColor(status);
     return Chip(
       visualDensity: VisualDensity.compact,
       avatar: Icon(Icons.circle, color: color, size: 10),
-      label: Text(status),
+      label: Text(_localizedStatusLabel(status, l10n)),
     );
   }
 }
@@ -229,70 +250,69 @@ class _NewTemplateDialogState extends State<_NewTemplateDialog> {
   }
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
-    title: const Text('Nuovo template'),
-    content: SizedBox(
-      width: 420,
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFormField(
-              controller: _code,
-              textCapitalization: TextCapitalization.characters,
-              decoration: const InputDecoration(
-                labelText: 'Codice, es. WELCOME',
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return AlertDialog(
+      title: Text(l10n.emailMessageCustom3), // 'Nuovo template'
+      content: SizedBox(
+        width: 420,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: _code,
+                textCapitalization: TextCapitalization.characters,
+                decoration: InputDecoration(
+                  labelText: l10n.emailMessageCustom11, // 'Codice, es. WELCOME'
+                ),
+                validator: (value) => RegExp(r'^[A-Z][A-Z0-9_]*$')
+                        .hasMatch((value ?? '').trim().toUpperCase())
+                    ? null
+                    : l10n.emailMessageCustom12, // 'Usa maiuscole, numeri e _.'
               ),
-              validator: (value) =>
-                  RegExp(
-                    r'^[A-Z][A-Z0-9_]*$',
-                  ).hasMatch((value ?? '').trim().toUpperCase())
-                  ? null
-                  : 'Usa maiuscole, numeri e _.',
-            ),
-            TextFormField(
-              controller: _language,
-              decoration: const InputDecoration(
-                labelText: 'Lingua, es. it o en-US',
+              TextFormField(
+                controller: _language,
+                decoration: InputDecoration(
+                  labelText: l10n.emailMessageCustom13, // 'Lingua, es. it o en-US'
+                ),
+                validator: (value) => RegExp(r'^[a-z]{2,3}(-[A-Z]{2})?$')
+                        .hasMatch((value ?? '').trim())
+                    ? null
+                    : l10n.emailMessageCustom14, // 'Formato lingua non valido.'
               ),
-              validator: (value) =>
-                  RegExp(
-                    r'^[a-z]{2,3}(-[A-Z]{2})?$',
-                  ).hasMatch((value ?? '').trim())
-                  ? null
-                  : 'Formato lingua non valido.',
-            ),
-            TextFormField(
-              controller: _description,
-              decoration: const InputDecoration(
-                labelText: 'Descrizione interna',
+              TextFormField(
+                controller: _description,
+                decoration: InputDecoration(
+                  labelText: l10n.emailMessageCustom15, // 'Descrizione interna'
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-    actions: [
-      TextButton(
-        onPressed: () => Navigator.pop(context),
-        child: const Text('Annulla'),
-      ),
-      FilledButton(
-        onPressed: () {
-          if (!_formKey.currentState!.validate()) return;
-          final description = _description.text.trim();
-          Navigator.pop(
-            context,
-            _NewTemplateDefinition(
-              code: _code.text.trim().toUpperCase(),
-              language: _language.text.trim(),
-              description: description.isEmpty ? null : description,
-            ),
-          );
-        },
-        child: const Text('Crea bozza'),
-      ),
-    ],
-  );
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(l10n.emailMessageCustom8), // 'Annulla'
+        ),
+        FilledButton(
+          onPressed: () {
+            if (!_formKey.currentState!.validate()) return;
+            final description = _description.text.trim();
+            Navigator.pop(
+              context,
+              _NewTemplateDefinition(
+                code: _code.text.trim().toUpperCase(),
+                language: _language.text.trim(),
+                description: description.isEmpty ? null : description,
+              ),
+            );
+          },
+          child: Text(l10n.emailMessageCustom9), // 'Crea bozza'
+        ),
+      ],
+    );
+  }
 }

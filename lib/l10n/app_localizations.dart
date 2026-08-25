@@ -2689,6 +2689,336 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Female'**
   String get rankingMessageCustom58;
+
+  /// Page title: Email templates
+  ///
+  /// In en, this message translates to:
+  /// **'Email templates'**
+  String get emailMessageCustom1;
+
+  /// Tooltip refresh button
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get emailMessageCustom2;
+
+  /// FAB / dialog title: New template
+  ///
+  /// In en, this message translates to:
+  /// **'New template'**
+  String get emailMessageCustom3;
+
+  /// Error opening template
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to open template: {error}'**
+  String emailMessageCustom4(Object error);
+
+  /// Error creating draft
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to create draft: {error}'**
+  String emailMessageCustom5(Object error);
+
+  /// Error loading list
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading: {error}'**
+  String emailMessageCustom6(Object error);
+
+  /// Empty list message
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t created any email templates yet.'**
+  String get emailMessageCustom7;
+
+  /// Button label: Cancel
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get emailMessageCustom8;
+
+  /// Button label: Create draft
+  ///
+  /// In en, this message translates to:
+  /// **'Create draft'**
+  String get emailMessageCustom9;
+
+  /// Template code field label
+  ///
+  /// In en, this message translates to:
+  /// **'Code, e.g. WELCOME'**
+  String get emailMessageCustom11;
+
+  /// Validator: code format
+  ///
+  /// In en, this message translates to:
+  /// **'Use uppercase letters, numbers and _.'**
+  String get emailMessageCustom12;
+
+  /// Language field label
+  ///
+  /// In en, this message translates to:
+  /// **'Language, e.g. it or en-US'**
+  String get emailMessageCustom13;
+
+  /// Validator: language format
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid language format.'**
+  String get emailMessageCustom14;
+
+  /// Description field label
+  ///
+  /// In en, this message translates to:
+  /// **'Internal description'**
+  String get emailMessageCustom15;
+
+  /// Placeholder for empty subject
+  ///
+  /// In en, this message translates to:
+  /// **'No subject'**
+  String get emailMessageCustom16;
+
+  /// Status label: active
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get emailMessageCustom18;
+
+  /// Status label: draft
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get emailMessageCustom19;
+
+  /// Status label: unknown
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get emailMessageCustom20;
+
+  /// AppBar title: code · language · version
+  ///
+  /// In en, this message translates to:
+  /// **'{code} · {language} · v{version}'**
+  String emailMessageCustom21(Object code, Object language, Object version);
+
+  /// Button label: save draft
+  ///
+  /// In en, this message translates to:
+  /// **'Save draft'**
+  String get emailMessageCustom22;
+
+  /// Button label: publish
+  ///
+  /// In en, this message translates to:
+  /// **'Publish'**
+  String get emailMessageCustom23;
+
+  /// Card title: published version
+  ///
+  /// In en, this message translates to:
+  /// **'Published version'**
+  String get emailMessageCustom24;
+
+  /// Card subtitle when viewing published version
+  ///
+  /// In en, this message translates to:
+  /// **'Saving will automatically create a new draft.'**
+  String get emailMessageCustom25;
+
+  /// Subject field label
+  ///
+  /// In en, this message translates to:
+  /// **'Email subject'**
+  String get emailMessageCustom26;
+
+  /// Validator: subject required
+  ///
+  /// In en, this message translates to:
+  /// **'Subject is required.'**
+  String get emailMessageCustom27;
+
+  /// Description field label
+  ///
+  /// In en, this message translates to:
+  /// **'Internal description'**
+  String get emailMessageCustom28;
+
+  /// Variables panel title
+  ///
+  /// In en, this message translates to:
+  /// **'Dynamic variables'**
+  String get emailMessageCustom29;
+
+  /// Button label: add variable
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get emailMessageCustom30;
+
+  /// Empty variables message
+  ///
+  /// In en, this message translates to:
+  /// **'No variables. You can still write a static email.'**
+  String get emailMessageCustom31;
+
+  /// Section title: email body
+  ///
+  /// In en, this message translates to:
+  /// **'Email body'**
+  String get emailMessageCustom32;
+
+  /// Button label: upload image
+  ///
+  /// In en, this message translates to:
+  /// **'Upload image'**
+  String get emailMessageCustom33;
+
+  /// Quill placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Write the email content…'**
+  String get emailMessageCustom34;
+
+  /// Paragraph explaining variables
+  ///
+  /// In en, this message translates to:
+  /// **'Text variables are inserted as {token}. For a dynamic link, create a URL variable and use {token} in the link URL field.'**
+  String emailMessageCustom35(Object token);
+
+  /// Save success message
+  ///
+  /// In en, this message translates to:
+  /// **'Draft v{version} saved.'**
+  String emailMessageCustom36(Object version);
+
+  /// Publish dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Publish version'**
+  String get emailMessageCustom37;
+
+  /// Publish dialog content
+  ///
+  /// In en, this message translates to:
+  /// **'The previous active version for this language will be archived. Do you also want to set this language as default?'**
+  String get emailMessageCustom38;
+
+  /// Dialog button: No
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get emailMessageCustom39;
+
+  /// Dialog button: Yes, publish
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, publish'**
+  String get emailMessageCustom40;
+
+  /// Message: save first before inserting image
+  ///
+  /// In en, this message translates to:
+  /// **'Save first: a new draft will be created to associate the image with.'**
+  String get emailMessageCustom41;
+
+  /// Image uploaded message
+  ///
+  /// In en, this message translates to:
+  /// **'Image uploaded and inserted into the editor.'**
+  String get emailMessageCustom42;
+
+  /// Generic error message
+  ///
+  /// In en, this message translates to:
+  /// **'Operation failed: {error}'**
+  String emailMessageCustom43(Object error);
+
+  /// Undefined variables error
+  ///
+  /// In en, this message translates to:
+  /// **'Undeclared variables: {list}'**
+  String emailMessageCustom44(Object list);
+
+  /// Duplicate variable message
+  ///
+  /// In en, this message translates to:
+  /// **'This variable is already present.'**
+  String get emailMessageCustom45;
+
+  /// New variable dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'New variable'**
+  String get emailMessageCustom46;
+
+  /// Edit variable dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Edit variable'**
+  String get emailMessageCustom47;
+
+  /// Variable label field
+  ///
+  /// In en, this message translates to:
+  /// **'Label'**
+  String get emailMessageCustom50;
+
+  /// Validator: label required
+  ///
+  /// In en, this message translates to:
+  /// **'Label is required.'**
+  String get emailMessageCustom51;
+
+  /// Variable type field
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get emailMessageCustom52;
+
+  /// Switch label: required
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get emailMessageCustom59;
+
+  /// Default value field
+  ///
+  /// In en, this message translates to:
+  /// **'Default value'**
+  String get emailMessageCustom60;
+
+  /// Example value field
+  ///
+  /// In en, this message translates to:
+  /// **'Preview value'**
+  String get emailMessageCustom61;
+
+  /// Description field label
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get emailMessageCustom62;
+
+  /// Confirm button label
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get emailMessageCustom63;
+
+  /// Chip label: default template
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get emailMessageCustom17;
+
+  /// Status label: archived
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get emailMessageCustom64;
 }
 
 class _AppLocalizationsDelegate

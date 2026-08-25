@@ -1441,4 +1441,191 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rankingMessageCustom58 => 'Female';
+
+  @override
+  String get emailMessageCustom1 => 'Email templates';
+
+  @override
+  String get emailMessageCustom2 => 'Refresh';
+
+  @override
+  String get emailMessageCustom3 => 'New template';
+
+  @override
+  String emailMessageCustom4(Object error) {
+    return 'Unable to open template: $error';
+  }
+
+  @override
+  String emailMessageCustom5(Object error) {
+    return 'Unable to create draft: $error';
+  }
+
+  @override
+  String emailMessageCustom6(Object error) {
+    return 'Error loading: $error';
+  }
+
+  @override
+  String get emailMessageCustom7 =>
+      'You haven\'t created any email templates yet.';
+
+  @override
+  String get emailMessageCustom8 => 'Cancel';
+
+  @override
+  String get emailMessageCustom9 => 'Create draft';
+
+  @override
+  String get emailMessageCustom11 => 'Code, e.g. WELCOME';
+
+  @override
+  String get emailMessageCustom12 => 'Use uppercase letters, numbers and _.';
+
+  @override
+  String get emailMessageCustom13 => 'Language, e.g. it or en-US';
+
+  @override
+  String get emailMessageCustom14 => 'Invalid language format.';
+
+  @override
+  String get emailMessageCustom15 => 'Internal description';
+
+  @override
+  String get emailMessageCustom16 => 'No subject';
+
+  @override
+  String get emailMessageCustom18 => 'Active';
+
+  @override
+  String get emailMessageCustom19 => 'Draft';
+
+  @override
+  String get emailMessageCustom20 => 'Unknown';
+
+  @override
+  String emailMessageCustom21(Object code, Object language, Object version) {
+    return '$code · $language · v$version';
+  }
+
+  @override
+  String get emailMessageCustom22 => 'Save draft';
+
+  @override
+  String get emailMessageCustom23 => 'Publish';
+
+  @override
+  String get emailMessageCustom24 => 'Published version';
+
+  @override
+  String get emailMessageCustom25 =>
+      'Saving will automatically create a new draft.';
+
+  @override
+  String get emailMessageCustom26 => 'Email subject';
+
+  @override
+  String get emailMessageCustom27 => 'Subject is required.';
+
+  @override
+  String get emailMessageCustom28 => 'Internal description';
+
+  @override
+  String get emailMessageCustom29 => 'Dynamic variables';
+
+  @override
+  String get emailMessageCustom30 => 'Add';
+
+  @override
+  String get emailMessageCustom31 =>
+      'No variables. You can still write a static email.';
+
+  @override
+  String get emailMessageCustom32 => 'Email body';
+
+  @override
+  String get emailMessageCustom33 => 'Upload image';
+
+  @override
+  String get emailMessageCustom34 => 'Write the email content…';
+
+  @override
+  String emailMessageCustom35(Object token) {
+    return 'Text variables are inserted as $token. For a dynamic link, create a URL variable and use $token in the link URL field.';
+  }
+
+  @override
+  String emailMessageCustom36(Object version) {
+    return 'Draft v$version saved.';
+  }
+
+  @override
+  String get emailMessageCustom37 => 'Publish version';
+
+  @override
+  String get emailMessageCustom38 =>
+      'The previous active version for this language will be archived. Do you also want to set this language as default?';
+
+  @override
+  String get emailMessageCustom39 => 'No';
+
+  @override
+  String get emailMessageCustom40 => 'Yes, publish';
+
+  @override
+  String get emailMessageCustom41 =>
+      'Save first: a new draft will be created to associate the image with.';
+
+  @override
+  String get emailMessageCustom42 =>
+      'Image uploaded and inserted into the editor.';
+
+  @override
+  String emailMessageCustom43(Object error) {
+    return 'Operation failed: $error';
+  }
+
+  @override
+  String emailMessageCustom44(Object list) {
+    return 'Undeclared variables: $list';
+  }
+
+  @override
+  String get emailMessageCustom45 => 'This variable is already present.';
+
+  @override
+  String get emailMessageCustom46 => 'New variable';
+
+  @override
+  String get emailMessageCustom47 => 'Edit variable';
+
+  @override
+  String get emailMessageCustom50 => 'Label';
+
+  @override
+  String get emailMessageCustom51 => 'Label is required.';
+
+  @override
+  String get emailMessageCustom52 => 'Type';
+
+  @override
+  String get emailMessageCustom59 => 'Required';
+
+  @override
+  String get emailMessageCustom60 => 'Default value';
+
+  @override
+  String get emailMessageCustom61 => 'Preview value';
+
+  @override
+  String get emailMessageCustom62 => 'Description';
+
+  @override
+  String get emailMessageCustom63 => 'Confirm';
+
+  @override
+  String get emailMessageCustom17 => 'Default';
+
+  @override
+  String get emailMessageCustom64 => 'Archived';
 }

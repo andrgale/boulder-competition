@@ -12,27 +12,7 @@ import '../models/email_template_variable_model.dart';
 
 import 'package:html/parser.dart' as html_parser;
 import 'package:html/dom.dart' as dom;
-/// Editor dei template email.
-///
-/// Il database continua a utilizzare HTML.
-///
-/// Flusso:
-///
-///   HTML database
-///       ↓
-///   HtmlToDelta
-///       ↓
-///   QuillController
-///       ↓
-///   Flutter Quill
-///       ↓
-///   Delta
-///       ↓
-///   QuillDeltaToHtmlConverter
-///       ↓
-///   HTML database
-///
-/// Non utilizza WebView.
+import 'package:boulder_competition/l10n/app_localizations.dart';
 class EmailTemplateEditorPage extends StatefulWidget {
   const EmailTemplateEditorPage({
     super.key,
@@ -46,10 +26,10 @@ class EmailTemplateEditorPage extends StatefulWidget {
       _EmailTemplateEditorPageState();
 }
 
-class _EmailTemplateEditorPageState
-    extends State<EmailTemplateEditorPage> {
+class _EmailTemplateEditorPageState extends State<EmailTemplateEditorPage> {
   final _repository = EmailTemplateRepository();
   final _assetService = EmailTemplateAssetService();
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -61,8 +41,7 @@ class _EmailTemplateEditorPageState
   late QuillController _editor;
 
   final FocusNode _editorFocusNode = FocusNode();
-  final ScrollController _editorScrollController =
-      ScrollController();
+  final ScrollController _editorScrollController = ScrollController();
 
   List<EmailTemplateVariableModel> _variables = [];
 
@@ -70,117 +49,44 @@ class _EmailTemplateEditorPageState
   bool _saving = false;
   bool _publishing = false;
 
-@override
-void initState() {
-  super.initState();
+  @override
+  void initState() {
+    super.initState();
 
-  _template = widget.template;
+    _template = widget.template;
 
-  // debugPrint('======================================');
-  // debugPrint('EDITOR APERTO');
-  // debugPrint('ID: ${_template.id}');
-  // debugPrint('VERSION: ${_template.version}');
-  // debugPrint('STATUS: ${_template.status}');
-  // debugPrint('HTML BODY DA DB:');
-  // debugPrint(_template.htmlBody);
-  // debugPrint('======================================');
+    _subject = TextEditingController(text: _template.subject);
+    _description = TextEditingController(text: _template.description ?? '');
+    _editor = _createEditorFromHtml(_template.htmlBody);
 
-  _subject = TextEditingController(
-    text: _template.subject,
-  );
-
-  _description = TextEditingController(
-    text: _template.description ?? '',
-  );
-
-  _editor = _createEditorFromHtml(
-    _template.htmlBody,
-  );
-
-  _loadVariables();
-}
-  /// Converte l'HTML presente nel database in un documento
-  /// Quill modificabile.
-  // QuillController _createEditorFromHtml(String html) {
-  //   try {
-  //     final sourceHtml = html.trim().isEmpty
-  //         ? '<p><br></p>'
-  //         : html;
-
-  //     final delta = HtmlToDelta().convert(
-  //       sourceHtml,
-  //       transformTableAsEmbed: false,
-  //     );
-
-  //     final document = Document.fromDelta(delta);
-
-  //     final selectionOffset =
-  //         document.length > 0 ? document.length - 1 : 0;
-
-  //     return QuillController(
-  //       document: document,
-  //       selection: TextSelection.collapsed(
-  //         offset: selectionOffset,
-  //       ),
-  //     );
-  //   } catch (error, stackTrace) {
-  //     debugPrint(
-  //       'Errore conversione HTML → Quill: $error',
-  //     );
-  //     debugPrintStack(stackTrace: stackTrace);
-
-  //     return QuillController.basic();
-  //   }
-  // }
+    _loadVariables();
+  }
 
   QuillController _createEditorFromHtml(String html) {
-  // debugPrint('════════════════════════════════════════');
-  // debugPrint('QUILL LOAD');
-  // debugPrint('HTML RICEVUTO DAL MODELLO:');
-  // debugPrint(html);
-  // debugPrint('════════════════════════════════════════');
+    try {
+      final sourceHtml = html.trim().isEmpty ? '<p><br></p>' : _normalizeHtmlForQuill(html);
 
-  try {
-    final sourceHtml = html.trim().isEmpty
-        ? '<p><br></p>'
-        : _normalizeHtmlForQuill(html);
+      final delta = HtmlToDelta().convert(sourceHtml, transformTableAsEmbed: false);
+      final document = Document.fromDelta(delta);
 
-  //  debugPrint('HTML NORMALIZZATO PER QUILL:');
-  //  debugPrint(sourceHtml);
+      final selectionOffset = document.length > 0 ? document.length - 1 : 0;
 
-    final delta = HtmlToDelta().convert(
-      sourceHtml,
-      transformTableAsEmbed: false,
-    );
-    // debugPrint('DELTA GENERATO DA HTML:');
-    // debugPrint(delta.toJson().toString());
+      return QuillController(
+        document: document,
+        selection: TextSelection.collapsed(offset: selectionOffset),
+      );
+    } catch (error, stackTrace) {
+      debugPrint('ERRORE HTML → DELTA → QUILL: $error');
+      debugPrintStack(stackTrace: stackTrace);
 
-    final document = Document.fromDelta(delta);
+      final document = Document();
 
-    // debugPrint('TESTO PLAIN GENERATO DA DELTA:');
-    // debugPrint(document.toPlainText());
-
-    final selectionOffset =
-        document.length > 0 ? document.length - 1 : 0;
-
-    return QuillController(
-      document: document,
-      selection: TextSelection.collapsed(
-        offset: selectionOffset,
-      ),
-    );
-  } catch (error, stackTrace) {
-    debugPrint('ERRORE HTML → DELTA → QUILL: $error');
-    debugPrintStack(stackTrace: stackTrace);
-
-    final document = Document();
-
-    return QuillController(
-      document: document,
-      selection: const TextSelection.collapsed(offset: 0),
-    );
+      return QuillController(
+        document: document,
+        selection: const TextSelection.collapsed(offset: 0),
+      );
+    }
   }
-}
 
   @override
   void dispose() {
@@ -196,9 +102,7 @@ void initState() {
 
   Future<void> _loadVariables() async {
     try {
-      _variables = await _repository.variablesFor(
-        _template.id,
-      );
+      _variables = await _repository.variablesFor(_template.id);
     } catch (error) {
       if (mounted) {
         _showError(error);
@@ -221,36 +125,18 @@ void initState() {
       if (style != null && style.trim().isNotEmpty) {
         final tag = element.localName?.toLowerCase();
 
-        const inlineFormattingTags = {
-          'strong',
-          'b',
-          'em',
-          'i',
-          'u',
-          's',
-          'del',
-        };
+        const inlineFormattingTags = {'strong', 'b', 'em', 'i', 'u', 's', 'del'};
 
         if (tag != null && inlineFormattingTags.contains(tag)) {
           final span = dom.Element.tag('span');
-
           span.attributes['style'] = style;
-
-          // Copia tutti i nodi figli dentro lo span.
-          span.nodes.addAll(
-            List<dom.Node>.from(element.nodes),
-          );
-
+          span.nodes.addAll(List<dom.Node>.from(element.nodes));
           element.nodes.clear();
-
           element.append(span);
-
-          // Lo style non deve più stare sul tag strong/em/u.
           element.attributes.remove('style');
         }
       }
 
-      // Continuiamo ricorsivamente.
       for (final child in List<dom.Element>.from(element.children)) {
         processElement(child);
       }
@@ -262,48 +148,24 @@ void initState() {
 
     return document.outerHtml;
   }
-    /// Converte il documento Quill nell'HTML da salvare nel DB.
-  ///
-  /// inlineStylesFlag è importante per le email: gli stili vengono
-  /// prodotti direttamente nell'HTML invece di dipendere da CSS
-  /// esterni.
+
   String _editorToHtml() {
     final delta = _editor.document.toDelta();
 
-    // debugPrint('======================================');
-    // debugPrint('DELTA PRIMA DEL SALVATAGGIO:');
-    // debugPrint(delta.toJson().toString());
-    // debugPrint('======================================');
-
-    // Normalizziamo i colori Quill:
-    //
-    // #AARRGGBB → #RRGGBB
-    //
-    // prima di passarli al converter.
     final normalizedDelta = delta.toJson().map((operation) {
       final result = Map<String, dynamic>.from(operation);
-
       final attributes = result['attributes'];
 
       if (attributes is Map) {
-        final normalizedAttributes =
-            Map<String, dynamic>.from(attributes);
-
+        final normalizedAttributes = Map<String, dynamic>.from(attributes);
         final color = normalizedAttributes['color'];
-
         if (color is String) {
-          normalizedAttributes['color'] =
-              _quillColorToCss(color);
+          normalizedAttributes['color'] = _quillColorToCss(color);
         }
-
-        final background =
-            normalizedAttributes['background'];
-
+        final background = normalizedAttributes['background'];
         if (background is String) {
-          normalizedAttributes['background'] =
-              _quillColorToCss(background);
+          normalizedAttributes['background'] = _quillColorToCss(background);
         }
-
         result['attributes'] = normalizedAttributes;
       }
 
@@ -311,53 +173,20 @@ void initState() {
     }).toList();
 
     final options = ConverterOptions.forEmail();
-
     options.converterOptions.inlineStylesFlag = true;
+    options.sanitizerOptions = OpAttributeSanitizerOptions(allow8DigitHexColors: true);
 
-    options.sanitizerOptions =
-        OpAttributeSanitizerOptions(
-      allow8DigitHexColors: true,
-    );
-
-    final converter = QuillDeltaToHtmlConverter(
-      normalizedDelta,
-      options,
-    );
+    final converter = QuillDeltaToHtmlConverter(normalizedDelta, options);
 
     final html = converter.convert();
-
-    // debugPrint('======================================');
-    // debugPrint('DELTA NORMALIZZATO:');
-    // debugPrint(normalizedDelta.toString());
-    // debugPrint('======================================');
-
-    // debugPrint('HTML GENERATO DAL DELTA:');
-    // debugPrint(html);
-    // debugPrint('======================================');
-
     return html;
   }
 
   String _quillColorToCss(String color) {
     final value = color.trim();
-
-    // Quill Flutter usa spesso #AARRGGBB.
-    //
-    // Esempio:
-    // #FFE53935
-    //
-    // FF = alpha
-    // E5 = red
-    // 39 = green
-    // 35 = blue
-    //
-    // CSS:
-    // #E53935
-
     if (RegExp(r'^#[0-9a-fA-F]{8}$').hasMatch(value)) {
       return '#${value.substring(3)}';
     }
-
     return value;
   }
 
@@ -373,14 +202,7 @@ void initState() {
     try {
       final html = _editorToHtml();
 
-      // debugPrint(
-      //   '>>> HTML GENERATO DAL NUOVO EDITOR:\n$html',
-      // );
-
-      _validateTokens(
-        _subject.text,
-        html,
-      );
+      _validateTokens(_subject.text, html);
 
       if (_template.status == 'active') {
         _template = await _repository.createDraft(
@@ -388,25 +210,18 @@ void initState() {
           language: _template.language,
           subject: _subject.text.trim(),
           htmlBody: html,
-          description: _emptyToNull(
-            _description.text,
-          ),
+          description: _emptyToNull(_description.text),
         );
       } else {
         _template = await _repository.updateDraft(
           id: _template.id,
           subject: _subject.text.trim(),
           htmlBody: html,
-          description: _emptyToNull(
-            _description.text,
-          ),
+          description: _emptyToNull(_description.text),
         );
       }
 
-      await _repository.replaceVariables(
-        _template.id,
-        _variables,
-      );
+      await _repository.replaceVariables(_template.id, _variables);
 
       if (!mounted) {
         return true;
@@ -417,7 +232,7 @@ void initState() {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Bozza v${_template.version} salvata.',
+            l10n.emailMessageCustom36(_template.version.toString()), // 'Bozza v{version} salvata.'
           ),
         ),
       );
@@ -444,33 +259,27 @@ void initState() {
   Future<void> _publish() async {
     final saved = await _save();
 
-    if (!saved ||
-        !mounted ||
-        _template.status != 'draft') {
+    if (!saved || !mounted || _template.status != 'draft') {
       return;
     }
 
     final defaultLanguage = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Pubblica versione'),
-        content: const Text(
-          'La versione attiva precedente per questa lingua '
-          'verrà archiviata. Vuoi impostare questa lingua '
-          'anche come predefinita?',
-        ),
+        title: Text(l10n.emailMessageCustom37), // 'Pubblica versione'
+        content: Text(l10n.emailMessageCustom38), // dialog content
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(context, false);
             },
-            child: const Text('No'),
+            child: Text(l10n.emailMessageCustom39), // 'No'
           ),
           FilledButton(
             onPressed: () {
               Navigator.pop(context, true);
             },
-            child: const Text('Sì, pubblica'),
+            child: Text(l10n.emailMessageCustom40), // 'Sì, pubblica'
           ),
         ],
       ),
@@ -485,10 +294,7 @@ void initState() {
     });
 
     try {
-      await _repository.publish(
-        _template.id,
-        isDefault: defaultLanguage,
-      );
+      await _repository.publish(_template.id, isDefault: defaultLanguage);
 
       if (!mounted) {
         return;
@@ -508,81 +314,38 @@ void initState() {
     }
   }
 
-  /// Carica l'immagine tramite il tuo servizio esistente e inserisce
-  /// l'URL pubblico come image embed Quill.
   Future<void> _insertImage() async {
     if (_template.status == 'active') {
-      _showMessage(
-        'Salva prima: verrà creata una nuova bozza '
-        'a cui associare l’immagine.',
-      );
+      _showMessage(l10n.emailMessageCustom41); // 'Salva prima: ...'
       return;
     }
 
     try {
-      final image =
-          await _assetService.pickUploadAndGetPublicUrl(
-        _template.id,
-      );
-
-      if (image == null) {
-        return;
-      }
+      final image = await _assetService.pickUploadAndGetPublicUrl(_template.id);
+      if (image == null) return;
 
       final url = image.publicUrl;
-
       final selection = _editor.selection;
-
       var index = selection.baseOffset;
+      if (index < 0) index = 0;
+      final maxIndex = _editor.document.length > 0 ? _editor.document.length - 1 : 0;
+      if (index > maxIndex) index = maxIndex;
 
-      if (index < 0) {
-        index = 0;
-      }
-
-      final maxIndex =
-          _editor.document.length > 0
-              ? _editor.document.length - 1
-              : 0;
-
-      if (index > maxIndex) {
-        index = maxIndex;
-      }
-
-      _editor.document.insert(
-        index,
-        BlockEmbed.image(url),
-      );
-
-      _editor.updateSelection(
-        TextSelection.collapsed(
-          offset: index + 1,
-        ),
-        ChangeSource.local,
-      );
-
+      _editor.document.insert(index, BlockEmbed.image(url));
+      _editor.updateSelection(TextSelection.collapsed(offset: index + 1), ChangeSource.local);
       _editorFocusNode.requestFocus();
 
-      _showMessage(
-        'Immagine caricata e inserita nell’editor.',
-      );
+      _showMessage(l10n.emailMessageCustom42); // 'Immagine caricata e inserita nell’editor.'
     } catch (error, stackTrace) {
-      debugPrint(
-        'Errore inserimento immagine: $error',
-      );
+      debugPrint('Errore inserimento immagine: $error');
       debugPrintStack(stackTrace: stackTrace);
-
-      if (mounted) {
-        _showError(error);
-      }
+      if (mounted) _showError(error);
     }
   }
 
-  /// Inserisce {{CODICE}} nella posizione corrente del cursore.
   void _insertVariable(String code) {
     final value = '{{$code}}';
-
     final selection = _editor.selection;
-
     final start = selection.start;
     final length = selection.end - selection.start;
 
@@ -590,182 +353,107 @@ void initState() {
       start,
       length,
       value,
-      TextSelection.collapsed(
-        offset: start + value.length,
-      ),
+      TextSelection.collapsed(offset: start + value.length),
     );
 
     _editorFocusNode.requestFocus();
   }
 
-  Future<void> _editVariable([
-    EmailTemplateVariableModel? current,
-  ]) async {
-    final variable =
-        await showDialog<EmailTemplateVariableModel>(
+  Future<void> _editVariable([EmailTemplateVariableModel? current]) async {
+    final variable = await showDialog<EmailTemplateVariableModel>(
       context: context,
-      builder: (_) => _VariableDialog(
-        variable: current,
-      ),
+      builder: (_) => _VariableDialog(variable: current),
     );
 
-    if (variable == null) {
-      return;
-    }
+    if (variable == null) return;
 
-    final duplicate = _variables.any(
-      (item) =>
-          item.variableCode ==
-              variable.variableCode &&
-          item.id != variable.id,
-    );
+    final duplicate = _variables.any((item) => item.variableCode == variable.variableCode && item.id != variable.id);
 
     if (duplicate) {
-      _showMessage(
-        'Questa variabile è già presente.',
-      );
+      _showMessage(l10n.emailMessageCustom45); // 'Questa variabile è già presente.'
       return;
     }
 
     setState(() {
-      final index = _variables.indexWhere(
-        (item) => item.id == variable.id,
-      );
-
+      final index = _variables.indexWhere((item) => item.id == variable.id);
       if (index == -1) {
-        _variables = [
-          ..._variables,
-          variable,
-        ];
+        _variables = [..._variables, variable];
       } else {
-        _variables = [
-          ..._variables,
-        ]..[index] = variable;
+        _variables = [..._variables]..[index] = variable;
       }
     });
   }
 
-  void _validateTokens(
-    String subject,
-    String html,
-  ) {
-    final supported = _variables
-        .map((item) => item.variableCode)
-        .toSet();
-
-    final pattern =
-        RegExp(r'\{\{([A-Z][A-Z0-9_]*)\}\}');
-
-    final found = pattern
-        .allMatches('$subject\n$html')
-        .map((match) => match.group(1)!)
-        .toSet();
-
-    final unknown =
-        found.difference(supported);
+  void _validateTokens(String subject, String html) {
+    final supported = _variables.map((item) => item.variableCode).toSet();
+    final pattern = RegExp(r'\{\{([A-Z][A-Z0-9_]*)\}\}');
+    final found = pattern.allMatches('$subject\n$html').map((match) => match.group(1)!).toSet();
+    final unknown = found.difference(supported);
 
     if (unknown.isNotEmpty) {
-      throw StateError(
-        'Variabili non dichiarate: '
-        '${unknown.join(', ')}',
-      );
+      throw StateError(AppLocalizations.of(context)!.emailMessageCustom44(unknown.join(', '))); // 'Variabili non dichiarate: {list}'
     }
   }
 
   String? _emptyToNull(String value) {
-    return value.trim().isEmpty
-        ? null
-        : value.trim();
+    return value.trim().isEmpty ? null : value.trim();
   }
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _showError(Object error) {
-    _showMessage(
-      'Operazione non riuscita: $error',
-    );
+    _showMessage(l10n.emailMessageCustom43(error.toString())); // 'Operazione non riuscita: {error}'
   }
 
   @override
   Widget build(BuildContext context) {
-    final readOnlyVersion =
-        _template.status == 'active';
+    final readOnlyVersion = _template.status == 'active';
+    final sampleToken = Localizations.localeOf(context).languageCode.startsWith('it') ? '{{CODICE}}' : '{{CODE}}';
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          '${_template.templateCode} · '
-          '${_template.language} · '
-          'v${_template.version}',
-        ),
+        title: Text(l10n.emailMessageCustom21(_template.templateCode, _template.language, _template.version.toString())), // '{code} · {language} · v{version}'
         actions: [
           TextButton.icon(
             onPressed: _saving ? null : _save,
-            icon: const Icon(
-              Icons.save_outlined,
-            ),
-            label: const Text('Salva bozza'),
+            icon: const Icon(Icons.save_outlined),
+            label: Text(l10n.emailMessageCustom22), // 'Salva bozza'
           ),
           if (_template.status == 'draft')
             FilledButton.icon(
-              onPressed:
-                  _saving || _publishing
-                      ? null
-                      : _publish,
-              icon: const Icon(
-                Icons.publish_outlined,
-              ),
-              label: const Text('Pubblica'),
+              onPressed: _saving || _publishing ? null : _publish,
+              icon: const Icon(Icons.publish_outlined),
+              label: Text(l10n.emailMessageCustom23), // 'Pubblica'
             ),
           const SizedBox(width: 12),
         ],
       ),
       body: _loading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
+          ? const Center(child: CircularProgressIndicator())
           : Form(
               key: _formKey,
               child: ListView(
-                padding:
-                    const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 children: [
                   if (readOnlyVersion)
-                    const Card(
+                    Card(
                       child: ListTile(
-                        leading: Icon(
-                          Icons.history,
-                        ),
-                        title: Text(
-                          'Versione pubblicata',
-                        ),
-                        subtitle: Text(
-                          'Il salvataggio creerà '
-                          'automaticamente una nuova bozza.',
-                        ),
+                        leading: const Icon(Icons.history),
+                        title: Text(l10n.emailMessageCustom24), // 'Versione pubblicata'
+                        subtitle: Text(l10n.emailMessageCustom25), // 'Il salvataggio creerà automaticamente...'
                       ),
                     ),
 
                   TextFormField(
                     controller: _subject,
-                    decoration:
-                        const InputDecoration(
-                      labelText:
-                          'Oggetto email',
-                    ),
+                    decoration: InputDecoration(labelText: l10n.emailMessageCustom26), // 'Oggetto email'
                     maxLength: 200,
                     validator: (value) {
-                      if (value == null ||
-                          value.trim().isEmpty) {
-                        return 'L’oggetto è obbligatorio.';
+                      if (value == null || value.trim().isEmpty) {
+                        return l10n.emailMessageCustom27; // 'L’oggetto è obbligatorio.'
                       }
-
                       return null;
                     },
                   ),
@@ -774,11 +462,7 @@ void initState() {
 
                   TextFormField(
                     controller: _description,
-                    decoration:
-                        const InputDecoration(
-                      labelText:
-                          'Descrizione interna',
-                    ),
+                    decoration: InputDecoration(labelText: l10n.emailMessageCustom28), // 'Descrizione interna'
                     maxLines: 2,
                   ),
 
@@ -786,59 +470,38 @@ void initState() {
 
                   _VariablesPanel(
                     variables: _variables,
-                    onAdd: () =>
-                        _editVariable(),
+                    onAdd: () => _editVariable(),
                     onEdit: _editVariable,
                     onDelete: (variable) {
                       setState(() {
-                        _variables
-                            .remove(variable);
+                        _variables.remove(variable);
                       });
                     },
-                    onInsert:
-                        _insertVariable,
+                    onInsert: _insertVariable,
                   ),
 
                   const SizedBox(height: 24),
 
                   Row(
                     children: [
-                      Text(
-                        'Corpo email',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge,
-                      ),
+                      Text(l10n.emailMessageCustom32, style: Theme.of(context).textTheme.titleLarge), // 'Corpo email'
                       const Spacer(),
                       OutlinedButton.icon(
-                        onPressed:
-                            _insertImage,
-                        icon: const Icon(
-                          Icons
-                              .add_photo_alternate_outlined,
-                        ),
-                        label: const Text(
-                          'Carica immagine',
-                        ),
+                        onPressed: _insertImage,
+                        icon: const Icon(Icons.add_photo_alternate_outlined),
+                        label: Text(l10n.emailMessageCustom33), // 'Carica immagine'
                       ),
                     ],
                   ),
 
                   const SizedBox(height: 8),
 
-                  _buildRichTextEditor(),
+                  _buildRichTextEditor(l10n),
 
                   const SizedBox(height: 24),
 
-                  Text(
-                    'Le variabili testuali vengono '
-                    'inserite come {{CODICE}}. '
-                    'Per un link dinamico, crea una '
-                    'variabile di tipo URL e usa '
-                    '{{CODICE}} nel campo URL del link.',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall,
+                  Text(l10n.emailMessageCustom35(sampleToken), // paragraph about variables
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               ),
@@ -846,66 +509,38 @@ void initState() {
     );
   }
 
-  Widget _buildRichTextEditor() {
+  Widget _buildRichTextEditor(AppLocalizations l10n) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(
-          color: Theme.of(context)
-              .colorScheme
-              .outline,
-        ),
-        borderRadius:
-            BorderRadius.circular(8),
+        border: Border.all(color: Theme.of(context).colorScheme.outline),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
         children: [
           Material(
-            color: Theme.of(context)
-                .colorScheme
-                .surfaceContainerHighest,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
             child: QuillSimpleToolbar(
               controller: _editor,
-              config:
-              QuillSimpleToolbarConfig(
+              config: QuillSimpleToolbarConfig(
                 multiRowsDisplay: true,
                 showDividers: true,
-
-                // Font
                 showFontFamily: true,
                 showFontSize: true,
-
-                // Formattazione
                 showBoldButton: true,
                 showItalicButton: true,
                 showUnderLineButton: true,
                 showStrikeThrough: true,
-
-                // Colori
                 showColorButton: true,
                 showBackgroundColorButton: true,
-
-                // Pulizia formattazione
                 showClearFormat: true,
-
-                // Paragrafo
                 showAlignmentButtons: true,
                 showHeaderStyle: true,
-
-                // Liste
                 showListNumbers: true,
                 showListBullets: true,
-
-                // Rientro
                 showIndent: true,
-
-                // Link
                 showLink: true,
-
-                // Cronologia
                 showUndo: true,
                 showRedo: true,
-
-                // Non necessari per le email
                 showInlineCode: false,
                 showCodeBlock: false,
                 showQuote: false,
@@ -913,9 +548,7 @@ void initState() {
                 showSubscript: false,
                 showSuperscript: false,
                 showSearchButton: false,
-
                 axis: Axis.horizontal,
-
                 buttonOptions: const QuillSimpleToolbarButtonOptions(
                   fontFamily: QuillToolbarFontFamilyButtonOptions(
                     items: {
@@ -937,31 +570,23 @@ void initState() {
             ),
           ),
 
-          const Divider(
-            height: 1,
-          ),
+          const Divider(height: 1),
 
           SizedBox(
             height: 460,
             child: QuillEditor(
               controller: _editor,
               focusNode: _editorFocusNode,
-              scrollController:
-                  _editorScrollController,
+              scrollController: _editorScrollController,
               config: QuillEditorConfig(
-                placeholder:
-                    'Scrivi il contenuto della mail…',
-                padding:
-                    const EdgeInsets.all(16),
+                placeholder: l10n.emailMessageCustom34, // 'Scrivi il contenuto della mail…'
+                padding: const EdgeInsets.all(16),
                 expands: false,
                 scrollable: true,
-                enableInteractiveSelection:
-                    true,
+                enableInteractiveSelection: true,
                 enableSelectionToolbar: true,
                 autoFocus: false,
-                embedBuilders:
-                    FlutterQuillEmbeds
-                        .editorBuilders(),
+                embedBuilders: FlutterQuillEmbeds.editorBuilders(),
               ),
             ),
           ),
@@ -988,43 +613,25 @@ class _VariablesPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Text(
-                  'Variabili dinamiche',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge,
-                ),
+                Text(l10n.emailMessageCustom29, style: Theme.of(context).textTheme.titleLarge), // 'Variabili dinamiche'
                 const Spacer(),
-                OutlinedButton.icon(
-                  onPressed: onAdd,
-                  icon: const Icon(
-                    Icons.add,
-                  ),
-                  label: const Text(
-                    'Aggiungi',
-                  ),
-                ),
+                OutlinedButton.icon(onPressed: onAdd, icon: const Icon(Icons.add), label: Text(l10n.emailMessageCustom30)), // 'Aggiungi'
               ],
             ),
 
             if (variables.isEmpty)
-              const Padding(
-                padding:
-                    EdgeInsets.only(top: 8),
-                child: Text(
-                  'Nessuna variabile. '
-                  'Puoi comunque scrivere '
-                  'una mail statica.',
-                ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(l10n.emailMessageCustom31), // 'Nessuna variabile...'
               )
             else
               Wrap(
@@ -1032,30 +639,14 @@ class _VariablesPanel extends StatelessWidget {
                 runSpacing: 8,
                 children: variables
                     .map(
-                      (variable) =>
-                          InputChip(
-                        label: Text(
-                          '{{${variable.variableCode}}}'
-                          ' · '
-                          '${variable.dataType}',
-                        ),
-                        tooltip:
-                            variable.description ??
-                                variable.label,
-                        onPressed: () =>
-                            onInsert(
-                          variable.variableCode,
-                        ),
-                        onDeleted: () =>
-                            onDelete(variable),
+                      (variable) => InputChip(
+                        label: Text('{{${variable.variableCode}}} · ${variable.dataType}'),
+                        tooltip: variable.description ?? variable.label,
+                        onPressed: () => onInsert(variable.variableCode),
+                        onDeleted: () => onDelete(variable),
                         avatar: IconButton(
-                          icon: const Icon(
-                            Icons
-                                .edit_outlined,
-                            size: 18,
-                          ),
-                          onPressed: () =>
-                              onEdit(variable),
+                          icon: const Icon(Icons.edit_outlined, size: 18),
+                          onPressed: () => onEdit(variable),
                         ),
                       ),
                     )
@@ -1069,21 +660,15 @@ class _VariablesPanel extends StatelessWidget {
 }
 
 class _VariableDialog extends StatefulWidget {
-  const _VariableDialog({
-    this.variable,
-  });
-
+  const _VariableDialog({this.variable});
   final EmailTemplateVariableModel? variable;
 
   @override
-  State<_VariableDialog> createState() =>
-      _VariableDialogState();
+  State<_VariableDialog> createState() => _VariableDialogState();
 }
 
-class _VariableDialogState
-    extends State<_VariableDialog> {
-  final _formKey =
-      GlobalKey<FormState>();
+class _VariableDialogState extends State<_VariableDialog> {
+  final _formKey = GlobalKey<FormState>();
 
   late final TextEditingController _code;
   late final TextEditingController _label;
@@ -1100,29 +685,11 @@ class _VariableDialogState
 
     final value = widget.variable;
 
-    _code = TextEditingController(
-      text: value?.variableCode ?? '',
-    );
-
-    _label = TextEditingController(
-      text: value?.label ?? '',
-    );
-
-    _description =
-        TextEditingController(
-      text: value?.description ?? '',
-    );
-
-    _defaultValue =
-        TextEditingController(
-      text: value?.defaultValue ?? '',
-    );
-
-    _exampleValue =
-        TextEditingController(
-      text: value?.exampleValue ?? '',
-    );
-
+    _code = TextEditingController(text: value?.variableCode ?? '');
+    _label = TextEditingController(text: value?.label ?? '');
+    _description = TextEditingController(text: value?.description ?? '');
+    _defaultValue = TextEditingController(text: value?.defaultValue ?? '');
+    _exampleValue = TextEditingController(text: value?.exampleValue ?? '');
     _type = value?.dataType ?? 'text';
     _required = value?.required ?? false;
   }
@@ -1140,83 +707,45 @@ class _VariableDialogState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: Text(
-        widget.variable == null
-            ? 'Nuova variabile'
-            : 'Modifica variabile',
-      ),
+      title: Text(widget.variable == null ? l10n.emailMessageCustom46 : l10n.emailMessageCustom47), // 'Nuova variabile' / 'Modifica variabile'
       content: SizedBox(
         width: 440,
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
             child: Column(
-              mainAxisSize:
-                  MainAxisSize.min,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 TextFormField(
                   controller: _code,
-                  textCapitalization:
-                      TextCapitalization
-                          .characters,
-                  decoration:
-                      const InputDecoration(
-                    labelText:
-                        'Codice, es. FIRST_NAME',
-                  ),
-                  validator: (value) =>
-                      RegExp(
-                        r'^[A-Z][A-Z0-9_]*$',
-                      ).hasMatch(
-                        value ?? '',
-                      )
-                          ? null
-                          : 'Usa maiuscole, '
-                            'numeri e _.',
+                  textCapitalization: TextCapitalization.characters,
+                  decoration: InputDecoration(labelText: l10n.emailMessageCustom11), // reuse 'Codice, es. WELCOME'
+                  validator: (value) => RegExp(r'^[A-Z][A-Z0-9_]*$').hasMatch(value ?? '')
+                      ? null
+                      : l10n.emailMessageCustom12, // 'Usa maiuscole, numeri e _.'
                 ),
 
                 TextFormField(
                   controller: _label,
-                  decoration:
-                      const InputDecoration(
-                    labelText:
-                        'Etichetta',
-                  ),
+                  decoration: InputDecoration(labelText: l10n.emailMessageCustom50), // 'Etichetta'
                   validator: (value) {
-                    if (value == null ||
-                        value.trim().isEmpty) {
-                      return 'L’etichetta '
-                          'è obbligatoria.';
+                    if (value == null || value.trim().isEmpty) {
+                      return l10n.emailMessageCustom51; // 'L’etichetta è obbligatoria.'
                     }
-
                     return null;
                   },
                 ),
 
                 DropdownButtonFormField<String>(
-                  initialValue: _type,
-                  decoration: const InputDecoration(
-                    labelText: 'Tipo',
-                  ),
-                  items: const [
-                    'text',
-                    'number',
-                    'date',
-                    'datetime',
-                    'url',
-                    'email',
-                  ]
-                      .map(
-                        (type) => DropdownMenuItem(
-                          value: type,
-                          child: Text(type),
-                        ),
-                      )
+                  value: _type,
+                  decoration: InputDecoration(labelText: l10n.emailMessageCustom52), // 'Tipo'
+                  items: const ['text', 'number', 'date', 'datetime', 'url', 'email']
+                      .map((type) => DropdownMenuItem(value: type, child: Text(type)))
                       .toList(),
                   onChanged: (value) {
                     if (value == null) return;
-
                     setState(() {
                       _type = value;
                     });
@@ -1224,11 +753,8 @@ class _VariableDialogState
                 ),
 
                 SwitchListTile(
-                  contentPadding:
-                      EdgeInsets.zero,
-                  title: const Text(
-                    'Obbligatoria',
-                  ),
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(l10n.emailMessageCustom59), // 'Obbligatoria'
                   value: _required,
                   onChanged: (value) {
                     setState(() {
@@ -1237,94 +763,40 @@ class _VariableDialogState
                   },
                 ),
 
-                TextFormField(
-                  controller: _defaultValue,
-                  decoration:
-                      const InputDecoration(
-                    labelText:
-                        'Valore predefinito',
-                  ),
-                ),
+                TextFormField(controller: _defaultValue, decoration: InputDecoration(labelText: l10n.emailMessageCustom60)), // 'Valore predefinito'
 
-                TextFormField(
-                  controller: _exampleValue,
-                  decoration:
-                      const InputDecoration(
-                    labelText:
-                        'Valore per anteprima',
-                  ),
-                ),
+                TextFormField(controller: _exampleValue, decoration: InputDecoration(labelText: l10n.emailMessageCustom61)), // 'Valore per anteprima'
 
-                TextFormField(
-                  controller: _description,
-                  decoration:
-                      const InputDecoration(
-                    labelText:
-                        'Descrizione',
-                  ),
-                  maxLines: 2,
-                ),
+                TextFormField(controller: _description, decoration: InputDecoration(labelText: l10n.emailMessageCustom62), maxLines: 2), // 'Descrizione'
               ],
             ),
           ),
         ),
       ),
       actions: [
-        TextButton(
-          onPressed: () =>
-              Navigator.pop(context),
-          child: const Text(
-            'Annulla',
-          ),
-        ),
+        TextButton(onPressed: () => Navigator.pop(context), child: Text(l10n.emailMessageCustom8)), // 'Annulla'
         FilledButton(
           onPressed: () {
-            if (!_formKey.currentState!
-                .validate()) {
-              return;
-            }
+            if (!_formKey.currentState!.validate()) return;
 
             Navigator.pop(
               context,
               EmailTemplateVariableModel(
                 id: widget.variable?.id ?? '',
-                templateId:
-                    widget.variable?.templateId ??
-                        '',
-                variableCode:
-                    _code.text
-                        .trim()
-                        .toUpperCase(),
-                label:
-                    _label.text.trim(),
-                description:
-                    _emptyToNull(
-                  _description.text,
-                ),
+                templateId: widget.variable?.templateId ?? '',
+                variableCode: _code.text.trim().toUpperCase(),
+                label: _label.text.trim(),
+                description: _emptyToNull(_description.text),
                 dataType: _type,
                 required: _required,
-                defaultValue:
-                    _emptyToNull(
-                  _defaultValue.text,
-                ),
-                validation:
-                    widget.variable
-                            ?.validation ??
-                        const {},
-                exampleValue:
-                    _emptyToNull(
-                  _exampleValue.text,
-                ),
-                createdAt:
-                    widget.variable
-                            ?.createdAt ??
-                        DateTime.now(),
+                defaultValue: _emptyToNull(_defaultValue.text),
+                validation: widget.variable?.validation ?? const {},
+                exampleValue: _emptyToNull(_exampleValue.text),
+                createdAt: widget.variable?.createdAt ?? DateTime.now(),
               ),
             );
           },
-          child: const Text(
-            'Conferma',
-          ),
+          child: Text(l10n.emailMessageCustom63), // 'Conferma'
         ),
       ],
     );
@@ -1332,7 +804,5 @@ class _VariableDialogState
 }
 
 String? _emptyToNull(String value) {
-  return value.trim().isEmpty
-      ? null
-      : value.trim();
+  return value.trim().isEmpty ? null : value.trim();
 }

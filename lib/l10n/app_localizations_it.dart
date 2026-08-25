@@ -1446,4 +1446,190 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get rankingMessageCustom58 => 'Femmina';
+
+  @override
+  String get emailMessageCustom1 => 'Template email';
+
+  @override
+  String get emailMessageCustom2 => 'Aggiorna';
+
+  @override
+  String get emailMessageCustom3 => 'Nuovo template';
+
+  @override
+  String emailMessageCustom4(Object error) {
+    return 'Impossibile aprire il template: $error';
+  }
+
+  @override
+  String emailMessageCustom5(Object error) {
+    return 'Impossibile creare la bozza: $error';
+  }
+
+  @override
+  String emailMessageCustom6(Object error) {
+    return 'Errore nel caricamento: $error';
+  }
+
+  @override
+  String get emailMessageCustom7 => 'Non hai ancora creato template email.';
+
+  @override
+  String get emailMessageCustom8 => 'Annulla';
+
+  @override
+  String get emailMessageCustom9 => 'Crea bozza';
+
+  @override
+  String get emailMessageCustom11 => 'Codice, es. WELCOME';
+
+  @override
+  String get emailMessageCustom12 => 'Usa maiuscole, numeri e _.';
+
+  @override
+  String get emailMessageCustom13 => 'Lingua, es. it o en-US';
+
+  @override
+  String get emailMessageCustom14 => 'Formato lingua non valido.';
+
+  @override
+  String get emailMessageCustom15 => 'Descrizione interna';
+
+  @override
+  String get emailMessageCustom16 => 'Senza oggetto';
+
+  @override
+  String get emailMessageCustom18 => 'Attivo';
+
+  @override
+  String get emailMessageCustom19 => 'Bozza';
+
+  @override
+  String get emailMessageCustom20 => 'Sconosciuto';
+
+  @override
+  String emailMessageCustom21(Object code, Object language, Object version) {
+    return '$code · $language · v$version';
+  }
+
+  @override
+  String get emailMessageCustom22 => 'Salva bozza';
+
+  @override
+  String get emailMessageCustom23 => 'Pubblica';
+
+  @override
+  String get emailMessageCustom24 => 'Versione pubblicata';
+
+  @override
+  String get emailMessageCustom25 =>
+      'Il salvataggio creerà automaticamente una nuova bozza.';
+
+  @override
+  String get emailMessageCustom26 => 'Oggetto email';
+
+  @override
+  String get emailMessageCustom27 => 'L’oggetto è obbligatorio.';
+
+  @override
+  String get emailMessageCustom28 => 'Descrizione interna';
+
+  @override
+  String get emailMessageCustom29 => 'Variabili dinamiche';
+
+  @override
+  String get emailMessageCustom30 => 'Aggiungi';
+
+  @override
+  String get emailMessageCustom31 =>
+      'Nessuna variabile. Puoi comunque scrivere una mail statica.';
+
+  @override
+  String get emailMessageCustom32 => 'Corpo email';
+
+  @override
+  String get emailMessageCustom33 => 'Carica immagine';
+
+  @override
+  String get emailMessageCustom34 => 'Scrivi il contenuto della mail…';
+
+  @override
+  String emailMessageCustom35(Object token) {
+    return 'Le variabili testuali vengono inserite come $token. Per un link dinamico, crea una variabile di tipo URL e usa $token nel campo URL del link.';
+  }
+
+  @override
+  String emailMessageCustom36(Object version) {
+    return 'Bozza v$version salvata.';
+  }
+
+  @override
+  String get emailMessageCustom37 => 'Pubblica versione';
+
+  @override
+  String get emailMessageCustom38 =>
+      'La versione attiva precedente per questa lingua verrà archiviata. Vuoi impostare questa lingua anche come predefinita?';
+
+  @override
+  String get emailMessageCustom39 => 'No';
+
+  @override
+  String get emailMessageCustom40 => 'Sì, pubblica';
+
+  @override
+  String get emailMessageCustom41 =>
+      'Salva prima: verrà creata una nuova bozza a cui associare l’immagine.';
+
+  @override
+  String get emailMessageCustom42 =>
+      'Immagine caricata e inserita nell’editor.';
+
+  @override
+  String emailMessageCustom43(Object error) {
+    return 'Operazione non riuscita: $error';
+  }
+
+  @override
+  String emailMessageCustom44(Object list) {
+    return 'Variabili non dichiarate: $list';
+  }
+
+  @override
+  String get emailMessageCustom45 => 'Questa variabile è già presente.';
+
+  @override
+  String get emailMessageCustom46 => 'Nuova variabile';
+
+  @override
+  String get emailMessageCustom47 => 'Modifica variabile';
+
+  @override
+  String get emailMessageCustom50 => 'Etichetta';
+
+  @override
+  String get emailMessageCustom51 => 'L’etichetta è obbligatoria.';
+
+  @override
+  String get emailMessageCustom52 => 'Tipo';
+
+  @override
+  String get emailMessageCustom59 => 'Obbligatoria';
+
+  @override
+  String get emailMessageCustom60 => 'Valore predefinito';
+
+  @override
+  String get emailMessageCustom61 => 'Valore per anteprima';
+
+  @override
+  String get emailMessageCustom62 => 'Descrizione';
+
+  @override
+  String get emailMessageCustom63 => 'Conferma';
+
+  @override
+  String get emailMessageCustom17 => 'Predefinito';
+
+  @override
+  String get emailMessageCustom64 => 'Archiviato';
 }
