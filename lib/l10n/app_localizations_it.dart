@@ -1972,4 +1972,14 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get athleteMessageCustom108 =>
       'Per effettuare il check-in è necessario utilizzare un dispositivo dotato di fotocamera.';
+
+  @override
+  String get competitionMessageCustom40 =>
+      'Vuoi creare le categorie da template?';
+
+  @override
+  String get competitionMessageCustom41 => 'Template categorie';
+
+  @override
+  String get competitionMessageCustom42 => 'Selezionare un template categorie';
 }

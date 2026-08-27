@@ -1916,5 +1916,17 @@
 "athleteMessageCustom107": "Inquadra il QR della gara",
 "@athleteMessageCustom107": { "description": "Istruzione: inquadra il QR della gara" },
 "athleteMessageCustom108": "Per effettuare il check-in è necessario utilizzare un dispositivo dotato di fotocamera.",
-"@athleteMessageCustom108": { "description": "Messaggio: il check-in richiede un dispositivo con fotocamera" }
+"@athleteMessageCustom108": { "description": "Messaggio: il check-in richiede un dispositivo con fotocamera" },
+"competitionMessageCustom40": "Vuoi creare le categorie da template?",
+"@competitionMessageCustom40": {
+  "description": "Custom competition message 40"
+},
+"competitionMessageCustom41": "Template categorie",
+"@competitionMessageCustom41": {
+  "description": "Custom competition message 41"
+},
+"competitionMessageCustom42": "Selezionare un template categorie",
+"@competitionMessageCustom42": {
+  "description": "Custom competition message 42"
+}
 }  

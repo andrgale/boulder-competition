@@ -59,6 +59,12 @@ class CompetitionModel {
     this.note,
   });
 
+  factory CompetitionModel.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return CompetitionModel.fromMap(json);
+  }
+
   factory CompetitionModel.fromMap(
     Map<String, dynamic> map,
   ) {
@@ -128,99 +134,8 @@ class CompetitionModel {
 
       nrMaxSecondTurn:
           map['nr_max_second_turn'] ?? 0,
-
     );
   }
 
-  Map<String, dynamic> toInsertMap({
-    required String profileId,
-  }) {
-    return {
-      'descrizione': descrizione,
-
-      'dt_gara':
-          dtGara.toIso8601String(),
-
-      'nr_boulder': nrBoulder,
-
-      'quota_iscrizione':
-          quotaIscrizione,
-
-      'nr_finalisti': nrFinalisti,
-
-      'fl_iscrizioni_chiuse':
-          flIscrizioniChiuse,
-
-      'fl_gara_chiusa':
-          flGaraChiusa,
-
-      'fl_gestione_presenze':
-          flGestionePresenze,
-
-      'fl_gestione_pagamenti':
-          flGestionePagamenti,
-
-      'fl_gestione_omaggi':
-          flGestioneOmaggi,
-
-      'note': note,
-
-      'created_by': profileId,
-
-      'nr_max_registrations': nrMaxRegistrations,
-
-      'is_turn':
-          isTurn,
-
-      'nr_max_first_turn': nrMaxFirstTurn,
-
-      'nr_max_second_turn': nrMaxSecondTurn,      
-    };
-  }
-
-  Map<String, dynamic> toUpdateMap() {
-    return {
-      'descrizione': descrizione,
-
-      'dt_gara':
-          dtGara.toIso8601String(),
-
-      'nr_boulder': nrBoulder,
-
-      'quota_iscrizione':
-          quotaIscrizione,
-
-      'nr_finalisti': nrFinalisti,
-
-      'fl_iscrizioni_chiuse':
-          flIscrizioniChiuse,
-
-      'fl_gara_chiusa':
-          flGaraChiusa,
-
-      'fl_gestione_presenze':
-          flGestionePresenze,
-
-      'fl_gestione_pagamenti':
-          flGestionePagamenti,
-
-      'fl_gestione_omaggi':
-          flGestioneOmaggi,
-
-      'note': note,
-
-      'updated_at':
-          DateTime.now().toIso8601String(),
-
-      'nr_max_registrations': nrMaxRegistrations,
-
-      'is_turn':
-          isTurn,
-
-      'nr_max_first_turn': nrMaxFirstTurn,
-
-      'nr_max_second_turn': nrMaxSecondTurn,      
-
-    };
-  }
+  // ... resto invariato
 }

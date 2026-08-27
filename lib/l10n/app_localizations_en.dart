@@ -1971,4 +1971,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get athleteMessageCustom108 =>
       'To perform check-in you need a device with a camera.';
+
+  @override
+  String get competitionMessageCustom40 =>
+      'Do you want to create categories from a template?';
+
+  @override
+  String get competitionMessageCustom41 => 'Category template';
+
+  @override
+  String get competitionMessageCustom42 => 'Select a category template';
 }

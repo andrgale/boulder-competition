@@ -1,3 +1,5 @@
+import 'package:boulder_competition/features/categories/data/category_service.dart';
+import 'package:boulder_competition/features/categories/models/category_template_model.dart';
 import 'package:boulder_competition/features/competitions/pages/competition_card_export_pdf.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +17,8 @@ import 'package:currency_text_input_formatter/currency_text_input_formatter.dart
 import '../../../core/services/permission_service.dart';
 
 import 'package:boulder_competition/l10n/app_localizations.dart';
+
+
 
 class CompetitionFormPage extends StatefulWidget {
   final CompetitionModel? competition;
@@ -35,6 +39,7 @@ class _CompetitionFormPageState
    AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   final service = CompetitionService();
+  final categoryService = CategoryService();
 
   final formKey = GlobalKey<FormState>();
 
@@ -55,6 +60,13 @@ class _CompetitionFormPageState
   final nrMaxSecondTurnController = TextEditingController();
 
   bool isTurn = false;
+  bool createCategoriesFromTemplate = false;
+
+  List<CategoryTemplateModel> categoryTemplates = [];
+
+  String? selectedCategoryTemplateId;
+
+  bool loadingCategoryTemplates = false;
 
   DateTime? dtGara;
 
@@ -86,6 +98,10 @@ class _CompetitionFormPageState
   void initState() {
     super.initState();
     loadData();
+
+    if (!isEdit) {
+      loadCategoryTemplates();
+    }
 
     checkPermission();
   }
@@ -129,6 +145,28 @@ class _CompetitionFormPageState
     flGestionePagamenti = c.flGestionePagamenti;
     flGestioneOmaggi = c.flGestioneOmaggi;
   }
+
+  Future<void> loadCategoryTemplates() async {
+    setState(() => loadingCategoryTemplates = true);
+
+    try {
+      final templates = await categoryService.getCategoryTemplates();
+
+      if (!mounted) return;
+
+      setState(() {
+        categoryTemplates = templates;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      showError(e.toString());
+    } finally {
+      if (mounted) {
+        setState(() => loadingCategoryTemplates = false);
+      }
+    }
+}
 
   Future<void> checkPermission() async {
     final allowed =
@@ -214,6 +252,15 @@ class _CompetitionFormPageState
       return;
     }
 
+    if (!isEdit &&
+        createCategoriesFromTemplate &&
+        selectedCategoryTemplateId == null) {
+      showError(
+        l10n.competitionMessageCustom42, // Selezionare un template categorie
+      );
+      return;
+    }
+
     final nrMaxRegistrations =
         int.tryParse(nrMaxRegistrationsController.text) ?? 0;
     final nrMaxFirstTurn =
@@ -261,22 +308,30 @@ class _CompetitionFormPageState
           nrMaxFirstTurn: nrMaxFirstTurn,
           nrMaxSecondTurn: nrMaxSecondTurn,
         );
-      } else {
-        await service.createCompetition(
-          descrizione: descrizioneController.text.trim(),
-          dtGara: dtGara!,
-          nrBoulder: int.tryParse(nrBoulderController.text) ?? 0,
-          quotaIscrizione:
-              currencyFormatter.getUnformattedValue().toDouble(),
-          nrFinalisti: int.tryParse(nrFinalistiController.text) ?? 0,
-          note: noteController.text.trim(),
-          nrMaxRegistrations: nrMaxRegistrations,
-          isTurn: isTurn,
-          nrMaxFirstTurn: nrMaxFirstTurn,
-          nrMaxSecondTurn: nrMaxSecondTurn,
-        );
-      }
+        } else {
+          final createdCompetition = await service.createCompetition(
+            descrizione: descrizioneController.text.trim(),
+            dtGara: dtGara!,
+            nrBoulder: int.tryParse(nrBoulderController.text) ?? 0,
+            quotaIscrizione:
+                currencyFormatter.getUnformattedValue().toDouble(),
+            nrFinalisti: int.tryParse(nrFinalistiController.text) ?? 0,
+            note: noteController.text.trim(),
+            nrMaxRegistrations: nrMaxRegistrations,
+            isTurn: isTurn,
+            nrMaxFirstTurn: nrMaxFirstTurn,
+            nrMaxSecondTurn: nrMaxSecondTurn,
+          );
 
+          if (createCategoriesFromTemplate &&
+              selectedCategoryTemplateId != null) {
+            await categoryService.createCategoriesFromTemplate(
+              competitionId: createdCompetition.id,
+              templateId: selectedCategoryTemplateId!,
+            );
+          }
+        }
+ 
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -485,6 +540,66 @@ class _CompetitionFormPageState
                   ),
 
                   const SizedBox(height: 24),
+
+                  // Visibile solo durante la creazione di una nuova gara.
+                  if (!isEdit) ...[
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: SwitchListTile(
+                            contentPadding: EdgeInsets.zero,
+                            value: createCategoriesFromTemplate,
+                            title: Text(
+                              l10n.competitionMessageCustom40, // Vuoi creare le categorie da template
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                createCategoriesFromTemplate = value;
+
+                                // Se l'utente disabilita la creazione da template,
+                                // azzeriamo anche il template eventualmente selezionato.
+                                if (!value) {
+                                  selectedCategoryTemplateId = null;
+                                }
+                              });
+                            },
+                          ),
+                        ),
+
+                        const SizedBox(width: 24),
+
+                        Expanded(
+                          flex: 2,
+                          child: DropdownButtonFormField<String>(
+                            value: selectedCategoryTemplateId,
+                            isExpanded: true,
+                            decoration: InputDecoration(
+                              labelText: l10n.competitionMessageCustom41, // Template categorie
+                            ),
+                            items: categoryTemplates
+                                .map(
+                                  (template) => DropdownMenuItem<String>(
+                                    value: template.id,
+                                    child: Text(template.nome),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: createCategoriesFromTemplate &&
+                                    !loadingCategoryTemplates
+                                ? (value) {
+                                    setState(() {
+                                      selectedCategoryTemplateId = value;
+                                    });
+                                  }
+                                : null,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 24),
+                  ],
 
                   TextFormField(
                     controller: noteController,

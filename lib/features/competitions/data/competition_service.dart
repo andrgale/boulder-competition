@@ -78,7 +78,7 @@ class CompetitionService {
   // CREATE
   // =======================================================
 
-  Future<void> createCompetition({
+  Future<CompetitionModel> createCompetition({
     required String descrizione,
     required DateTime dtGara,
     required int nrBoulder,
@@ -88,10 +88,9 @@ class CompetitionService {
     required int nrMaxRegistrations,
     required bool isTurn,
     required int nrMaxFirstTurn,
-    required int nrMaxSecondTurn,    
+    required int nrMaxSecondTurn,
   }) async {
-    final user =
-        supabase.auth.currentUser;
+    final user = supabase.auth.currentUser;
 
     if (user == null) {
       throw Exception(
@@ -109,35 +108,36 @@ class CompetitionService {
         .eq('auth_user_id', user.id)
         .single();
 
-    await supabase
+    final data = await supabase
         .from('competitions')
         .insert({
-      'descrizione': descrizione,
+          'descrizione': descrizione,
 
-      'dt_gara':
-          dtGara.toIso8601String(),
+          'dt_gara': dtGara.toIso8601String(),
 
-      'nr_boulder': nrBoulder,
+          'nr_boulder': nrBoulder,
 
-      'quota_iscrizione':
-          quotaIscrizione,
+          'quota_iscrizione': quotaIscrizione,
 
-      'nr_finalisti': nrFinalisti,
+          'nr_finalisti': nrFinalisti,
 
-      'note': note,
+          'note': note,
 
-      'nr_max_registrations': nrMaxRegistrations,
+          'nr_max_registrations': nrMaxRegistrations,
 
-      'is_turn': isTurn,
+          'is_turn': isTurn,
 
-      'nr_max_first_turn': nrMaxFirstTurn,
+          'nr_max_first_turn': nrMaxFirstTurn,
 
-      'nr_max_second_turn': nrMaxSecondTurn,
+          'nr_max_second_turn': nrMaxSecondTurn,
 
-      'created_by': profile['id'],
-    });
-  }
+          'created_by': profile['id'],
+        })
+        .select()
+        .single();
 
+    return CompetitionModel.fromJson(data);
+  } 
   // =======================================================
   // UPDATE
   // =======================================================

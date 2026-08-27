@@ -1910,5 +1910,17 @@
 "athleteMessageCustom107": "Point the camera at the competition QR",
 "@athleteMessageCustom107": { "description": "Instruction: point the camera at the competition QR" },
 "athleteMessageCustom108": "To perform check-in you need a device with a camera.",
-"@athleteMessageCustom108": { "description": "Message: check-in requires a device with a camera" }
+"@athleteMessageCustom108": { "description": "Message: check-in requires a device with a camera" },
+"competitionMessageCustom40": "Do you want to create categories from a template?",
+"@competitionMessageCustom40": {
+  "description": "Custom competition message 40"
+},
+"competitionMessageCustom41": "Category template",
+"@competitionMessageCustom41": {
+  "description": "Custom competition message 41"
+},
+"competitionMessageCustom42": "Select a category template",
+"@competitionMessageCustom42": {
+  "description": "Custom competition message 42"
+}
 }

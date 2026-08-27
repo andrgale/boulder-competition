@@ -3643,6 +3643,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'To perform check-in you need a device with a camera.'**
   String get athleteMessageCustom108;
+
+  /// Custom competition message 40
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to create categories from a template?'**
+  String get competitionMessageCustom40;
+
+  /// Custom competition message 41
+  ///
+  /// In en, this message translates to:
+  /// **'Category template'**
+  String get competitionMessageCustom41;
+
+  /// Custom competition message 42
+  ///
+  /// In en, this message translates to:
+  /// **'Select a category template'**
+  String get competitionMessageCustom42;
 }
 
 class _AppLocalizationsDelegate

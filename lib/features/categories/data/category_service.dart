@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/category_model.dart';
+import '../models/category_template_model.dart';
 
 class CategoryService {
   final _db = Supabase.instance.client.from('categories');
@@ -74,5 +75,31 @@ class CategoryService {
   // DELETE
   Future<void> deleteCategory(String id) async {
     await _db.delete().eq('id', id);
+  }
+
+  // GET CATEGORY TEMPLATES
+  Future<List<CategoryTemplateModel>> getCategoryTemplates() async {
+    final data = await Supabase.instance.client
+        .from('category_templates')
+        .select()
+        .order('nome');
+
+    return (data as List)
+        .map((e) => CategoryTemplateModel.fromJson(e))
+        .toList();
+  }
+
+  // CREATE CATEGORIES FROM TEMPLATE
+  Future<void> createCategoriesFromTemplate({
+    required String competitionId,
+    required String templateId,
+  }) async {
+    await Supabase.instance.client.rpc(
+      'create_categories_from_template',
+      params: {
+        'p_competition_id': competitionId,
+        'p_template_id': templateId,
+      },
+    );
   }
 }
