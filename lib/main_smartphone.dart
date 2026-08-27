@@ -4,9 +4,12 @@ import 'package:boulder_competition/core/models/client_config.dart';
 import 'package:boulder_competition/core/pages/activation_screen.dart';
 import 'package:boulder_competition/core/services/central_config_service.dart';
 import 'package:boulder_competition/core/services/client_config_store.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'core/services/locale_override_controller.dart';
+
 
 import 'config/app_mode.dart';
 import 'core/routing/app_router.dart';
@@ -47,7 +50,10 @@ class BootstrapAppState extends State<BootstrapApp> {
       // Credenziali già presenti in locale: salta l'attivazione
       // e si collega direttamente al Supabase del cliente.
       await _initSupabase(cached);
-      setState(() { _ready = true; _loading = false; });
+      setState(() {
+        _ready = true;
+        _loading = false;
+      });
     } else {
       // Primo avvio (o dopo un reset): mostra la schermata di attivazione.
       setState(() => _loading = false);
@@ -62,7 +68,10 @@ class BootstrapAppState extends State<BootstrapApp> {
   }
 
   Future<void> _onActivate(String clientId, String password) async {
-    setState(() { _loading = true; _error = null; });
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
     try {
       final cfg = await CentralConfigService.authenticate(
         clientId: clientId,
@@ -70,10 +79,16 @@ class BootstrapAppState extends State<BootstrapApp> {
       );
       await ClientConfigStore.save(cfg);
       await _initSupabase(cfg);
-      setState(() { _ready = true; _loading = false; });
-    } catch (e) {
       setState(() {
-        _error = 'Attivazione fallita: credenziali non valide';
+        _ready = true;
+        _loading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      // usa la stringa localizzata per l'errore
+      final l10n = AppLocalizations.of(context);
+      setState(() {
+        _error = l10n?.athleteMessageCustom1 ?? 'Attivazione fallita: credenziali non valide';
         _loading = false;
       });
     }
@@ -102,7 +117,19 @@ class BootstrapAppState extends State<BootstrapApp> {
     }
 
     if (!_ready) {
+      // MaterialApp con delegati di localizzazione così ActivationScreen
+      // e i messaggi d'errore possono usare AppLocalizations.
       return MaterialApp(
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('it'),
+          Locale('en'),
+        ],
         home: ActivationScreen(onSubmit: _onActivate, error: _error),
       );
     }
@@ -112,29 +139,36 @@ class BootstrapAppState extends State<BootstrapApp> {
     return const AthleteApp();
   }
 }
-
 class AthleteApp extends StatelessWidget {
   const AthleteApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('it', 'IT'),
-        Locale('en', 'EN'),
-      ],
-      debugShowCheckedModeBanner: false,
-      routerConfig: appRouter,
-      title: 'Athlete Boulder',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: Colors.green,
-      ),
+    // NEW: la Locale forzata (se presente) guida l'intero MaterialApp.router
+    return ValueListenableBuilder<Locale?>(
+      valueListenable: localeOverrideNotifier,
+      builder: (context, overrideLocale, _) {
+        return MaterialApp.router(
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('it'),
+            Locale('en'),
+          ],
+          locale: overrideLocale,
+          debugShowCheckedModeBanner: false,
+          routerConfig: appRouter,
+          title: 'Athlete Boulder',
+          theme: ThemeData(
+            useMaterial3: true,
+            colorSchemeSeed: Colors.green,
+          ),
+        );
+      },
     );
   }
 }

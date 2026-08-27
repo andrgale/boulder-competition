@@ -2,21 +2,9 @@ import 'package:boulder_competition/features/registrations/data/registration_ser
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 /// Pagina di iscrizione dell'atleta a una gara boulder.
-///
-/// Rispecchia i controlli presenti nella pagina di iscrizione lato
-/// amministratore (RegistrationFormPage), con l'aggiunta dei controlli
-/// specifici richiesti per l'iscrizione "self service" da smartphone:
-///  - gara con iscrizioni aperte (fl_iscrizioni_chiuse = false)
-///  - atleta non già iscritto (email già presente in registrations)
-///  - numero massimo iscritti raggiunto (nr_max_registrations)
-///  - gestione turni (is_turn, nr_max_first_turn, nr_max_second_turn)
-///
-/// L'applicazione gestisce una sola gara alla volta: in `competitions`
-/// può esistere al massimo una riga con `fl_iscrizioni_chiuse = false`.
-/// Per questo la pagina non riceve un `competitionId` dall'esterno: lo
-/// determina da sé cercando l'eventuale gara con iscrizioni aperte.
 class AthleteCompetitionRegistrationPage extends StatefulWidget {
   const AthleteCompetitionRegistrationPage({super.key});
 
@@ -33,9 +21,9 @@ class _AthleteCompetitionRegistrationPageState
 
   final societaCtrl = TextEditingController();
   final dataNascitaCtrl = TextEditingController();
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   // ── dati gara ────────────────────────────────────────────────
-  /// Id della gara con iscrizioni aperte, determinato in _loadCompetition().
   String? competitionId;
   Map<String, dynamic>? competition;
   bool isTurn = false;
@@ -63,9 +51,10 @@ class _AthleteCompetitionRegistrationPageState
   bool loading = true;
   bool saving = false;
 
-  /// Se valorizzato, la pagina mostra solo questo messaggio + bottone home
-  /// (gara chiusa, già iscritto, posti esauriti, ecc.)
-  String? blockingMessage;
+  // Instead of storing a localized string at init time (no context),
+  // store a key and optional argument and convert to localized text in build().
+  String? blockingKey;
+  String? blockingArg;
 
   @override
   void initState() {
@@ -84,20 +73,21 @@ class _AthleteCompetitionRegistrationPageState
     try {
       await _loadCompetition();
 
-      if (blockingMessage == null) {
+      if (blockingKey == null) {
         await _loadProfile();
       }
 
-      if (blockingMessage == null) {
+      if (blockingKey == null) {
         await _checkAlreadyRegistered();
       }
 
-      if (blockingMessage == null) {
+      if (blockingKey == null) {
         await _loadRegistrationCounts();
         await _computeNextPettorale();
       }
     } catch (e) {
-      blockingMessage = 'Errore nel caricamento dei dati: $e';
+      blockingKey = 'loading_error';
+      blockingArg = e.toString();
     } finally {
       if (mounted) setState(() => loading = false);
     }
@@ -105,8 +95,6 @@ class _AthleteCompetitionRegistrationPageState
 
   // =====================================================
   // RICERCA GARA CON ISCRIZIONI APERTE
-  // L'app gestisce una sola gara alla volta: in competitions può
-  // esistere al massimo una riga con fl_iscrizioni_chiuse = false.
   // =====================================================
   Future<void> _loadCompetition() async {
     final data = await supabase
@@ -116,7 +104,7 @@ class _AthleteCompetitionRegistrationPageState
         .maybeSingle();
 
     if (data == null) {
-      blockingMessage = 'Nessuna gara con iscrizioni aperte al momento';
+      blockingKey = 'no_open_competition';
       return;
     }
 
@@ -136,7 +124,7 @@ class _AthleteCompetitionRegistrationPageState
     final authUserId = supabase.auth.currentUser?.id;
 
     if (authUserId == null) {
-      blockingMessage = 'Utente non autenticato';
+      blockingKey = 'user_not_authenticated';
       return;
     }
 
@@ -163,8 +151,7 @@ class _AthleteCompetitionRegistrationPageState
     );
 
     if (exists) {
-      blockingMessage =
-          'Iscrizione già presente, cerca la mail nella tua cassetta di posta';
+      blockingKey = 'already_registered';
     }
   }
 
@@ -172,8 +159,7 @@ class _AthleteCompetitionRegistrationPageState
   // CONTEGGIO ISCRITTI (totale + per turno)
   // =====================================================
   Future<void> _loadRegistrationCounts() async {
-    final registrations =
-        await service.getRegistrations(competitionId!);
+    final registrations = await service.getRegistrations(competitionId!);
 
     totalRegistrationsCount = registrations.length;
     firstTurnCount = registrations.where((r) => r.isFirstTurn).length;
@@ -181,17 +167,14 @@ class _AthleteCompetitionRegistrationPageState
 
     if (nrMaxRegistrations > 0 &&
         totalRegistrationsCount >= nrMaxRegistrations) {
-      blockingMessage =
-          'Numero massimo di iscritti raggiunto per questa gara';
+      blockingKey = 'max_registrations';
     }
   }
 
   bool get firstTurnAvailable => isTurn && firstTurnCount < nrMaxFirstTurn;
-
   bool get secondTurnAvailable => isTurn && secondTurnCount < nrMaxSecondTurn;
 
-   /// Testo del turno scelto da inserire nella mail di conferma.
-  /// null se la gestione turni non è attiva o non è stato scelto un turno.
+  /// Testo del turno scelto da inserire nella mail di conferma.
   String? get _turnoText {
     if (!isTurn) return null;
     if (isFirstTurn) return 'Primo turno';
@@ -213,37 +196,26 @@ class _AthleteCompetitionRegistrationPageState
     if (!formKey.currentState!.validate()) return;
 
     if (isTurn && !isFirstTurn && !isSecondTurn) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Seleziona un turno')),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l10n.athleteMessageCustom53)));
       return;
     }
 
     if (isFirstTurn && !firstTurnAvailable) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content:
-                Text('Primo turno al completo, seleziona un\'altra opzione')),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l10n.athleteMessageCustom54)));
       return;
     }
 
     if (isSecondTurn && !secondTurnAvailable) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text(
-                'Secondo turno al completo, seleziona un\'altra opzione')),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l10n.athleteMessageCustom55)));
       return;
     }
 
     setState(() => saving = true);
 
     try {
-      // ===============================================
-      // CREATE SOLO SU registrations (via RegistrationService,
-      // stessa logica usata dalla pagina admin)
-      // ===============================================
       await service.createRegistration(
         competitionId: competitionId!,
         profileId: profileId,
@@ -262,82 +234,49 @@ class _AthleteCompetitionRegistrationPageState
         ownerRegistration: 'athlete',
       );
 
-      // ===============================================
-      // INVIO MAIL DI CONFERMA ISCRIZIONE
-      // Edge Function Supabase — non blocca l'iscrizione se fallisce,
-      // la registrazione è comunque già stata salvata.
-      // Passiamo direttamente i dati già in memoria (evitiamo un
-      // ulteriore giro sul DB lato edge function).
-      // ===============================================
-      // try {
-      //   await supabase.functions.invoke(
-      //     'send-mail-registration',
-      //     body: {
-      //       'email': email,
-      //       'nome': nome,
-      //       'cognome': cognome,
-      //       'competitionName': competition?['descrizione'],
-      //       'competitionDate': _formatDate(competition?['dt_gara']),
-      //       'turno': _turnoText,
-      //     },
-      //   );
-      // } catch (_) {
-      //   // TODO: valutare logging/retry lato server per l'invio mail.
-      // }
-
+      // invio mail di conferma (edge function)
       try {
-          final turno = _turnoText?.trim();
+        final turno = _turnoText?.trim();
 
-          final riepilogoParts = <String>[
-            if ((competition?['descrizione'] as String?)?.trim().isNotEmpty ?? false)
-              'Gara: ${(competition!['descrizione'] as String).trim()}',
-            if (_formatDate(competition?['dt_gara']).trim().isNotEmpty)
-              'Data: ${_formatDate(competition?['dt_gara']).trim()}',
-            if (turno?.isNotEmpty ?? false)
-              'Turno: $turno',
-          ];
-          await supabase.functions.invoke(
-            'send-template-email',
-            body: {
-              'email': email,
-              'toName': '$nome $cognome'.trim(),
-              'templateCode': 'REG_GARA',
-              'language': 'it',
-              'variables': buildEmailVariables({
-                'NOME_ATLETA': '$nome $cognome',
-                'DESC_GARA': competition?['descrizione'] as String?,
-                'DT_GARA': _formatDate(competition?['dt_gara']),
-                'TURNO': _turnoText,
-                'RIEPILOGO_GARA': riepilogoParts.isNotEmpty
-                    ? riepilogoParts.join(' — ')
-                    : null,
-                // qui in futuro aggiungi qualsiasi altro campo potenzialmente
-                // referenziabile nei testi delle mail: EMAIL_ATLETA, CATEGORIA,
-                // LUOGO_GARA, ecc. Se il template non li usa, vengono ignorati
-                // lato server senza errore.
-              }),
-            },
-          );
+        final riepilogoParts = <String>[
+          if ((competition?['descrizione'] as String?)?.trim().isNotEmpty ?? false)
+            '${AppLocalizations.of(context)!.athleteMessageCustom76}: ${(competition!['descrizione'] as String).trim()}',
+          if (_formatDate(competition?['dt_gara']).trim().isNotEmpty)
+            '${AppLocalizations.of(context)!.athleteMessageCustom77}: ${_formatDate(competition?['dt_gara']).trim()}',
+          if (turno?.isNotEmpty ?? false)
+            '${AppLocalizations.of(context)!.athleteMessageCustom78}: $turno',
+        ];
+
+        await supabase.functions.invoke(
+          'send-template-email',
+          body: {
+            'email': email,
+            'toName': '$nome $cognome'.trim(),
+            'templateCode': 'REG_GARA',
+            'language': 'it',
+            'variables': buildEmailVariables({
+              'NOME_ATLETA': '$nome $cognome',
+              'DESC_GARA': competition?['descrizione'] as String?,
+              'DT_GARA': _formatDate(competition?['dt_gara']),
+              'TURNO': _turnoText,
+              'RIEPILOGO_GARA': riepilogoParts.isNotEmpty ? riepilogoParts.join(' — ') : null,
+            }),
+          },
+        );
       } catch (_) {
-        // TODO: valutare logging/retry lato server per l'invio mail.
+        // non bloccare l'iscrizione se l'invio mail fallisce
       }
 
       if (mounted) _showSuccessAndGoHome();
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Errore: $e')),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l10n.athleteMessageCustom56(e.toString()))));
     } finally {
       if (mounted) setState(() => saving = false);
     }
   }
 
-  /// Costruisce la mappa di variabili per la mail partendo da una lista di
-  /// coppie campo/valore. I campi con valore null o stringa vuota (dopo
-  /// trim) vengono esclusi automaticamente: se sono opzionali nel template
-  /// va bene così, se sono required lo dirà la function con un errore
-  /// esplicito ("Missing required variable: ...").
   Map<String, String> buildEmailVariables(Map<String, String?> fields) {
     final result = <String, String>{};
     for (final entry in fields.entries) {
@@ -354,20 +293,36 @@ class _AthleteCompetitionRegistrationPageState
       context: context,
       barrierDismissible: false,
       builder: (_) => AlertDialog(
-        title: const Text('Iscrizione completata'),
-        content: const Text(
-            'La tua iscrizione è stata registrata. Riceverai una mail di conferma.'),
+        title: Text(l10n.athleteMessageCustom57),
+        content: Text(l10n.athleteMessageCustom58),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               context.go('/athlete-home');
             },
-            child: const Text('Torna alla home'),
+            child: Text(l10n.athleteMessageCustom59),
           ),
         ],
       ),
     );
+  }
+
+  String _localizedBlockingMessage(AppLocalizations l10n) {
+    switch (blockingKey) {
+      case 'loading_error':
+        return l10n.athleteMessageCustom49(blockingArg ?? '');
+      case 'no_open_competition':
+        return l10n.athleteMessageCustom50;
+      case 'user_not_authenticated':
+        return l10n.athleteMessageCustom47; // reuse
+      case 'already_registered':
+        return l10n.athleteMessageCustom51;
+      case 'max_registrations':
+        return l10n.athleteMessageCustom52;
+      default:
+        return '';
+    }
   }
 
   // =====================================================
@@ -378,9 +333,9 @@ class _AthleteCompetitionRegistrationPageState
     if (loading) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Iscrizione Gara'),
+          title: Text(l10n.athleteMessageCustom61),
           leading: IconButton(
-            tooltip: 'Torna alla home',
+            tooltip: l10n.athleteMessageCustom59,
             icon: const Icon(Icons.home_outlined),
             onPressed: () => context.go('/athlete-home'),
           ),
@@ -390,11 +345,12 @@ class _AthleteCompetitionRegistrationPageState
     }
 
     final title = competition != null
-        ? 'Iscrizione alla gara: ${competition!['descrizione'] ?? ''}\n'
-          'Data: ${_formatDate(competition!['dt_gara'])}'
-        : 'Iscrizione Gara';    
+        ? l10n.athleteMessageCustom60(
+            (competition!['descrizione'] as String?) ?? '', _formatDate(competition!['dt_gara']))
+        : l10n.athleteMessageCustom61;
 
-    if (blockingMessage != null) {
+    if (blockingKey != null) {
+      final message = _localizedBlockingMessage(l10n);
       return Scaffold(
         appBar: AppBar(
           toolbarHeight: 76,
@@ -405,12 +361,11 @@ class _AthleteCompetitionRegistrationPageState
             style: const TextStyle(fontSize: 16, height: 1.2),
           ),
           leading: IconButton(
-            tooltip: 'Torna alla home',
+            tooltip: l10n.athleteMessageCustom59,
             icon: const Icon(Icons.home_outlined),
             onPressed: () => context.go('/athlete-home'),
           ),
         ),
-
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -418,14 +373,14 @@ class _AthleteCompetitionRegistrationPageState
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  blockingMessage!,
+                  message,
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 16),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton.icon(
                   icon: const Icon(Icons.home_outlined),
-                  label: const Text('Torna alla home'),
+                  label: Text(l10n.athleteMessageCustom59),
                   onPressed: () => context.go('/athlete-home'),
                 ),
               ],
@@ -445,47 +400,43 @@ class _AthleteCompetitionRegistrationPageState
           style: const TextStyle(fontSize: 16, height: 1.2),
         ),
         leading: IconButton(
-          tooltip: 'Torna alla home',
+          tooltip: l10n.athleteMessageCustom59,
           icon: const Icon(Icons.home_outlined),
           onPressed: () => context.go('/athlete-home'),
         ),
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
           key: formKey,
           child: ListView(
             children: [
-              _readOnlyField('Cognome', cognome),
+              _readOnlyField(l10n.athleteMessageCustom63, cognome),
               const SizedBox(height: 12),
-              _readOnlyField('Nome', nome),
+              _readOnlyField(l10n.athleteMessageCustom64, nome),
               const SizedBox(height: 12),
-              _readOnlyField('Email', email),
+              _readOnlyField(l10n.athleteMessageCustom65, email),
               const SizedBox(height: 12),
-
               TextFormField(
                 controller: dataNascitaCtrl,
                 readOnly: true,
-                decoration: const InputDecoration(
-                  labelText: 'Data di nascita',
-                  suffixIcon: Icon(Icons.calendar_today),
+                decoration: InputDecoration(
+                  labelText: l10n.athleteMessageCustom66,
+                  suffixIcon: const Icon(Icons.calendar_today),
                 ),
                 onTap: _selectDataNascita,
                 validator: (_) {
                   if (dataNascita == null) {
-                    return 'Campo obbligatorio';
+                    return l10n.athleteMessageCustom17; // 'Obbligatorio' reuse
                   }
                   return null;
                 },
               ),
-
               const SizedBox(height: 12),
-
               DropdownButtonFormField<String>(
                 initialValue: sesso,
-                decoration: const InputDecoration(
-                  labelText: 'Sesso',
+                decoration: InputDecoration(
+                  labelText: l10n.athleteMessageCustom67,
                 ),
                 items: const [
                   DropdownMenuItem<String>(
@@ -504,34 +455,27 @@ class _AthleteCompetitionRegistrationPageState
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Campo obbligatorio';
+                    return l10n.athleteMessageCustom17;
                   }
                   return null;
                 },
               ),
-
               const SizedBox(height: 12),
-
-
               TextFormField(
                 controller: societaCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Società (facoltativo)',
+                decoration: InputDecoration(
+                  labelText: l10n.athleteMessageCustom68,
                 ),
               ),
-
               const SizedBox(height: 12),
-
-              _readOnlyField('Pettorale', pettorale?.toString() ?? '-'),
-
+              _readOnlyField(l10n.athleteMessageCustom69, pettorale?.toString() ?? '-'),
               const SizedBox(height: 20),
-
               SwitchListTile(
-                title: const Text('Primo turno'),
+                title: Text(l10n.athleteMessageCustom71),
                 subtitle: !isTurn
-                    ? const Text('Gestione turni non attiva per questa gara')
+                    ? Text(l10n.athleteMessageCustom73)
                     : (!firstTurnAvailable
-                        ? const Text('Turno al completo')
+                        ? Text(l10n.athleteMessageCustom74)
                         : null),
                 value: isFirstTurn,
                 onChanged: firstTurnAvailable
@@ -543,13 +487,12 @@ class _AthleteCompetitionRegistrationPageState
                       }
                     : null,
               ),
-
               SwitchListTile(
-                title: const Text('Secondo turno'),
+                title: Text(l10n.athleteMessageCustom72),
                 subtitle: !isTurn
-                    ? const Text('Gestione turni non attiva per questa gara')
+                    ? Text(l10n.athleteMessageCustom73)
                     : (!secondTurnAvailable
-                        ? const Text('Turno al completo')
+                        ? Text(l10n.athleteMessageCustom74)
                         : null),
                 value: isSecondTurn,
                 onChanged: secondTurnAvailable
@@ -561,9 +504,7 @@ class _AthleteCompetitionRegistrationPageState
                       }
                     : null,
               ),
-
               const SizedBox(height: 24),
-
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -576,7 +517,7 @@ class _AthleteCompetitionRegistrationPageState
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Text('Crea iscrizione'),
+                        : Text(l10n.athleteMessageCustom75),
                   ),
                 ),
               ),
@@ -596,20 +537,19 @@ class _AthleteCompetitionRegistrationPageState
   }
 
   Future<void> _selectDataNascita() async {
-      final picked = await showDatePicker(
-        context: context,
-          initialDate: DateTime(2005),
-          firstDate: DateTime(1960),
-            lastDate: DateTime.now(), );
-            if (picked != null) { 
-              setState(() { 
-                dataNascita = picked;
-                dataNascitaCtrl.text = _formatDate(picked);
-            }
-        );
-      }
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime(2005),
+      firstDate: DateTime(1960),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        dataNascita = picked;
+        dataNascitaCtrl.text = _formatDate(picked);
+      });
     }
-  
+  }
 
   String _formatDate(dynamic raw) {
     if (raw == null) return '';

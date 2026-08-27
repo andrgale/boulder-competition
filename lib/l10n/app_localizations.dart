@@ -3019,6 +3019,630 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Archived'**
   String get emailMessageCustom64;
+
+  /// Message shown when activation fails due to invalid credentials
+  ///
+  /// In en, this message translates to:
+  /// **'Activation failed: invalid credentials'**
+  String get athleteMessageCustom1;
+
+  /// App title / name
+  ///
+  /// In en, this message translates to:
+  /// **'Athlete Boulder'**
+  String get athleteMessageCustom2;
+
+  /// Tooltip / label for logout
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get athleteMessageCustom3;
+
+  /// Message shown when no menu items are configured for athlete
+  ///
+  /// In en, this message translates to:
+  /// **'No menu items configured for your profile. Contact the event organizers.'**
+  String get athleteMessageCustom4;
+
+  /// Menu label: boulder registration
+  ///
+  /// In en, this message translates to:
+  /// **'Boulder registration'**
+  String get athleteMessageCustom5;
+
+  /// Menu label: competition registration
+  ///
+  /// In en, this message translates to:
+  /// **'Competition registration'**
+  String get athleteMessageCustom6;
+
+  /// Menu label: competition check-in
+  ///
+  /// In en, this message translates to:
+  /// **'Competition check-in'**
+  String get athleteMessageCustom7;
+
+  /// Label: coming soon
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get athleteMessageCustom8;
+
+  /// Greeting: morning
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get athleteMessageCustom9;
+
+  /// Greeting: afternoon
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon'**
+  String get athleteMessageCustom10;
+
+  /// Greeting: evening
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get athleteMessageCustom11;
+
+  /// Page title: athlete registration
+  ///
+  /// In en, this message translates to:
+  /// **'Athlete registration'**
+  String get athleteMessageCustom12;
+
+  /// Page subtitle: registration
+  ///
+  /// In en, this message translates to:
+  /// **'Create your account to participate'**
+  String get athleteMessageCustom13;
+
+  /// Label field: family name / surname
+  ///
+  /// In en, this message translates to:
+  /// **'Family name'**
+  String get athleteMessageCustom14;
+
+  /// Label field: given name / first name
+  ///
+  /// In en, this message translates to:
+  /// **'Given name'**
+  String get athleteMessageCustom15;
+
+  /// Label field: email
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get athleteMessageCustom16;
+
+  /// Validator: required field
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get athleteMessageCustom17;
+
+  /// Validator: email required
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required'**
+  String get athleteMessageCustom18;
+
+  /// Validator: invalid email format
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email format'**
+  String get athleteMessageCustom19;
+
+  /// Message shown when email already registered
+  ///
+  /// In en, this message translates to:
+  /// **'User already registered'**
+  String get athleteMessageCustom20;
+
+  /// Dialog title: registration completed
+  ///
+  /// In en, this message translates to:
+  /// **'Registration completed'**
+  String get athleteMessageCustom21;
+
+  /// Dialog content: registration completed
+  ///
+  /// In en, this message translates to:
+  /// **'Your account has been created successfully. Check your email for the initial password.'**
+  String get athleteMessageCustom22;
+
+  /// Button label: OK
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get athleteMessageCustom23;
+
+  /// Button label: register
+  ///
+  /// In en, this message translates to:
+  /// **'REGISTER'**
+  String get athleteMessageCustom24;
+
+  /// Link text: already have account
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? Sign in'**
+  String get athleteMessageCustom25;
+
+  /// Error message when registration fails
+  ///
+  /// In en, this message translates to:
+  /// **'Registration error: {error}'**
+  String athleteMessageCustom26(Object error);
+
+  /// App name / title shown on login page
+  ///
+  /// In en, this message translates to:
+  /// **'Boulder Competition'**
+  String get athleteMessageCustom27;
+
+  /// Subtitle on login page
+  ///
+  /// In en, this message translates to:
+  /// **'Athlete sign in'**
+  String get athleteMessageCustom28;
+
+  /// Label for email field
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get athleteMessageCustom29;
+
+  /// Label for password field
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get athleteMessageCustom30;
+
+  /// Login button label
+  ///
+  /// In en, this message translates to:
+  /// **'LOGIN'**
+  String get athleteMessageCustom31;
+
+  /// Change password link label
+  ///
+  /// In en, this message translates to:
+  /// **'Change password'**
+  String get athleteMessageCustom32;
+
+  /// Registration link label
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account? Register'**
+  String get athleteMessageCustom33;
+
+  /// Login error message shown in snackbar
+  ///
+  /// In en, this message translates to:
+  /// **'Login error: {error}'**
+  String athleteMessageCustom34(Object error);
+
+  /// AppBar title: change password
+  ///
+  /// In en, this message translates to:
+  /// **'Change password'**
+  String get athleteMessageCustom35;
+
+  /// Heading: set a new password
+  ///
+  /// In en, this message translates to:
+  /// **'Set a new password'**
+  String get athleteMessageCustom36;
+
+  /// Label: current password
+  ///
+  /// In en, this message translates to:
+  /// **'Current password'**
+  String get athleteMessageCustom37;
+
+  /// Label: new password
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get athleteMessageCustom38;
+
+  /// Label: confirm password
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get athleteMessageCustom39;
+
+  /// Button label: save password
+  ///
+  /// In en, this message translates to:
+  /// **'SAVE PASSWORD'**
+  String get athleteMessageCustom40;
+
+  /// Validation: enter email
+  ///
+  /// In en, this message translates to:
+  /// **'Enter email'**
+  String get athleteMessageCustom41;
+
+  /// Validation: enter current password
+  ///
+  /// In en, this message translates to:
+  /// **'Enter current password'**
+  String get athleteMessageCustom42;
+
+  /// Validation: new password length
+  ///
+  /// In en, this message translates to:
+  /// **'New password must be at least 8 characters'**
+  String get athleteMessageCustom43;
+
+  /// Validation: passwords do not match
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get athleteMessageCustom44;
+
+  /// Success message: password changed
+  ///
+  /// In en, this message translates to:
+  /// **'Password changed successfully'**
+  String get athleteMessageCustom46;
+
+  /// Error: user not authenticated
+  ///
+  /// In en, this message translates to:
+  /// **'User not authenticated'**
+  String get athleteMessageCustom47;
+
+  /// Error when password change fails
+  ///
+  /// In en, this message translates to:
+  /// **'Password change error: {error}'**
+  String athleteMessageCustom48(Object error);
+
+  /// Loading error
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading data: {error}'**
+  String athleteMessageCustom49(Object error);
+
+  /// No open competition
+  ///
+  /// In en, this message translates to:
+  /// **'No competitions with open registrations at the moment'**
+  String get athleteMessageCustom50;
+
+  /// Message: already registered
+  ///
+  /// In en, this message translates to:
+  /// **'Registration already present, check your email inbox'**
+  String get athleteMessageCustom51;
+
+  /// Message: max registrations reached
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum number of registrations reached for this competition'**
+  String get athleteMessageCustom52;
+
+  /// Message: select a turn
+  ///
+  /// In en, this message translates to:
+  /// **'Select a turn'**
+  String get athleteMessageCustom53;
+
+  /// Message: first turn full
+  ///
+  /// In en, this message translates to:
+  /// **'First turn is full, please choose another option'**
+  String get athleteMessageCustom54;
+
+  /// Message: second turn full
+  ///
+  /// In en, this message translates to:
+  /// **'Second turn is full, please choose another option'**
+  String get athleteMessageCustom55;
+
+  /// Generic error
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String athleteMessageCustom56(Object error);
+
+  /// Dialog title: registration completed
+  ///
+  /// In en, this message translates to:
+  /// **'Registration completed'**
+  String get athleteMessageCustom57;
+
+  /// Dialog content: registration recorded
+  ///
+  /// In en, this message translates to:
+  /// **'Your registration has been recorded. You will receive a confirmation email.'**
+  String get athleteMessageCustom58;
+
+  /// Button label: back to home
+  ///
+  /// In en, this message translates to:
+  /// **'Back to home'**
+  String get athleteMessageCustom59;
+
+  /// Page title with competition and date
+  ///
+  /// In en, this message translates to:
+  /// **'{competition} · Date: {date}'**
+  String athleteMessageCustom60(Object competition, Object date);
+
+  /// Page title: competition registration
+  ///
+  /// In en, this message translates to:
+  /// **'Competition registration'**
+  String get athleteMessageCustom61;
+
+  /// Label: family name / surname
+  ///
+  /// In en, this message translates to:
+  /// **'Family name'**
+  String get athleteMessageCustom63;
+
+  /// Label: given name / first name
+  ///
+  /// In en, this message translates to:
+  /// **'Given name'**
+  String get athleteMessageCustom64;
+
+  /// Label: email
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get athleteMessageCustom65;
+
+  /// Label: date of birth
+  ///
+  /// In en, this message translates to:
+  /// **'Date of birth'**
+  String get athleteMessageCustom66;
+
+  /// Label: sex
+  ///
+  /// In en, this message translates to:
+  /// **'Sex'**
+  String get athleteMessageCustom67;
+
+  /// Label: club (optional)
+  ///
+  /// In en, this message translates to:
+  /// **'Club (optional)'**
+  String get athleteMessageCustom68;
+
+  /// Label: bib
+  ///
+  /// In en, this message translates to:
+  /// **'Bib'**
+  String get athleteMessageCustom69;
+
+  /// Label: first turn
+  ///
+  /// In en, this message translates to:
+  /// **'First turn'**
+  String get athleteMessageCustom71;
+
+  /// Label: second turn
+  ///
+  /// In en, this message translates to:
+  /// **'Second turn'**
+  String get athleteMessageCustom72;
+
+  /// Subtitle when turns not active
+  ///
+  /// In en, this message translates to:
+  /// **'Turn management not active for this competition'**
+  String get athleteMessageCustom73;
+
+  /// Subtitle when turn is full
+  ///
+  /// In en, this message translates to:
+  /// **'Turn full'**
+  String get athleteMessageCustom74;
+
+  /// Button label: create registration
+  ///
+  /// In en, this message translates to:
+  /// **'Create registration'**
+  String get athleteMessageCustom75;
+
+  /// Label: Competition (for recap)
+  ///
+  /// In en, this message translates to:
+  /// **'Competition'**
+  String get athleteMessageCustom76;
+
+  /// Label: Date (for recap)
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get athleteMessageCustom77;
+
+  /// Label: Turn (for recap)
+  ///
+  /// In en, this message translates to:
+  /// **'Turn'**
+  String get athleteMessageCustom78;
+
+  /// Title / tooltip: competition check-in
+  ///
+  /// In en, this message translates to:
+  /// **'Competition check-in'**
+  String get athleteMessageCustom79;
+
+  /// Instruction to perform check-in
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the icon in the top-left to perform check-in'**
+  String get athleteMessageCustom80;
+
+  /// Message when there are no competitions in progress
+  ///
+  /// In en, this message translates to:
+  /// **'No competitions in progress at the moment'**
+  String get athleteMessageCustom81;
+
+  /// Fallback title when no competition
+  ///
+  /// In en, this message translates to:
+  /// **'Boulder registration'**
+  String get athleteMessageCustom82;
+
+  /// Message shown when competition closed or athlete not checked-in
+  ///
+  /// In en, this message translates to:
+  /// **'Competition closed or athlete not checked-in'**
+  String get athleteMessageCustom83;
+
+  /// Page title: my boulders
+  ///
+  /// In en, this message translates to:
+  /// **'My boulders'**
+  String get athleteMessageCustom84;
+
+  /// Tooltip: open QR scanner to register a boulder
+  ///
+  /// In en, this message translates to:
+  /// **'Register boulder (scan QR)'**
+  String get athleteMessageCustom85;
+
+  /// Label: competition
+  ///
+  /// In en, this message translates to:
+  /// **'Competition'**
+  String get athleteMessageCustom86;
+
+  /// Filter: all
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get athleteMessageCustom87;
+
+  /// Filter: todo
+  ///
+  /// In en, this message translates to:
+  /// **'To do'**
+  String get athleteMessageCustom88;
+
+  /// Filter: done
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get athleteMessageCustom89;
+
+  /// Difficulty label
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty {difficulty}'**
+  String athleteMessageCustom90(Object difficulty);
+
+  /// Status: done
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get athleteMessageCustom92;
+
+  /// Status: todo
+  ///
+  /// In en, this message translates to:
+  /// **'To do'**
+  String get athleteMessageCustom93;
+
+  /// Tooltip: mark as done
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as done'**
+  String get athleteMessageCustom94;
+
+  /// Tooltip: undo / cancel
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get athleteMessageCustom95;
+
+  /// Message: invalid QR
+  ///
+  /// In en, this message translates to:
+  /// **'QR code not valid for this app'**
+  String get athleteMessageCustom96;
+
+  /// Dialog title: boulder successfully registered
+  ///
+  /// In en, this message translates to:
+  /// **'Boulder registered'**
+  String get athleteMessageCustom97;
+
+  /// Dialog title: attention / error
+  ///
+  /// In en, this message translates to:
+  /// **'Attention'**
+  String get athleteMessageCustom98;
+
+  /// Button label: OK
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get athleteMessageCustom99;
+
+  /// AppBar title: boulder scanner
+  ///
+  /// In en, this message translates to:
+  /// **'Register boulder'**
+  String get athleteMessageCustom100;
+
+  /// Text shown while processing the scan
+  ///
+  /// In en, this message translates to:
+  /// **'Verifying...'**
+  String get athleteMessageCustom101;
+
+  /// Instruction for scanning the QR
+  ///
+  /// In en, this message translates to:
+  /// **'Point the camera at the QR below the boulder'**
+  String get athleteMessageCustom102;
+
+  /// Fallback title when camera unavailable
+  ///
+  /// In en, this message translates to:
+  /// **'Camera not available'**
+  String get athleteMessageCustom103;
+
+  /// Fallback explanation: camera not available
+  ///
+  /// In en, this message translates to:
+  /// **'The iOS Simulator doesn\'t have a real camera. This feature requires a physical device to scan the boulder QR code.'**
+  String get athleteMessageCustom104;
+
+  /// Label for back button in fallback view
+  ///
+  /// In en, this message translates to:
+  /// **'Go back'**
+  String get athleteMessageCustom105;
+
+  /// Dialog title: check-in completed
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in completed'**
+  String get athleteMessageCustom106;
+
+  /// Instruction: point the camera at the competition QR
+  ///
+  /// In en, this message translates to:
+  /// **'Point the camera at the competition QR'**
+  String get athleteMessageCustom107;
+
+  /// Message: check-in requires a device with a camera
+  ///
+  /// In en, this message translates to:
+  /// **'To perform check-in you need a device with a camera.'**
+  String get athleteMessageCustom108;
 }
 
 class _AppLocalizationsDelegate

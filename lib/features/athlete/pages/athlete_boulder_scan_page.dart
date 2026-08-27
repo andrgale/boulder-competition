@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../data/athlete_boulder_scan_service.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class AthleteBoulderScanPage extends StatefulWidget {
   final String competitionId;
@@ -20,10 +21,10 @@ class AthleteBoulderScanPage extends StatefulWidget {
 class _BoulderScanPageState extends State<AthleteBoulderScanPage> {
   final service = AthleteBoulderScanService();
   MobileScannerController? _controller;
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   bool _processing = false;
   final bool _cameraUnavailable = false;
- // bool _cameraReady = false; // true solo dopo che start() è andato a buon fine
   String? _cameraErrorMessage;
 
   @override
@@ -62,7 +63,7 @@ class _BoulderScanPageState extends State<AthleteBoulderScanPage> {
     if (parsed == null) {
       _showResultAndReturn(
         success: false,
-        message: 'QR code non valido per questa app',
+        message: l10n.athleteMessageCustom96, // 'QR code non valido per questa app'
       );
       return;
     }
@@ -105,32 +106,23 @@ class _BoulderScanPageState extends State<AthleteBoulderScanPage> {
           color: success ? Colors.green : Colors.red,
           size: 48,
         ),
-        title: Text(success ? 'Boulder registrato' : 'Attenzione'),
+        title: Text(success
+            ? l10n.athleteMessageCustom97 // 'Boulder registrato'
+            : l10n.athleteMessageCustom98 // 'Attenzione'
+            ),
         content: Text(message),
         actions: [
           FilledButton(
             onPressed: () {
               Navigator.of(context).pop(); // chiude il dialog
-              Navigator.of(context).pop(success); // torna alla home atleta
+              Navigator.of(context).pop(success); // torna alla pagina precedente con risultato
             },
-            child: const Text('OK'),
+            child: Text(l10n.athleteMessageCustom99), // 'OK'
           ),
         ],
       ),
     );
   }
-
-  // =========================================================
-  // GESTIONE ERRORE CAMERA (es. simulatore senza hardware camera)
-  // =========================================================
-
-  // void _onCameraError(Object error) {
-  //   if (!mounted) return;
-  //   setState(() {
-  //     _cameraUnavailable = true;
-  //     _cameraErrorMessage = error.toString();
-  //   });
-  // }
 
   // =========================================================
   // BUILD
@@ -141,17 +133,15 @@ class _BoulderScanPageState extends State<AthleteBoulderScanPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Registra Boulder'),
+        title: Text(l10n.athleteMessageCustom100), // 'Registra Boulder'
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
       ),
-      body: _cameraUnavailable
-          ? _buildCameraUnavailableView()
-          : _buildScannerView(),
+      body: _cameraUnavailable ? _buildCameraUnavailableView(l10n) : _buildScannerView(l10n),
     );
   }
 
-  Widget _buildScannerView() {
+  Widget _buildScannerView(AppLocalizations l10n) {
     // Mostra spinner mentre la camera si inizializza
     if (_controller == null) {
       return const Center(
@@ -164,6 +154,7 @@ class _BoulderScanPageState extends State<AthleteBoulderScanPage> {
     return Stack(
       children: [
         MobileScanner(
+          controller: _controller,
           onDetect: _onDetect,
         ),
 
@@ -189,8 +180,8 @@ class _BoulderScanPageState extends State<AthleteBoulderScanPage> {
           child: Center(
             child: Text(
               _processing
-                  ? 'Verifica in corso...'
-                  : 'Inquadra il QR sotto al boulder',
+                  ? l10n.athleteMessageCustom101 // 'Verifica in corso...'
+                  : l10n.athleteMessageCustom102, // 'Inquadra il QR sotto al boulder'
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
@@ -217,7 +208,7 @@ class _BoulderScanPageState extends State<AthleteBoulderScanPage> {
   // VISTA FALLBACK — camera non disponibile (es. Simulatore iOS)
   // =========================================================
 
-  Widget _buildCameraUnavailableView() {
+  Widget _buildCameraUnavailableView(AppLocalizations l10n) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -230,9 +221,9 @@ class _BoulderScanPageState extends State<AthleteBoulderScanPage> {
               color: Colors.white54,
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Fotocamera non disponibile',
-              style: TextStyle(
+            Text(
+              l10n.athleteMessageCustom103, // 'Fotocamera non disponibile'
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -240,11 +231,9 @@ class _BoulderScanPageState extends State<AthleteBoulderScanPage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
-            const Text(
-              'Il Simulatore iOS non dispone di una fotocamera reale. '
-              'Questa funzione richiede un dispositivo fisico per '
-              'scansionare il QR code del boulder.',
-              style: TextStyle(color: Colors.white70, fontSize: 14),
+            Text(
+              l10n.athleteMessageCustom104, // long explanation about simulator
+              style: const TextStyle(color: Colors.white70, fontSize: 14),
               textAlign: TextAlign.center,
             ),
             if (_cameraErrorMessage != null) ...[
@@ -259,9 +248,9 @@ class _BoulderScanPageState extends State<AthleteBoulderScanPage> {
             OutlinedButton.icon(
               onPressed: () => Navigator.of(context).pop(),
               icon: const Icon(Icons.arrow_back, color: Colors.white),
-              label: const Text(
-                'Torna indietro',
-                style: TextStyle(color: Colors.white),
+              label: Text(
+                l10n.athleteMessageCustom105, // 'Torna indietro'
+                style: const TextStyle(color: Colors.white),
               ),
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.white54),

@@ -1,77 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 import 'athlete_login_page.dart';
 
-class AthleteChangePasswordPage
-    extends StatefulWidget {
+class AthleteChangePasswordPage extends StatefulWidget {
   const AthleteChangePasswordPage({
     super.key,
   });
 
   @override
-  State<AthleteChangePasswordPage>
-      createState() =>
-          _AthleteChangePasswordPageState();
+  State<AthleteChangePasswordPage> createState() =>
+      _AthleteChangePasswordPageState();
 }
 
-class _AthleteChangePasswordPageState
-    extends State<AthleteChangePasswordPage> {
-  final emailController =
-      TextEditingController();
+class _AthleteChangePasswordPageState extends State<AthleteChangePasswordPage> {
+  final emailController = TextEditingController();
+  final currentPasswordController = TextEditingController();
+  final newPasswordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
-  final currentPasswordController =
-      TextEditingController();
-
-  final newPasswordController =
-      TextEditingController();
-
-  final confirmPasswordController =
-      TextEditingController();
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   bool loading = false;
 
-  final supabase =
-      Supabase.instance.client;
+  final supabase = Supabase.instance.client;
 
   Future<void> changePassword() async {
     try {
-      final email =
-          emailController.text.trim();
+      final email = emailController.text.trim();
+      final currentPassword = currentPasswordController.text.trim();
+      final newPassword = newPasswordController.text.trim();
+      final confirmPassword = confirmPasswordController.text.trim();
 
-      final currentPassword =
-          currentPasswordController.text
-              .trim();
-
-      final newPassword =
-          newPasswordController.text.trim();
-
-      final confirmPassword =
-          confirmPasswordController.text
-              .trim();
-
+      // Validation with localized messages
       if (email.isEmpty) {
-        throw Exception(
-          'Inserire l\'email',
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.athleteMessageCustom41)), // 'Inserire l'email'
         );
+        return;
       }
 
       if (currentPassword.isEmpty) {
-        throw Exception(
-          'Inserire la password attuale',
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.athleteMessageCustom42)), // 'Inserire la password attuale'
         );
+        return;
       }
 
       if (newPassword.length < 8) {
-        throw Exception(
-          'La nuova password deve contenere almeno 8 caratteri',
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.athleteMessageCustom43)), // 'La nuova password deve contenere almeno 8 caratteri'
         );
+        return;
       }
 
       if (newPassword != confirmPassword) {
-        throw Exception(
-          'Le password non coincidono',
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.athleteMessageCustom44)), // 'Le password non coincidono'
         );
+        return;
       }
 
       setState(() {
@@ -79,18 +67,14 @@ class _AthleteChangePasswordPageState
       });
 
       // verifica credenziali correnti
-
       await supabase.auth.signInWithPassword(
         email: email,
         password: currentPassword,
       );
 
       // cambio password
-
       await supabase.auth.updateUser(
-        UserAttributes(
-          password: newPassword,
-        ),
+        UserAttributes(password: newPassword),
       );
 
       if (!mounted) return;
@@ -98,47 +82,34 @@ class _AthleteChangePasswordPageState
       final user = Supabase.instance.client.auth.currentUser;
 
       if (user == null) {
-        throw Exception('Utente non autenticato');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.athleteMessageCustom47)), // 'Utente non autenticato'
+        );
+        return;
       }
 
-      await supabase
-          .from('profiles')
-          .update({
-            'password_changed': true,
-          })
-          .eq('auth_user_id', user.id);
+      await supabase.from('profiles').update({'password_changed': true}).eq('auth_user_id', user.id);
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Password modificata correttamente',
-          ),
-        ),
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.athleteMessageCustom46)), // 'Password modificata correttamente'
       );
 
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(
-          builder: (_) =>
-              const AthleteLoginPage(),
-        ),
+        MaterialPageRoute(builder: (_) => const AthleteLoginPage()),
         (route) => false,
       );
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(
-        SnackBar(
-          content: Text(
-            e.toString(),
-          ),
-        ),
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.athleteMessageCustom48(e.toString()))), // 'Errore cambio password: {error}'
       );
     } finally {
       if (!mounted) return;
-
       setState(() {
         loading = false;
       });
@@ -148,170 +119,87 @@ class _AthleteChangePasswordPageState
   @override
   void dispose() {
     emailController.dispose();
-
     currentPasswordController.dispose();
-
     newPasswordController.dispose();
-
     confirmPasswordController.dispose();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          const Color(0xFFF6F8FB),
-
+      backgroundColor: const Color(0xFFF6F8FB),
       appBar: AppBar(
-        title: const Text(
-          'Cambio Password',
-        ),
+        title: Text(l10n.athleteMessageCustom35), // 'Cambio Password'
       ),
-
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding:
-                const EdgeInsets.all(24),
-
+            padding: const EdgeInsets.all(24),
             child: ConstrainedBox(
-              constraints:
-                  const BoxConstraints(
-                maxWidth: 450,
-              ),
-
+              constraints: const BoxConstraints(maxWidth: 450),
               child: Card(
                 child: Padding(
-                  padding:
-                      const EdgeInsets.all(
-                    24,
-                  ),
-
+                  padding: const EdgeInsets.all(24),
                   child: Column(
-                    mainAxisSize:
-                        MainAxisSize.min,
-
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(
                         Icons.lock_reset,
                         size: 64,
                         color: Colors.blue,
                       ),
-
-                      const SizedBox(
-                        height: 16,
+                      const SizedBox(height: 16),
+                      Text(
+                        l10n.athleteMessageCustom36, // 'Imposta una nuova password'
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                       ),
-
-                      const Text(
-                        'Imposta una nuova password',
-                        textAlign:
-                            TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight:
-                              FontWeight.bold,
+                      const SizedBox(height: 24),
+                      TextField(
+                        controller: emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          labelText: l10n.athleteMessageCustom16, // reuse 'Email'
+                          prefixIcon: const Icon(Icons.email),
                         ),
                       ),
-
-                      const SizedBox(
-                        height: 24,
-                      ),
-
+                      const SizedBox(height: 16),
                       TextField(
-                        controller:
-                            emailController,
-                        keyboardType:
-                            TextInputType
-                                .emailAddress,
-                        decoration:
-                            const InputDecoration(
-                          labelText:
-                              'Email',
-                          prefixIcon:
-                              Icon(
-                            Icons.email,
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(
-                        height: 16,
-                      ),
-
-                      TextField(
-                        controller:
-                            currentPasswordController,
+                        controller: currentPasswordController,
                         obscureText: true,
-                        decoration:
-                            const InputDecoration(
-                          labelText:
-                              'Password attuale',
-                          prefixIcon:
-                              Icon(
-                            Icons.lock_outline,
-                          ),
+                        decoration: InputDecoration(
+                          labelText: l10n.athleteMessageCustom37, // 'Password attuale'
+                          prefixIcon: const Icon(Icons.lock_outline),
                         ),
                       ),
-
-                      const SizedBox(
-                        height: 16,
-                      ),
-
+                      const SizedBox(height: 16),
                       TextField(
-                        controller:
-                            newPasswordController,
+                        controller: newPasswordController,
                         obscureText: true,
-                        decoration:
-                            const InputDecoration(
-                          labelText:
-                              'Nuova password',
-                          prefixIcon:
-                              Icon(
-                            Icons.lock,
-                          ),
+                        decoration: InputDecoration(
+                          labelText: l10n.athleteMessageCustom38, // 'Nuova password'
+                          prefixIcon: const Icon(Icons.lock),
                         ),
                       ),
-
-                      const SizedBox(
-                        height: 16,
-                      ),
-
+                      const SizedBox(height: 16),
                       TextField(
-                        controller:
-                            confirmPasswordController,
+                        controller: confirmPasswordController,
                         obscureText: true,
-                        decoration:
-                            const InputDecoration(
-                          labelText:
-                              'Conferma password',
-                          prefixIcon:
-                              Icon(
-                            Icons.lock,
-                          ),
+                        decoration: InputDecoration(
+                          labelText: l10n.athleteMessageCustom39, // 'Conferma password'
+                          prefixIcon: const Icon(Icons.lock),
                         ),
                       ),
-
-                      const SizedBox(
-                        height: 24,
-                      ),
-
+                      const SizedBox(height: 24),
                       SizedBox(
-                        width:
-                            double.infinity,
+                        width: double.infinity,
                         height: 50,
-                        child:
-                            ElevatedButton(
-                          onPressed:
-                              loading
-                                  ? null
-                                  : changePassword,
+                        child: ElevatedButton(
+                          onPressed: loading ? null : changePassword,
                           child: loading
                               ? const CircularProgressIndicator()
-                              : const Text(
-                                  'SALVA PASSWORD',
-                                ),
+                              : Text(l10n.athleteMessageCustom40), // 'SALVA PASSWORD'
                         ),
                       ),
                     ],

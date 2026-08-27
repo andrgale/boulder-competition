@@ -1,30 +1,22 @@
 import 'package:flutter/material.dart';
-
-import '../../../core/services/auth_service.dart';
-
-//import '../pages/athlete_boulders_page.dart';
-//import '../pages/athlete_change_password_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-//import '../../../core/services/permission_service.dart';
+
+import 'package:boulder_competition/l10n/app_localizations.dart';
+import '../../../core/services/auth_service.dart';
 
 class AthleteLoginPage extends StatefulWidget {
   const AthleteLoginPage({super.key});
 
   @override
-  State<AthleteLoginPage> createState() =>
-      _AthleteLoginPageState();
+  State<AthleteLoginPage> createState() => _AthleteLoginPageState();
 }
 
-class _AthleteLoginPageState
-    extends State<AthleteLoginPage> {
-  final emailController =
-      TextEditingController();
-
-  final passwordController =
-      TextEditingController();
-
+class _AthleteLoginPageState extends State<AthleteLoginPage> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   final authService = AuthService();
+    AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   bool loading = false;
 
@@ -38,34 +30,28 @@ class _AthleteLoginPageState
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-      
- //     PermissionService.clearCache();
-      
-      final user =
-          Supabase.instance.client.auth.currentUser!;
 
-      final profile =
-          await Supabase.instance.client
-              .from('profiles')
-              .select('password_changed')
-              .eq('auth_user_id', user.id)
-              .single();
+      final user = Supabase.instance.client.auth.currentUser!;
+
+      final profile = await Supabase.instance.client
+          .from('profiles')
+          .select('password_changed')
+          .eq('auth_user_id', user.id)
+          .single();
 
       if (!mounted) return;
 
       if (profile['password_changed'] == false) {
-        context.go('/athlete-change-password');        
-      }
-     else {
+        context.go('/athlete-change-password');
+      } else {
         context.go('/athlete-home');
-      }  
+      }
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString()),
+          content: Text(l10n.athleteMessageCustom34(e.toString())),
         ),
       );
     } finally {
@@ -81,197 +67,105 @@ class _AthleteLoginPageState
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          const Color(0xFFF6F8FB),
-
+      backgroundColor: const Color(0xFFF6F8FB),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding:
-                const EdgeInsets.all(24),
-
+            padding: const EdgeInsets.all(24),
             child: ConstrainedBox(
-              constraints:
-                  const BoxConstraints(
-                maxWidth: 420,
-              ),
-
+              constraints: const BoxConstraints(maxWidth: 420),
               child: Card(
                 elevation: 4,
-
-                shape:
-                    RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(
-                    20,
-                  ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
                 ),
-
                 child: Padding(
-                  padding:
-                      const EdgeInsets.all(
-                    24,
-                  ),
-
+                  padding: const EdgeInsets.all(24),
                   child: Column(
-                    mainAxisSize:
-                        MainAxisSize.min,
-
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(
                         Icons.terrain,
                         size: 72,
                         color: Colors.blue,
                       ),
-
-                      const SizedBox(
-                        height: 16,
-                      ),
-
-                      const Text(
-                        'Boulder Competition',
-                        textAlign:
-                            TextAlign.center,
-                        style: TextStyle(
+                      const SizedBox(height: 16),
+                      Text(
+                        l10n.athleteMessageCustom27, // 'Boulder Competition'
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
                           fontSize: 26,
-                          fontWeight:
-                              FontWeight.bold,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-
-                      const SizedBox(
-                        height: 8,
+                      const SizedBox(height: 8),
+                      Text(
+                        l10n.athleteMessageCustom28, // 'Accesso Atleti'
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.grey),
                       ),
-
-                      const Text(
-                        'Accesso Atleti',
-                        textAlign:
-                            TextAlign.center,
-                        style: TextStyle(
-                          color:
-                              Colors.grey,
-                        ),
-                      ),
-
-                      const SizedBox(
-                        height: 32,
-                      ),
-
+                      const SizedBox(height: 32),
                       TextField(
-                        controller:
-                            emailController,
-                        keyboardType:
-                            TextInputType
-                                .emailAddress,
-                        decoration:
-                            const InputDecoration(
-                          labelText:
-                              'Email',
-                          prefixIcon:
-                              Icon(
-                            Icons.email,
-                          ),
+                        controller: emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          labelText: l10n.athleteMessageCustom29, // 'Email'
+                          prefixIcon: const Icon(Icons.email),
                         ),
                       ),
-
-                      const SizedBox(
-                        height: 16,
-                      ),
-
+                      const SizedBox(height: 16),
                       TextField(
-                        controller:
-                            passwordController,
+                        controller: passwordController,
                         obscureText: true,
-                        decoration:
-                            const InputDecoration(
-                          labelText:
-                              'Password',
-                          prefixIcon:
-                              Icon(
-                            Icons.lock,
-                          ),
+                        decoration: InputDecoration(
+                          labelText: l10n.athleteMessageCustom30, // 'Password'
+                          prefixIcon: const Icon(Icons.lock),
                         ),
                       ),
-
-                      const SizedBox(
-                        height: 24,
-                      ),
-
+                      const SizedBox(height: 24),
                       SizedBox(
-                        width:
-                            double.infinity,
+                        width: double.infinity,
                         height: 50,
-
-                        child:
-                            ElevatedButton(
-                          onPressed:
-                              loading
-                                  ? null
-                                  : login,
-
+                        child: ElevatedButton(
+                          onPressed: loading ? null : login,
                           child: loading
                               ? const SizedBox(
-                                  width:
-                                      22,
-                                  height:
-                                      22,
-                                  child:
-                                      CircularProgressIndicator(
-                                    strokeWidth:
-                                        2,
+                                  width: 22,
+                                  height: 22,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
                                   ),
                                 )
-                              : const Text(
-                                  'LOGIN',
-                                ),
+                              : Text(l10n.athleteMessageCustom31), // 'LOGIN'
                         ),
                       ),
-
-                      const SizedBox(
-                        height: 12,
-                      ),
-
+                      const SizedBox(height: 12),
                       TextButton(
                         onPressed: () {
                           context.go('/athlete-change-password');
                         },
-                        child: const Text(
-                          'Cambia password',
-                        ),
+                        child: Text(l10n.athleteMessageCustom32), // 'Cambia password'
                       ),
-
-                      const SizedBox(
-                        height: 4,
-                      ),
-
+                      const SizedBox(height: 4),
                       TextButton(
                         onPressed: () {
                           context.go('/athlete-registration');
                         },
-                        child: const Text(
-                          'Non hai un account? Registrati',
-                        ),
+                        child: Text(l10n.athleteMessageCustom33), // 'Non hai un account? Registrati'
                       ),
-
-                      const SizedBox(
-                        height: 8,
-                      ),
-
+                      const SizedBox(height: 8),
                       const Text(
                         '',
-                        textAlign:
-                            TextAlign.center,
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 12,
-                          color:
-                              Colors.grey,
+                          color: Colors.grey,
                         ),
                       ),
                     ],

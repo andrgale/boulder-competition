@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../models/athlete_boulder_model.dart';
 import '../models/athlete_boulders_page_data.dart';
 import '../data/athlete_boulder_service.dart';
-import 'package:go_router/go_router.dart';
-//import 'package:supabase_flutter/supabase_flutter.dart';
-//import '../../../config/app_mode.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 enum AthleteFilter {
   all,
@@ -19,61 +18,45 @@ class AthleteBouldersPage extends StatefulWidget {
   });
 
   @override
-  State<AthleteBouldersPage> createState() =>
-      _AthleteBouldersPageState();
+  State<AthleteBouldersPage> createState() => _AthleteBouldersPageState();
 }
 
-class _AthleteBouldersPageState
-    extends State<AthleteBouldersPage> {
+class _AthleteBouldersPageState extends State<AthleteBouldersPage> {
   final service = AthleteBoulderService();
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   bool loading = true;
-  Color _parseColor(
-    String? colorName,
-    ) {
-        switch (
-            colorName
-                ?.toLowerCase()) {
-          case 'rosso':
-            return Colors.red;
 
-          case 'blu':
-            return Colors.blue;
+  Color _parseColor(String? colorName) {
+    switch (colorName?.toLowerCase()) {
+      case 'rosso':
+        return Colors.red;
+      case 'blu':
+        return Colors.blue;
+      case 'verde':
+        return Colors.green;
+      case 'giallo':
+        return Colors.yellow;
+      case 'nero':
+        return Colors.black;
+      case 'bianco':
+        return Colors.white;
+      case 'arancione':
+        return Colors.orange;
+      case 'viola':
+        return Colors.purple;
+      case 'rosa':
+        return Colors.pink;
+      case 'grigio':
+        return Colors.grey;
+      default:
+        return Colors.blueGrey;
+    }
+  }
 
-          case 'verde':
-            return Colors.green;
+  AthleteFilter filter = AthleteFilter.all;
 
-          case 'giallo':
-            return Colors.yellow;
-
-          case 'nero':
-            return Colors.black;
-
-          case 'bianco':
-            return Colors.white;
-
-          case 'arancione':
-            return Colors.orange;
-
-          case 'viola':
-            return Colors.purple;
-
-          case 'rosa':
-            return Colors.pink;
-
-          case 'grigio':
-            return Colors.grey;
-
-          default:
-            return Colors.blueGrey;
-        }
-      }
-
-  AthleteFilter filter =
-      AthleteFilter.all;
-
-  AthleteBouldersPageData?
-      pageData;
+  AthleteBouldersPageData? pageData;
 
   @override
   void initState() {
@@ -83,8 +66,7 @@ class _AthleteBouldersPageState
 
   Future<void> loadData() async {
     try {
-      final data =
-          await service.loadPage();
+      final data = await service.loadPage();
 
       if (!mounted) return;
 
@@ -95,12 +77,9 @@ class _AthleteBouldersPageState
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            e.toString(),
-          ),
+          content: Text(l10n.athleteMessageCustom56(e.toString())),
         ),
       );
 
@@ -110,69 +89,44 @@ class _AthleteBouldersPageState
     }
   }
 
-  Future<void> markDone(
-    AthleteBoulderModel item,
-  ) async {
+  Future<void> markDone(AthleteBoulderModel item) async {
     try {
       await service.markAsDone(
-        registrationId:
-            pageData!.registrationId!,
+        registrationId: pageData!.registrationId!,
         boulderId: item.boulderId,
       );
 
       await loadData();
     } catch (e) {
       if (!mounted) return;
-
-      ScaffoldMessenger.of(context)
-          .showSnackBar(
-        SnackBar(
-          content: Text(
-            e.toString(),
-          ),
-        ),
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.athleteMessageCustom56(e.toString()))),
       );
     }
   }
 
-  Future<void> removeAscent(
-    AthleteBoulderModel item,
-  ) async {
+  Future<void> removeAscent(AthleteBoulderModel item) async {
     try {
       await service.removeAscent(
-        registrationId:
-            pageData!.registrationId!,
+        registrationId: pageData!.registrationId!,
         boulderId: item.boulderId,
       );
 
       await loadData();
     } catch (e) {
       if (!mounted) return;
-
-      ScaffoldMessenger.of(context)
-          .showSnackBar(
-        SnackBar(
-          content: Text(
-            e.toString(),
-          ),
-        ),
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.athleteMessageCustom56(e.toString()))),
       );
     }
   }
-
-  // =========================================================
-  // SCAN QR — apre lo scanner e gestisce l'esito
-  // =========================================================
 
   Future<void> openScanner() async {
     final competition = pageData?.competition;
     final registrationId = pageData?.registrationId;
 
-   // debugPrint("OPEN SCANNER");
-
     if (competition == null || registrationId == null) return;
 
-  //  debugPrint("PUSH SCANNER");
     final result = await context.push<bool>(
       '/athlete-boulder-scan',
       extra: {
@@ -180,35 +134,20 @@ class _AthleteBouldersPageState
         'registrationId': registrationId,
       },
     );
- //   debugPrint("RETURNED FROM SCANNER");
-    
-    // Se la scansione ha avuto successo, ricarica la lista
-    // così il boulder appena registrato appare come "Fatto".
+
     if (result == true) {
       await loadData();
     }
   }
 
-  List<AthleteBoulderModel>
-      filteredBoulders() {
-    final items =
-        pageData?.boulders ?? [];
+  List<AthleteBoulderModel> filteredBoulders() {
+    final items = pageData?.boulders ?? [];
 
     switch (filter) {
       case AthleteFilter.todo:
-        return items
-            .where(
-              (e) => !e.top,
-            )
-            .toList();
-
+        return items.where((e) => !e.top).toList();
       case AthleteFilter.done:
-        return items
-            .where(
-              (e) => e.top,
-            )
-            .toList();
-
+        return items.where((e) => e.top).toList();
       case AthleteFilter.all:
         return items;
     }
@@ -219,42 +158,32 @@ class _AthleteBouldersPageState
     if (loading) {
       return const Scaffold(
         body: Center(
-          child:
-              CircularProgressIndicator(),
+          child: CircularProgressIndicator(),
         ),
       );
     }
 
-    final competition =
-        pageData?.competition;
+    final competition = pageData?.competition;
 
     if (competition == null) {
       return Scaffold(
-          appBar: AppBar(
-          title: Text('Registrazione Boulder'),
+        appBar: AppBar(
+          title: Text(l10n.athleteMessageCustom82), // 'Registrazione Boulder' (fallback title)
           leading: IconButton(
-            tooltip: 'Torna alla home',
+            tooltip: l10n.athleteMessageCustom59, // 'Torna alla home'
             icon: const Icon(Icons.home_outlined),
             onPressed: () => context.go('/athlete-home'),
           ),
         ),
-        // appBar: AppBar(
-        //   title: const Text(
-        //     'Boulder Competition',
-        //   ),
-        // ),
-        body: const Center(
+        body: Center(
           child: Padding(
-            padding:
-                EdgeInsets.all(24),
+            padding: const EdgeInsets.all(24),
             child: Text(
-              'Gara chiusa o atleta senza check-in',
-              textAlign:
-                  TextAlign.center,
-              style: TextStyle(
+              l10n.athleteMessageCustom83, // 'Gara chiusa o atleta senza check-in'
+              textAlign: TextAlign.center,
+              style: const TextStyle(
                 fontSize: 18,
-                fontWeight:
-                    FontWeight.w600,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -262,24 +191,20 @@ class _AthleteBouldersPageState
       );
     }
 
-    final boulders =
-        filteredBoulders();
+    final boulders = filteredBoulders();
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        // ── icona scanner QR in alto a sinistra ───────────────
         leading: IconButton(
-          tooltip: 'Registra boulder (scansiona QR)',
+          tooltip: l10n.athleteMessageCustom85, // 'Registra boulder (scansiona QR)'
           icon: const Icon(Icons.qr_code_scanner),
           onPressed: openScanner,
         ),
-        title: const Text(
-          'I miei Boulder',
-        ),
+        title: Text(l10n.athleteMessageCustom84), // 'I miei Boulder'
         actions: [
           IconButton(
-            tooltip: 'Torna alla home',
+            tooltip: l10n.athleteMessageCustom59,
             icon: const Icon(Icons.home_outlined),
             onPressed: () => context.go('/athlete-home'),
           ),
@@ -289,290 +214,116 @@ class _AthleteBouldersPageState
         onRefresh: loadData,
         child: Column(
           children: [
-            // =====================================
-            // GARA
-            // =====================================
-
             Container(
               width: double.infinity,
-              margin:
-                  const EdgeInsets.all(
-                16,
+              margin: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                borderRadius: BorderRadius.circular(16),
               ),
-              padding:
-                  const EdgeInsets.all(
-                16,
-              ),
-              decoration:
-                  BoxDecoration(
-                color:
-                    Colors.blue.shade50,
-                borderRadius:
-                    BorderRadius
-                        .circular(16),
-              ),
-              child: 
-              Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: Text(
-                          'Competizione',
-                          style: TextStyle(
+                          l10n.athleteMessageCustom86, // 'Competizione'
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                      // if(AppConfig.mostraCampo)
-                      //   TextButton.icon(
-                      //     icon: const Icon(
-                      //       Icons.logout,
-                      //       size: 18,
-                      //     ),
-                      //     label: const Text('Esci'),
-                      //     onPressed: () async {
-                      //       await Supabase
-                      //           .instance
-                      //           .client
-                      //           .auth
-                      //           .signOut();
-
-                      //       if (!mounted) return;
-
-                      //       context.go(
-                      //         '/athlete-login',
-                      //       );
-                      //     },
-                      //   ),
                     ],
                   ),
-
-                  const SizedBox(
-                    height: 8,
-                  ),
-
+                  const SizedBox(height: 8),
                   Text(
                     competition.descrizione,
-                    style: const TextStyle(
-                      fontSize: 18,
-                    ),
+                    style: const TextStyle(fontSize: 18),
                   ),
                 ],
               ),
             ),
 
-            // =====================================
-            // FILTRI
-            // =====================================
-
             Padding(
-              padding:
-                  const EdgeInsets
-                      .symmetric(
-                horizontal: 16,
-              ),
-              child: SegmentedButton<
-                  AthleteFilter>(
-                segments: const [
-                  ButtonSegment(
-                    value:
-                        AthleteFilter
-                            .all,
-                    label:
-                        Text('Tutti'),
-                  ),
-                  ButtonSegment(
-                    value:
-                        AthleteFilter
-                            .todo,
-                    label:
-                        Text(
-                          'Da fare',
-                        ),
-                  ),
-                  ButtonSegment(
-                    value:
-                        AthleteFilter
-                            .done,
-                    label:
-                        Text(
-                          'Fatti',
-                        ),
-                  ),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: SegmentedButton<AthleteFilter>(
+                segments: [
+                  ButtonSegment(value: AthleteFilter.all, label: Text(l10n.athleteMessageCustom87)),
+                  ButtonSegment(value: AthleteFilter.todo, label: Text(l10n.athleteMessageCustom88)),
+                  ButtonSegment(value: AthleteFilter.done, label: Text(l10n.athleteMessageCustom89)),
                 ],
-                selected: {
-                  filter,
-                },
-                onSelectionChanged:
-                    (value) {
+                selected: { filter },
+                onSelectionChanged: (value) {
                   setState(() {
-                    filter =
-                        value.first;
+                    filter = value.first;
                   });
                 },
               ),
             ),
 
-            const SizedBox(
-              height: 12,
-            ),
-
-            // =====================================
-            // ELENCO
-            // =====================================
+            const SizedBox(height: 12),
 
             Expanded(
               child: ListView.builder(
-                itemCount:
-                    boulders.length,
-                itemBuilder:
-                    (context, index) {
-                  final item =
-                      boulders[index];
+                itemCount: boulders.length,
+                itemBuilder: (context, index) {
+                  final item = boulders[index];
 
                   return Card(
-                    margin:
-                        const EdgeInsets
-                            .symmetric(
-                      horizontal:
-                          12,
-                      vertical: 6,
-                    ),
+                    margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     child: Padding(
-                      padding:
-                          const EdgeInsets
-                              .all(12),
+                      padding: const EdgeInsets.all(12),
                       child: Row(
                         children: [
-                          CircleAvatar(
-                            child: Text(
-                              item.numero
-                                  .toString(),
-                            ),
-                          ),
-
-                          const SizedBox(
-                            width: 12,
-                          ),
-
+                          CircleAvatar(child: Text(item.numero.toString())),
+                          const SizedBox(width: 12),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment
-                                      .start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Difficoltà ${item.difficolta}',
-                                  style:
-                                      const TextStyle(
-                                    fontWeight:
-                                        FontWeight
-                                            .bold,
-                                  ),
+                                  l10n.athleteMessageCustom90(item.difficolta),
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
                                 ),
-
-                                const SizedBox(
-                                  height: 4,
-                                ),
+                                const SizedBox(height: 4),
                                 Row(
                                   children: [
-                                    Icon(
-                                      Icons.terrain,
-                                      size: 22,
-                                      color: _parseColor(
-                                        item.colore,
-                                      ),
-                                    ),
-
-                                    const SizedBox(
-                                      width: 8,
-                                    ),
-
-                                    Text(
-                                      item.colore ?? '-',
-                                    ),
+                                    Icon(Icons.terrain, size: 22, color: _parseColor(item.colore)),
+                                    const SizedBox(width: 8),
+                                    Text(item.colore ?? '-'),
                                   ],
                                 ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-
+                                const SizedBox(height: 8),
                                 Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(
-                                    horizontal:
-                                        10,
-                                    vertical:
-                                        4,
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: item.top ? Colors.green.shade100 : Colors.red.shade100,
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
-                                  decoration:
-                                      BoxDecoration(
-                                    color: item
-                                            .top
-                                        ? Colors
-                                            .green
-                                            .shade100
-                                        : Colors
-                                            .red
-                                            .shade100,
-                                    borderRadius:
-                                        BorderRadius.circular(
-                                      20,
-                                    ),
-                                  ),
-                                  child:
-                                      Text(
-                                    item.top
-                                        ? 'Fatto'
-                                        : 'Da fare',
-                                    style:
-                                        TextStyle(
-                                      color: item.top
-                                          ? Colors.green.shade800
-                                          : Colors.red.shade800,
-                                      fontWeight:
-                                          FontWeight.bold,
+                                  child: Text(
+                                    item.top ? l10n.athleteMessageCustom92 : l10n.athleteMessageCustom93,
+                                    style: TextStyle(
+                                      color: item.top ? Colors.green.shade800 : Colors.red.shade800,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-
                           Column(
                             children: [
                               IconButton(
-                                tooltip:
-                                    'Segna come fatto',
-                                onPressed:
-                                    item.top
-                                        ? null
-                                        : () =>
-                                            markDone(
-                                              item,
-                                            ),
-                                icon:
-                                    const Icon(
-                                  Icons.check_circle,
-                                ),
+                                tooltip: l10n.athleteMessageCustom94, // 'Segna come fatto'
+                                onPressed: item.top ? null : () => markDone(item),
+                                icon: const Icon(Icons.check_circle),
                               ),
                               IconButton(
-                                tooltip:
-                                    'Annulla',
-                                onPressed:
-                                    item.top
-                                        ? () =>
-                                            removeAscent(
-                                              item,
-                                            )
-                                        : null,
-                                icon:
-                                    const Icon(
-                                  Icons.undo,
-                                ),
+                                tooltip: l10n.athleteMessageCustom95, // 'Annulla'
+                                onPressed: item.top ? () => removeAscent(item) : null,
+                                icon: const Icon(Icons.undo),
                               ),
                             ],
                           ),

@@ -1,9 +1,14 @@
+import 'package:boulder_competition/l10n/app_localizations.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/models/app_menu.dart';
 import '../../../core/services/menu_service.dart';
+// TODO: aggiusta questo import in base a dove hai definito
+// localeOverrideNotifier / LocaleOverrideController (stesso file usato per macOS/Windows).
+import '../../../core/services/locale_override_controller.dart';
 import '../../../shared/widgets/shell_user_service.dart';
 
 class AthleteHomePage extends StatefulWidget {
@@ -16,6 +21,7 @@ class AthleteHomePage extends StatefulWidget {
 class _AthleteHomePageState extends State<AthleteHomePage> {
   final _menuService = MenuService();
   final _shellUserService = ShellUserService();
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   bool _loading = true;
   List<AppMenu> _menus = [];
@@ -63,11 +69,11 @@ class _AthleteHomePageState extends State<AthleteHomePage> {
     if (mounted) context.go('/athlete-login');
   }
 
-  String get _greeting {
+  String _localizedGreeting(AppLocalizations l10n) {
     final h = DateTime.now().hour;
-    if (h < 12) return 'Buongiorno';
-    if (h < 18) return 'Buon pomeriggio';
-    return 'Buonasera';
+    if (h < 12) return l10n.athleteMessageCustom9; // 'Buongiorno' / 'Good morning'
+    if (h < 18) return l10n.athleteMessageCustom10; // 'Buon pomeriggio' / 'Good afternoon'
+    return l10n.athleteMessageCustom11; // 'Buonasera' / 'Good evening'
   }
 
   @override
@@ -91,7 +97,7 @@ class _AthleteHomePageState extends State<AthleteHomePage> {
               backgroundColor: Colors.green.shade600,
               actions: [
                 IconButton(
-                  tooltip: 'Esci',
+                  tooltip: l10n.athleteMessageCustom3, // 'Esci' / 'Logout'
                   onPressed: _logout,
                   icon: const Icon(Icons.logout, color: Colors.white),
                 ),
@@ -129,7 +135,7 @@ class _AthleteHomePageState extends State<AthleteHomePage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              _greeting,
+                              _localizedGreeting(l10n),
                               style: const TextStyle(
                                 color: Colors.white70,
                                 fontSize: 13,
@@ -152,10 +158,20 @@ class _AthleteHomePageState extends State<AthleteHomePage> {
                 ),
               ),
             ),
+            // Pannello di forzatura lingua, visibile SOLO in debug build
+            // (mai in release/App Store/Play Store), pensato per i test
+            // sui simulatori iOS/Android.
+            if (kDebugMode)
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                sliver: SliverToBoxAdapter(
+                  child: _LocaleOverrideSwitcher(),
+                ),
+              ),
             SliverPadding(
               padding: const EdgeInsets.all(16),
               sliver: _menus.isEmpty
-                  ? SliverToBoxAdapter(child: _fallbackGrid(context))
+                  ? SliverToBoxAdapter(child: _fallbackGrid(context, l10n))
                   : SliverGrid(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
@@ -182,7 +198,7 @@ class _AthleteHomePageState extends State<AthleteHomePage> {
 
   /// Mostrata solo se le voci menu per il ruolo 'athlete' non sono ancora
   /// configurate a DB: permette comunque di raggiungere le funzioni note.
-  Widget _fallbackGrid(BuildContext context) {
+  Widget _fallbackGrid(BuildContext context, AppLocalizations l10n) {
     return Column(
       children: [
         Card(
@@ -190,16 +206,15 @@ class _AthleteHomePageState extends State<AthleteHomePage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          child: const Padding(
-            padding: EdgeInsets.all(14),
+          child: Padding(
+            padding: const EdgeInsets.all(14),
             child: Row(
               children: [
                 Icon(Icons.info_outline, color: Colors.orange),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    'Nessuna voce di menu configurata per il tuo profilo. '
-                    'Contatta l\'organizzazione della gara.',
+                    l10n.athleteMessageCustom4, // 'Nessuna voce di menu configurata per il tuo profilo...'
                   ),
                 ),
               ],
@@ -217,19 +232,21 @@ class _AthleteHomePageState extends State<AthleteHomePage> {
           children: [
             _MenuCard(
               icon: Icons.terrain,
-              label: 'Registrazione Boulder',
+              label: l10n.athleteMessageCustom5, // 'Registrazione Boulder'
               onTap: () => context.go('/athlete-boulders'),
             ),
             _MenuCard(
               icon: Icons.app_registration,
-              label: 'Iscrizione Gara',
+              label: l10n.athleteMessageCustom6, // 'Iscrizione Gara'
               enabled: false,
+              disabledLabel: l10n.athleteMessageCustom8, // 'Presto disponibile'
               onTap: () {},
             ),
             _MenuCard(
               icon: Icons.qr_code_scanner,
-              label: 'Check-in Gara',
+              label: l10n.athleteMessageCustom7, // 'Check-in Gara'
               enabled: false,
+              disabledLabel: l10n.athleteMessageCustom8, // 'Presto disponibile'
               onTap: () {},
             ),
           ],
@@ -273,16 +290,19 @@ class _MenuCard extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
   final bool enabled;
+  final String? disabledLabel;
 
   const _MenuCard({
     required this.icon,
     required this.label,
     required this.onTap,
     this.enabled = true,
+    this.disabledLabel,
   });
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Opacity(
       opacity: enabled ? 1 : 0.5,
       child: Material(
@@ -318,7 +338,7 @@ class _MenuCard extends StatelessWidget {
                 if (!enabled) ...[
                   const SizedBox(height: 4),
                   Text(
-                    'Presto disponibile',
+                    disabledLabel ?? l10n.athleteMessageCustom8, // fallback 'Presto disponibile'
                     style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
                   ),
                 ],
@@ -327,6 +347,85 @@ class _MenuCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Pannello compatto e collassabile per forzare la lingua dell'app
+/// durante i test sui simulatori/emulatori. Non viene mai costruito
+/// in release build grazie al controllo `kDebugMode` nella build principale.
+class _LocaleOverrideSwitcher extends StatelessWidget {
+  const _LocaleOverrideSwitcher();
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<Locale?>(
+      valueListenable: localeOverrideNotifier,
+      builder: (context, currentOverride, _) {
+        final l10n = AppLocalizations.of(context)!;
+        return Card(
+          elevation: 0,
+          color: Colors.orange.shade50,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(color: Colors.orange.shade200),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Theme(
+            // rimuove i divider di default dell'ExpansionTile per un look più pulito
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16),
+              childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              leading: const Icon(Icons.translate, size: 20, color: Colors.orange),
+              title: Text(
+                l10n.administrationMessaggeCustom21, // 'Forza lingua (solo test)'
+                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+              ),
+              subtitle: Text(
+                currentOverride == null
+                    ? l10n.administrationMessaggeCustom22 // 'Lingua attuale: automatica'
+                    : l10n.administrationMessaggeCustom23(
+                        currentOverride.languageCode.toUpperCase()),
+                style: const TextStyle(fontSize: 11, color: Colors.black54),
+              ),
+              children: [
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    ChoiceChip(
+                      label: Text(
+                        l10n.administrationMessaggeCustom24,
+                        style: const TextStyle(fontSize: 11), // era il default ~14
+                      ),
+                      visualDensity: VisualDensity.compact,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap, // riduce il padding tap
+                      labelPadding: const EdgeInsets.symmetric(horizontal: 6), // meno spazio interno
+                      selected: currentOverride == null,
+                      onSelected: (_) => LocaleOverrideController.set(null),
+                    ),
+                    ...AppLocalizations.supportedLocales.map((locale) {
+                      final selected = currentOverride?.languageCode == locale.languageCode;
+                      return ChoiceChip(
+                        label: Text(
+                          locale.languageCode.toUpperCase(),
+                          style: const TextStyle(fontSize: 11),
+                        ),
+                        visualDensity: VisualDensity.compact,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        labelPadding: const EdgeInsets.symmetric(horizontal: 6),
+                        selected: selected,
+                        onSelected: (_) => LocaleOverrideController.set(locale),
+                      );
+                    }),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

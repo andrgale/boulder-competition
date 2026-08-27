@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class AthleteCheckinPage extends StatefulWidget {
   const AthleteCheckinPage({super.key});
 
   @override
-  State<AthleteCheckinPage> createState() =>
-      _AthleteCheckinPageState();
+  State<AthleteCheckinPage> createState() => _AthleteCheckinPageState();
 }
 
-class _AthleteCheckinPageState
-    extends State<AthleteCheckinPage> {
+class _AthleteCheckinPageState extends State<AthleteCheckinPage> {
   final supabase = Supabase.instance.client;
   final formKey = GlobalKey<FormState>();
-
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   final societaCtrl = TextEditingController();
 
   // ── dati gara ────────────────────────────────────────────────
@@ -25,7 +24,10 @@ class _AthleteCheckinPageState
   bool loading = true;
   bool saving = false;
 
-  String? blockingMessage;
+  // Per localizzazione: memorizziamo una chiave di blocco (senza testo
+  // localizzato) finché non abbiamo un BuildContext per tradurre.
+  String? blockingKey;
+  String? blockingArg;
 
   @override
   void initState() {
@@ -42,9 +44,9 @@ class _AthleteCheckinPageState
   Future<void> _init() async {
     try {
       await _loadCompetition();
-
     } catch (e) {
-      blockingMessage = 'Errore nel caricamento dei dati: $e';
+      blockingKey = 'loading_error';
+      blockingArg = e.toString();
     } finally {
       if (mounted) setState(() => loading = false);
     }
@@ -56,8 +58,6 @@ class _AthleteCheckinPageState
 
   // =====================================================
   // RICERCA GARA APERTA
-  // L'app gestisce una sola gara alla volta: in competitions può
-  // esistere al massimo una riga con fl_gara_chiusa = false.
   // =====================================================
   Future<void> _loadCompetition() async {
     final data = await supabase
@@ -67,13 +67,23 @@ class _AthleteCheckinPageState
         .maybeSingle();
 
     if (data == null) {
-      blockingMessage = 'Nessuna gara in corso al momento';
+      blockingKey = 'no_competition';
       return;
     }
 
     competition = data;
     competitionId = data['id'] as String;
+  }
 
+  String _localizedBlockingMessage(AppLocalizations l10n) {
+    switch (blockingKey) {
+      case 'loading_error':
+        return l10n.athleteMessageCustom49(blockingArg ?? '');
+      case 'no_competition':
+        return l10n.athleteMessageCustom81;
+      default:
+        return '';
+    }
   }
 
   // =====================================================
@@ -83,28 +93,27 @@ class _AthleteCheckinPageState
   Widget build(BuildContext context) {
     if (loading) {
       return Scaffold(
-
         appBar: AppBar(
-            title: const Text('Check-in Gara'), 
-            centerTitle: true,
-            actions: [
-              IconButton(
-                tooltip: 'Torna alla home',
-                icon: const Icon(Icons.home_outlined),
-                onPressed: () => context.go('/athlete-home'),
-              ),
-            ],
+          title: Text(l10n.athleteMessageCustom79), // 'Check-in Gara'
+          centerTitle: true,
+          actions: [
+            IconButton(
+              tooltip: l10n.athleteMessageCustom59, // 'Torna alla home'
+              icon: const Icon(Icons.home_outlined),
+              onPressed: () => context.go('/athlete-home'),
+            ),
+          ],
         ),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     final title = competition != null
-        ? 'Check-in gara: ${competition!['descrizione'] ?? ''}\n'
-          'Data: ${_formatDate(competition!['dt_gara'])}'
-        : 'Iscrizione Gara';    
+        ? '${l10n.athleteMessageCustom79}: ${(competition!['descrizione'] as String?) ?? ''}\n${l10n.athleteMessageCustom77}: ${_formatDate(competition!['dt_gara'])}'
+        : l10n.athleteMessageCustom79;
 
-    if (blockingMessage != null) {
+    if (blockingKey != null) {
+      final message = _localizedBlockingMessage(l10n);
       return Scaffold(
         appBar: AppBar(
           toolbarHeight: 76,
@@ -115,7 +124,6 @@ class _AthleteCheckinPageState
             style: const TextStyle(fontSize: 16, height: 1.2),
           ),
         ),
-
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -123,14 +131,14 @@ class _AthleteCheckinPageState
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  blockingMessage!,
+                  message,
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 16),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton.icon(
                   icon: const Icon(Icons.home_outlined),
-                  label: const Text('Torna alla home'),
+                  label: Text(l10n.athleteMessageCustom59),
                   onPressed: () => context.go('/athlete-home'),
                 ),
               ],
@@ -153,25 +161,25 @@ class _AthleteCheckinPageState
           ),
         ),
         leading: IconButton(
-          tooltip: 'Check-in gara',
+          tooltip: l10n.athleteMessageCustom79, // use same label as page title
           icon: const Icon(Icons.qr_code_scanner),
           onPressed: () => openScanner(context),
         ),
         actions: [
           IconButton(
-            tooltip: 'Torna alla home',
+            tooltip: l10n.athleteMessageCustom59,
             icon: const Icon(Icons.home_outlined),
             onPressed: () => context.go('/athlete-home'),
           ),
         ],
       ),
-      body: const Center(
+      body: Center(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 32),
+          padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            'Clicca sull\'icona in alto a sinistra per effettuare il check-in',
+            l10n.athleteMessageCustom80,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w600,
               height: 1.4,

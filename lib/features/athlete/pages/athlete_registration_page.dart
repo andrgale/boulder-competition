@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../shared/app_snackbar.dart';
 import '../data/athlete_registration_service.dart';
+import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class AthleteRegistrationPage extends StatefulWidget {
   const AthleteRegistrationPage({super.key});
@@ -14,13 +15,13 @@ class AthleteRegistrationPage extends StatefulWidget {
       _AthleteRegistrationPageState();
 }
 
-class _AthleteRegistrationPageState
-    extends State<AthleteRegistrationPage> {
-
+class _AthleteRegistrationPageState extends State<AthleteRegistrationPage> {
   final service = AthleteRegistrationService(
     Supabase.instance.client,
     EmailService(Supabase.instance.client),
   );
+
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   final formKey = GlobalKey<FormState>();
 
@@ -54,7 +55,7 @@ class _AthleteRegistrationPageState
 
       if (exists) {
         if (!mounted) return;
-        AppSnackbar.error(context, 'Utente già registrato');
+        AppSnackbar.error(context, l10n.athleteMessageCustom20); // 'Utente già registrato'
         return;
       }
 
@@ -70,15 +71,14 @@ class _AthleteRegistrationPageState
         context: context,
         barrierDismissible: false,
         builder: (_) => AlertDialog(
-          title: const Text('Registrazione completata'),
-          content: const Text(
-            'Il tuo account è stato creato con successo. '
-            'Controlla la tua email per la password iniziale.',
+          title: Text(l10n.athleteMessageCustom21), // 'Registrazione completata'
+          content: Text(
+            l10n.athleteMessageCustom22, // 'Il tuo account è stato creato ...'
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
+              child: Text(l10n.athleteMessageCustom23), // 'OK'
             ),
           ],
         ),
@@ -88,7 +88,7 @@ class _AthleteRegistrationPageState
       context.go('/athlete-login');
     } catch (e) {
       if (!mounted) return;
-      AppSnackbar.error(context, 'Errore registrazione: $e');
+      AppSnackbar.error(context, l10n.athleteMessageCustom26(e.toString())); // 'Errore registrazione: {error}'
     } finally {
       if (mounted) setState(() => loading = false);
     }
@@ -126,57 +126,55 @@ class _AthleteRegistrationPageState
                           color: Colors.blue,
                         ),
                         const SizedBox(height: 16),
-                        const Text(
-                          'Registrazione Atleta',
+                        Text(
+                          l10n.athleteMessageCustom12, // 'Registrazione Atleta'
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 8),
-                        const Text(
-                          'Crea il tuo account per partecipare',
+                        Text(
+                          l10n.athleteMessageCustom13, // 'Crea il tuo account per partecipare'
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey),
+                          style: const TextStyle(color: Colors.grey),
                         ),
                         const SizedBox(height: 32),
                         TextFormField(
                           controller: cognomeCtrl,
-                          decoration: const InputDecoration(
-                            labelText: 'Cognome',
-                            prefixIcon: Icon(Icons.badge),
+                          decoration: InputDecoration(
+                            labelText: l10n.athleteMessageCustom14, // 'Cognome'
+                            prefixIcon: const Icon(Icons.badge),
                           ),
-                          validator: (v) =>
-                              v == null || v.trim().isEmpty
-                                  ? 'Obbligatorio'
-                                  : null,
+                          validator: (v) => v == null || v.trim().isEmpty
+                              ? l10n.athleteMessageCustom17 // 'Obbligatorio'
+                              : null,
                         ),
                         const SizedBox(height: 16),
                         TextFormField(
                           controller: nomeCtrl,
-                          decoration: const InputDecoration(
-                            labelText: 'Nome',
-                            prefixIcon: Icon(Icons.person),
+                          decoration: InputDecoration(
+                            labelText: l10n.athleteMessageCustom15, // 'Nome'
+                            prefixIcon: const Icon(Icons.person),
                           ),
-                          validator: (v) =>
-                              v == null || v.trim().isEmpty
-                                  ? 'Obbligatorio'
-                                  : null,
+                          validator: (v) => v == null || v.trim().isEmpty
+                              ? l10n.athleteMessageCustom17 // 'Obbligatorio'
+                              : null,
                         ),
                         const SizedBox(height: 16),
                         TextFormField(
                           controller: emailCtrl,
                           keyboardType: TextInputType.emailAddress,
-                          decoration: const InputDecoration(
-                            labelText: 'Email',
-                            prefixIcon: Icon(Icons.email),
+                          decoration: InputDecoration(
+                            labelText: l10n.athleteMessageCustom16, // 'Email'
+                            prefixIcon: const Icon(Icons.email),
                           ),
                           validator: (value) {
                             final email = value?.trim() ?? '';
 
                             if (email.isEmpty) {
-                              return 'Email obbligatoria';
+                              return l10n.athleteMessageCustom18; // 'Email obbligatoria'
                             }
 
                             final emailRegex = RegExp(
@@ -184,7 +182,7 @@ class _AthleteRegistrationPageState
                             );
 
                             if (!emailRegex.hasMatch(email)) {
-                              return 'Formato email non valido';
+                              return l10n.athleteMessageCustom19; // 'Formato email non valido'
                             }
 
                             return null;
@@ -204,7 +202,7 @@ class _AthleteRegistrationPageState
                                       strokeWidth: 2,
                                     ),
                                   )
-                                : const Text('REGISTRATI'),
+                                : Text(l10n.athleteMessageCustom24), // 'REGISTRATI'
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -212,9 +210,7 @@ class _AthleteRegistrationPageState
                           onPressed: loading
                               ? null
                               : () => context.go('/athlete-login'),
-                          child: const Text(
-                            'Hai già un account? Accedi',
-                          ),
+                          child: Text(l10n.athleteMessageCustom25), // 'Hai già un account? Accedi'
                         ),
                       ],
                     ),

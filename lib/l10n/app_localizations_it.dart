@@ -1632,4 +1632,344 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get emailMessageCustom64 => 'Archiviato';
+
+  @override
+  String get athleteMessageCustom1 =>
+      'Attivazione fallita: credenziali non valide';
+
+  @override
+  String get athleteMessageCustom2 => 'Athlete Boulder';
+
+  @override
+  String get athleteMessageCustom3 => 'Esci';
+
+  @override
+  String get athleteMessageCustom4 =>
+      'Nessuna voce di menu configurata per il tuo profilo. Contatta l\'organizzazione della gara.';
+
+  @override
+  String get athleteMessageCustom5 => 'Registrazione Boulder';
+
+  @override
+  String get athleteMessageCustom6 => 'Iscrizione Gara';
+
+  @override
+  String get athleteMessageCustom7 => 'Check-in Gara';
+
+  @override
+  String get athleteMessageCustom8 => 'Presto disponibile';
+
+  @override
+  String get athleteMessageCustom9 => 'Buongiorno';
+
+  @override
+  String get athleteMessageCustom10 => 'Buon pomeriggio';
+
+  @override
+  String get athleteMessageCustom11 => 'Buonasera';
+
+  @override
+  String get athleteMessageCustom12 => 'Registrazione Atleta';
+
+  @override
+  String get athleteMessageCustom13 => 'Crea il tuo account per partecipare';
+
+  @override
+  String get athleteMessageCustom14 => 'Cognome';
+
+  @override
+  String get athleteMessageCustom15 => 'Nome';
+
+  @override
+  String get athleteMessageCustom16 => 'Email';
+
+  @override
+  String get athleteMessageCustom17 => 'Obbligatorio';
+
+  @override
+  String get athleteMessageCustom18 => 'Email obbligatoria';
+
+  @override
+  String get athleteMessageCustom19 => 'Formato email non valido';
+
+  @override
+  String get athleteMessageCustom20 => 'Utente già registrato';
+
+  @override
+  String get athleteMessageCustom21 => 'Registrazione completata';
+
+  @override
+  String get athleteMessageCustom22 =>
+      'Il tuo account è stato creato con successo. Controlla la tua email per la password iniziale.';
+
+  @override
+  String get athleteMessageCustom23 => 'OK';
+
+  @override
+  String get athleteMessageCustom24 => 'REGISTRATI';
+
+  @override
+  String get athleteMessageCustom25 => 'Hai già un account? Accedi';
+
+  @override
+  String athleteMessageCustom26(Object error) {
+    return 'Errore registrazione: $error';
+  }
+
+  @override
+  String get athleteMessageCustom27 => 'Boulder Competition';
+
+  @override
+  String get athleteMessageCustom28 => 'Accesso Atleti';
+
+  @override
+  String get athleteMessageCustom29 => 'Email';
+
+  @override
+  String get athleteMessageCustom30 => 'Password';
+
+  @override
+  String get athleteMessageCustom31 => 'LOGIN';
+
+  @override
+  String get athleteMessageCustom32 => 'Cambia password';
+
+  @override
+  String get athleteMessageCustom33 => 'Non hai un account? Registrati';
+
+  @override
+  String athleteMessageCustom34(Object error) {
+    return 'Errore accesso: $error';
+  }
+
+  @override
+  String get athleteMessageCustom35 => 'Cambio Password';
+
+  @override
+  String get athleteMessageCustom36 => 'Imposta una nuova password';
+
+  @override
+  String get athleteMessageCustom37 => 'Password attuale';
+
+  @override
+  String get athleteMessageCustom38 => 'Nuova password';
+
+  @override
+  String get athleteMessageCustom39 => 'Conferma password';
+
+  @override
+  String get athleteMessageCustom40 => 'SALVA PASSWORD';
+
+  @override
+  String get athleteMessageCustom41 => 'Inserire l\'email';
+
+  @override
+  String get athleteMessageCustom42 => 'Inserire la password attuale';
+
+  @override
+  String get athleteMessageCustom43 =>
+      'La nuova password deve contenere almeno 8 caratteri';
+
+  @override
+  String get athleteMessageCustom44 => 'Le password non coincidono';
+
+  @override
+  String get athleteMessageCustom46 => 'Password modificata correttamente';
+
+  @override
+  String get athleteMessageCustom47 => 'Utente non autenticato';
+
+  @override
+  String athleteMessageCustom48(Object error) {
+    return 'Errore cambio password: $error';
+  }
+
+  @override
+  String athleteMessageCustom49(Object error) {
+    return 'Errore nel caricamento dei dati: $error';
+  }
+
+  @override
+  String get athleteMessageCustom50 =>
+      'Nessuna gara con iscrizioni aperte al momento';
+
+  @override
+  String get athleteMessageCustom51 =>
+      'Iscrizione già presente, cerca la mail nella tua casella di posta';
+
+  @override
+  String get athleteMessageCustom52 =>
+      'Numero massimo di iscritti raggiunto per questa gara';
+
+  @override
+  String get athleteMessageCustom53 => 'Seleziona un turno';
+
+  @override
+  String get athleteMessageCustom54 =>
+      'Primo turno al completo, seleziona un\'altra opzione';
+
+  @override
+  String get athleteMessageCustom55 =>
+      'Secondo turno al completo, seleziona un\'altra opzione';
+
+  @override
+  String athleteMessageCustom56(Object error) {
+    return 'Errore: $error';
+  }
+
+  @override
+  String get athleteMessageCustom57 => 'Iscrizione completata';
+
+  @override
+  String get athleteMessageCustom58 =>
+      'La tua iscrizione è stata registrata. Riceverai una mail di conferma.';
+
+  @override
+  String get athleteMessageCustom59 => 'Torna alla home';
+
+  @override
+  String athleteMessageCustom60(Object competition, Object date) {
+    return '$competition · Data: $date';
+  }
+
+  @override
+  String get athleteMessageCustom61 => 'Iscrizione Gara';
+
+  @override
+  String get athleteMessageCustom63 => 'Cognome';
+
+  @override
+  String get athleteMessageCustom64 => 'Nome';
+
+  @override
+  String get athleteMessageCustom65 => 'Email';
+
+  @override
+  String get athleteMessageCustom66 => 'Data di nascita';
+
+  @override
+  String get athleteMessageCustom67 => 'Sesso';
+
+  @override
+  String get athleteMessageCustom68 => 'Società (facoltativo)';
+
+  @override
+  String get athleteMessageCustom69 => 'Pettorale';
+
+  @override
+  String get athleteMessageCustom71 => 'Primo turno';
+
+  @override
+  String get athleteMessageCustom72 => 'Secondo turno';
+
+  @override
+  String get athleteMessageCustom73 =>
+      'Gestione turni non attiva per questa gara';
+
+  @override
+  String get athleteMessageCustom74 => 'Turno al completo';
+
+  @override
+  String get athleteMessageCustom75 => 'Crea iscrizione';
+
+  @override
+  String get athleteMessageCustom76 => 'Gara';
+
+  @override
+  String get athleteMessageCustom77 => 'Data';
+
+  @override
+  String get athleteMessageCustom78 => 'Turno';
+
+  @override
+  String get athleteMessageCustom79 => 'Check-in Gara';
+
+  @override
+  String get athleteMessageCustom80 =>
+      'Clicca sull\'icona in alto a sinistra per effettuare il check-in';
+
+  @override
+  String get athleteMessageCustom81 => 'Nessuna gara in corso al momento';
+
+  @override
+  String get athleteMessageCustom82 => 'Registrazione Boulder';
+
+  @override
+  String get athleteMessageCustom83 => 'Gara chiusa o atleta senza check-in';
+
+  @override
+  String get athleteMessageCustom84 => 'I miei Boulder';
+
+  @override
+  String get athleteMessageCustom85 => 'Registra boulder (scansiona QR)';
+
+  @override
+  String get athleteMessageCustom86 => 'Competizione';
+
+  @override
+  String get athleteMessageCustom87 => 'Tutti';
+
+  @override
+  String get athleteMessageCustom88 => 'Da fare';
+
+  @override
+  String get athleteMessageCustom89 => 'Fatti';
+
+  @override
+  String athleteMessageCustom90(Object difficulty) {
+    return 'Difficoltà $difficulty';
+  }
+
+  @override
+  String get athleteMessageCustom92 => 'Fatto';
+
+  @override
+  String get athleteMessageCustom93 => 'Da fare';
+
+  @override
+  String get athleteMessageCustom94 => 'Segna come fatto';
+
+  @override
+  String get athleteMessageCustom95 => 'Annulla';
+
+  @override
+  String get athleteMessageCustom96 => 'QR code non valido per questa app';
+
+  @override
+  String get athleteMessageCustom97 => 'Boulder registrato';
+
+  @override
+  String get athleteMessageCustom98 => 'Attenzione';
+
+  @override
+  String get athleteMessageCustom99 => 'OK';
+
+  @override
+  String get athleteMessageCustom100 => 'Registra Boulder';
+
+  @override
+  String get athleteMessageCustom101 => 'Verifica in corso...';
+
+  @override
+  String get athleteMessageCustom102 => 'Inquadra il QR sotto al boulder';
+
+  @override
+  String get athleteMessageCustom103 => 'Fotocamera non disponibile';
+
+  @override
+  String get athleteMessageCustom104 =>
+      'Il Simulatore iOS non dispone di una fotocamera reale. Questa funzione richiede un dispositivo fisico per scansionare il QR code del boulder.';
+
+  @override
+  String get athleteMessageCustom105 => 'Torna indietro';
+
+  @override
+  String get athleteMessageCustom106 => 'Check-in effettuato';
+
+  @override
+  String get athleteMessageCustom107 => 'Inquadra il QR della gara';
+
+  @override
+  String get athleteMessageCustom108 =>
+      'Per effettuare il check-in è necessario utilizzare un dispositivo dotato di fotocamera.';
 }

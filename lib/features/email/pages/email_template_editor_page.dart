@@ -739,7 +739,7 @@ class _VariableDialogState extends State<_VariableDialog> {
                 ),
 
                 DropdownButtonFormField<String>(
-                  value: _type,
+                  initialValue: _type,
                   decoration: InputDecoration(labelText: l10n.emailMessageCustom52), // 'Tipo'
                   items: const ['text', 'number', 'date', 'datetime', 'url', 'email']
                       .map((type) => DropdownMenuItem(value: type, child: Text(type)))
