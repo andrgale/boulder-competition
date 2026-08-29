@@ -35,6 +35,11 @@ class _AthleteCompetitionRegistrationPageState
   int secondTurnCount = 0;
   int totalRegistrationsCount = 0;
 
+    // ── categorie gara ───────────────────────────────────────────
+  List<Map<String, dynamic>> categories = [];
+  bool hasCategories = false;
+  String? categoryId;
+
   // ── dati atleta (da profiles, via auth_user_id) ────────────────
   String? profileId;
   String cognome = '';
@@ -72,6 +77,10 @@ class _AthleteCompetitionRegistrationPageState
   Future<void> _init() async {
     try {
       await _loadCompetition();
+
+      if (blockingKey == null) {
+        await _loadCategories();
+      }
 
       if (blockingKey == null) {
         await _loadProfile();
@@ -116,7 +125,25 @@ class _AthleteCompetitionRegistrationPageState
     nrMaxSecondTurn = data['nr_max_second_turn'] ?? 0;
     nrMaxRegistrations = data['nr_max_registrations'] ?? 0;
   }
+  // =====================================================
+  // CARICAMENTO CATEGORIE DELLA GARA
+  // =====================================================
+  Future<void> _loadCategories() async {
+    if (competitionId == null) return;
 
+    final data = await supabase
+        .from('categories')
+        .select('id, eta_min, eta_max, sesso')
+        .eq('competition_id', competitionId!);
+
+    categories = List<Map<String, dynamic>>.from(data);
+    hasCategories = categories.isNotEmpty;
+
+    // Se non ci sono categorie, category_id rimane null.
+    if (!hasCategories) {
+      categoryId = null;
+    }
+  }
   // =====================================================
   // CARICAMENTO PROFILO ATLETA (auth_user_id -> profiles)
   // =====================================================
@@ -153,6 +180,90 @@ class _AthleteCompetitionRegistrationPageState
     if (exists) {
       blockingKey = 'already_registered';
     }
+  }
+
+  // =====================================================
+  // CALCOLO ETA' ALLA DATA DELLA GARA
+  // =====================================================
+  int? _calculateAgeOnCompetitionDate() {
+    if (dataNascita == null || competition == null) {
+      return null;
+    }
+
+    final rawCompetitionDate = competition!['dt_gara'];
+
+    if (rawCompetitionDate == null) {
+      return null;
+    }
+
+    final competitionDate = DateTime.tryParse(
+      rawCompetitionDate.toString(),
+    );
+
+    if (competitionDate == null) {
+      return null;
+    }
+
+    int age = competitionDate.year - dataNascita!.year;
+
+    final birthdayAlreadyOccurred =
+        competitionDate.month > dataNascita!.month ||
+        (competitionDate.month == dataNascita!.month &&
+            competitionDate.day >= dataNascita!.day);
+
+    if (!birthdayAlreadyOccurred) {
+      age--;
+    }
+
+    return age;
+  }
+
+  // =====================================================
+  // RICERCA CATEGORIA IN BASE A ETA' E SESSO
+  // =====================================================
+  String? _findCategoryId() {
+    // Se la gara non ha categorie, non assegniamo category_id.
+    if (!hasCategories) {
+      return null;
+    }
+
+    final age = _calculateAgeOnCompetitionDate();
+
+    if (age == null || sesso == null || sesso!.trim().isEmpty) {
+      return null;
+    }
+
+    final normalizedSex = sesso!.trim().toUpperCase();
+
+    for (final category in categories) {
+      final categorySex =
+          category['sesso']?.toString().trim().toUpperCase();
+
+      final etaMin = _toInt(category['eta_min']);
+      final etaMax = _toInt(category['eta_max']);
+
+      if (categorySex != normalizedSex) {
+        continue;
+      }
+
+      if (etaMin == null || etaMax == null) {
+        continue;
+      }
+
+      if (age >= etaMin && age <= etaMax) {
+        return category['id']?.toString();
+      }
+    }
+
+    return null;
+  }
+
+  int? _toInt(dynamic value) {
+    if (value == null) return null;
+
+    if (value is int) return value;
+
+    return int.tryParse(value.toString());
   }
 
   // =====================================================
@@ -195,21 +306,46 @@ class _AthleteCompetitionRegistrationPageState
   Future<void> save() async {
     if (!formKey.currentState!.validate()) return;
 
+    // =====================================================
+   // CALCOLO / VERIFICA CATEGORIA
+   // =====================================================
+    if (hasCategories) {
+      categoryId = _findCategoryId();
+
+      if (categoryId == null) {
+        final age = _calculateAgeOnCompetitionDate();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              age == null
+                  ? l10n.athleteMessageCustom109 //'Impossibile calcolare la categoria dell’atleta.'
+                  : l10n.athleteMessageCustom110 //'Nessuna categoria disponibile per età e sesso dell’atleta.',
+            ),
+          ),
+        );
+
+        return;
+      }
+    } else {
+      categoryId = null;
+    }
+
     if (isTurn && !isFirstTurn && !isSecondTurn) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(l10n.athleteMessageCustom53)));
+          .showSnackBar(SnackBar(content: Text(l10n.athleteMessageCustom53))); // Seleziona un turno
       return;
     }
 
     if (isFirstTurn && !firstTurnAvailable) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(l10n.athleteMessageCustom54)));
+          .showSnackBar(SnackBar(content: Text(l10n.athleteMessageCustom54))); // Primo turno al completo, seleziona un'altra opzione
       return;
     }
 
     if (isSecondTurn && !secondTurnAvailable) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(l10n.athleteMessageCustom55)));
+          .showSnackBar(SnackBar(content: Text(l10n.athleteMessageCustom55))); // Secondo turno al completo, seleziona un'altra opzione
       return;
     }
 
@@ -226,6 +362,7 @@ class _AthleteCompetitionRegistrationPageState
         pettorale: pettorale,
         sesso: sesso,
         dataNascita: dataNascita,
+        categoryId: categoryId,
         flPresente: false,
         flPagato: false,
         flOmaggio: false,
@@ -240,11 +377,11 @@ class _AthleteCompetitionRegistrationPageState
 
         final riepilogoParts = <String>[
           if ((competition?['descrizione'] as String?)?.trim().isNotEmpty ?? false)
-            '${AppLocalizations.of(context)!.athleteMessageCustom76}: ${(competition!['descrizione'] as String).trim()}',
+            '${AppLocalizations.of(context)!.athleteMessageCustom76}: ${(competition!['descrizione'] as String).trim()}', // Gara
           if (_formatDate(competition?['dt_gara']).trim().isNotEmpty)
-            '${AppLocalizations.of(context)!.athleteMessageCustom77}: ${_formatDate(competition?['dt_gara']).trim()}',
+            '${AppLocalizations.of(context)!.athleteMessageCustom77}: ${_formatDate(competition?['dt_gara']).trim()}', // Data
           if (turno?.isNotEmpty ?? false)
-            '${AppLocalizations.of(context)!.athleteMessageCustom78}: $turno',
+            '${AppLocalizations.of(context)!.athleteMessageCustom78}: $turno', // Turno
         ];
 
         await supabase.functions.invoke(
@@ -271,7 +408,7 @@ class _AthleteCompetitionRegistrationPageState
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(l10n.athleteMessageCustom56(e.toString()))));
+          .showSnackBar(SnackBar(content: Text(l10n.athleteMessageCustom56(e.toString())))); // Errore: {error}
     } finally {
       if (mounted) setState(() => saving = false);
     }
@@ -293,15 +430,15 @@ class _AthleteCompetitionRegistrationPageState
       context: context,
       barrierDismissible: false,
       builder: (_) => AlertDialog(
-        title: Text(l10n.athleteMessageCustom57),
-        content: Text(l10n.athleteMessageCustom58),
+        title: Text(l10n.athleteMessageCustom57), // Iscrizione completata
+        content: Text(l10n.athleteMessageCustom58), // La tua iscrizione è stata registrata. Riceverai una mail di conferma.
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               context.go('/athlete-home');
             },
-            child: Text(l10n.athleteMessageCustom59),
+            child: Text(l10n.athleteMessageCustom59), // Torna alla home
           ),
         ],
       ),
@@ -311,15 +448,15 @@ class _AthleteCompetitionRegistrationPageState
   String _localizedBlockingMessage(AppLocalizations l10n) {
     switch (blockingKey) {
       case 'loading_error':
-        return l10n.athleteMessageCustom49(blockingArg ?? '');
+        return l10n.athleteMessageCustom49(blockingArg ?? ''); // Errore nel caricamento dei dati: {error}
       case 'no_open_competition':
-        return l10n.athleteMessageCustom50;
+        return l10n.athleteMessageCustom50; // Nessuna gara con iscrizioni aperte al momento
       case 'user_not_authenticated':
-        return l10n.athleteMessageCustom47; // reuse
+        return l10n.athleteMessageCustom47; //  Utente non autenticato
       case 'already_registered':
-        return l10n.athleteMessageCustom51;
+        return l10n.athleteMessageCustom51; // Iscrizione già presente, cerca la mail nella tua casella di posta
       case 'max_registrations':
-        return l10n.athleteMessageCustom52;
+        return l10n.athleteMessageCustom52; // Numero massimo di iscritti raggiunto per questa gara
       default:
         return '';
     }
@@ -333,9 +470,9 @@ class _AthleteCompetitionRegistrationPageState
     if (loading) {
       return Scaffold(
         appBar: AppBar(
-          title: Text(l10n.athleteMessageCustom61),
+          title: Text(l10n.athleteMessageCustom61), // Iscrizione Gara
           leading: IconButton(
-            tooltip: l10n.athleteMessageCustom59,
+            tooltip: l10n.athleteMessageCustom59, // Torna alla home
             icon: const Icon(Icons.home_outlined),
             onPressed: () => context.go('/athlete-home'),
           ),
@@ -345,9 +482,9 @@ class _AthleteCompetitionRegistrationPageState
     }
 
     final title = competition != null
-        ? l10n.athleteMessageCustom60(
-            (competition!['descrizione'] as String?) ?? '', _formatDate(competition!['dt_gara']))
-        : l10n.athleteMessageCustom61;
+        ? l10n.athleteMessageCustom60( // 
+            (competition!['descrizione'] as String?) ?? '', _formatDate(competition!['dt_gara'])) // {competition} · Data: {date}
+        : l10n.athleteMessageCustom61; // Iscrizione Gara
 
     if (blockingKey != null) {
       final message = _localizedBlockingMessage(l10n);
@@ -361,7 +498,7 @@ class _AthleteCompetitionRegistrationPageState
             style: const TextStyle(fontSize: 16, height: 1.2),
           ),
           leading: IconButton(
-            tooltip: l10n.athleteMessageCustom59,
+            tooltip: l10n.athleteMessageCustom59, // Torna alla home
             icon: const Icon(Icons.home_outlined),
             onPressed: () => context.go('/athlete-home'),
           ),
@@ -380,7 +517,7 @@ class _AthleteCompetitionRegistrationPageState
                 const SizedBox(height: 24),
                 ElevatedButton.icon(
                   icon: const Icon(Icons.home_outlined),
-                  label: Text(l10n.athleteMessageCustom59),
+                  label: Text(l10n.athleteMessageCustom59), // Torna alla home
                   onPressed: () => context.go('/athlete-home'),
                 ),
               ],
@@ -400,7 +537,7 @@ class _AthleteCompetitionRegistrationPageState
           style: const TextStyle(fontSize: 16, height: 1.2),
         ),
         leading: IconButton(
-          tooltip: l10n.athleteMessageCustom59,
+          tooltip: l10n.athleteMessageCustom59, // Torna alla home
           icon: const Icon(Icons.home_outlined),
           onPressed: () => context.go('/athlete-home'),
         ),
@@ -411,23 +548,23 @@ class _AthleteCompetitionRegistrationPageState
           key: formKey,
           child: ListView(
             children: [
-              _readOnlyField(l10n.athleteMessageCustom63, cognome),
+              _readOnlyField(l10n.athleteMessageCustom63, cognome), // cognome
               const SizedBox(height: 12),
-              _readOnlyField(l10n.athleteMessageCustom64, nome),
+              _readOnlyField(l10n.athleteMessageCustom64, nome), // nome
               const SizedBox(height: 12),
-              _readOnlyField(l10n.athleteMessageCustom65, email),
+              _readOnlyField(l10n.athleteMessageCustom65, email), // email
               const SizedBox(height: 12),
               TextFormField(
                 controller: dataNascitaCtrl,
                 readOnly: true,
                 decoration: InputDecoration(
-                  labelText: l10n.athleteMessageCustom66,
+                  labelText: l10n.athleteMessageCustom66, // data di nascita
                   suffixIcon: const Icon(Icons.calendar_today),
                 ),
                 onTap: _selectDataNascita,
                 validator: (_) {
                   if (dataNascita == null) {
-                    return l10n.athleteMessageCustom17; // 'Obbligatorio' reuse
+                    return l10n.athleteMessageCustom17; // 'Obbligatorio'
                   }
                   return null;
                 },
@@ -436,7 +573,7 @@ class _AthleteCompetitionRegistrationPageState
               DropdownButtonFormField<String>(
                 initialValue: sesso,
                 decoration: InputDecoration(
-                  labelText: l10n.athleteMessageCustom67,
+                  labelText: l10n.athleteMessageCustom67, // sesso
                 ),
                 items: const [
                   DropdownMenuItem<String>(
@@ -451,11 +588,12 @@ class _AthleteCompetitionRegistrationPageState
                 onChanged: (v) {
                   setState(() {
                     sesso = v;
+                    categoryId = _findCategoryId();
                   });
                 },
-                validator: (value) {
+                  validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return l10n.athleteMessageCustom17;
+                    return l10n.athleteMessageCustom17; // 'Obbligatorio'
                   }
                   return null;
                 },
@@ -464,18 +602,18 @@ class _AthleteCompetitionRegistrationPageState
               TextFormField(
                 controller: societaCtrl,
                 decoration: InputDecoration(
-                  labelText: l10n.athleteMessageCustom68,
+                  labelText: l10n.athleteMessageCustom68, // società
                 ),
               ),
               const SizedBox(height: 12),
-              _readOnlyField(l10n.athleteMessageCustom69, pettorale?.toString() ?? '-'),
+              _readOnlyField(l10n.athleteMessageCustom69, pettorale?.toString() ?? '-'), // pettorale
               const SizedBox(height: 20),
               SwitchListTile(
-                title: Text(l10n.athleteMessageCustom71),
+                title: Text(l10n.athleteMessageCustom71), // Primo turno
                 subtitle: !isTurn
-                    ? Text(l10n.athleteMessageCustom73)
+                    ? Text(l10n.athleteMessageCustom73) // Gestione turni non attiva per questa gara
                     : (!firstTurnAvailable
-                        ? Text(l10n.athleteMessageCustom74)
+                        ? Text(l10n.athleteMessageCustom74) // Turno al completo
                         : null),
                 value: isFirstTurn,
                 onChanged: firstTurnAvailable
@@ -488,11 +626,11 @@ class _AthleteCompetitionRegistrationPageState
                     : null,
               ),
               SwitchListTile(
-                title: Text(l10n.athleteMessageCustom72),
+                title: Text(l10n.athleteMessageCustom72), // Secondo turno
                 subtitle: !isTurn
-                    ? Text(l10n.athleteMessageCustom73)
+                    ? Text(l10n.athleteMessageCustom73) // Gestione turni non attiva per questa gara
                     : (!secondTurnAvailable
-                        ? Text(l10n.athleteMessageCustom74)
+                        ? Text(l10n.athleteMessageCustom74) // Turno al completo
                         : null),
                 value: isSecondTurn,
                 onChanged: secondTurnAvailable
@@ -517,7 +655,7 @@ class _AthleteCompetitionRegistrationPageState
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : Text(l10n.athleteMessageCustom75),
+                        : Text(l10n.athleteMessageCustom75), // Crea iscrizione
                   ),
                 ),
               ),
@@ -547,6 +685,10 @@ class _AthleteCompetitionRegistrationPageState
       setState(() {
         dataNascita = picked;
         dataNascitaCtrl.text = _formatDate(picked);
+
+        // Ricalcola la categoria in base all'età
+        // dell'atleta alla data della gara.
+        categoryId = _findCategoryId();
       });
     }
   }

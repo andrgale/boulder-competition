@@ -1928,5 +1928,9 @@
 "competitionMessageCustom42": "Selezionare un template categorie",
 "@competitionMessageCustom42": {
   "description": "Custom competition message 42"
-}
+},
+"athleteMessageCustom109": "Impossibile calcolare la categoria dell’atleta.",
+"@athleteMessageCustom109": { "description": "Impossibile calcolare la categoria dell’atleta." },
+"athleteMessageCustom110": "Nessuna categoria disponibile per età e sesso dell’atleta.",
+"@athleteMessageCustom110": { "description": "Nessuna categoria disponibile per età e sesso dell’atleta." }
 }  

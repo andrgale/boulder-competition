@@ -97,6 +97,44 @@ serve(async (req) => {
     }
 
     // =====================================================
+    // CATEGORIE DELLA COMPETIZIONE
+    // =====================================================
+
+    // La data della gara è il riferimento per il calcolo
+    // dell'età degli atleti.
+    const competitionDate = competition.dt_gara;
+
+    if (!competitionDate) {
+      return new Response(
+        JSON.stringify({
+          error: "Data della gara non presente",
+        }),
+        { status: 500 },
+      );
+    }
+
+    // Recuperiamo UNA SOLA VOLTA tutte le categorie della gara.
+    const { data: competitionCategories, error: categoriesError } = await supabase
+      .from("categories")
+      .select(`
+        id,
+        eta_min,
+        eta_max,
+        sesso
+      `)
+      .eq("competition_id", competition_id);
+
+    if (categoriesError) {
+      throw new Error(
+        "Errore recupero categorie della gara: " +
+          categoriesError.message,
+      );
+    }
+
+    // Se la gara non ha categorie, l'array sarà semplicemente vuoto.
+    const hasCategories = (competitionCategories?.length ?? 0) > 0;
+
+    // =====================================================
     // CONTEGGI INIZIALI PER CONTROLLI ISCRIZIONI/TURNI
     // =====================================================
     //
@@ -234,6 +272,98 @@ serve(async (req) => {
     }
 
     // =====================================================
+    // CALCOLO ETA ALLA DATA DELLA GARA
+    // =====================================================
+
+    function calculateAgeAtCompetitionDate(
+      birthDate: string,
+      competitionDate: string,
+    ): number {
+      const birth = new Date(`${birthDate}T00:00:00`);
+      const competition = new Date(`${competitionDate}T00:00:00`);
+
+      let age = competition.getFullYear() - birth.getFullYear();
+
+      const monthDifference =
+        competition.getMonth() - birth.getMonth();
+
+      const dayDifference =
+        competition.getDate() - birth.getDate();
+
+      // Se alla data della gara non ha ancora compiuto gli anni,
+      // sottraiamo un anno.
+      if (
+        monthDifference < 0 ||
+        (monthDifference === 0 && dayDifference < 0)
+      ) {
+        age--;
+      }
+
+      return age;
+    }
+
+    // =====================================================
+    // RICERCA CATEGORIA
+    // =====================================================
+
+    function findMatchingCategory(
+      categories: Array<{
+        id: string;
+        eta_min: number | null;
+        eta_max: number | null;
+        sesso: string | null;
+      }>,
+      age: number,
+      athleteGender: string,
+    ) {
+      return categories.find((category) => {
+        // -------------------------------------------------
+        // CONTROLLO SESSO
+        // -------------------------------------------------
+
+        const categoryGender =
+          category.sesso?.trim().toUpperCase();
+
+        const normalizedAthleteGender =
+          athleteGender.trim().toUpperCase();
+
+        // Se la categoria ha un sesso specifico,
+        // deve coincidere con quello dell'atleta.
+        const genderMatches =
+          !categoryGender ||
+          categoryGender === normalizedAthleteGender;
+
+        if (!genderMatches) {
+          return false;
+        }
+
+        // -------------------------------------------------
+        // CONTROLLO ETA MINIMA
+        // -------------------------------------------------
+
+        if (
+          category.eta_min !== null &&
+          age < category.eta_min
+        ) {
+          return false;
+        }
+
+        // -------------------------------------------------
+        // CONTROLLO ETA MASSIMA
+        // -------------------------------------------------
+
+        if (
+          category.eta_max !== null &&
+          age > category.eta_max
+        ) {
+          return false;
+        }
+
+        return true;
+      });
+    } 
+    
+    // =====================================================
     // NEXT PETTORALE (FIX: SOLO UNA VOLTA)
     // =====================================================
 
@@ -324,6 +454,29 @@ serve(async (req) => {
         if (!email || !email.includes("@")) throw new Error("Email non valida");
         if (sesso !== "M" && sesso !== "F") throw new Error("Sesso non valido");
 
+        // ===================================================
+        // CALCOLO E ASSEGNAZIONE CATEGORIA
+        // ===================================================
+
+        let categoryId: string | null = null;
+
+        // La categoria viene calcolata solamente se:
+        // - la gara ha delle categorie;
+        // - è presente la data di nascita dell'atleta.
+        if (hasCategories && data_nascita) {
+          const age = calculateAgeAtCompetitionDate(
+            data_nascita,
+            competitionDate,
+          );
+
+          const matchingCategory = findMatchingCategory(
+            competitionCategories ?? [],
+            age,
+            sesso,
+          );
+
+          categoryId = matchingCategory?.id ?? null;
+        }
         // ===================================================
         // CONTROLLO TURNI (SOLO SE is_turn = true)
         // ===================================================
@@ -444,6 +597,7 @@ serve(async (req) => {
           societa,
           sesso,
           data_nascita,
+          category_id: categoryId,
           pettorale: nextPettorale,
           is_first_turn: isFirstTurn,
           is_second_turn: isSecondTurn,

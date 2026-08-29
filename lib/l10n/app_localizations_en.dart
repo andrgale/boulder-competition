@@ -1981,4 +1981,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get competitionMessageCustom42 => 'Select a category template';
+
+  @override
+  String get athleteMessageCustom109 =>
+      'Unable to determine the athlete category.';
+
+  @override
+  String get athleteMessageCustom110 =>
+      'No category available for the athlete\'s age and gender.';
 }

@@ -1922,5 +1922,14 @@
 "competitionMessageCustom42": "Select a category template",
 "@competitionMessageCustom42": {
   "description": "Custom competition message 42"
+},
+"athleteMessageCustom109": "Unable to determine the athlete category.",
+"@athleteMessageCustom109": {
+  "description": "Unable to determine the athlete's category."
+},
+
+"athleteMessageCustom110": "No category available for the athlete's age and gender.",
+"@athleteMessageCustom110": {
+  "description": "No category available for the athlete's age and gender."
 }
 }

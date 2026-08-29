@@ -1,3 +1,6 @@
+import 'package:boulder_competition/features/categories/data/category_rules.dart';
+import 'package:boulder_competition/features/categories/data/category_service.dart';
+import 'package:boulder_competition/features/categories/models/category_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/registration_model.dart';
@@ -6,6 +9,7 @@ import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class RegistrationFormPage extends StatefulWidget {
   final String competitionId;
+  final DateTime competitionDate;
   final RegistrationModel? registration;
 
   // ── nuovi campi per controllo turni ─────────────────────────
@@ -18,6 +22,7 @@ class RegistrationFormPage extends StatefulWidget {
   const RegistrationFormPage({
     super.key,
     required this.competitionId,
+    required this.competitionDate,
     this.registration,
     this.isTurn = false,
     this.nrMaxFirstTurn = 0,
@@ -32,6 +37,7 @@ class RegistrationFormPage extends StatefulWidget {
 class _RegistrationFormPageState
     extends State<RegistrationFormPage> {
   final service = RegistrationService();
+  final categoryService = CategoryService();
 
   AppLocalizations get l10n => AppLocalizations.of(context)!;
   
@@ -269,6 +275,24 @@ class _RegistrationFormPageState
                   pettoraleCtrl.text,
                 );
 
+
+      String? categoryId;
+
+      // La categoria può essere calcolata solamente
+      // se abbiamo la data di nascita.
+      if (dataNascita != null) {
+        final category = await _findAthleteCategory(
+          dataNascita: dataNascita!,
+          sesso: sesso,
+        );
+
+        categoryId = category?.id;
+      }
+
+      // Debug opzionale.
+      debugPrint(
+        'Categoria assegnata: $categoryId',
+      );
       // ===============================================
       // UPDATE
       // ===============================================
@@ -276,12 +300,11 @@ class _RegistrationFormPageState
       if (isEdit) {
         await service.updateRegistration(
           id: widget.registration!.id,
-          cognome:
-              cognomeCtrl.text.trim(),
+          cognome: cognomeCtrl.text.trim(),
           nome: nomeCtrl.text.trim(),
           email: email,
-          societa:
-              societaCtrl.text.trim(),
+          societa: societaCtrl.text.trim(),
+          categoryId: categoryId,
           pettorale: pettorale,
           sesso: sesso,
           dataNascita: dataNascita,
@@ -323,6 +346,7 @@ class _RegistrationFormPageState
           pettorale: pettorale,
           sesso: sesso,
           dataNascita: dataNascita,
+          categoryId: categoryId,
           flPresente: flPresente,
           flPagato: flPagato,
           flOmaggio: flOmaggio,
@@ -359,7 +383,26 @@ class _RegistrationFormPageState
     }
   }
 
+  Future<CategoryModel?> _findAthleteCategory({
+    required DateTime dataNascita,
+    required String? sesso,
+  }) async {
+    // 1. Recupera SOLO le categorie della gara corrente.
+    final categories = await categoryService.getCategories(
+      widget.competitionId,
+    );
 
+    // 2. Cerca la categoria usando:
+    //    - data di nascita atleta
+    //    - sesso atleta
+    //    - data della gara
+    return CategoryRules.findMatchingCategory(
+      categories: categories,
+      birthDate: dataNascita,
+      competitionDate: widget.competitionDate,
+      sesso: sesso,
+    );
+  }
   // =====================================================
   // UI
   // =====================================================

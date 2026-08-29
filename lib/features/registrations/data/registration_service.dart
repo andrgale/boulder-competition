@@ -75,6 +75,7 @@ class RegistrationService {
   Future<void> createRegistration({
     required String competitionId,
     String? profileId,
+    String? categoryId,
     required String cognome,
     required String nome,
     required String email,
@@ -88,7 +89,6 @@ class RegistrationService {
     bool isFirstTurn = false,
     bool isSecondTurn = false,
     String ownerRegistration = 'admin',
-
   }) async {
     final autoPettorale =
         pettorale ??
@@ -96,28 +96,32 @@ class RegistrationService {
 
     await _db.insert({
       'competition_id': competitionId,
+      'profile_id': profileId,
+      'category_id': categoryId,
       'cognome': cognome,
       'nome': nome,
       'email': email,
       'societa': societa,
       'pettorale': autoPettorale,
       'sesso': sesso,
-      'data_nascita': dataNascita?.toIso8601String(),
+      'data_nascita': dataNascita
+          ?.toIso8601String()
+          .split('T')
+          .first,
       'fl_presente': flPresente,
       'fl_pagato': flPagato,
       'fl_omaggio': flOmaggio,
-      'profile_id': profileId,
       'is_first_turn': isFirstTurn,
       'is_second_turn': isSecondTurn,
       'owner_registration': ownerRegistration,
     });
   }
-
   // =====================================================
   // UPDATE
   // =====================================================
   Future<void> updateRegistration({
     required String id,
+    String? categoryId,
     required String cognome,
     required String nome,
     required String email,
@@ -130,27 +134,27 @@ class RegistrationService {
     bool flOmaggio = false,
     bool isFirstTurn = false,
     bool isSecondTurn = false,
- //   String ownerRegistration = 'admin',
-
   }) async {
     await _db.update({
+      'category_id': categoryId,
       'cognome': cognome,
       'nome': nome,
       'email': email,
       'societa': societa,
       'pettorale': pettorale,
       'sesso': sesso,
-      'data_nascita': dataNascita?.toIso8601String(),
+      'data_nascita': dataNascita
+          ?.toIso8601String()
+          .split('T')
+          .first,
       'fl_presente': flPresente,
       'fl_pagato': flPagato,
       'fl_omaggio': flOmaggio,
       'is_first_turn': isFirstTurn,
       'is_second_turn': isSecondTurn,
-    //  'owner_registration': ownerRegistration,
       'updated_at': DateTime.now().toIso8601String(),
     }).eq('id', id);
   }
-
   // =====================================================
   // DELETE
   // =====================================================

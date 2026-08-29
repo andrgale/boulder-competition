@@ -1982,4 +1982,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get competitionMessageCustom42 => 'Selezionare un template categorie';
+
+  @override
+  String get athleteMessageCustom109 =>
+      'Impossibile calcolare la categoria dell’atleta.';
+
+  @override
+  String get athleteMessageCustom110 =>
+      'Nessuna categoria disponibile per età e sesso dell’atleta.';
 }

@@ -572,7 +572,7 @@ class _CompetitionFormPageState
                         Expanded(
                           flex: 2,
                           child: DropdownButtonFormField<String>(
-                            value: selectedCategoryTemplateId,
+                            initialValue: selectedCategoryTemplateId,
                             isExpanded: true,
                             decoration: InputDecoration(
                               labelText: l10n.competitionMessageCustom41, // Template categorie

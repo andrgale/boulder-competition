@@ -438,13 +438,10 @@ final GoRouter appRouter = GoRouter(
             );
           },
         ),
-// ======================================================
-// REGISTRATIONS
-// ======================================================
 
-// ======================================================
-// REGISTRATIONS
-// ======================================================
+        // ======================================================
+        // REGISTRATIONS
+        // ======================================================
 
         GoRoute(
           path: '/competitions/:id/registrations',
@@ -453,37 +450,65 @@ final GoRouter appRouter = GoRouter(
             final competitionId = state.pathParameters['id']!;
 
             final extra = state.extra;
+
             String competitionName = '';
+            DateTime? competitionDate;
+
             bool flIscrizioniChiuse = false;
             int nrMaxRegistrations = 0;
-            bool isTurn = false; // ← aggiunto
-            int nrMaxFirstTurn = 0; // ← aggiunto
-            int nrMaxSecondTurn = 0; // ← aggiunto
+
+            bool isTurn = false;
+            int nrMaxFirstTurn = 0;
+            int nrMaxSecondTurn = 0;
 
             if (extra is CompetitionModel) {
               competitionName = extra.descrizione;
+              competitionDate = extra.dtGara;
+
               flIscrizioniChiuse = extra.flIscrizioniChiuse;
               nrMaxRegistrations = extra.nrMaxRegistrations;
-              isTurn = extra.isTurn; // ← aggiunto
-              nrMaxFirstTurn = extra.nrMaxFirstTurn; // ← aggiunto
-              nrMaxSecondTurn = extra.nrMaxSecondTurn; // ← aggiunto
+
+              isTurn = extra.isTurn;
+              nrMaxFirstTurn = extra.nrMaxFirstTurn;
+              nrMaxSecondTurn = extra.nrMaxSecondTurn;
             } else if (extra is Map) {
-              competitionName = extra['competitionName'] as String? ?? '';
-              flIscrizioniChiuse = extra['flIscrizioniChiuse'] as bool? ?? false;
-              nrMaxRegistrations = extra['nrMaxRegistrations'] as int? ?? 0;
-              isTurn = extra['isTurn'] as bool? ?? false; // ← aggiunto
-              nrMaxFirstTurn = extra['nrMaxFirstTurn'] as int? ?? 0; // ← aggiunto
-              nrMaxSecondTurn = extra['nrMaxSecondTurn'] as int? ?? 0; // ← aggiunto
+              competitionName =
+                  extra['competitionName'] as String? ?? '';
+
+              competitionDate =
+                  extra['competitionDate'] as DateTime?;
+
+              flIscrizioniChiuse =
+                  extra['flIscrizioniChiuse'] as bool? ?? false;
+
+              nrMaxRegistrations =
+                  extra['nrMaxRegistrations'] as int? ?? 0;
+
+              isTurn =
+                  extra['isTurn'] as bool? ?? false;
+
+              nrMaxFirstTurn =
+                  extra['nrMaxFirstTurn'] as int? ?? 0;
+
+              nrMaxSecondTurn =
+                  extra['nrMaxSecondTurn'] as int? ?? 0;
+            }
+
+            if (competitionDate == null) {
+              throw Exception(
+                'Data della gara non disponibile per la competizione $competitionId',
+              );
             }
 
             return RegistrationsPage(
               competitionId: competitionId,
               competitionName: competitionName,
+              competitionDate: competitionDate,
               flIscrizioniChiuse: flIscrizioniChiuse,
               nrMaxRegistrations: nrMaxRegistrations,
-              isTurn: isTurn, // ← aggiunto
-              nrMaxFirstTurn: nrMaxFirstTurn, // ← aggiunto
-              nrMaxSecondTurn: nrMaxSecondTurn, // ← aggiunto
+              isTurn: isTurn,
+              nrMaxFirstTurn: nrMaxFirstTurn,
+              nrMaxSecondTurn: nrMaxSecondTurn,
             );
           },
         ),
@@ -496,11 +521,16 @@ final GoRouter appRouter = GoRouter(
 
             return RegistrationFormPage(
               competitionId: data['competitionId'] as String,
+              competitionDate: data['competitionDate'] as DateTime,
               isTurn: data['isTurn'] as bool? ?? false,
-              nrMaxFirstTurn: data['nrMaxFirstTurn'] as int? ?? 0,
-              nrMaxSecondTurn: data['nrMaxSecondTurn'] as int? ?? 0,
-              firstTurnCount: data['firstTurnCount'] as int? ?? 0,
-              secondTurnCount: data['secondTurnCount'] as int? ?? 0,
+              nrMaxFirstTurn:
+                  data['nrMaxFirstTurn'] as int? ?? 0,
+              nrMaxSecondTurn:
+                  data['nrMaxSecondTurn'] as int? ?? 0,
+              firstTurnCount:
+                  data['firstTurnCount'] as int? ?? 0,
+              secondTurnCount:
+                  data['secondTurnCount'] as int? ?? 0,
             );
           },
         ),
@@ -513,15 +543,22 @@ final GoRouter appRouter = GoRouter(
 
             return RegistrationFormPage(
               competitionId: data['competitionId'] as String,
-              registration: data['registration'] as RegistrationModel,
+              competitionDate: data['competitionDate'] as DateTime,
+              registration:
+                  data['registration'] as RegistrationModel,
               isTurn: data['isTurn'] as bool? ?? false,
-              nrMaxFirstTurn: data['nrMaxFirstTurn'] as int? ?? 0,
-              nrMaxSecondTurn: data['nrMaxSecondTurn'] as int? ?? 0,
-              firstTurnCount: data['firstTurnCount'] as int? ?? 0,
-              secondTurnCount: data['secondTurnCount'] as int? ?? 0,
+              nrMaxFirstTurn:
+                  data['nrMaxFirstTurn'] as int? ?? 0,
+              nrMaxSecondTurn:
+                  data['nrMaxSecondTurn'] as int? ?? 0,
+              firstTurnCount:
+                  data['firstTurnCount'] as int? ?? 0,
+              secondTurnCount:
+                  data['secondTurnCount'] as int? ?? 0,
             );
           },
         ),
+
 // ======================================================
 // REALIZZAZIONI BOULDER
 // =====================================================

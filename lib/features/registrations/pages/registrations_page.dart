@@ -12,6 +12,7 @@ import 'package:boulder_competition/l10n/app_localizations.dart';
 class RegistrationsPage extends StatefulWidget {
   final String competitionId;
   final String competitionName;
+  final DateTime competitionDate;
 
   // ── flag dalla competition: se true, iscrizioni chiuse ─────
   final bool flIscrizioniChiuse;
@@ -27,6 +28,7 @@ class RegistrationsPage extends StatefulWidget {
     super.key,
     required this.competitionId,
     required this.competitionName,
+    required this.competitionDate,
     this.flIscrizioniChiuse = false,
     this.nrMaxRegistrations = 0,
     this.isTurn = false,
@@ -283,6 +285,7 @@ class _RegistrationsPageState
       '/registrations/new',
       extra: {
         'competitionId': widget.competitionId,
+        'competitionDate': widget.competitionDate,
         'isTurn': widget.isTurn,
         'nrMaxFirstTurn': widget.nrMaxFirstTurn,
         'nrMaxSecondTurn': widget.nrMaxSecondTurn,
@@ -295,15 +298,16 @@ class _RegistrationsPageState
       await refreshData();
     }
   }
+
   // =====================================================
   // NAV EDIT
   // =====================================================
-
   Future<void> openEdit(RegistrationModel r) async {
     final res = await context.push(
       '/registrations/edit',
       extra: {
         'competitionId': widget.competitionId,
+        'competitionDate': widget.competitionDate,
         'registration': r,
         'isTurn': widget.isTurn,
         'nrMaxFirstTurn': widget.nrMaxFirstTurn,
@@ -317,6 +321,7 @@ class _RegistrationsPageState
       await refreshData();
     }
   }
+
   // =====================================================
   // UI
   // =====================================================

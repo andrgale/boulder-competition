@@ -3661,6 +3661,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select a category template'**
   String get competitionMessageCustom42;
+
+  /// Unable to determine the athlete's category.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to determine the athlete category.'**
+  String get athleteMessageCustom109;
+
+  /// No category available for the athlete's age and gender.
+  ///
+  /// In en, this message translates to:
+  /// **'No category available for the athlete\'s age and gender.'**
+  String get athleteMessageCustom110;
 }
 
 class _AppLocalizationsDelegate
