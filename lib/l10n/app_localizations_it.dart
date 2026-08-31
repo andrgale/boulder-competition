@@ -359,7 +359,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get registrationMessageCustom10 =>
-      'Cerca pettorale, cognome o nome...';
+      'Cerca pettorale, cognome o nome o societa o categoria...';
 
   @override
   String get registrationMessageCustom11 => 'Nessuna iscrizione';

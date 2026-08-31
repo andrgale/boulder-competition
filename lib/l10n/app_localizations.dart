@@ -731,7 +731,7 @@ abstract class AppLocalizations {
   /// Hint for searching registrations
   ///
   /// In en, this message translates to:
-  /// **'Search bib, lastname or given firstname...'**
+  /// **'Search bib, lastname or given firstname or club or category...'**
   String get registrationMessageCustom10;
 
   /// Text shown when there are no registrations

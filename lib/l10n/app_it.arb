@@ -460,7 +460,7 @@
       "max": {}
     }
   },
-  "registrationMessageCustom10": "Cerca pettorale, cognome o nome...",
+  "registrationMessageCustom10": "Cerca pettorale, cognome o nome o societa o categoria...",
   "@registrationMessageCustom10": {
     "description": "Hint per la ricerca nelle iscrizioni"
   },

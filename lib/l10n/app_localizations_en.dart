@@ -358,7 +358,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get registrationMessageCustom10 =>
-      'Search bib, lastname or given firstname...';
+      'Search bib, lastname or given firstname or club or category...';
 
   @override
   String get registrationMessageCustom11 => 'No registrations';

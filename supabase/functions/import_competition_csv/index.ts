@@ -362,7 +362,14 @@ serve(async (req) => {
         return true;
       });
     } 
-    
+   
+      function formatDate(dateStr?: string | null) {
+      if (!dateStr) return null;
+
+      const d = new Date(dateStr);
+
+      return d.toLocaleDateString("it-IT");
+    }  
     // =====================================================
     // NEXT PETTORALE (FIX: SOLO UNA VOLTA)
     // =====================================================
@@ -627,22 +634,58 @@ serve(async (req) => {
         // propria password. Isolato in un try/catch separato: se
         // l'invio fallisce, la registrazione resta comunque valida
         // (già inserita) e la riga non viene marcata come scartata.
-
-        if (createdNewUser) {
+ //       if (createdNewUser) {
           try {
-            await sendWelcomeEmail({
-              email,
-              name: `${nome} ${cognome}`.trim(),
-              competitionName: competition.descrizione,
-            });
-          } catch (mailErr: any) {
-            console.error(
-              `Errore invio mail iscrizione (riga ${i + 1}, ${email}):`,
-              mailErr.message,
+              const turnoText = isTurn
+              ? (isFirstTurn ? "Primo Turno" : "Secondo Turno")
+              : null;
+
+              const riepilogoParts = [
+              competition.descrizione,
+              turnoText,
+              ].filter(Boolean);
+            const response = await fetch(
+              `${Deno.env.get("SUPABASE_URL")}/functions/v1/send-template-email`,
+              {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+                  apikey: Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  email,
+                  toName: `${nome} ${cognome}`.trim(),
+                  templateCode: "REG_GARA_CSV",
+                  language: "it",
+                  variables: buildEmailVariables({
+                    'NOME_ATLETA': `${nome} ${cognome}`.trim(),
+                    'DESC_GARA': competition.descrizione,
+                    'DT_GARA': formatDate(competition.dt_gara),
+                    'TURNO': turnoText,
+                    'RIEPILOGO_GARA':
+                      riepilogoParts.length > 0
+                        ? riepilogoParts.join(' — ')
+                        : null,
+                  }),
+                }),
+              },
             );
-          }
-        }
-      } catch (err: any) {
+
+            if (!response.ok) {
+              const detail = await response.text();
+              throw new Error(
+                `send-template-email (${response.status}): ${detail}`,
+              );
+            }
+            } catch (mailErr: any) {
+              console.error(
+                `Errore invio mail iscrizione (riga ${i + 1}, ${email}):`,
+                mailErr.message,
+              );
+            }
+//        }
+          } catch (err: any) {
         discarded++;
 
         await supabase.from("import_job_rows").insert({
@@ -687,76 +730,12 @@ serve(async (req) => {
   }
 });
 
-// =========================================================
-// EMAIL CONFERMA ISCRIZIONE
-// =========================================================
+// =====================================================
+// BUILD EMAIL VARIABLES
+// =====================================================
 
-async function sendWelcomeEmail({
-  email,
-  name,
-  competitionName,
-}: {
-  email: string
-  name?: string
-  competitionName?: string
-}) {
-  const apiKey = Deno.env.get("BREVO_API_KEY")
-  const senderEmail = Deno.env.get("BREVO_SENDER_EMAIL")
-  const senderName = Deno.env.get("BREVO_SENDER_NAME") ?? "BoulderCompetition"
-
-  if (!apiKey || !senderEmail) {
-    throw new Error("Credenziali Brevo mancanti")
-  }
-
-  const safeName = name?.trim() || " "
-  const safeCompetition = competitionName?.trim()
-
-  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "api-key": apiKey,
-    },
-    body: JSON.stringify({
-      sender: {
-        name: senderName,
-        email: senderEmail,
-      },
-      to: [
-        {
-          email,
-          name: safeName,
-        },
-      ],
-      subject: `Iscrizione alla gara di boulder`,
-      htmlContent: `
-        <html>
-          <body style="font-family: Arial, sans-serif; line-height: 1.5;">
-            <h2>Ciao ${safeName}!</h2>
-
-            <p>Ti confermiamo che l'iscrizione${
-              safeCompetition ? ` alla gara "${safeCompetition}"` : " alla gara"
-            } è stata eseguita correttamente.</p>
-
-            <p>
-              Scarica l'app BoulderCompetition, entra con la tua mail e con password
-              12345678. Al primo accesso ti verrà chiesto di modificare la password.
-            </p>
-
-            <p>Se non hai richiesto tu l'iscrizione, ignora questa email.</p>
-          </body>
-        </html>
-      `,
-      tags: ["welcome"],
-    }),
-  })
-
-  if (!response.ok) {
-    const detail = await response.text()
-    console.error("Brevo error:", detail)
-    throw new Error("Invio email di iscrizione gara non riuscito")
-  }
-
-  return await response.json()
+function buildEmailVariables(raw: Record<string, unknown>,): Record<string, unknown> {
+  return Object.fromEntries(
+    Object.entries(raw).filter(([, value]) => value !== null),
+  );
 }

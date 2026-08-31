@@ -4,6 +4,7 @@ class RegistrationModel {
 
   final String? profileId;
   final String? categoryId;
+  final String? categoryName;
 
   final int? pettorale;
 
@@ -33,6 +34,7 @@ class RegistrationModel {
     required this.competitionId,
     this.profileId,
     this.categoryId,
+    this.categoryName,
     this.pettorale,
     required this.cognome,
     required this.nome,
@@ -64,6 +66,9 @@ class RegistrationModel {
 
       categoryId:
           json['category_id'] as String?,
+
+      categoryName:
+          json['category_name'] as String?,    
 
       pettorale:
           json['pettorale'] != null

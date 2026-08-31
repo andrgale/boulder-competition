@@ -5,6 +5,7 @@ import '../models/registration_model.dart';
 class RegistrationService {
   final _db = Supabase.instance.client.from('registrations');
 
+  Map<String, String> _categoryNames = {};
   // =====================================================
   // STREAM
   // =====================================================
@@ -15,41 +16,79 @@ class RegistrationService {
         .from('registrations')
         .stream(primaryKey: ['id'])
         .handleError((error) {
-          // Connessione Realtime persa temporaneamente, verrà riconnessa automaticamente
-          debugPrint('Realtime stream error (ignorato): $error');
+          // Connessione Realtime persa temporaneamente,
+          // verrà riconnessa automaticamente
+          debugPrint(
+            'Realtime stream error (ignorato): $error',
+          );
         })
         .map((data) {
-      final filtered = data
-          .where((e) =>
-              e['competition_id'] == competitionId)
-          .toList();
+          final filtered = data
+              .where(
+                (e) =>
+                    e['competition_id'] == competitionId,
+              )
+              .toList();
 
-      filtered.sort((a, b) =>
-          (a['pettorale'] ?? 0)
-              .compareTo(b['pettorale'] ?? 0));
+          filtered.sort(
+            (a, b) => (a['pettorale'] ?? 0)
+                .compareTo(b['pettorale'] ?? 0),
+          );
 
-      return filtered
-          .map((e) => RegistrationModel.fromJson(e))
-          .toList();
-    });
+          return filtered
+              .map(
+                (e) => _registrationFromJson(e),
+              )
+              .toList();
+        });
   }
 
+  Future<void> loadCategoryNames(
+    String competitionId,
+  ) async {
+    final data = await Supabase.instance.client
+        .from('categories')
+        .select('id, nome')
+        .eq('competition_id', competitionId);
+
+    _categoryNames = {
+      for (final row in data)
+        row['id'].toString(): row['nome'].toString(),
+    };
+  }
+
+  RegistrationModel _registrationFromJson(
+    Map<String, dynamic> json,
+  ) {
+    final data = Map<String, dynamic>.from(json);
+
+    final categoryId = data['category_id'];
+
+    data['category_name'] = categoryId != null
+        ? _categoryNames[categoryId.toString()]
+        : null;
+
+    return RegistrationModel.fromJson(data);
+  }
   // =====================================================
   // GET (ordinato per pettorale ASC)
   // =====================================================
   Future<List<RegistrationModel>> getRegistrations(
     String competitionId,
   ) async {
+    await loadCategoryNames(competitionId);
+
     final data = await _db
         .select()
         .eq('competition_id', competitionId)
         .order('pettorale', ascending: true);
 
     return (data as List)
-        .map((e) => RegistrationModel.fromJson(e))
+        .map(
+          (e) => _registrationFromJson(e),
+        )
         .toList();
   }
-
   // =====================================================
   // NEXT PETTORALE (MAX + 1)
   // =====================================================

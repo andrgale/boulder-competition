@@ -460,7 +460,7 @@
       "max": {}
     }
   },
-  "registrationMessageCustom10": "Search bib, lastname or given firstname...",
+  "registrationMessageCustom10": "Search bib, lastname or given firstname or club or category...",
   "@registrationMessageCustom10": {
     "description": "Hint for searching registrations"
   },

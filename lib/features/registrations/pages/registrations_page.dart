@@ -92,10 +92,15 @@ class _RegistrationsPageState
           (r.societa ?? '')
               .toLowerCase();
 
+      final categoria =
+          (r.categoryName ?? '')
+              .toLowerCase();
+
       return nome.contains(query) ||
           cognome.contains(query) ||
           pettorale.contains(query) ||
-          societa.contains(query);
+          societa.contains(query)  ||
+          categoria.contains(query);
     }).toList();
   }
 
@@ -225,7 +230,11 @@ class _RegistrationsPageState
   // REALTIME
   // =====================================================
 
-  void loadRealtime() {
+  Future<void> loadRealtime() async {
+    await service.loadCategoryNames(
+      widget.competitionId,
+    );
+
     service
         .watchRegistrations(
           widget.competitionId,
@@ -494,7 +503,8 @@ class _RegistrationsPageState
 
                       subtitle: Text(
                         '${r.email}'
-                        '${r.societa != null && r.societa!.isNotEmpty ? ' | ${r.societa}' : ''}',
+                        '${r.societa != null && r.societa!.isNotEmpty ? ' | ${r.societa}' : ''}'
+                        '${r.categoryName != null && r.categoryName!.isNotEmpty ? ' | ${r.categoryName}' : ''}',
                       ),
 
                       trailing: Row(
