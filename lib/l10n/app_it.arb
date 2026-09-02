@@ -1932,5 +1932,9 @@
 "athleteMessageCustom109": "Impossibile calcolare la categoria dell’atleta.",
 "@athleteMessageCustom109": { "description": "Impossibile calcolare la categoria dell’atleta." },
 "athleteMessageCustom110": "Nessuna categoria disponibile per età e sesso dell’atleta.",
-"@athleteMessageCustom110": { "description": "Nessuna categoria disponibile per età e sesso dell’atleta." }
+"@athleteMessageCustom110": { "description": "Nessuna categoria disponibile per età e sesso dell’atleta." },
+"rankingMessageCustom59": "Generale",
+"@rankingMessageCustom59": { "description": "Generale" },
+"rankingMessageCustom60": "Categorie",
+"@rankingMessageCustom60": { "description": "Categorie" }
 }  

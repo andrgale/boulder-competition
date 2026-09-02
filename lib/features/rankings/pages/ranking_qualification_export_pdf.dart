@@ -9,6 +9,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
 import '../models/ranking_qualification_model.dart';
+import '../models/ranking_category_model.dart';
 
 import 'package:flutter/services.dart';
 
@@ -23,6 +24,7 @@ class RankingQualificazioneExportPdf {
     required List<RankingQualificationModel> rankings,
     required int nrFinalisti,
     required AppLocalizations l10n,
+    List<RankingCategoryModel> categoryRankings = const [], // NUOVO
   }) async {
     final bytes = await _buildPdf(
       competitionName: competitionName,
@@ -30,6 +32,7 @@ class RankingQualificazioneExportPdf {
       rankings: rankings,
       nrFinalisti: nrFinalisti,
       l10n: l10n,
+      categoryRankings: categoryRankings, // NUOVO
     );
 
     String buildSafeFileName(String value) {
@@ -70,8 +73,8 @@ class RankingQualificazioneExportPdf {
     required List<RankingQualificationModel> rankings,
     required int nrFinalisti,
     required AppLocalizations l10n,
-  }) async {
-    final doc = pw.Document();
+    List<RankingCategoryModel> categoryRankings = const [], // NUOVO
+  }) async {    final doc = pw.Document();
 
     // ── colori (stessa palette di CheckinPdfExport) ───────────
     const headerBg = PdfColor.fromInt(0xFF1E40AF); // blue-800
@@ -145,6 +148,37 @@ class RankingQualificazioneExportPdf {
       grey: grey,
       l10n: l10n,
     );
+
+    // ── NUOVO: una pagina per ogni categoria, se presenti ──────
+    if (categoryRankings.isNotEmpty) {
+      final groups = <String, List<RankingCategoryModel>>{};
+      final order = <String>[];
+      for (final r in categoryRankings) {
+        if (!groups.containsKey(r.categoryId)) {
+          groups[r.categoryId] = [];
+          order.add(r.categoryId);
+        }
+        groups[r.categoryId]!.add(r);
+      }
+
+      for (final catId in order) {
+        final athletes = groups[catId]!;
+        _addCategoryRankingPage(
+          doc: doc,
+          categoryName: athletes.first.categoriaNome,
+          competitionName: competitionName,
+          dtGara: dtGara,
+          athletes: athletes,
+          bold: bold,
+          regular: regular,
+          headerBg: headerBg,
+          rowAlt: rowAlt,
+          grey: grey,
+          indigo: indigo,
+          l10n: l10n,
+        );
+      }
+    }
 
     return doc.save();
   }
@@ -373,6 +407,138 @@ class RankingQualificazioneExportPdf {
         pw.Divider(color: const PdfColor.fromInt(0xFFE5E7EB)),
         pw.SizedBox(height: 4),
       ],
+    );
+  }
+
+  // =========================================================
+  // PAGINA SINGOLA CATEGORIA
+  // =========================================================
+
+  static void _addCategoryRankingPage({
+    required pw.Document doc,
+    required String categoryName,
+    required String competitionName,
+    required DateTime dtGara,
+    required List<RankingCategoryModel> athletes,
+    required pw.Font bold,
+    required pw.Font regular,
+    required PdfColor headerBg,
+    required PdfColor rowAlt,
+    required PdfColor grey,
+    required PdfColor indigo,
+    required AppLocalizations l10n,
+  }) {
+    // ── intestazioni colonne (niente colonna Sesso: già implicito
+    //    nel nome categoria, es. "Allievi Maschile") ────────────
+    final colHeaders = <String>[
+      l10n.rankingMessageCustom45, // '#'
+      l10n.rankingMessageCustom46, // 'Pett.'
+      l10n.rankingMessageCustom47, // 'Cognome e Nome'
+      l10n.rankingMessageCustom49, // 'Società'
+      l10n.rankingMessageCustom32, // 'Top'
+      l10n.rankingMessageCustom33, // 'Punti'
+    ];
+
+    final colWidths = <double>[25, 40, 260, 260, 50, 80];
+
+    final dataRows = athletes.map((r) {
+      final cells = <pw.Widget>[
+        pw.Center(
+          child: pw.Text(
+            '${r.posizione}°',
+            style: pw.TextStyle(font: bold, fontSize: 9, color: grey),
+          ),
+        ),
+        pw.Center(
+          child: pw.Container(
+            width: 26,
+            height: 26,
+            alignment: pw.Alignment.center,
+            decoration: pw.BoxDecoration(
+              color: PdfColors.grey200,
+              borderRadius: pw.BorderRadius.circular(13),
+            ),
+            child: pw.Text(
+              r.pettorale?.toString() ?? '—',
+              style: pw.TextStyle(font: bold, fontSize: 9, color: PdfColors.grey700),
+            ),
+          ),
+        ),
+        pw.Text(r.fullName, style: pw.TextStyle(font: bold, fontSize: 9)),
+        pw.Text(r.societa ?? '', style: pw.TextStyle(font: regular, fontSize: 8)),
+        pw.Center(
+          child: pw.Text('${r.nrTop}', style: pw.TextStyle(font: bold, fontSize: 9)),
+        ),
+        pw.Align(
+          alignment: pw.Alignment.centerRight,
+          child: pw.Text(r.punteggioTotale.toStringAsFixed(2), style: pw.TextStyle(font: bold, fontSize: 9)),
+        ),
+      ];
+      return cells;
+    }).toList();
+
+    doc.addPage(
+      pw.MultiPage(
+        pageFormat: PdfPageFormat.a4.landscape,
+        margin: const pw.EdgeInsets.all(24),
+        header: (ctx) => _buildHeader(
+          competitionName: competitionName,
+          dtGara: dtGara,
+          sectionTitle: categoryName,
+          subtitleColor: indigo,
+          bold: bold,
+          regular: regular,
+          headerBg: headerBg,
+          l10n: l10n,
+        ),
+        footer: (ctx) => _buildFooter(ctx, regular, grey, l10n),
+        build: (ctx) => [
+          pw.Container(
+            margin: const pw.EdgeInsets.only(bottom: 16),
+            padding: const pw.EdgeInsets.all(12),
+            decoration: pw.BoxDecoration(
+              color: const PdfColor.fromInt(0xFFEFF6FF),
+              borderRadius: pw.BorderRadius.circular(8),
+              border: pw.Border.all(color: const PdfColor.fromInt(0xFFBFDBFE)),
+            ),
+            child: pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
+              children: [
+                _statBox(l10n.rankingMessageCustom38, '${athletes.length}', indigo, bold, regular), // 'Atleti'
+              ],
+            ),
+          ),
+          pw.Table(
+            columnWidths: {
+              for (var i = 0; i < colWidths.length; i++) i: pw.FixedColumnWidth(colWidths[i]),
+            },
+            border: pw.TableBorder(
+              horizontalInside: pw.BorderSide(color: const PdfColor.fromInt(0xFFE5E7EB), width: 0.5),
+            ),
+            children: [
+              pw.TableRow(
+                decoration: pw.BoxDecoration(color: headerBg),
+                children: colHeaders
+                    .map(
+                      (h) => pw.Padding(
+                        padding: const pw.EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+                        child: pw.Text(h, style: pw.TextStyle(font: bold, fontSize: 9, color: PdfColors.white), textAlign: pw.TextAlign.center),
+                      ),
+                    )
+                    .toList(),
+              ),
+              ...dataRows.asMap().entries.map((entry) {
+                final i = entry.key;
+                final cells = entry.value;
+                return pw.TableRow(
+                  decoration: pw.BoxDecoration(color: i.isEven ? PdfColors.white : rowAlt),
+                  children: cells.map((cell) => pw.Padding(padding: const pw.EdgeInsets.symmetric(horizontal: 6, vertical: 6), child: cell)).toList(),
+                );
+              }),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

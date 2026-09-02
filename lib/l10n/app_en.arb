@@ -1931,5 +1931,9 @@
 "athleteMessageCustom110": "No category available for the athlete's age and gender.",
 "@athleteMessageCustom110": {
   "description": "No category available for the athlete's age and gender."
-}
+},
+"rankingMessageCustom59": "General",
+"@rankingMessageCustom59": { "description": "General" },
+"rankingMessageCustom60": "Categories",
+"@rankingMessageCustom60": { "description": "Categories" }
 }

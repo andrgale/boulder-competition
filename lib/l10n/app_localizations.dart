@@ -3673,6 +3673,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No category available for the athlete\'s age and gender.'**
   String get athleteMessageCustom110;
+
+  /// General
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get rankingMessageCustom59;
+
+  /// Categories
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get rankingMessageCustom60;
 }
 
 class _AppLocalizationsDelegate

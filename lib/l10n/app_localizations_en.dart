@@ -1989,4 +1989,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get athleteMessageCustom110 =>
       'No category available for the athlete\'s age and gender.';
+
+  @override
+  String get rankingMessageCustom59 => 'General';
+
+  @override
+  String get rankingMessageCustom60 => 'Categories';
 }
