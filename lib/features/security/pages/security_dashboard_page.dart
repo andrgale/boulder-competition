@@ -8,12 +8,25 @@ import '../../../shared/widgets/base_page.dart';
 import '../../../config/app_mode.dart';
 import '../../../main.dart' show bootstrapAppKey;
 
-class SecurityDashboardPage extends StatelessWidget {
+class SecurityDashboardPage extends StatefulWidget {
   const SecurityDashboardPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+  State<SecurityDashboardPage> createState() =>
+      _SecurityDashboardPageState();
+}
+
+class _SecurityDashboardPageState extends State<SecurityDashboardPage> {
+  final ScrollController _cardsScrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _cardsScrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {    final l10n = AppLocalizations.of(context)!;
 
     final cards = [
       _SecurityCard(
@@ -51,6 +64,13 @@ class SecurityDashboardPage extends StatelessWidget {
         route: '/security/email',
         color: Colors.teal,
       ),
+      _SecurityCard(
+        icon: Icons.category_outlined,
+        title: l10n.administrationMessageCustom170, // 'Categorie'
+        description: l10n.administrationMessageCustom171, // 'Gestisci i template delle categorie'
+        route: '/security/categorytemplates',
+        color: Colors.indigo,
+      ),
     ];
 
     return BasePage(
@@ -60,12 +80,30 @@ class SecurityDashboardPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Wrap(
-              spacing: 24,
-              runSpacing: 24,
-              children: cards,
+            Scrollbar(
+              controller: _cardsScrollController,
+              thumbVisibility: true,
+              trackVisibility: true,
+              interactive: true,
+              scrollbarOrientation: ScrollbarOrientation.bottom,
+              child: SingleChildScrollView(
+                controller: _cardsScrollController,
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (var index = 0; index < cards.length; index++) ...[
+                      SizedBox(
+                        width: 180,
+                        child: cards[index],
+                      ),
+                      if (index < cards.length - 1) const SizedBox(width: 12),
+                    ],
+                  ],
+                ),
+              ),
             ),
-
             // =====================================================
             // STRUMENTI DI SVILUPPO — visibili solo con flag di test
             // =====================================================
@@ -243,45 +281,42 @@ class _SecurityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 200,
-      child: Card(
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: const BorderSide(color: Color(0xFFE5E7EB)),
-        ),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(20),
-          onTap: () => context.go(route),
-          child: Padding(
-            padding: const EdgeInsets.all(28),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CircleAvatar(
-                  radius: 28,
-                  backgroundColor: color.withValues(alpha: 0.12),
-                  child: Icon(icon, color: color, size: 28),
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: const BorderSide(color: Color(0xFFE5E7EB)),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () => context.go(route),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                radius: 21,
+                backgroundColor: color.withValues(alpha: 0.12),
+                child: Icon(icon, color: color, size: 22),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 20),
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                description,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  description,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

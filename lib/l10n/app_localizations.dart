@@ -1271,7 +1271,7 @@ abstract class AppLocalizations {
   /// Administration page title: Security
   ///
   /// In en, this message translates to:
-  /// **'Security'**
+  /// **'Security and Templates'**
   String get administrationMessaggeCustom11;
 
   /// Administration page subtitle
@@ -3685,6 +3685,366 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Categories'**
   String get rankingMessageCustom60;
+
+  /// Category template management title
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get administrationMessageCustom170;
+
+  /// Category template management description
+  ///
+  /// In en, this message translates to:
+  /// **'Manage category templates'**
+  String get administrationMessageCustom171;
+
+  /// Category template page title
+  ///
+  /// In en, this message translates to:
+  /// **'Category templates'**
+  String get categoryTemplateMessageCustom1;
+
+  /// Refresh list tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get categoryTemplateMessageCustom2;
+
+  /// New template action
+  ///
+  /// In en, this message translates to:
+  /// **'New template'**
+  String get categoryTemplateMessageCustom3;
+
+  /// Loading error
+  ///
+  /// In en, this message translates to:
+  /// **'Loading error: {error}'**
+  String categoryTemplateMessageCustom4(Object error);
+
+  /// Empty list
+  ///
+  /// In en, this message translates to:
+  /// **'You have not created any category templates yet.'**
+  String get categoryTemplateMessageCustom5;
+
+  /// Name field label
+  ///
+  /// In en, this message translates to:
+  /// **'Category name'**
+  String get categoryTemplateMessageCustom6;
+
+  /// Name validation
+  ///
+  /// In en, this message translates to:
+  /// **'The name is required.'**
+  String get categoryTemplateMessageCustom7;
+
+  /// Cancel dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get categoryTemplateMessageCustom8;
+
+  /// Confirm creation
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get categoryTemplateMessageCustom9;
+
+  /// Edit dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Edit template'**
+  String get categoryTemplateMessageCustom10;
+
+  /// Save edit
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get categoryTemplateMessageCustom11;
+
+  /// Creation confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Template created.'**
+  String get categoryTemplateMessageCustom12;
+
+  /// Creation error
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to create the template: {error}'**
+  String categoryTemplateMessageCustom13(Object error);
+
+  /// Update confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Template updated.'**
+  String get categoryTemplateMessageCustom14;
+
+  /// Update error
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to update the template: {error}'**
+  String categoryTemplateMessageCustom15(Object error);
+
+  /// Delete dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete template'**
+  String get categoryTemplateMessageCustom16;
+
+  /// Deletion confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to delete the \"{nome}\" template?'**
+  String categoryTemplateMessageCustom17(Object nome);
+
+  /// Confirm deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get categoryTemplateMessageCustom18;
+
+  /// Deletion confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Template deleted.'**
+  String get categoryTemplateMessageCustom19;
+
+  /// Deletion error
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to delete the template: {error}'**
+  String categoryTemplateMessageCustom20(Object error);
+
+  /// Update date
+  ///
+  /// In en, this message translates to:
+  /// **'Updated on {data}'**
+  String categoryTemplateMessageCustom21(Object data);
+
+  /// Edit icon tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Edit template'**
+  String get categoryTemplateMessageCustom22;
+
+  /// Delete icon tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Delete template'**
+  String get categoryTemplateMessageCustom23;
+
+  /// Categories icon tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Manage categories'**
+  String get categoryTemplateMessageCustom24;
+
+  /// Categories page title
+  ///
+  /// In en, this message translates to:
+  /// **'Categories - {nomeTemplate}'**
+  String categoryTemplateMessageCustom25(Object nomeTemplate);
+
+  /// Refresh tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get categoryTemplateMessageCustom26;
+
+  /// Create action
+  ///
+  /// In en, this message translates to:
+  /// **'New category'**
+  String get categoryTemplateMessageCustom27;
+
+  /// Loading error
+  ///
+  /// In en, this message translates to:
+  /// **'Loading error: {error}'**
+  String categoryTemplateMessageCustom28(Object error);
+
+  /// Empty list
+  ///
+  /// In en, this message translates to:
+  /// **'There are no categories in this template.'**
+  String get categoryTemplateMessageCustom29;
+
+  /// Sex label
+  ///
+  /// In en, this message translates to:
+  /// **'Sex'**
+  String get categoryTemplateMessageCustom30;
+
+  /// Age label
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get categoryTemplateMessageCustom31;
+
+  /// Cancel dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get categoryTemplateMessageCustom32;
+
+  /// Edit tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Edit category'**
+  String get categoryTemplateMessageCustom33;
+
+  /// Delete dialog title and tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Delete category'**
+  String get categoryTemplateMessageCustom34;
+
+  /// Deletion confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to delete the \"{nome}\" category?'**
+  String categoryTemplateMessageCustom35(Object nome);
+
+  /// Confirm deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get categoryTemplateMessageCustom36;
+
+  /// Deletion confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Category deleted.'**
+  String get categoryTemplateMessageCustom37;
+
+  /// Deletion error
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to delete the category: {error}'**
+  String categoryTemplateMessageCustom38(Object error);
+
+  /// Male sex label
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get categoryTemplateMessageCustom39;
+
+  /// Female sex label
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get categoryTemplateMessageCustom40;
+
+  /// Tooltip / dialog title for duplicating a template
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate template'**
+  String get categoryTemplateMessageCustom41;
+
+  /// Confirmation message when a template was duplicated successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Template duplicated.'**
+  String get categoryTemplateMessageCustom42;
+
+  /// Error message when duplication fails
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to duplicate the template: {error}'**
+  String categoryTemplateMessageCustom43(Object error);
+
+  /// Male sex label
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get categoryTemplateMessageCustom44;
+
+  /// Female sex label
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get categoryTemplateMessageCustom45;
+
+  /// Name field label
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get categoryTemplateMessageCustom46;
+
+  /// Sex field label
+  ///
+  /// In en, this message translates to:
+  /// **'Sex'**
+  String get categoryTemplateMessageCustom47;
+
+  /// Minimum age label
+  ///
+  /// In en, this message translates to:
+  /// **'Age min'**
+  String get categoryTemplateMessageCustom48;
+
+  /// Maximum age label
+  ///
+  /// In en, this message translates to:
+  /// **'Age max'**
+  String get categoryTemplateMessageCustom49;
+
+  /// Order label
+  ///
+  /// In en, this message translates to:
+  /// **'Order'**
+  String get categoryTemplateMessageCustom50;
+
+  /// Validation required
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get categoryTemplateMessageCustom51;
+
+  /// Permission denied message
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have permission to modify categories'**
+  String get categoryTemplateMessageCustom52;
+
+  /// Error when age ranges overlap
+  ///
+  /// In en, this message translates to:
+  /// **'Age overlaps with another category'**
+  String get categoryTemplateMessageCustom53;
+
+  /// Error when min > max
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum age must be less than or equal to maximum age'**
+  String get categoryTemplateMessageCustom54;
+
+  /// New category page title
+  ///
+  /// In en, this message translates to:
+  /// **'New category'**
+  String get categoryTemplateMessageCustom55;
+
+  /// Edit category page title
+  ///
+  /// In en, this message translates to:
+  /// **'Edit category'**
+  String get categoryTemplateMessageCustom56;
+
+  /// Create button
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get categoryTemplateMessageCustom57;
+
+  /// Update button
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get categoryTemplateMessageCustom58;
 }
 
 class _AppLocalizationsDelegate

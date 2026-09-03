@@ -113,12 +113,15 @@ class RouteGuard {
     '/security/profiles/new':       'security.admin',
     '/security/profiles/delete':    'security.admin',
     '/security/email':              'security.admin',
+    '/security/categorytemplates':  'security.admin',
+    '/security/categorytemplates/items': 'security.admin',
+    '/security/categorytemplates/items/form': 'security.admin',
 
     '/check-in': 'checkin.read',
   };
 
   // =======================================================
-  // CHECK AUTH
+  // CHECK AUTH 
   // =======================================================
 
   static bool isLogged() {
@@ -340,6 +343,10 @@ class RouteGuard {
       return '/rankings/top-zone';
     } 
 
+    if (RegExp(r'^/security/categorytemplates/[^/]+/items')
+        .hasMatch(route)) {
+      return '/security/categorytemplates/items';
+    }
 
     // Security routes con segmenti dinamici (attualmente nessuno,
     // ma pronti per future estensioni)

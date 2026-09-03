@@ -1,4 +1,9 @@
 import 'package:boulder_competition/features/athlete/pages/athlete_check_in_scan_page.dart';
+import 'package:boulder_competition/features/categories/models/category_template_item_model.dart';
+import 'package:boulder_competition/features/categories/models/category_template_model.dart';
+import 'package:boulder_competition/features/category_templates/pages/category_template_items_form_page.dart';
+import 'package:boulder_competition/features/category_templates/pages/category_template_items_page.dart';
+import 'package:boulder_competition/features/category_templates/pages/category_template_page.dart';
 import 'package:boulder_competition/features/email/pages/email_templates_page.dart';
 import 'package:boulder_competition/features/registrations/models/registration_model.dart';
 import 'package:boulder_competition/features/security/models/menu_translation_model.dart';
@@ -399,6 +404,8 @@ final GoRouter appRouter = GoRouter(
           },
         ),
 
+
+
 // ======================================================
 // CHECK-IN COMPETIZIONI
 // ======================================================
@@ -752,6 +759,36 @@ final GoRouter appRouter = GoRouter(
           path: '/security/email',
           builder: (context, state) {
             return const EmailTemplatesPage(); 
+          },
+        ),
+
+        GoRoute(
+          path: '/security/categorytemplates',
+          builder: (context, state) {
+            return const CategoryTemplatePage();
+
+          },
+        ),
+
+        GoRoute(
+          path: '/security/categorytemplates/:templateId/items',
+          builder: (context, state) {
+            final template = state.extra! as CategoryTemplateModel;
+            return CategoryTemplateItemsPage(
+              templateId: state.pathParameters['templateId']!,
+              templateName: template.nome,
+            );
+          },
+        ),
+
+        GoRoute(
+          path: '/security/categorytemplates/items/form',
+          builder: (context, state) {
+            final data = state.extra as Map;
+            return CategoryTemplateItemsFormPage(
+              templateId: data['templateId'] as String,
+              item: data['item'] as CategoryTemplateItemModel?,
+            );
           },
         ),
 

@@ -648,7 +648,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Gestisci configurazioni, template e impostazioni di invio email.';
 
   @override
-  String get administrationMessaggeCustom11 => 'Sicurezza';
+  String get administrationMessaggeCustom11 => 'Sicurezza e Modelli';
 
   @override
   String get administrationMessaggeCustom12 =>
@@ -1996,4 +1996,212 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get rankingMessageCustom60 => 'Categorie';
+
+  @override
+  String get administrationMessageCustom170 => 'Categorie';
+
+  @override
+  String get administrationMessageCustom171 =>
+      'Gestisci i template delle categorie';
+
+  @override
+  String get categoryTemplateMessageCustom1 => 'Template categorie';
+
+  @override
+  String get categoryTemplateMessageCustom2 => 'Aggiorna';
+
+  @override
+  String get categoryTemplateMessageCustom3 => 'Nuovo template';
+
+  @override
+  String categoryTemplateMessageCustom4(Object error) {
+    return 'Errore nel caricamento: $error';
+  }
+
+  @override
+  String get categoryTemplateMessageCustom5 =>
+      'Non hai ancora creato template di categoria.';
+
+  @override
+  String get categoryTemplateMessageCustom6 => 'Nome categoria';
+
+  @override
+  String get categoryTemplateMessageCustom7 => 'Il nome è obbligatorio.';
+
+  @override
+  String get categoryTemplateMessageCustom8 => 'Annulla';
+
+  @override
+  String get categoryTemplateMessageCustom9 => 'Crea';
+
+  @override
+  String get categoryTemplateMessageCustom10 => 'Modifica template';
+
+  @override
+  String get categoryTemplateMessageCustom11 => 'Salva';
+
+  @override
+  String get categoryTemplateMessageCustom12 => 'Template creato.';
+
+  @override
+  String categoryTemplateMessageCustom13(Object error) {
+    return 'Impossibile creare il template: $error';
+  }
+
+  @override
+  String get categoryTemplateMessageCustom14 => 'Template aggiornato.';
+
+  @override
+  String categoryTemplateMessageCustom15(Object error) {
+    return 'Impossibile aggiornare il template: $error';
+  }
+
+  @override
+  String get categoryTemplateMessageCustom16 => 'Elimina template';
+
+  @override
+  String categoryTemplateMessageCustom17(Object nome) {
+    return 'Vuoi eliminare il template \"$nome\"?';
+  }
+
+  @override
+  String get categoryTemplateMessageCustom18 => 'Elimina';
+
+  @override
+  String get categoryTemplateMessageCustom19 => 'Template eliminato.';
+
+  @override
+  String categoryTemplateMessageCustom20(Object error) {
+    return 'Impossibile eliminare il template: $error';
+  }
+
+  @override
+  String categoryTemplateMessageCustom21(Object data) {
+    return 'Aggiornato il $data';
+  }
+
+  @override
+  String get categoryTemplateMessageCustom22 => 'Modifica template';
+
+  @override
+  String get categoryTemplateMessageCustom23 => 'Elimina template';
+
+  @override
+  String get categoryTemplateMessageCustom24 => 'Gestisci categorie';
+
+  @override
+  String categoryTemplateMessageCustom25(Object nomeTemplate) {
+    return 'Categorie - $nomeTemplate';
+  }
+
+  @override
+  String get categoryTemplateMessageCustom26 => 'Aggiorna';
+
+  @override
+  String get categoryTemplateMessageCustom27 => 'Nuova categoria';
+
+  @override
+  String categoryTemplateMessageCustom28(Object error) {
+    return 'Errore nel caricamento: $error';
+  }
+
+  @override
+  String get categoryTemplateMessageCustom29 =>
+      'Nessuna categoria nel template.';
+
+  @override
+  String get categoryTemplateMessageCustom30 => 'Sesso';
+
+  @override
+  String get categoryTemplateMessageCustom31 => 'Età';
+
+  @override
+  String get categoryTemplateMessageCustom32 => 'Annulla';
+
+  @override
+  String get categoryTemplateMessageCustom33 => 'Modifica categoria';
+
+  @override
+  String get categoryTemplateMessageCustom34 => 'Elimina categoria';
+
+  @override
+  String categoryTemplateMessageCustom35(Object nome) {
+    return 'Vuoi eliminare la categoria \"$nome\"?';
+  }
+
+  @override
+  String get categoryTemplateMessageCustom36 => 'Elimina';
+
+  @override
+  String get categoryTemplateMessageCustom37 => 'Categoria eliminata.';
+
+  @override
+  String categoryTemplateMessageCustom38(Object error) {
+    return 'Impossibile eliminare la categoria: $error';
+  }
+
+  @override
+  String get categoryTemplateMessageCustom39 => 'Maschio';
+
+  @override
+  String get categoryTemplateMessageCustom40 => 'Femmina';
+
+  @override
+  String get categoryTemplateMessageCustom41 => 'Duplica template';
+
+  @override
+  String get categoryTemplateMessageCustom42 => 'Template duplicato.';
+
+  @override
+  String categoryTemplateMessageCustom43(Object error) {
+    return 'Impossibile duplicare il template: $error';
+  }
+
+  @override
+  String get categoryTemplateMessageCustom44 => 'Maschio';
+
+  @override
+  String get categoryTemplateMessageCustom45 => 'Femmina';
+
+  @override
+  String get categoryTemplateMessageCustom46 => 'Nome';
+
+  @override
+  String get categoryTemplateMessageCustom47 => 'Sesso';
+
+  @override
+  String get categoryTemplateMessageCustom48 => 'Età min';
+
+  @override
+  String get categoryTemplateMessageCustom49 => 'Età max';
+
+  @override
+  String get categoryTemplateMessageCustom50 => 'Ordine';
+
+  @override
+  String get categoryTemplateMessageCustom51 => 'Obbligatorio';
+
+  @override
+  String get categoryTemplateMessageCustom52 =>
+      'Non hai i permessi per modificare le categorie';
+
+  @override
+  String get categoryTemplateMessageCustom53 =>
+      'Sovrapposizione età con un\'altra categoria';
+
+  @override
+  String get categoryTemplateMessageCustom54 =>
+      'Età minima deve essere minore o uguale all\'età massima';
+
+  @override
+  String get categoryTemplateMessageCustom55 => 'Nuova categoria';
+
+  @override
+  String get categoryTemplateMessageCustom56 => 'Modifica categoria';
+
+  @override
+  String get categoryTemplateMessageCustom57 => 'Crea';
+
+  @override
+  String get categoryTemplateMessageCustom58 => 'Aggiorna';
 }
