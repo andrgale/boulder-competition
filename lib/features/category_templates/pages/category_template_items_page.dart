@@ -1,12 +1,11 @@
+import 'dart:collection';
+
 import 'package:boulder_competition/features/categories/models/category_template_item_model.dart';
 import 'package:boulder_competition/features/category_templates/data/category_template_items_service.dart';
-
 import 'package:boulder_competition/features/category_templates/models/category_template_item_sex_l10n.dart';
 import 'package:boulder_competition/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'dart:async';
-
 
 class CategoryTemplateItemsPage extends StatefulWidget {
   const CategoryTemplateItemsPage({
@@ -25,8 +24,7 @@ class CategoryTemplateItemsPage extends StatefulWidget {
 
 class _CategoryTemplateItemsPageState extends State<CategoryTemplateItemsPage> {
   final _service = CategoryTemplateItemsService();
-  final _horizontalController = ScrollController();
-  StreamSubscription<List<CategoryTemplateItemModel>>? _itemsSubscription;
+  final _verticalController = ScrollController();
 
   List<CategoryTemplateItemModel> _items = [];
   bool _loading = true;
@@ -36,68 +34,38 @@ class _CategoryTemplateItemsPageState extends State<CategoryTemplateItemsPage> {
   @override
   void initState() {
     super.initState();
-    _listenToItems();
+    _reload();
   }
 
   @override
   void dispose() {
-    _itemsSubscription?.cancel();
-    _horizontalController.dispose();
+    _verticalController.dispose();
     super.dispose();
   }
 
+  // fingerprint / dedup: safety net se il server restituisce voci "simili"
   String _fingerprint(CategoryTemplateItemModel e) {
-    // fallback se id non esiste
     return '${e.nome}|${e.sesso ?? ''}|${e.etaMin ?? ''}|${e.etaMax ?? ''}';
   }
 
   List<CategoryTemplateItemModel> _uniqueItems(List<CategoryTemplateItemModel> items) {
-    // LinkedHashMap preserva l'ordine d'inserimento
-    final map = <String, CategoryTemplateItemModel>{};
+    final map = LinkedHashMap<String, CategoryTemplateItemModel>();
+    String keyFor(CategoryTemplateItemModel item) {
+      final id = item.id;
+      if (id.isNotEmpty == true) return 'id:$id';
+      return _fingerprint(item);
+    }
+
     for (final item in items) {
-      final key = (item.id.isNotEmpty) ? 'id:${item.id}' : _fingerprint(item);
-      // scrivendo map[key] = item sovrascriviamo eventuali occorrenze precedenti:
-      // questo tiene l'ultima occorrenza (utile quando la lista aggiornata contiene la versione "corretta")
-      map[key] = item;
+      map[keyFor(item)] = item; // sovrascrive precedenti -> mantiene l'ultima occorrenza
     }
     return map.values.toList();
   }
 
-  void _listenToItems() {
-    // se esiste già una subscription, non crearne una nuova
-    if (_itemsSubscription != null) return;
-
-    _itemsSubscription = _service.watchForTemplate(widget.templateId).listen(
-      (items) {
-  //      debugPrint('[stream] received ${items.length} items -> ids: ${items.map((e) => e.id).toList()}');
-        if (!mounted) return;
-        setState(() {
-          _items = _uniqueItems(items);
-          _loading = false;
-        });
-      },
-      onError: (Object error, StackTrace stackTrace) {
-  //      debugPrint('Errore realtime categorie template: $error');
-  //      debugPrintStack(stackTrace: stackTrace);
-        if (!mounted) return;
-        setState(() => _loading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.categoryTemplateMessageCustom28(error.toString())),
-          ),
-        );
-      },
-    );
-  }
-
   Future<void> _reload() async {
-    // cancelliamo da subito la sottoscrizione per evitare emissioni concorrenti
-    await _itemsSubscription?.cancel();
-    _itemsSubscription = null;
-
+    setState(() => _loading = true);
     try {
       final items = await _service.listForTemplate(widget.templateId);
-      //      debugPrint('[reload] fetched ${items.length} items -> ids: ${items.map((e) => e.id).toList()}');
       if (!mounted) return;
       setState(() {
         _items = _uniqueItems(items);
@@ -108,12 +76,9 @@ class _CategoryTemplateItemsPageState extends State<CategoryTemplateItemsPage> {
       setState(() => _loading = false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(l10n.categoryTemplateMessageCustom28(error.toString())),
+          content: Text(l10n.categoryTemplateMessageCustom28(error.toString())), // 'Errore nel caricamento: {error}'
         ),
       );
-    } finally {
-      // riaprire la sottoscrizione dopo il fetch
-      _listenToItems();
     }
   }
 
@@ -137,18 +102,18 @@ class _CategoryTemplateItemsPageState extends State<CategoryTemplateItemsPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: Text(l10n.categoryTemplateMessageCustom34), // 'Elimina categoria' / 'Delete category'
-        content: Text(l10n.categoryTemplateMessageCustom35(item.nome)), // 'Vuoi eliminare la categoria "{nome}"?' / 'Do you want to delete the "{nome}" category?'
+        title: Text(l10n.categoryTemplateMessageCustom34), // 'Elimina categoria'
+        content: Text(l10n.categoryTemplateMessageCustom35(item.nome)), // 'Vuoi eliminare la categoria "{nome}"?'
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
-            child: Text(l10n.categoryTemplateMessageCustom32), // 'Annulla' / 'Cancel'
+            child: Text(l10n.categoryTemplateMessageCustom32), // 'Annulla'
           ),
           FilledButton.icon(
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () => Navigator.pop(dialogContext, true),
             icon: const Icon(Icons.delete_outline),
-            label: Text(l10n.categoryTemplateMessageCustom36), // 'Elimina' / 'Delete'
+            label: Text(l10n.categoryTemplateMessageCustom36), // 'Elimina'
           ),
         ],
       ),
@@ -162,14 +127,14 @@ class _CategoryTemplateItemsPageState extends State<CategoryTemplateItemsPage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(l10n.categoryTemplateMessageCustom37), // 'Categoria eliminata.' / 'Category deleted.'
+          content: Text(l10n.categoryTemplateMessageCustom37), // 'Categoria eliminata.'
         ),
       );
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(l10n.categoryTemplateMessageCustom38(error.toString())), // 'Impossibile eliminare la categoria: {error}' / 'Unable to delete the category: {error}'
+          content: Text(l10n.categoryTemplateMessageCustom38(error.toString())), // 'Impossibile eliminare la categoria: {error}'
         ),
       );
     }
@@ -179,45 +144,63 @@ class _CategoryTemplateItemsPageState extends State<CategoryTemplateItemsPage> {
 
   @override
   Widget build(BuildContext context) {
+    const double maxContentWidth = 840;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.categoryTemplateMessageCustom25(widget.templateName)), // 'Categorie - {nomeTemplate}' / 'Categories - {templateName}'
+        // titleSpacing 0 ci permette di posizionare con flexibleSpace esattamente il titolo
+        titleSpacing: 0,
+        toolbarHeight: kToolbarHeight,
+        flexibleSpace: SafeArea(
+          child: Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: maxContentWidth),
+              child: Center(
+                child: Text(
+                  l10n.categoryTemplateMessageCustom25(widget.templateName), // 'Categorie - {nomeTemplate}'
+                  style: Theme.of(context).appBarTheme.titleTextStyle ??
+                      Theme.of(context).textTheme.titleLarge,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _openCreate,
         icon: const Icon(Icons.add),
-        label: Text(l10n.categoryTemplateMessageCustom27), // 'Nuova categoria' / 'New category'
+        label: Text(l10n.categoryTemplateMessageCustom27), // 'Nuova categoria'
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _items.isEmpty
               ? Center(
-                  child: Text(l10n.categoryTemplateMessageCustom29), // 'Nessuna categoria nel template.' / 'There are no categories in this template.'
+                  child: Text(l10n.categoryTemplateMessageCustom29), // 'Nessuna categoria nel template.'
                 )
-              : Scrollbar(
-                  controller: _horizontalController,
-                  thumbVisibility: true,
-                  trackVisibility: true,
-                  interactive: true,
-                  scrollbarOrientation: ScrollbarOrientation.bottom,
-                  child: SingleChildScrollView(
-                    controller: _horizontalController,
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: SizedBox(
-                      width: 840,
+              : SingleChildScrollView(
+                  // horizontal scroll enabled for safety on narrow/odd monitors
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: ConstrainedBox(
+                      // manteniamo la larghezza ideale (maxContentWidth).
+                      // se lo schermo è più stretto apparirà la scrollbar orizzontale
+                      constraints: const BoxConstraints.tightFor(width: maxContentWidth),
                       child: RefreshIndicator(
                         onRefresh: _reload,
                         child: ListView.separated(
+                          controller: _verticalController,
                           padding: const EdgeInsets.all(16),
                           itemCount: _items.length,
-                          separatorBuilder: (_, _) => const SizedBox(height: 8),
-
+                          separatorBuilder: (_, __) => const SizedBox(height: 8),
                           itemBuilder: (context, index) {
                             final item = _items[index];
 
-                            // Key stabile: preferisci id se presente, altrimenti fallback su fingerprint
-                            final rowKey = (item.id.isNotEmpty)
+                            final rowKey = (item.id.isNotEmpty == true)
                                 ? item.id
                                 : _fingerprint(item);
 
@@ -238,19 +221,18 @@ class _CategoryTemplateItemsPageState extends State<CategoryTemplateItemsPage> {
                                     IconButton(
                                       onPressed: () => _openEdit(item),
                                       icon: const Icon(Icons.edit_outlined),
-                                      tooltip: l10n.categoryTemplateMessageCustom33, // 'Modifica categoria' / 'Edit category'
+                                      tooltip: l10n.categoryTemplateMessageCustom33, // 'Modifica categoria'
                                     ),
                                     IconButton(
                                       onPressed: () => _delete(item),
                                       icon: const Icon(Icons.delete_outline),
-                                      tooltip: l10n.categoryTemplateMessageCustom34, // 'Elimina categoria' / 'Delete category'
+                                      tooltip: l10n.categoryTemplateMessageCustom34, // 'Elimina categoria'
                                     ),
                                   ],
                                 ),
                               ),
                             );
                           },
-
                         ),
                       ),
                     ),
