@@ -1,3 +1,4 @@
+import 'package:boulder_competition/features/rankings/models/ranking_category_top_zone_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/ranking_top_zone_model.dart';
@@ -29,4 +30,28 @@ class RankingTopZoneService {
         )
         .toList();
   }
+    // =========================================================
+  // GET CATEGORY RANKINGS — ordinati per fascia età, categoria,
+  // posizione (già calcolata dalla vista)
+  // =========================================================
+
+  Future<List<RankingCategoryTopZoneModel>> getCategoryRankings(
+    String competitionId,
+  ) async {
+    final data = await supabase
+        .from('v_category_rankings_top_zone')
+        .select()
+        .eq('competition_id', competitionId)
+        .order('categoria_eta_min', ascending: true, nullsFirst: false)
+        .order('categoria_nome', ascending: true)
+        .order('posizione', ascending: true);
+
+    return data
+        .map<RankingCategoryTopZoneModel>(
+          (e) => RankingCategoryTopZoneModel.fromJson(e),
+        )
+        .toList();
+  }
+
+
 }

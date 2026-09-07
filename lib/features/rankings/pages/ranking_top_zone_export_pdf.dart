@@ -11,6 +11,7 @@ import 'package:printing/printing.dart';
 import '../models/ranking_top_zone_model.dart';
 
 import 'package:flutter/services.dart';
+import '../models/ranking_category_top_zone_model.dart';
 
 /// Genera e condivide/stampa il PDF della classifica top e zone.
 class RankingTopZoneExportPdf {
@@ -19,6 +20,7 @@ class RankingTopZoneExportPdf {
     required String competitionName,
     required DateTime dtGara,
     required List<RankingTopZoneModel> rankings,
+    List<RankingCategoryTopZoneModel> categoryRankings = const [],
     required int nrFinalisti,
     required AppLocalizations l10n,
   }) async {
@@ -26,10 +28,10 @@ class RankingTopZoneExportPdf {
       competitionName: competitionName,
       dtGara: dtGara,
       rankings: rankings,
+      categoryRankings: categoryRankings,
       nrFinalisti: nrFinalisti,
       l10n: l10n,
     );
-
     String buildSafeFileName(String value) {
       return value
           .replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_')
@@ -64,10 +66,10 @@ class RankingTopZoneExportPdf {
     required String competitionName,
     required DateTime dtGara,
     required List<RankingTopZoneModel> rankings,
+    List<RankingCategoryTopZoneModel> categoryRankings = const [],
     required int nrFinalisti,
     required AppLocalizations l10n,
-  }) async {
-    final doc = pw.Document();
+  }) async {    final doc = pw.Document();
 
     // colori
     const headerBg = PdfColor.fromInt(0xFF1E40AF); // blue-800
@@ -140,6 +142,36 @@ class RankingTopZoneExportPdf {
       grey: grey,
       l10n: l10n,
     );
+
+      if (categoryRankings.isNotEmpty) {
+      final catGroups = <String, List<RankingCategoryTopZoneModel>>{};
+      final catOrder = <String>[];
+      for (final r in categoryRankings) {
+        final key = r.categoryId ?? '';
+        if (!catGroups.containsKey(key)) {
+          catGroups[key] = [];
+          catOrder.add(key);
+        }
+        catGroups[key]!.add(r);
+      }
+
+      for (final key in catOrder) {
+        final items = catGroups[key]!;
+        _addCategoryRankingPage(
+          doc: doc,
+          title: items.first.categoriaNome ?? '—',
+          competitionName: competitionName,
+          dtGara: dtGara,
+          rankings: items,
+          bold: bold,
+          regular: regular,
+          headerBg: headerBg,
+          rowAlt: rowAlt,
+          grey: grey,
+          l10n: l10n,
+        );
+      }
+    }
 
     return doc.save();
   }
@@ -331,6 +363,148 @@ class RankingTopZoneExportPdf {
                 ],
               ),
             ),
+        ],
+      ),
+    );
+  }
+
+    // =========================================================
+  // PAGINA SINGOLA CATEGORIA
+  // =========================================================
+
+  static void _addCategoryRankingPage({
+    required pw.Document doc,
+    required String title,
+    required String competitionName,
+    required DateTime dtGara,
+    required List<RankingCategoryTopZoneModel> rankings,
+    required pw.Font bold,
+    required pw.Font regular,
+    required PdfColor headerBg,
+    required PdfColor rowAlt,
+    required PdfColor grey,
+    required AppLocalizations l10n,
+  }) {
+    // colonne senza "Sesso": il nome categoria lo implica già
+    final colHeaders = <String>[
+      l10n.rankingMessageCustom45, // '#'
+      l10n.rankingMessageCustom46, // 'Pett.'
+      l10n.rankingMessageCustom47, // 'Cognome e Nome'
+      l10n.rankingMessageCustom49, // 'Società'
+      l10n.rankingMessageCustom32, // 'Top'
+      l10n.rankingMessageCustom51, // 'Tent. Top'
+      l10n.rankingMessageCustom52, // 'Zone'
+      l10n.rankingMessageCustom53, // 'Tent. Zone'
+      l10n.rankingMessageCustom33, // 'Punti'
+    ];
+
+    final colWidths = <double>[20, 35, 190, 190, 40, 55, 40, 55, 65];
+
+    final dataRows = rankings.map((r) {
+      final cells = <pw.Widget>[
+        pw.Center(
+          child: pw.Text(
+            '${r.posizione}°',
+            style: pw.TextStyle(font: bold, fontSize: 9, color: grey),
+          ),
+        ),
+        pw.Center(
+          child: pw.Container(
+            width: 26,
+            height: 26,
+            alignment: pw.Alignment.center,
+            decoration: pw.BoxDecoration(
+              color: PdfColors.grey200,
+              borderRadius: pw.BorderRadius.circular(13),
+            ),
+            child: pw.Text(
+              r.pettorale?.toString() ?? '—',
+              style: pw.TextStyle(font: bold, fontSize: 9, color: PdfColors.grey700),
+            ),
+          ),
+        ),
+        pw.Text(r.fullName, style: pw.TextStyle(font: bold, fontSize: 9)),
+        pw.Text(r.societa ?? '', style: pw.TextStyle(font: regular, fontSize: 8)),
+        pw.Center(
+          child: pw.Text('${r.nrTop}', style: pw.TextStyle(font: bold, fontSize: 9)),
+        ),
+        pw.Center(
+          child: pw.Text('${r.tentativiTop}', style: pw.TextStyle(font: regular, fontSize: 8, color: grey)),
+        ),
+        pw.Center(
+          child: pw.Text('${r.nrZone}', style: pw.TextStyle(font: bold, fontSize: 9)),
+        ),
+        pw.Center(
+          child: pw.Text('${r.tentativiZone}', style: pw.TextStyle(font: regular, fontSize: 8, color: grey)),
+        ),
+        pw.Align(
+          alignment: pw.Alignment.centerRight,
+          child: pw.Text(r.punteggioTotale.toStringAsFixed(2), style: pw.TextStyle(font: bold, fontSize: 9)),
+        ),
+      ];
+      return cells;
+    }).toList();
+
+    doc.addPage(
+      pw.MultiPage(
+        pageFormat: PdfPageFormat.a4.landscape,
+        margin: const pw.EdgeInsets.all(24),
+        header: (ctx) => _buildHeader(
+          competitionName: competitionName,
+          dtGara: dtGara,
+          sectionTitle: title,
+          subtitleColor: headerBg,
+          bold: bold,
+          regular: regular,
+          headerBg: headerBg,
+          l10n: l10n,
+        ),
+        footer: (ctx) => _buildFooter(ctx, regular, grey, l10n),
+        build: (ctx) => [
+          pw.Container(
+            margin: const pw.EdgeInsets.only(bottom: 16),
+            padding: const pw.EdgeInsets.all(12),
+            decoration: pw.BoxDecoration(
+              color: const PdfColor.fromInt(0xFFEFF6FF),
+              borderRadius: pw.BorderRadius.circular(8),
+              border: pw.Border.all(color: const PdfColor.fromInt(0xFFBFDBFE)),
+            ),
+            child: pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
+              children: [
+                _statBox(l10n.rankingMessageCustom38, '${rankings.length}', headerBg, bold, regular), // 'Atleti'
+              ],
+            ),
+          ),
+          pw.Table(
+            columnWidths: {
+              for (var i = 0; i < colWidths.length; i++) i: pw.FixedColumnWidth(colWidths[i]),
+            },
+            border: pw.TableBorder(
+              horizontalInside: pw.BorderSide(color: const PdfColor.fromInt(0xFFE5E7EB), width: 0.5),
+            ),
+            children: [
+              pw.TableRow(
+                decoration: pw.BoxDecoration(color: headerBg),
+                children: colHeaders
+                    .map(
+                      (h) => pw.Padding(
+                        padding: const pw.EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+                        child: pw.Text(h, style: pw.TextStyle(font: bold, fontSize: 8, color: PdfColors.white), textAlign: pw.TextAlign.center),
+                      ),
+                    )
+                    .toList(),
+              ),
+              ...dataRows.asMap().entries.map((entry) {
+                final i = entry.key;
+                final cells = entry.value;
+                return pw.TableRow(
+                  decoration: pw.BoxDecoration(color: i.isEven ? PdfColors.white : rowAlt),
+                  children: cells.map((cell) => pw.Padding(padding: const pw.EdgeInsets.symmetric(horizontal: 5, vertical: 6), child: cell)).toList(),
+                );
+              }),
+            ],
+          ),
         ],
       ),
     );

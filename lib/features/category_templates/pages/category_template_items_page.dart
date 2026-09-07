@@ -1,4 +1,4 @@
-import 'dart:collection';
+//import 'dart:collection';
 
 import 'package:boulder_competition/features/categories/models/category_template_item_model.dart';
 import 'package:boulder_competition/features/category_templates/data/category_template_items_service.dart';
@@ -49,7 +49,7 @@ class _CategoryTemplateItemsPageState extends State<CategoryTemplateItemsPage> {
   }
 
   List<CategoryTemplateItemModel> _uniqueItems(List<CategoryTemplateItemModel> items) {
-    final map = LinkedHashMap<String, CategoryTemplateItemModel>();
+    final map = <String, CategoryTemplateItemModel>{};
     String keyFor(CategoryTemplateItemModel item) {
       final id = item.id;
       if (id.isNotEmpty == true) return 'id:$id';
@@ -196,7 +196,7 @@ class _CategoryTemplateItemsPageState extends State<CategoryTemplateItemsPage> {
                           controller: _verticalController,
                           padding: const EdgeInsets.all(16),
                           itemCount: _items.length,
-                          separatorBuilder: (_, __) => const SizedBox(height: 8),
+                          separatorBuilder: (_, _) => const SizedBox(height: 8),
                           itemBuilder: (context, index) {
                             final item = _items[index];
 

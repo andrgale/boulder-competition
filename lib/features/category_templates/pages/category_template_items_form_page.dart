@@ -190,7 +190,7 @@ class _CategoryTemplateItemsFormPageState
               ),
 
               DropdownButtonFormField<String>(
-                value: sesso,
+                initialValue: sesso,
                 items: [
                   DropdownMenuItem(value: 'M', child: Text(l10n.categoryTemplateMessageCustom44)), // 'Maschio'
                   DropdownMenuItem(value: 'F', child: Text(l10n.categoryTemplateMessageCustom45)), // 'Femmina'
