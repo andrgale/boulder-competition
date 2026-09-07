@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:boulder_competition/features/rankings/models/ranking_category_finale_model.dart';
 import 'package:boulder_competition/features/rankings/models/ranking_sex_model_l10n.dart';
 import 'package:boulder_competition/l10n/app_localizations.dart';
 import 'package:path_provider/path_provider.dart';
@@ -16,18 +17,20 @@ import 'package:flutter/services.dart';
 /// Ora tutte le stringhe sono localizzabili tramite AppLocalizations.
 class RankingFinalExportPdf {
   /// Apre il dialog di stampa/condivisione nativo.
-  static Future<void> exportAndShare({
-    required String competitionName,
-    required DateTime dtGara,
-    required List<RankingFinalModel> rankings,
-    required AppLocalizations l10n,
-  }) async {
-    final bytes = await _buildPdf(
-      competitionName: competitionName,
-      dtGara: dtGara,
-      rankings: rankings,
-      l10n: l10n,
-    );
+    static Future<void> exportAndShare({
+      required String competitionName,
+      required DateTime dtGara,
+      required List<RankingFinalModel> rankings,
+      required AppLocalizations l10n,
+      List<RankingCategoryFinaleModel> categoryRankings = const [],
+    }) async {
+      final bytes = await _buildPdf(
+        competitionName: competitionName,
+        dtGara: dtGara,
+        rankings: rankings,
+        l10n: l10n,
+        categoryRankings: categoryRankings,
+      );
 
     String buildSafeFileName(String value) {
       return value
@@ -66,6 +69,7 @@ class RankingFinalExportPdf {
     required DateTime dtGara,
     required List<RankingFinalModel> rankings,
     required AppLocalizations l10n,
+    List<RankingCategoryFinaleModel> categoryRankings = const [],
   }) async {
     final doc = pw.Document();
 
@@ -148,8 +152,174 @@ class RankingFinalExportPdf {
       bronze: bronze,
       l10n: l10n,
     );
+  // ── pagine per categoria (una per categoria, se presenti) ──
+    if (categoryRankings.isNotEmpty) {
+      final grouped = <String, List<RankingCategoryFinaleModel>>{};
+      for (final r in categoryRankings) {
+        grouped.putIfAbsent(r.categoryId, () => []).add(r);
+      }
+      for (final group in grouped.values) {
+        _addCategoryRankingPage(
+          doc: doc,
+          title: group.first.categoriaNome,
+          competitionName: competitionName,
+          dtGara: dtGara,
+          rankings: group,
+          bold: bold,
+          regular: regular,
+          headerBg: headerBg,
+          rowAlt: rowAlt,
+          grey: grey,
+          gold: gold,
+          silver: silver,
+          bronze: bronze,
+          l10n: l10n,
+        );
+      }
+    }
 
     return doc.save();
+  }
+
+
+  static void _addCategoryRankingPage({
+    required pw.Document doc,
+    required String title,
+    required String competitionName,
+    required DateTime dtGara,
+    required List<RankingCategoryFinaleModel> rankings,
+    required pw.Font bold,
+    required pw.Font regular,
+    required PdfColor headerBg,
+    required PdfColor rowAlt,
+    required PdfColor grey,
+    required PdfColor gold,
+    required PdfColor silver,
+    required PdfColor bronze,
+    required AppLocalizations l10n,
+  }) {
+    // stessi header, senza colonna Sesso
+    final colHeaders = <String>[
+      l10n.rankingMessageCustom45, // '#'
+      l10n.rankingMessageCustom46, // 'Pett.'
+      l10n.rankingMessageCustom47, // 'Cognome e Nome'
+      l10n.rankingMessageCustom49, // 'Società'
+      l10n.rankingMessageCustom32, // 'Top'
+      l10n.rankingMessageCustom51, // 'Tent. Top'
+      l10n.rankingMessageCustom52, // 'Zone'
+      l10n.rankingMessageCustom53, // 'Tent. Zone'
+    ];
+
+    final colWidths = <double>[25, 40, 240, 190, 45, 60, 45, 60];
+
+    PdfColor? podiumColor(int position) {
+      switch (position) {
+        case 1:
+          return gold;
+        case 2:
+          return silver;
+        case 3:
+          return bronze;
+        default:
+          return null;
+      }
+    }
+
+    pw.Widget pettoraleCell(int? pettorale, PdfColor? color) {
+      return pw.Center(
+        child: pw.Container(
+          width: 26,
+          height: 26,
+          alignment: pw.Alignment.center,
+          decoration: pw.BoxDecoration(
+            color: color ?? PdfColors.grey200,
+            borderRadius: pw.BorderRadius.circular(13),
+          ),
+          child: pw.Text(
+            pettorale?.toString() ?? '—',
+            style: pw.TextStyle(font: bold, fontSize: 9, color: color != null ? PdfColors.white : PdfColors.grey700),
+          ),
+        ),
+      );
+    }
+
+    final dataRows = rankings.asMap().entries.map((entry) {
+      final i = entry.key;
+      final r = entry.value;
+      final position = r.posizione; // già calcolata dalla vista
+      final color = podiumColor(position);
+
+      final cells = <pw.Widget>[
+        pw.Center(child: pw.Text('$position°', style: pw.TextStyle(font: bold, fontSize: 9, color: grey))),
+        pettoraleCell(r.pettorale, color),
+        pw.Text(r.fullName, style: pw.TextStyle(font: bold, fontSize: 9)),
+        pw.Text(r.societa ?? '', style: pw.TextStyle(font: regular, fontSize: 8)),
+        pw.Center(child: pw.Text('${r.nrTop}', style: pw.TextStyle(font: bold, fontSize: 9))),
+        pw.Center(child: pw.Text('${r.tentativiTop}', style: pw.TextStyle(font: regular, fontSize: 8, color: grey))),
+        pw.Center(child: pw.Text('${r.nrZone}', style: pw.TextStyle(font: bold, fontSize: 9))),
+        pw.Center(child: pw.Text('${r.tentativiZone}', style: pw.TextStyle(font: regular, fontSize: 8, color: grey))),
+      ];
+
+      return MapEntry(i, cells);
+    }).toList();
+
+    doc.addPage(
+      pw.MultiPage(
+        pageFormat: PdfPageFormat.a4.landscape,
+        margin: const pw.EdgeInsets.all(24),
+        header: (ctx) => _buildHeader(
+          competitionName: competitionName,
+          dtGara: dtGara,
+          sectionTitle: title,
+          subtitleColor: const PdfColor.fromInt(0xFF4F46E5),
+          bold: bold,
+          regular: regular,
+          headerBg: headerBg,
+          l10n: l10n,
+        ),
+        footer: (ctx) => _buildFooter(ctx, regular, grey, l10n),
+        build: (ctx) => [
+          pw.Container(
+            margin: const pw.EdgeInsets.only(bottom: 16),
+            padding: const pw.EdgeInsets.all(12),
+            decoration: pw.BoxDecoration(
+              color: const PdfColor.fromInt(0xFFEFF6FF),
+              borderRadius: pw.BorderRadius.circular(8),
+              border: pw.Border.all(color: const PdfColor.fromInt(0xFFBFDBFE)),
+            ),
+            child: pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
+              children: [
+                _statBox(l10n.rankingMessageCustom38, '${rankings.length}', const PdfColor.fromInt(0xFF4F46E5), bold, regular),
+              ],
+            ),
+          ),
+          pw.Table(
+            columnWidths: {for (var i = 0; i < colWidths.length; i++) i: pw.FixedColumnWidth(colWidths[i])},
+            border: pw.TableBorder(horizontalInside: pw.BorderSide(color: const PdfColor.fromInt(0xFFE5E7EB), width: 0.5)),
+            children: [
+              pw.TableRow(
+                decoration: pw.BoxDecoration(color: headerBg),
+                children: colHeaders
+                    .map((h) => pw.Padding(
+                          padding: const pw.EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+                          child: pw.Text(h, style: pw.TextStyle(font: bold, fontSize: 9, color: PdfColors.white), textAlign: pw.TextAlign.center),
+                        ))
+                    .toList(),
+              ),
+              ...dataRows.map((entry) {
+                final i = entry.key;
+                final cells = entry.value;
+                return pw.TableRow(
+                  decoration: pw.BoxDecoration(color: i.isEven ? PdfColors.white : rowAlt),
+                  children: cells.map((cell) => pw.Padding(padding: const pw.EdgeInsets.symmetric(horizontal: 6, vertical: 6), child: cell)).toList(),
+                );
+              }),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   // =========================================================

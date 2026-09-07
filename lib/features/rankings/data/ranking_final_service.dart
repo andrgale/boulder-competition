@@ -1,3 +1,4 @@
+import 'package:boulder_competition/features/rankings/models/ranking_category_finale_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/ranking_final_model.dart';
@@ -28,6 +29,24 @@ class RankingFinalService {
     return data
         .map<RankingFinalModel>(
           (e) => RankingFinalModel.fromJson(e),
+        )
+        .toList();
+  }
+
+  Future<List<RankingCategoryFinaleModel>> getCategoryRankings(
+    String competitionId,
+  ) async {
+    final data = await supabase
+        .from('v_category_rankings_finale')
+        .select()
+        .eq('competition_id', competitionId)
+        .order('categoria_eta_min', ascending: true, nullsFirst: false)
+        .order('categoria_nome', ascending: true)
+        .order('posizione', ascending: true);
+
+    return data
+        .map<RankingCategoryFinaleModel>(
+          (e) => RankingCategoryFinaleModel.fromJson(e),
         )
         .toList();
   }

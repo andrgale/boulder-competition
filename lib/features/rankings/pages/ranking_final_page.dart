@@ -1,3 +1,4 @@
+import 'package:boulder_competition/features/rankings/models/ranking_category_finale_model.dart';
 import 'package:boulder_competition/features/rankings/models/ranking_sex_model_l10n.dart';
 import 'package:flutter/material.dart';
 
@@ -103,132 +104,344 @@ class _RankingFinalPageState extends State<RankingFinalPage> {
     setState(() => _exporting = true);
 
     try {
+      List<RankingCategoryFinaleModel> categoryRankings = [];
+      if (hasCategories) {
+        categoryRankings = await service.getCategoryRankings(widget.competitionId);
+      }
+
       await RankingFinalExportPdf.exportAndShare(
         competitionName: widget.competitionName,
-        dtGara: DateTime.now(), // sostituisci con la data gara reale se disponibile
+        dtGara: DateTime.now(),
         rankings: rankings,
-        l10n:l10n // usa la lista completa, non filtered
+        l10n: l10n,
+        categoryRankings: categoryRankings,
       );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.rankingMessageCustom11(e.toString()))), // 'Errore esportazione PDF: {error}'
+        SnackBar(content: Text(AppLocalizations.of(context)!.rankingMessageCustom11(e.toString()))),
       );
     } finally {
       if (mounted) setState(() => _exporting = false);
     }
   }
-
   // =========================================================
   // BUILD
   // =========================================================
+    bool get hasCategories => rankings.any((r) => r.categoryId != null);
+
+    @override
+    Widget build(BuildContext context) {
+      return DefaultTabController(
+        length: hasCategories ? 2 : 1,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(l10n.rankingMessageCustom1(widget.competitionName)),
+            bottom: hasCategories
+                ? TabBar(
+                    tabs: [
+                      Tab(text: l10n.rankingMessageCustom59), // 'Generale'
+                      Tab(text: l10n.rankingMessageCustom60), // 'Categorie'
+                    ],
+                  )
+                : null,
+            actions: [
+              if (!loading)
+                _exporting
+                    ? const Padding(
+                        padding: EdgeInsets.all(16),
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        ),
+                      )
+                    : IconButton(
+                        tooltip: l10n.rankingMessageCustom2,
+                        icon: const Icon(Icons.picture_as_pdf),
+                        onPressed: _exportPdf,
+                      ),
+            ],
+          ),
+          body: loading
+              ? const Center(child: CircularProgressIndicator())
+              : hasCategories
+                  ? TabBarView(
+                      children: [
+                        _buildGeneralTab(),
+                        _CategoryRankingsTab(
+                          service: service,
+                          competitionId: widget.competitionId,
+                        ),
+                      ],
+                    )
+                  : _buildGeneralTab(),
+        ),
+      );
+    }
+
+    Widget _buildGeneralTab() {
+      return Column(
+        children: [
+          _RankingFilterBar(
+            current: _filter,
+            onChanged: (f) => setState(() => _filter = f),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+            child: TextField(
+              controller: searchController,
+              decoration: InputDecoration(
+                hintText: l10n.rankingMessageCustom3,
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: searchController.text.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          searchController.clear();
+                          setState(() {});
+                        },
+                      )
+                    : null,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              onChanged: (_) => setState(() {}),
+            ),
+          ),
+          Expanded(
+            child: filtered.isEmpty
+                ? Center(child: Text(l10n.rankingMessageCustom4))
+                : LayoutBuilder(
+                    builder: (context, constraints) {
+                      const minContentWidth = 780.0;
+                      final contentWidth = constraints.maxWidth > minContentWidth
+                          ? constraints.maxWidth
+                          : minContentWidth;
+
+                      return Scrollbar(
+                        controller: _horizontalController,
+                        thumbVisibility: true,
+                        notificationPredicate: (notif) => notif.metrics.axis == Axis.horizontal,
+                        child: SingleChildScrollView(
+                          controller: _horizontalController,
+                          scrollDirection: Axis.horizontal,
+                          child: SizedBox(
+                            width: contentWidth,
+                            height: constraints.maxHeight,
+                            child: ListView.builder(
+                              itemCount: filtered.length,
+                              itemBuilder: (_, i) => _RankingTile(
+                                ranking: filtered[i],
+                                position: i + 1,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      );
+    }
+}
+
+class _CategoryRankingsTab extends StatefulWidget {
+  final RankingFinalService service;
+  final String competitionId;
+
+  const _CategoryRankingsTab({
+    required this.service,
+    required this.competitionId,
+  });
+
+  @override
+  State<_CategoryRankingsTab> createState() => _CategoryRankingsTabState();
+}
+
+class _CategoryRankingsTabState extends State<_CategoryRankingsTab> {
+  List<RankingCategoryFinaleModel> categoryRankings = [];
+  bool loading = true;
+
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    try {
+      final data = await widget.service.getCategoryRankings(widget.competitionId);
+      if (!mounted) return;
+      setState(() {
+        categoryRankings = data;
+        loading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => loading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.rankingMessageCustom10(e.toString()))),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          l10n.rankingMessageCustom1(widget.competitionName), // 'Classifica finale - {competition}'
-        ),
-        actions: [
-          if (!loading)
-            _exporting
-                ? const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    ),
-                  )
-                : IconButton(
-                    tooltip: l10n.rankingMessageCustom2, // 'Esporta PDF'
-                    icon: const Icon(Icons.picture_as_pdf),
-                    onPressed: _exportPdf,
-                  ),
-        ],
-      ),
-      body: loading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                // ── filtri classifica ──────────────────────
-                _RankingFilterBar(
-                  current: _filter,
-                  onChanged: (f) => setState(() => _filter = f),
-                ),
+    if (loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (categoryRankings.isEmpty) {
+      return Center(child: Text(l10n.rankingMessageCustom4));
+    }
 
-                // ── ricerca ─────────────────────────────────
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
-                  child: TextField(
-                    controller: searchController,
-                    decoration: InputDecoration(
-                      hintText: l10n.rankingMessageCustom3, // 'Cerca pettorale, cognome, nome...'
-                      prefixIcon: const Icon(Icons.search),
-                      suffixIcon: searchController.text.isNotEmpty
-                          ? IconButton(
-                              icon: const Icon(Icons.clear),
-                              onPressed: () {
-                                searchController.clear();
-                                setState(() {});
-                              },
-                            )
-                          : null,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    onChanged: (_) => setState(() {}),
-                  ),
-                ),
+    // raggruppa per categoryId mantenendo l'ordine restituito dalla query
+    final grouped = <String, List<RankingCategoryFinaleModel>>{};
+    for (final r in categoryRankings) {
+      grouped.putIfAbsent(r.categoryId, () => []).add(r);
+    }
 
-                // ── lista classifica ───────────────────────
-                Expanded(
-                  child: filtered.isEmpty
-                      ? Center(
-                          child: Text(l10n.rankingMessageCustom4), // 'Nessun atleta in classifica'
-                        )
-                      : LayoutBuilder(
-                          builder: (context, constraints) {
-                            const minContentWidth = 780.0;
-                            final contentWidth =
-                                constraints.maxWidth > minContentWidth
-                                    ? constraints.maxWidth
-                                    : minContentWidth;
+    return ListView.builder(
+      itemCount: grouped.length,
+      itemBuilder: (_, groupIndex) {
+        final entries = grouped.entries.toList();
+        final group = entries[groupIndex].value;
+        final first = group.first;
 
-                            return Scrollbar(
-                              controller: _horizontalController, // keep consistent variable name
-                              thumbVisibility: true,
-                              notificationPredicate: (notif) =>
-                                  notif.metrics.axis == Axis.horizontal,
-                              child: SingleChildScrollView(
-                                controller: _horizontalController,
-                                scrollDirection: Axis.horizontal,
-                                child: SizedBox(
-                                  width: contentWidth,
-                                  height: constraints.maxHeight,
-                                  child: ListView.builder(
-                                    itemCount: filtered.length,
-                                    itemBuilder: (_, i) => _RankingTile(
-                                      ranking: filtered[i],
-                                      position: i + 1,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                ),
-              ],
-            ),
+        return Padding(
+          padding: EdgeInsets.only(top: groupIndex == 0 ? 8 : 20, bottom: 4),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _CategoryHeader(
+                nome: first.categoriaNome,
+                etaMin: first.categoriaEtaMin,
+                etaMax: first.categoriaEtaMax,
+              ),
+              ...group.map(
+                (r) => _CategoryRankingTile(ranking: r, position: r.posizione),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
+
+class _CategoryHeader extends StatelessWidget {
+  final String nome;
+  final int? etaMin;
+  final int? etaMax;
+
+  const _CategoryHeader({required this.nome, this.etaMin, this.etaMax});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.indigo.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.indigo.withValues(alpha: 0.3)),
+        ),
+        child: Text(
+          nome,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+            color: Colors.indigo.shade700,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// tile analoga a _RankingTile ma senza badge podio/finalisti
+class _CategoryRankingTile extends StatelessWidget {
+  final RankingCategoryFinaleModel ranking;
+  final int position;
+
+  const _CategoryRankingTile({required this.ranking, required this.position});
+
+  @override
+  Widget build(BuildContext context) {
+    final r = ranking;
+
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: const BorderSide(color: Color(0xFFE5E7EB)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 28,
+              child: Text(
+                '$position°',
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.grey.shade600),
+              ),
+            ),
+            const SizedBox(width: 8),
+            CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.grey.shade100,
+              child: Text(
+                r.pettorale?.toString() ?? '—',
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.grey.shade700),
+              ),
+            ),
+            // ── dati atleta ───────────────────────────────
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(r.fullName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                  const SizedBox(height: 2),
+                  Text(
+                    [
+                      r.localizedSessoLabel(context),
+                      if (r.societa != null && r.societa!.isNotEmpty) r.societa!,
+                    ].join(' · '),
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('${r.nrTop}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.teal.shade700)),
+                Text('(${r.tentativiTop})', style: TextStyle(fontSize: 10, color: Colors.teal.shade700)),
+              ],
+            ),
+            const SizedBox(width: 16),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('${r.nrZone}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.indigo.shade700)),
+                Text('(${r.tentativiZone})', style: TextStyle(fontSize: 10, color: Colors.indigo.shade700)),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
 // ──────────────────────────────────────────────────────────────
 // FILTER BAR — Maschile / Femminile / Generale
