@@ -62,3 +62,5 @@ SupaBase_db.md
 Supabase_mail.txt
 Messaggi_L10n.txt
 ollama.txt
+Save_Restore_DB.md
+.env 
