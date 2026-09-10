@@ -88,7 +88,7 @@ class SearchService {
             .from('competitions')
             // ← aggiunte le colonne necessarie ai controlli iscrizioni/turni
             .select(
-                'id, descrizione, fl_iscrizioni_chiuse, nr_max_registrations, '
+                'id, descrizione, dt_gara, fl_iscrizioni_chiuse, nr_max_registrations, '
                 'is_turn, nr_max_first_turn, nr_max_second_turn')
             .inFilter('id', competitionIds)
         : <Map<String, dynamic>>[];
@@ -110,6 +110,7 @@ class SearchService {
       final competitionId = r['competition_id'] as String? ?? '';
       final comp = compMap[competitionId];
       final competitionName = comp?['descrizione'] as String? ?? '';
+      final competitionDate = comp?['dt_gara'] as String? ?? '';
       final flIscrizioniChiuse =
           comp?['fl_iscrizioni_chiuse'] as bool? ?? false;
       final nrMaxRegistrations =
@@ -129,6 +130,7 @@ class SearchService {
         extra: {
           'competitionId': competitionId,
           'competitionName': competitionName,
+          'competitionDate': competitionDate,
           'flIscrizioniChiuse': flIscrizioniChiuse,
           'nrMaxRegistrations': nrMaxRegistrations,
           'isTurn': isTurn, // ← aggiunto

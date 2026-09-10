@@ -482,8 +482,12 @@ final GoRouter appRouter = GoRouter(
               competitionName =
                   extra['competitionName'] as String? ?? '';
 
-              competitionDate =
-                  extra['competitionDate'] as DateTime?;
+              final rawDate = extra['competitionDate'];
+              if (rawDate is DateTime) {
+                competitionDate = rawDate;
+              } else if (rawDate is String) {
+                competitionDate = DateTime.tryParse(rawDate);
+              }
 
               flIscrizioniChiuse =
                   extra['flIscrizioniChiuse'] as bool? ?? false;
