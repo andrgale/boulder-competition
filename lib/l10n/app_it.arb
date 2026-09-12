@@ -2052,5 +2052,56 @@
   "categoryTemplateMessageCustom57": "Crea",
   "@categoryTemplateMessageCustom57": {"description": "Bottone crea"},
   "categoryTemplateMessageCustom58": "Aggiorna",
-  "@categoryTemplateMessageCustom58": {"description": "Bottone aggiorna"}
+  "@categoryTemplateMessageCustom58": {"description": "Bottone aggiorna"},
+   "registrationMessageCustom42": "Invio mail di benvenuto",
+  "@registrationMessageCustom42": {
+    "description": "Invio mail di benvenuto"
+  },
+  "registrationMessageCustom43": "Vuoi inviare le mail di benvenuto agli atleti ?",
+  "@registrationMessageCustom43": {
+    "description": "Vuoi inviare le mail di benvenuto agli atleti ?"
+  },
+  "registrationMessageCustom44": "Si",
+  "@registrationMessageCustom44": {
+    "description": "Si"
+  },
+  "registrationMessageCustom45": "No",
+  "@registrationMessageCustom45": {
+    "description": "No"
+  },
+  "permissionDeniedTitle": "Permesso negato",
+  "@permissionDeniedTitle": {"description": "Titolo messaggio permesso negato"},
+  "permissionDeniedMessage": "Non hai i permessi per effettuare questa azione",
+  "@permissionDeniedMessage": {"description": "Messaggio permesso negato"},
+  "permissionOk": "OK",
+  "@permissionOk": {"description": "Bottone OK"},
+  "registrationMessageCustom46": "Elimina iscrizione",
+  "@registrationMessageCustom46": {"description": " Elimina iscrizione"},
+  "registrationMessageCustom47": "Eliminare {cognome} {nome} dall'iscrizione alla competizione {competitionName}? ",
+  "@registrationMessageCustom47": {
+    "description": "Titolo della pagina di eliminazione iscrizione",
+    "placeholders": {
+      "cognome": {},
+      "nome": {},
+      "competitionName": {}
+    }
+  },
+  "boulderMessageCustom37": "Elimina boulder",
+  "@boulderMessageCustom37": {
+    "description": "Elimina boulder"
+  },
+  "boulderMessageCustom38": "Sei sicuro di voler eliminare il boulder {numero}?",
+  "@boulderMessageCustom38": {
+    "description": "Conferma eliminazione boulder",
+        "placeholders": {
+      "numero": {}
+    }
+  },
+  "boulderMessageCustom39": "Impossibile eliminare: sono presenti ascese registrate...",
+  "@boulderMessageCustom39": {
+    "description": "Messaggio di errore quando si tenta di eliminare un boulder con ascese associate"
+  },
+  "rankingMessageCustom61": "Non hai i permessi per modificare lo stato",
+  "@rankingMessageCustom61": { "description": "Non hai i permessi per modificare lo stato" }
+
 }

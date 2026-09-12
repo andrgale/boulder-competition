@@ -1,3 +1,4 @@
+import 'package:boulder_competition/core/services/permission_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -50,6 +51,8 @@ class _RegistrationsPageState
   List<RegistrationModel> registrations = [];
 
   bool loading = true;
+  bool canWrite = false;
+  bool checkingPermission = true;
 
   final searchController = TextEditingController();
 
@@ -64,6 +67,7 @@ class _RegistrationsPageState
     super.initState();
 
     loadRealtime();
+    checkPermission();
   }
 
   List<RegistrationModel> filteredRegistrations() {
@@ -116,32 +120,61 @@ class _RegistrationsPageState
 
   int get secondTurnCount =>
       registrations.where((r) => r.isSecondTurn).length;      
-// =====================================================
-// IMPORT CSV
-// =====================================================
+
+  // =====================================================
+  // DIALOG SCELTA INVIO MAIL
+  // =====================================================
+
+  Future<bool?> _chiediInvioMailBenvenuto() async {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // obbliga la scelta, niente tap fuori
+      builder: (ctx) {
+        return AlertDialog(
+          title: Text(l10n.registrationMessageCustom42), // es. 'Invio mail di benvenuto'
+          content: Text(l10n.registrationMessageCustom43), // es. 'Vuoi inviare le mail di benvenuto agli atleti ?'
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(false),
+              child: Text(l10n.registrationMessageCustom45), // 'No'
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(ctx).pop(true),
+              child: Text(l10n.registrationMessageCustom44), // 'Sì'
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // =====================================================
+  // IMPORT CSV
+  // =====================================================
 
   Future<void> importCsv() async {
-    // ── guardia: non importa se le iscrizioni sono chiuse ────
     if (widget.flIscrizioniChiuse || isFull) return;
 
+    // ── nuova guardia: scelta obbligata prima del file picker ──
+    final bool? sendWelcomeEmails = await _chiediInvioMailBenvenuto();
+
+    // niente valore di default: se l'utente chiude il dialog senza
+    // scegliere (es. back button Android), non si procede
+    if (sendWelcomeEmails == null) return;
+
     try {
-      final result =
-          await FilePicker.platform.pickFiles(
+      final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['csv'],
       );
 
       if (result == null) return;
 
-      final path =
-          result.files.single.path;
-
+      final path = result.files.single.path;
       if (path == null) return;
 
       final file = File(path);
-
-      final csvContent =
-          await file.readAsString();
+      final csvContent = await file.readAsString();
 
       if (!mounted) return;
 
@@ -149,32 +182,20 @@ class _RegistrationsPageState
         loading = true;
       });
 
-      // debugPrint(
-      //   'IMPORT CSV competitionId=${widget.competitionId}',
-      // );
-
-      final response =
-          await Supabase.instance.client.functions
-              .invoke(
+      final response = await Supabase.instance.client.functions.invoke(
         'import_competition_csv',
         body: {
-          'competition_id':
-              widget.competitionId,
+          'competition_id': widget.competitionId,
           'csv_content': csvContent,
+          'send_welcome_emails': sendWelcomeEmails, 
         },
       );
 
       if (!mounted) return;
 
-      // debugPrint(response.data.toString());
-
       if (response.data != null) {
-        final inserted =
-            response.data['inserted'] ?? 0;
-
-        final discarded =
-            response.data['discarded'] ?? 0;
-
+        final inserted = response.data['inserted'] ?? 0;
+        final discarded = response.data['discarded'] ?? 0;
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -182,7 +203,7 @@ class _RegistrationsPageState
               l10n.registrationMessageCustom1(
                 inserted.toString(),
                 discarded.toString(),
-              ), // 'Import completato - Inseriti: $inserted Scartati: $discarded'
+              ),
             ),
           ),
         );
@@ -191,14 +212,8 @@ class _RegistrationsPageState
       }
     } catch (e) {
       if (!mounted) return;
-
-      ScaffoldMessenger.of(context)
-          .showSnackBar(
-        SnackBar(
-          content: Text(
-            'Error import CSV: $e',
-          ),
-        ),
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error import CSV: $e')),
       );
     } finally {
       if (mounted) {
@@ -225,7 +240,23 @@ class _RegistrationsPageState
       loading = false;
     });
   }
+  // =====================================================
+  // CONTROLLO PERMESSI CANCELLAZIONE
+  // =====================================================
 
+  Future<void> checkPermission() async {
+    final allowed =
+        await PermissionService.hasPermission(
+      'registration.delete',
+    );
+
+    if (!mounted) return;
+
+    setState(() {
+      canWrite = allowed;
+      checkingPermission = false;
+    });
+  }
   // =====================================================
   // REALTIME
   // =====================================================
@@ -254,10 +285,59 @@ class _RegistrationsPageState
   // =====================================================
 
   Future<void> deleteRegistration(
-    String id,
+    RegistrationModel r,
   ) async {
+    if (!canWrite) {
+      await showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(l10n.permissionDeniedTitle), // es. 'Attenzione'
+          content: Text(l10n.permissionDeniedMessage), // es. 'Utente non abilitato'
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: Text(l10n.permissionOk), // 'OK'
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(
+          l10n.registrationMessageCustom46, // es. 'Elimina iscrizione'
+        ),
+        content: Text(
+          l10n.registrationMessageCustom47(
+            r.cognome,
+            r.nome,
+            widget.competitionName,
+          ), // es. 'Sei sicuro di voler eliminare l\'iscrizione di ${r.cognome} ${r.nome} alla gara ${widget.competitionName} ?'
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(
+              l10n.commonCancel, // 'Annulla'
+            ),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(
+              l10n.commonDelete, // 'Elimina'
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm != true) return;
+
     try {
-      await service.deleteRegistration(id);
+      await service.deleteRegistration(r.id);
 
       if (!mounted) return;
 
@@ -570,24 +650,17 @@ class _RegistrationsPageState
                           ),
 
                           IconButton(
-                            icon: const Icon(
-                              Icons.edit,
-                            ),
-                            onPressed:
-                                () => openEdit(
-                                  r,
-                                ),
+                            icon: const Icon(Icons.edit),
+                            onPressed: (!canWrite || checkingPermission)
+                                ? null
+                                : () => openEdit(r),
                           ),
 
                           IconButton(
-                            icon: const Icon(
-                              Icons.delete,
-                            ),
-                            onPressed:
-                                () =>
-                                    deleteRegistration(
-                                      r.id,
-                                    ),
+                            icon: const Icon(Icons.delete),
+                            onPressed: (!canWrite || checkingPermission)
+                                ? null
+                                : () => deleteRegistration(r),
                           ),
                         ],
                       ),

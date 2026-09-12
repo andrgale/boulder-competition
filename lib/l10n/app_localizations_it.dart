@@ -2204,4 +2204,55 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get categoryTemplateMessageCustom58 => 'Aggiorna';
+
+  @override
+  String get registrationMessageCustom42 => 'Invio mail di benvenuto';
+
+  @override
+  String get registrationMessageCustom43 =>
+      'Vuoi inviare le mail di benvenuto agli atleti ?';
+
+  @override
+  String get registrationMessageCustom44 => 'Si';
+
+  @override
+  String get registrationMessageCustom45 => 'No';
+
+  @override
+  String get permissionDeniedTitle => 'Permesso negato';
+
+  @override
+  String get permissionDeniedMessage =>
+      'Non hai i permessi per effettuare questa azione';
+
+  @override
+  String get permissionOk => 'OK';
+
+  @override
+  String get registrationMessageCustom46 => 'Elimina iscrizione';
+
+  @override
+  String registrationMessageCustom47(
+    Object cognome,
+    Object nome,
+    Object competitionName,
+  ) {
+    return 'Eliminare $cognome $nome dall\'iscrizione alla competizione $competitionName? ';
+  }
+
+  @override
+  String get boulderMessageCustom37 => 'Elimina boulder';
+
+  @override
+  String boulderMessageCustom38(Object numero) {
+    return 'Sei sicuro di voler eliminare il boulder $numero?';
+  }
+
+  @override
+  String get boulderMessageCustom39 =>
+      'Impossibile eliminare: sono presenti ascese registrate...';
+
+  @override
+  String get rankingMessageCustom61 =>
+      'Non hai i permessi per modificare lo stato';
 }

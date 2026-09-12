@@ -118,6 +118,22 @@ class BoulderService {
   }
 
   // =====================================================
+  // CHECK ASCENTS COLLEGATE
+  // =====================================================
+
+  Future<bool> hasAscents(
+    String boulderId,
+  ) async {
+    final data = await Supabase.instance.client
+        .from('ascents')
+        .select('boulder_id')
+        .eq('boulder_id', boulderId)
+        .limit(1);
+
+    return (data as List).isNotEmpty;
+  }
+
+  // =====================================================
   // DELETE
   // =====================================================
 

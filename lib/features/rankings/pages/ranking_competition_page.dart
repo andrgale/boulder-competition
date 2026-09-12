@@ -1,3 +1,4 @@
+import 'package:boulder_competition/core/services/permission_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -31,11 +32,14 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
   bool showOnlyOpen = false;
   bool sortAsc = true;
   String sortColumn = 'dt_gara';
+  bool canWriteOpenClose = false;
+  bool checkingPermissionOpenClose = true;
 
   @override
   void initState() {
     super.initState();
     loadRealtime();
+    checkPermissionWrite();
   }
 
   @override
@@ -107,6 +111,24 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
       applyFilters();
     });
   }
+
+// =====================================================
+// CONTROLLO PERMESSI OPEN/CLOSE GARA
+// =====================================================
+  Future<void> checkPermissionWrite() async {
+    final allowed =
+        await PermissionService.hasPermission(
+      'competition.write',
+    );
+
+    if (!mounted) return;
+
+    setState(() {
+      canWriteOpenClose = allowed;
+      checkingPermissionOpenClose = false;
+    });
+  }
+
 
   // =========================================================
   // TOGGLE FL_GARA_CHIUSA — aggiornamento ottimistico
@@ -274,7 +296,9 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
                 // ── stato cliccabile per apri/chiudi gara ──────
                 _StatusChip(
                   chiusa: c.flGaraChiusa,
-                  onTap: () => _toggleGaraChiusa(c),
+                  onTap: (canWriteOpenClose && !checkingPermissionOpenClose)
+                  ? () => _toggleGaraChiusa(c)
+                  : null,
                 ),
                 const Divider(height: 24),
                 // ── bottoni classifiche ─────────────────────
@@ -398,11 +422,13 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
         // data gara
         DataCell(Text(DateFormat('dd/MM/yyyy').format(c.dtGara))),
 
-        // stato — cliccabile: apre/chiude la gara
+        // stato — cliccabile: apre/chiude la gara (solo se autorizzato)
         DataCell(
           _StatusChip(
             chiusa: c.flGaraChiusa,
-            onTap: () => _toggleGaraChiusa(c),
+            onTap: (canWriteOpenClose && !checkingPermissionOpenClose)
+              ? () => _toggleGaraChiusa(c)
+              : null,
           ),
         ),
 
@@ -485,45 +511,52 @@ class _RankingButton extends StatelessWidget {
 
 class _StatusChip extends StatelessWidget {
   final bool chiusa;
-  final VoidCallback onTap;
+  final VoidCallback? onTap; // ← ora nullable
 
   const _StatusChip({required this.chiusa, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final enabled = onTap != null;
+
     return Tooltip(
-      message: chiusa ? l10n.rankingMessageCustom27 : l10n.rankingMessageCustom28, // 'Tocca per riaprire la gara' / 'Tocca per chiudere la gara'
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-          decoration: BoxDecoration(
-            color: chiusa ? Colors.grey.shade100 : Colors.green.shade50,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: chiusa ? Colors.grey.shade300 : Colors.green.shade300,
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                chiusa ? Icons.lock_outline : Icons.lock_open,
-                size: 14,
-                color: chiusa ? Colors.grey.shade600 : Colors.green.shade700,
+      message: !enabled
+          ? l10n.rankingMessageCustom61 // es. 'Non hai i permessi per modificare lo stato'
+          : (chiusa ? l10n.rankingMessageCustom27 : l10n.rankingMessageCustom28),
+      child: Opacity(
+        opacity: enabled ? 1.0 : 0.6,
+        child: InkWell(
+          onTap: onTap, // null = automaticamente disabilitato, nessun effetto ripple
+          borderRadius: BorderRadius.circular(20),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: BoxDecoration(
+              color: chiusa ? Colors.grey.shade100 : Colors.green.shade50,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: chiusa ? Colors.grey.shade300 : Colors.green.shade300,
               ),
-              const SizedBox(width: 6),
-              Text(
-                chiusa ? l10n.rankingMessageCustom29 : l10n.rankingMessageCustom30, // 'Chiusa' / 'Aperta'
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  chiusa ? Icons.lock_outline : Icons.lock_open,
+                  size: 14,
                   color: chiusa ? Colors.grey.shade600 : Colors.green.shade700,
                 ),
-              ),
-            ],
+                const SizedBox(width: 6),
+                Text(
+                  chiusa ? l10n.rankingMessageCustom29 : l10n.rankingMessageCustom30,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: chiusa ? Colors.grey.shade600 : Colors.green.shade700,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

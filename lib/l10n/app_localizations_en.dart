@@ -2202,4 +2202,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get categoryTemplateMessageCustom58 => 'Update';
+
+  @override
+  String get registrationMessageCustom42 => 'Send Welcome Email';
+
+  @override
+  String get registrationMessageCustom43 =>
+      'Do you want to send welcome emails to the athletes?';
+
+  @override
+  String get registrationMessageCustom44 => 'Yes';
+
+  @override
+  String get registrationMessageCustom45 => 'No';
+
+  @override
+  String get permissionDeniedTitle => 'Permission Denied';
+
+  @override
+  String get permissionDeniedMessage =>
+      'You do not have permission to perform this action';
+
+  @override
+  String get permissionOk => 'OK';
+
+  @override
+  String get registrationMessageCustom46 => 'Delete Registration';
+
+  @override
+  String registrationMessageCustom47(
+    Object cognome,
+    Object nome,
+    Object competitionName,
+  ) {
+    return 'Delete $cognome $nome from the registration for the competition $competitionName?';
+  }
+
+  @override
+  String get boulderMessageCustom37 => 'Delete Boulder';
+
+  @override
+  String boulderMessageCustom38(Object numero) {
+    return 'Are you sure you want to delete boulder $numero?';
+  }
+
+  @override
+  String get boulderMessageCustom39 =>
+      'Unable to delete: there are recorded ascents associated with this boulder...';
+
+  @override
+  String get rankingMessageCustom61 =>
+      'You do not have permission to change the status';
 }

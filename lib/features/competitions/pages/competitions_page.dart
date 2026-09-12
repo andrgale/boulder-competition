@@ -1,3 +1,4 @@
+import 'package:boulder_competition/core/services/permission_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
@@ -32,7 +33,10 @@ class _CompetitionsPageState
   bool showOnlyOpen = false;
   bool sortAsc = true;
   String sortColumn = 'dt_gara';
-
+  bool canWriteCategory = false;
+  bool checkingPermissionCategory = true;
+  bool canWriteDelete = false;
+  bool checkingPermissionDelete = true;
    AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   // ── true se esiste almeno una gara aperta ──────────────────
@@ -46,6 +50,8 @@ class _CompetitionsPageState
   void initState() {
     super.initState();
     loadRealtime();
+    checkPermissionCategory();
+    checkPermissionDelete();
   }
 
   void loadRealtime() {
@@ -101,7 +107,7 @@ class _CompetitionsPageState
       CompetitionModel c) async {
         final confirm = await showDialog<bool>(
           context: context,
-          builder: (_) => AlertDialog(
+          builder: (dialogContext) => AlertDialog(
             title: Text(
               l10n.competitionMessageCustom26, // Elimina competizione
             ),
@@ -110,13 +116,13 @@ class _CompetitionsPageState
             ),
             actions: [
               TextButton(
-                onPressed: () => Navigator.pop(context, false),
+                onPressed: () => Navigator.pop(dialogContext, false),
                 child: Text(
                   l10n.commonCancel, // Annulla
                 ),
               ),
               FilledButton(
-                onPressed: () => Navigator.pop(context, true),
+                onPressed: () => Navigator.pop(dialogContext, true),
                 child: Text(
                   l10n.commonDelete, // Elimina
                 ),
@@ -130,6 +136,41 @@ class _CompetitionsPageState
     await service.deleteCompetition(c.id);
     await refreshData();
   }
+  
+// =====================================================
+// CONTROLLO PERMESSI CATEGORIA
+// =====================================================
+  Future<void> checkPermissionCategory() async {
+    final allowed =
+        await PermissionService.hasPermission(
+      'category.write',
+    );
+
+    if (!mounted) return;
+
+    setState(() {
+      canWriteCategory = allowed;
+      checkingPermissionCategory = false;
+    });
+  }
+
+// =====================================================
+// CONTROLLO PERMESSI CANCELLATION
+// =====================================================
+  Future<void> checkPermissionDelete() async {
+    final allowed =
+        await PermissionService.hasPermission(
+      'competition.write',
+    );
+
+    if (!mounted) return;
+
+    setState(() {
+      canWriteDelete = allowed;
+      checkingPermissionDelete = false;
+    });
+  }
+
 
   Future<void> refreshData() async {
     final rows = await service.getCompetitions();
@@ -286,6 +327,10 @@ class _CompetitionsPageState
           openRegistrations: openRegistrations,
           openCategories: openCategories,
           openBoulders: openBoulders,
+          canWriteCategory: canWriteCategory,
+          checkingPermissionCategory: checkingPermissionCategory,
+          canWriteDelete: canWriteDelete,
+          checkingPermissionDelete: checkingPermissionDelete,
         );
 
       case ScreenSize.tablet:
@@ -301,6 +346,10 @@ class _CompetitionsPageState
           openRegistrations: openRegistrations,
           openCategories: openCategories,
           openBoulders: openBoulders,
+          canWriteCategory: canWriteCategory,
+          checkingPermissionCategory: checkingPermissionCategory,
+          canWriteDelete: canWriteDelete,
+          checkingPermissionDelete: checkingPermissionDelete,
         );
     }
   }
@@ -317,6 +366,11 @@ class _MobileListView extends StatelessWidget {
   final Function(CompetitionModel) openCategories;
   final Function(CompetitionModel) openBoulders;
 
+  final bool canWriteCategory;
+  final bool checkingPermissionCategory;
+  final bool canWriteDelete;
+  final bool checkingPermissionDelete;
+
   const _MobileListView({
     required this.competitions,
     required this.refresh,
@@ -324,6 +378,10 @@ class _MobileListView extends StatelessWidget {
     required this.openRegistrations,
     required this.openCategories,
     required this.openBoulders,
+    required this.canWriteCategory,
+    required this.checkingPermissionCategory,
+    required this.canWriteDelete,
+    required this.checkingPermissionDelete,
   });
 
   @override
@@ -366,7 +424,9 @@ class _MobileListView extends StatelessWidget {
                     IconButton(
                         icon:
                             const Icon(Icons.category),
-                        onPressed: c.flGaraChiusa
+                        onPressed: (c.flGaraChiusa ||
+                                !canWriteCategory ||
+                                checkingPermissionCategory)
                             ? null
                             : () => openCategories(c)),
                     IconButton(
@@ -377,16 +437,20 @@ class _MobileListView extends StatelessWidget {
                             : () => openBoulders(c)),
                     IconButton(
                       icon: const Icon(Icons.edit),
-                      onPressed: () async {
-                        final r =
-                            await context.push(
-                                '/competitions/edit/${c.id}');
-                        if (r == true) refresh();
-                      },
+                      onPressed: (!canWriteDelete || checkingPermissionDelete)
+                          ? null
+                          : () async {
+                              final r =
+                                  await context.push(
+                                      '/competitions/edit/${c.id}');
+                              if (r == true) refresh();
+                            },
                     ),
                     IconButton(
                       icon: const Icon(Icons.delete),
-                      onPressed: c.flGaraChiusa
+                      onPressed: (c.flGaraChiusa ||
+                                !canWriteDelete ||
+                                checkingPermissionDelete)
                           ? null
                           : () => onDelete(c),
                     ),
@@ -416,6 +480,10 @@ class _TableView extends StatelessWidget {
   final Function(CompetitionModel) openRegistrations;
   final Function(CompetitionModel) openCategories;
   final Function(CompetitionModel) openBoulders;
+  final bool canWriteCategory;
+  final bool checkingPermissionCategory;
+  final bool canWriteDelete;
+  final bool checkingPermissionDelete;
 
   const _TableView({
     required this.competitions,
@@ -428,6 +496,10 @@ class _TableView extends StatelessWidget {
     required this.openRegistrations,
     required this.openCategories,
     required this.openBoulders,
+    required this.canWriteCategory,
+    required this.checkingPermissionCategory,
+    required this.canWriteDelete,
+    required this.checkingPermissionDelete,
   });
 
   @override
@@ -486,9 +558,8 @@ class _TableView extends StatelessWidget {
                       ? null
                       : () => openRegistrations(c)),
               IconButton(
-                  icon:
-                      const Icon(Icons.category),
-                  onPressed: c.flGaraChiusa
+                  icon: const Icon(Icons.category),
+                  onPressed: (c.flGaraChiusa || !canWriteCategory || checkingPermissionCategory)
                       ? null
                       : () => openCategories(c)),
               IconButton(
@@ -499,16 +570,18 @@ class _TableView extends StatelessWidget {
                       : () => openBoulders(c)),
               IconButton(
                 icon: const Icon(Icons.edit),
-                onPressed: () async {
-                  final r =
-                      await context.push(
-                          '/competitions/edit/${c.id}');
-                  if (r == true) refresh();
-                },
+                onPressed: (!canWriteDelete || checkingPermissionDelete)
+                    ? null
+                    : () async {
+                        final r =
+                            await context.push(
+                                '/competitions/edit/${c.id}');
+                        if (r == true) refresh();
+                      },
               ),
               IconButton(
                   icon: const Icon(Icons.delete),
-                  onPressed: c.flGaraChiusa
+                  onPressed: (c.flGaraChiusa|| !canWriteDelete || checkingPermissionDelete)
                       ? null
                       : () => onDelete(c)),
             ],

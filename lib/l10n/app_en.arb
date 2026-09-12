@@ -2051,5 +2051,63 @@
   "categoryTemplateMessageCustom57": "Create",
   "@categoryTemplateMessageCustom57": {"description": "Create button"},
   "categoryTemplateMessageCustom58": "Update",
-  "@categoryTemplateMessageCustom58": {"description": "Update button"}
+  "@categoryTemplateMessageCustom58": {"description": "Update button"},
+  "registrationMessageCustom42": "Send Welcome Email",
+  "@registrationMessageCustom42": {
+    "description": "Send Welcome Email"
+  },
+  "registrationMessageCustom43": "Do you want to send welcome emails to the athletes?",
+  "@registrationMessageCustom43": {
+    "description": "Do you want to send welcome emails to the athletes?"
+  },
+  "registrationMessageCustom44": "Yes",
+  "@registrationMessageCustom44": {
+    "description": "Yes"
+  },
+  "registrationMessageCustom45": "No",
+  "@registrationMessageCustom45": {
+    "description": "No"
+  },
+  "permissionDeniedTitle": "Permission Denied",
+  "@permissionDeniedTitle": {
+    "description": "Permission denied message title"
+  },
+  "permissionDeniedMessage": "You do not have permission to perform this action",
+  "@permissionDeniedMessage": {
+    "description": "Permission denied message"
+  },
+    "permissionOk": "OK",
+  "@permissionOk": {"description": "Button OK"},
+  "registrationMessageCustom46": "Delete Registration",
+"@registrationMessageCustom46": {
+  "description": "Delete registration"
+},
+"registrationMessageCustom47": "Delete {cognome} {nome} from the registration for the competition {competitionName}?",
+"@registrationMessageCustom47": {
+  "description": "Registration deletion page title",
+  "placeholders": {
+      "cognome": {},
+      "nome": {},
+      "competitionName": {}
+  }
+},
+"boulderMessageCustom37": "Delete Boulder",
+"@boulderMessageCustom37": {
+  "description": "Delete boulder"
+},
+"boulderMessageCustom38": "Are you sure you want to delete boulder {numero}?",
+"@boulderMessageCustom38": {
+  "description": "Confirmation message for deleting a boulder",
+  "placeholders": {
+    "numero": {}
+  }
+},
+"boulderMessageCustom39": "Unable to delete: there are recorded ascents associated with this boulder...",
+"@boulderMessageCustom39": {
+  "description": "Error message displayed when attempting to delete a boulder with associated ascents"
+},
+"rankingMessageCustom61": "You do not have permission to change the status",
+"@rankingMessageCustom61": {
+  "description": "You do not have permission to change the status"
+}
 }

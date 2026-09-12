@@ -4045,6 +4045,88 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Update'**
   String get categoryTemplateMessageCustom58;
+
+  /// Send Welcome Email
+  ///
+  /// In en, this message translates to:
+  /// **'Send Welcome Email'**
+  String get registrationMessageCustom42;
+
+  /// Do you want to send welcome emails to the athletes?
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to send welcome emails to the athletes?'**
+  String get registrationMessageCustom43;
+
+  /// Yes
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get registrationMessageCustom44;
+
+  /// No
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get registrationMessageCustom45;
+
+  /// Permission denied message title
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Denied'**
+  String get permissionDeniedTitle;
+
+  /// Permission denied message
+  ///
+  /// In en, this message translates to:
+  /// **'You do not have permission to perform this action'**
+  String get permissionDeniedMessage;
+
+  /// Button OK
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get permissionOk;
+
+  /// Delete registration
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Registration'**
+  String get registrationMessageCustom46;
+
+  /// Registration deletion page title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {cognome} {nome} from the registration for the competition {competitionName}?'**
+  String registrationMessageCustom47(
+    Object cognome,
+    Object nome,
+    Object competitionName,
+  );
+
+  /// Delete boulder
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Boulder'**
+  String get boulderMessageCustom37;
+
+  /// Confirmation message for deleting a boulder
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete boulder {numero}?'**
+  String boulderMessageCustom38(Object numero);
+
+  /// Error message displayed when attempting to delete a boulder with associated ascents
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to delete: there are recorded ascents associated with this boulder...'**
+  String get boulderMessageCustom39;
+
+  /// You do not have permission to change the status
+  ///
+  /// In en, this message translates to:
+  /// **'You do not have permission to change the status'**
+  String get rankingMessageCustom61;
 }
 
 class _AppLocalizationsDelegate

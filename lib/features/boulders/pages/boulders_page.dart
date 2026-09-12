@@ -1,3 +1,4 @@
+import 'package:boulder_competition/core/services/permission_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -27,6 +28,9 @@ class _BouldersPageState
   List<BoulderModel> boulders = [];
 
   bool showOnlyFinals = false;
+  bool canWriteDelete = false;
+  bool checkingPermissionDelete = true;
+  
 
   bool loading = true;
   AppLocalizations get l10n => AppLocalizations.of(context)!;
@@ -36,7 +40,26 @@ class _BouldersPageState
     super.initState();
 
     loadRealtime();
+    checkPermissionDelete();
   }
+
+  // =====================================================
+  // CONTROLLO PERMESSI CANCELLATION
+  // =====================================================
+    Future<void> checkPermissionDelete() async {
+      final allowed =
+          await PermissionService.hasPermission(
+        'boulder.write',
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        canWriteDelete = allowed;
+        checkingPermissionDelete = false;
+      });
+    }
+
 
   // =====================================================
   // REFRESH
@@ -79,11 +102,77 @@ class _BouldersPageState
   // =====================================================
 
   Future<void> deleteBoulder(
-    String id,
+    BoulderModel boulder,
   ) async {
-
+    // =====================================================
+    // CONTROLLO ASCESE COLLEGATE
+    // =====================================================
     try {
-      await service.deleteBoulder(id);
+      final hasAscents = await service.hasAscents(boulder.id);
+
+      if (hasAscents) {
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              l10n.boulderMessageCustom39, // 'Impossibile eliminare: sono presenti ascese registrate...'
+            ),
+          ),
+        );
+        return;
+      }
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            l10n.boulderMessageCustom2(e.toString()), // 'Errore: $e'
+          ),
+        ),
+      );
+      return;
+    }
+
+    // =====================================================
+    // CONFERMA UTENTE
+    // =====================================================
+    if (!mounted) return;
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(        title: Text(
+          l10n.boulderMessageCustom37, // 'Elimina boulder'
+        ),
+        content: Text(
+          l10n.boulderMessageCustom38(
+            boulder.numero.toString(),
+          ), // 'Sei sicuro di voler eliminare il boulder ${boulder.numero}?'
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(
+              l10n.commonCancel, // 'Annulla'
+            ),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(
+              l10n.commonDelete, // 'Elimina'
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm != true) return;
+
+    // =====================================================
+    // CANCELLAZIONE EFFETTIVA
+    // =====================================================
+    try {
+      await service.deleteBoulder(boulder.id);
 
       if (!mounted) return;
 
@@ -272,7 +361,9 @@ class _BouldersPageState
                                     icon: const Icon(
                                       Icons.delete,
                                     ),
-                                    onPressed: () => deleteBoulder(b.id),
+                                    onPressed: (!canWriteDelete || checkingPermissionDelete)
+                                        ? null
+                                        : () => deleteBoulder(b),
                                   ),
                                 ],
                               ),

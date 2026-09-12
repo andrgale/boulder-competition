@@ -14,6 +14,16 @@ serve(async (req) => {
 
     const competition_id = body.competition_id;
     const csv_content = body.csv_content;
+    const sendWelcomeEmails = body.send_welcome_emails === true;
+    
+    if (typeof body.send_welcome_emails !== "boolean") {
+      return new Response(
+        JSON.stringify({
+          error: "Parametro send_welcome_emails mancante o non valido",
+        }),
+        { status: 400 },
+      );
+    }
 
     console.log("competition_id =", competition_id);
 
@@ -635,6 +645,7 @@ serve(async (req) => {
         // l'invio fallisce, la registrazione resta comunque valida
         // (già inserita) e la riga non viene marcata come scartata.
  //       if (createdNewUser) {
+      if (sendWelcomeEmails) {
           try {
               const turnoText = isTurn
               ? (isFirstTurn ? "Primo Turno" : "Secondo Turno")
@@ -684,7 +695,7 @@ serve(async (req) => {
                 mailErr.message,
               );
             }
-//        }
+        }
           } catch (err: any) {
         discarded++;
 
