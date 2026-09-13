@@ -89,6 +89,23 @@ class CategoryService {
         .toList();
   }
 
+  // =====================================================
+  // CHECK REGISTRATIONS COLLEGATE
+  // =====================================================
+
+  Future<bool> hasRegistrationsCategory(
+    String categoryId,
+  ) async {
+    final data = await Supabase.instance.client
+        .from('registrations')
+        .select('id')
+        .eq('category_id', categoryId)
+        .limit(1);
+
+    return (data as List).isNotEmpty;
+  }
+
+
   // CREATE CATEGORIES FROM TEMPLATE
   Future<void> createCategoriesFromTemplate({
     required String competitionId,

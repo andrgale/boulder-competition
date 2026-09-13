@@ -1,3 +1,4 @@
+import 'package:boulder_competition/shared/app_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -63,6 +64,64 @@ class _CategoriesPageState extends State<CategoriesPage> {
   // DELETE
   // =====================================================
   Future<void> deleteCategory(String id) async {
+    // =====================================================
+    // CONTROLLO REGISTRAZIONI COLLEGATE
+    // =====================================================
+    try {
+      final hasRegistrations = await service.hasRegistrationsCategory(id);
+
+      if (hasRegistrations) {
+        if (!mounted) return;
+
+      AppSnackbar.error(
+        context,
+        l10n.categoryMessageCustom16, // 'Impossibile eliminare: sono presenti ascese registrate...
+      );
+        return;
+      }
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            l10n.categoryMessageCustom2(e.toString()), // 'Errore: $e'
+          ),
+        ),
+      );
+      return;
+    }
+
+    if (!mounted) return;
+
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(
+          l10n.categoryMessageCustom17, // es. 'Elimina categoria'
+        ),
+        content: Text(
+          l10n.categoryMessageCustom18, // es. 'Sei sicuro di voler eliminare questa categoria?'
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(
+              l10n.commonCancel, // 'Annulla'
+            ),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(
+              l10n.commonDelete, // 'Elimina'
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm != true) return;
+
     try {
       await service.deleteCategory(id);
 
@@ -86,9 +145,11 @@ class _CategoriesPageState extends State<CategoriesPage> {
         ),
       );
     }
+
     await refreshData();
   }
- // =====================================================
+
+  // =====================================================
   // NAV CREATE
   // =====================================================
   Future<void> openCreate() async {

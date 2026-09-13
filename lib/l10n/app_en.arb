@@ -2109,5 +2109,17 @@
 "rankingMessageCustom61": "You do not have permission to change the status",
 "@rankingMessageCustom61": {
   "description": "You do not have permission to change the status"
+},
+"categoryMessageCustom16": "Unable to delete: there are registered ascents associated with this category...",
+"@categoryMessageCustom16": {
+  "description": "Error message displayed when attempting to delete a category with associated registrations"
+},
+"categoryMessageCustom17": "Delete Category",
+"@categoryMessageCustom17": {
+  "description": "Category deletion page title"
+},
+"categoryMessageCustom18": "Are you sure you want to delete this category?",
+"@categoryMessageCustom18": {
+  "description": "Confirmation message displayed when attempting to delete a category with associated registrations"
 }
 }

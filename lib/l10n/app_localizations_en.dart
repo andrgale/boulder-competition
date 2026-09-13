@@ -2253,4 +2253,15 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get rankingMessageCustom61 =>
       'You do not have permission to change the status';
+
+  @override
+  String get categoryMessageCustom16 =>
+      'Unable to delete: there are registered ascents associated with this category...';
+
+  @override
+  String get categoryMessageCustom17 => 'Delete Category';
+
+  @override
+  String get categoryMessageCustom18 =>
+      'Are you sure you want to delete this category?';
 }

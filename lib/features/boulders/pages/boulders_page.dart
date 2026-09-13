@@ -1,4 +1,5 @@
 import 'package:boulder_competition/core/services/permission_service.dart';
+import 'package:boulder_competition/shared/app_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -113,12 +114,9 @@ class _BouldersPageState
       if (hasAscents) {
         if (!mounted) return;
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              l10n.boulderMessageCustom39, // 'Impossibile eliminare: sono presenti ascese registrate...'
-            ),
-          ),
+        AppSnackbar.error(
+          context,
+          l10n.boulderMessageCustom39, // 'Impossibile eliminare: sono presenti ascese registrate...
         );
         return;
       }

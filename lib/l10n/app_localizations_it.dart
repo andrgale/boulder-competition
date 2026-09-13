@@ -2255,4 +2255,15 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get rankingMessageCustom61 =>
       'Non hai i permessi per modificare lo stato';
+
+  @override
+  String get categoryMessageCustom16 =>
+      'Impossibile eliminare: sono presenti ascese registrate...';
+
+  @override
+  String get categoryMessageCustom17 => 'Elimina categoria';
+
+  @override
+  String get categoryMessageCustom18 =>
+      'Sei sicuro di voler eliminare questa categoria?';
 }

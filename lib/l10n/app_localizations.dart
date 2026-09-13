@@ -4127,6 +4127,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You do not have permission to change the status'**
   String get rankingMessageCustom61;
+
+  /// Error message displayed when attempting to delete a category with associated registrations
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to delete: there are registered ascents associated with this category...'**
+  String get categoryMessageCustom16;
+
+  /// Category deletion page title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Category'**
+  String get categoryMessageCustom17;
+
+  /// Confirmation message displayed when attempting to delete a category with associated registrations
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this category?'**
+  String get categoryMessageCustom18;
 }
 
 class _AppLocalizationsDelegate

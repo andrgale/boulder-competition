@@ -2102,6 +2102,18 @@
     "description": "Messaggio di errore quando si tenta di eliminare un boulder con ascese associate"
   },
   "rankingMessageCustom61": "Non hai i permessi per modificare lo stato",
-  "@rankingMessageCustom61": { "description": "Non hai i permessi per modificare lo stato" }
+  "@rankingMessageCustom61": { "description": "Non hai i permessi per modificare lo stato" },
+  "categoryMessageCustom16": "Impossibile eliminare: sono presenti ascese registrate...",
+  "@categoryMessageCustom16": {
+    "description": "Messaggio di errore quando si tenta di eliminare una categoria con iscrizioni associate"
+  },
+    "categoryMessageCustom17": "Elimina categoria",
+  "@categoryMessageCustom17": {
+    "description": "Titolo della pagina di eliminazione categoria"
+  },
+  "categoryMessageCustom18": "Sei sicuro di voler eliminare questa categoria?",
+  "@categoryMessageCustom18": {
+    "description": "Messaggio di conferma quando si tenta di eliminare una categoria con iscrizioni associate"
+  }
 
 }

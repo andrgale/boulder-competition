@@ -35,6 +35,13 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
   bool canWriteOpenClose = false;
   bool checkingPermissionOpenClose = true;
 
+   // ── true se esiste almeno una gara aperta ──────────────────
+  // Calcolato sui dati già in memoria (allCompetitions), che
+  // sono sempre sincronizzati via realtime: non serve una
+  // query separata, basta filtrare la lista che abbiamo già.
+  bool get hasOpenCompetition =>
+      allCompetitions.any((c) => c.flGaraChiusa == false);
+
   @override
   void initState() {
     super.initState();
@@ -138,6 +145,20 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
     final idx = competitions.indexOf(competition);
     if (idx < 0) return;
 
+    final isReopening = competition.flGaraChiusa; // true → sto per riaprirla
+
+    // ── guardia di sicurezza: non riapre se esiste già una gara
+    // aperta, anche se per qualche motivo il tap fosse arrivato
+    // comunque (es. doppio tap, automazione test)
+    if (isReopening && hasOpenCompetition) {
+      if (!mounted) return;
+      AppSnackbar.error(
+        context,
+        l10n.competitionMessageCustom28, // 'Esiste già una gara aperta: chiudila prima di riaprirne un'altra.'
+      );
+      return;
+    }
+
     final updated = competition.copyWith(
       flGaraChiusa: !competition.flGaraChiusa,
     );
@@ -161,10 +182,9 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
         if (allIdx >= 0) allCompetitions[allIdx] = competition;
       });
       if (!mounted) return;
-      AppSnackbar.error(context, l10n.rankingMessageCustom12(e.toString())); // 'Errore aggiornamento: {error}'
+      AppSnackbar.error(context, l10n.rankingMessageCustom12(e.toString()));
     }
   }
-
   // =========================================================
   // NAVIGAZIONE ALLE CLASSIFICHE
   // =========================================================

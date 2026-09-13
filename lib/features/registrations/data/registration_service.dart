@@ -225,6 +225,21 @@ class RegistrationService {
 
     return result.isNotEmpty;
   }
+  // =====================================================
+  // CHECK ASCENTS COLLEGATE
+  // =====================================================
+
+  Future<bool> hasAscentsRegistration(
+    String registrationId,
+  ) async {
+    final data = await Supabase.instance.client
+        .from('ascents')
+        .select('boulder_id')
+        .eq('registration_id', registrationId)
+        .limit(1);
+
+    return (data as List).isNotEmpty;
+  }
 
 // =====================================================
 // CREATE ATHLETE USER

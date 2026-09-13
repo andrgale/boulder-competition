@@ -1,4 +1,5 @@
 import 'package:boulder_competition/core/services/permission_service.dart';
+import 'package:boulder_competition/shared/app_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -283,27 +284,9 @@ class _RegistrationsPageState
   // =====================================================
   // DELETE
   // =====================================================
-
   Future<void> deleteRegistration(
     RegistrationModel r,
   ) async {
-    if (!canWrite) {
-      await showDialog<void>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text(l10n.permissionDeniedTitle), // es. 'Attenzione'
-          content: Text(l10n.permissionDeniedMessage), // es. 'Utente non abilitato'
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(ctx).pop(),
-              child: Text(l10n.permissionOk), // 'OK'
-            ),
-          ],
-        ),
-      );
-      return;
-    }
-
     final confirm = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -336,6 +319,34 @@ class _RegistrationsPageState
 
     if (confirm != true) return;
 
+    // =====================================================
+    // CONTROLLO ASCESE COLLEGATE
+    // =====================================================
+    try {
+      final hasAscents = await service.hasAscentsRegistration(r.id);
+
+      if (hasAscents) {
+        if (!mounted) return;
+
+      AppSnackbar.error(
+        context,
+        l10n.boulderMessageCustom39, // 'Impossibile eliminare: sono presenti ascese registrate...
+      );
+        return;
+      }
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            l10n.boulderMessageCustom2(e.toString()), // 'Errore: $e'
+          ),
+        ),
+      );
+      return;
+    }
+
     try {
       await service.deleteRegistration(r.id);
 
@@ -362,7 +373,6 @@ class _RegistrationsPageState
 
     await refreshData();
   }
-
   // =====================================================
   // NAV CREATE
   // =====================================================
