@@ -33,7 +33,7 @@ class RouteGuard {
     '/competitions/categories'    : 'competition.read',
     '/competitions/registrations' : 'registration.read',
     '/competitions/boulders'      : 'boulder.read',
-
+    '/competitions/statistics'    : 'competition.read',  
 
     // =====================================================
     // REGISTRATIONS
@@ -327,6 +327,12 @@ class RouteGuard {
         .hasMatch(route)) {
       return '/competitions/boulders';
     } 
+
+    if (RegExp(r'^/competitions/[^/]+/statistics$')
+        .hasMatch(route)) {
+      return '/competitions/statistics';
+    }
+
 
     if (RegExp(r'^/rankings/[^/]+/qualifications$')
         .hasMatch(route)) {

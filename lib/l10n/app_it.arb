@@ -2114,6 +2114,277 @@
   "categoryMessageCustom18": "Sei sicuro di voler eliminare questa categoria?",
   "@categoryMessageCustom18": {
     "description": "Messaggio di conferma quando si tenta di eliminare una categoria con iscrizioni associate"
+  },
+  "statisticsMessageCustom1": "Statistiche - {competition}",
+"@statisticsMessageCustom1": {
+  "description": "Titolo della pagina statistiche",
+  "placeholders": {
+    "competition": {
+      "type": "String"
+    }
   }
+},
+
+"statisticsMessageCustom2": "Atleti",
+"@statisticsMessageCustom2": {
+  "description": "Sezione statistiche atleti"
+},
+
+"statisticsMessageCustom3": "Boulder",
+"@statisticsMessageCustom3": {
+  "description": "Sezione statistiche boulder"
+},
+
+"statisticsMessageCustom4": "Categorie",
+"@statisticsMessageCustom4": {
+  "description": "Sezione statistiche categorie"
+},
+
+"statisticsMessageCustom5": "Dati non ancora disponibili",
+"@statisticsMessageCustom5": {
+  "description": "Messaggio visualizzato quando i dati statistici non sono ancora disponibili"
+},
+
+"statisticsMessageCustom6": "Errore caricamento statistiche: {error}",
+"@statisticsMessageCustom6": {
+  "description": "Messaggio di errore durante il caricamento delle statistiche",
+  "placeholders": {
+    "error": {
+      "type": "String"
+    }
+  }
+},
+
+"statisticsMessageCustom7": "Iscrizioni",
+"@statisticsMessageCustom7": {
+  "description": "Sezione statistiche iscrizioni"
+},
+
+"statisticsMessageCustom8": "Totale iscritti",
+"@statisticsMessageCustom8": {
+  "description": "Numero totale degli atleti iscritti"
+},
+
+"statisticsMessageCustom9": "Totale partecipanti",
+"@statisticsMessageCustom9": {
+  "description": "Numero totale dei partecipanti"
+},
+
+"statisticsMessageCustom10": "Maschi iscritti",
+"@statisticsMessageCustom10": {
+  "description": "Numero totale dei maschi iscritti"
+},
+
+"statisticsMessageCustom11": "Femmine iscritte",
+"@statisticsMessageCustom11": {
+  "description": "Numero totale delle femmine iscritte"
+},
+
+"statisticsMessageCustom12": "Maschi partecipanti",
+"@statisticsMessageCustom12": {
+  "description": "Numero totale dei maschi partecipanti"
+},
+
+"statisticsMessageCustom13": "Femmine partecipanti",
+"@statisticsMessageCustom13": {
+  "description": "Numero totale delle femmine partecipanti"
+},
+
+"statisticsMessageCustom14": "Provenienza iscrizioni",
+"@statisticsMessageCustom14": {
+  "description": "Sezione statistiche sulla provenienza delle iscrizioni"
+},
+
+"statisticsMessageCustom15": "Amministratore",
+"@statisticsMessageCustom15": {
+  "description": "Iscrizioni create da un amministratore"
+},
+
+"statisticsMessageCustom16": "Atleta",
+"@statisticsMessageCustom16": {
+  "description": "Iscrizioni create direttamente dall'atleta"
+},
+
+"statisticsMessageCustom17": "Importazione",
+"@statisticsMessageCustom17": {
+  "description": "Iscrizioni create tramite importazione dati"
+},
+
+"statisticsMessageCustom18": "Record anagrafici",
+"@statisticsMessageCustom18": {
+  "description": "Sezione record anagrafici degli atleti"
+},
+
+"statisticsMessageCustom19": "Atleta più giovane (M)",
+"@statisticsMessageCustom19": {
+  "description": "Atleta maschio più giovane"
+},
+
+"statisticsMessageCustom20": "Atleta più giovane (F)",
+"@statisticsMessageCustom20": {
+  "description": "Atleta femmina più giovane"
+},
+
+"statisticsMessageCustom21": "Atleta più anziano (M)",
+"@statisticsMessageCustom21": {
+  "description": "Atleta maschio più anziano"
+},
+
+"statisticsMessageCustom22": "Atleta più anziana (F)",
+"@statisticsMessageCustom22": {
+  "description": "Atleta femmina più anziana"
+},
+
+"statisticsMessageCustom23": "Pettorale",
+"@statisticsMessageCustom23": {
+  "description": "Etichetta del numero di pettorale"
+},
+
+"statisticsMessageCustom24": "Società",
+"@statisticsMessageCustom24": {
+  "description": "Etichetta della società di appartenenza"
+},
+
+"statisticsMessageCustom25": "Data di nascita",
+"@statisticsMessageCustom25": {
+  "description": "Etichetta della data di nascita"
+},
+
+"statisticsMessageCustom26": "Nessun dato disponibile",
+"@statisticsMessageCustom26": {
+  "description": "Messaggio visualizzato quando non sono presenti dati"
+},
+
+"statisticsMessageCustom27": "Nessuna statistica disponibile per questa gara",
+"@statisticsMessageCustom27": {
+  "description": "Messaggio visualizzato quando non sono disponibili statistiche per la competizione"
+},
+"statisticsMessageCustom28": "Panoramica boulder",
+"@statisticsMessageCustom28": {
+  "description": "Titolo sezione con il riepilogo numerico dei boulder nel tab Boulder"
+},
+
+"statisticsMessageCustom29": "Boulder totali",
+"@statisticsMessageCustom29": {
+  "description": "Etichetta della card che mostra il numero totale di boulder della gara"
+},
+
+"statisticsMessageCustom30": "Boulder finale",
+"@statisticsMessageCustom30": {
+  "description": "Etichetta della card che mostra il numero di boulder di finale della gara"
+},
+
+"statisticsMessageCustom31": "Dettaglio boulder",
+"@statisticsMessageCustom31": {
+  "description": "Titolo sezione con l'elenco dettagliato di ogni boulder"
+},
+
+"statisticsMessageCustom32": "Boulder n. {numero}",
+"@statisticsMessageCustom32": {
+  "description": "Intestazione della singola card boulder con il suo numero",
+  "placeholders": {
+    "numero": { "type": "int" }
+  }
+},
+
+"statisticsMessageCustom33": "Finale",
+"@statisticsMessageCustom33": {
+  "description": "Chip mostrata sulla card boulder quando il boulder appartiene alla finale"
+},
+
+"statisticsMessageCustom34": "Qualifica",
+"@statisticsMessageCustom34": {
+  "description": "Chip mostrata sulla card boulder quando il boulder appartiene alla qualifica"
+},
+
+"statisticsMessageCustom35": "Difficoltà",
+"@statisticsMessageCustom35": {
+  "description": "Etichetta del valore di difficoltà del boulder"
+},
+
+"statisticsMessageCustom36": "Colore",
+"@statisticsMessageCustom36": {
+  "description": "Etichetta del colore/presa del boulder"
+},
+
+"statisticsMessageCustom37": "Salite totali",
+"@statisticsMessageCustom37": {
+  "description": "Etichetta del numero totale di salite riuscite sul boulder"
+},
+
+"statisticsMessageCustom38": "Salite maschili",
+"@statisticsMessageCustom38": {
+  "description": "Etichetta del numero di salite riuscite sul boulder da atleti maschi"
+},
+
+"statisticsMessageCustom39": "Salite femminili",
+"@statisticsMessageCustom39": {
+  "description": "Etichetta del numero di salite riuscite sul boulder da atlete femmine"
+},
+
+"statisticsMessageCustom40": "Valore teorico",
+"@statisticsMessageCustom40": {
+  "description": "Etichetta del valore teorico assegnato al boulder"
+},
+
+"statisticsMessageCustom41": "Valore attuale",
+"@statisticsMessageCustom41": {
+  "description": "Etichetta del valore attuale ricalcolato del boulder in base alle salite"
+},
+
+"statisticsMessageCustom42": "Errore caricamento statistiche boulder: {error}",
+"@statisticsMessageCustom42": {
+  "description": "Messaggio di errore mostrato nel tab Boulder quando il caricamento dei dati fallisce",
+  "placeholders": {
+    "error": { "type": "String" }
+  }
+},
+"statisticsMessageCustom43": "Panoramica categorie",
+"@statisticsMessageCustom43": {
+  "description": "Titolo sezione con il riepilogo numerico delle categorie nel tab Categorie"
+},
+
+"statisticsMessageCustom44": "Categorie totali",
+"@statisticsMessageCustom44": {
+  "description": "Etichetta della card che mostra il numero totale di categorie della gara"
+},
+
+"statisticsMessageCustom45": "Iscritti totali",
+"@statisticsMessageCustom45": {
+  "description": "Etichetta della card che mostra la somma degli iscritti di tutte le categorie"
+},
+
+"statisticsMessageCustom46": "Partecipanti totali",
+"@statisticsMessageCustom46": {
+  "description": "Etichetta della card che mostra la somma dei partecipanti di tutte le categorie"
+},
+
+"statisticsMessageCustom47": "Dettaglio categorie",
+"@statisticsMessageCustom47": {
+  "description": "Titolo sezione con l'elenco dettagliato di ogni categoria"
+},
+
+"statisticsMessageCustom48": "Iscritti",
+"@statisticsMessageCustom48": {
+  "description": "Etichetta del numero di atleti iscritti nella card di una categoria"
+},
+
+"statisticsMessageCustom49": "Partecipanti",
+"@statisticsMessageCustom49": {
+  "description": "Etichetta del numero di atleti partecipanti nella card di una categoria"
+},
+
+"statisticsMessageCustom50": "Vuota",
+"@statisticsMessageCustom50": {
+  "description": "Chip mostrata sulla card di una categoria quando non ha atleti iscritti"
+},
+
+"statisticsMessageCustom51": "Errore caricamento statistiche categorie: {error}",
+"@statisticsMessageCustom51": {
+  "description": "Messaggio di errore mostrato nel tab Categorie quando il caricamento dei dati fallisce",
+  "placeholders": {
+    "error": { "type": "String" }
+  }
+}
 
 }

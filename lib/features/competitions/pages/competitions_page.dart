@@ -207,6 +207,13 @@ class _CompetitionsPageState
     );
   }
 
+  Future<void> openStatistics(CompetitionModel c) async {
+    await context.push(
+      '/competitions/${c.id}/statistics',
+      extra: c,
+    );
+  }
+
   Future<void> openRegistrations(CompetitionModel c) async {
     await context.push(
       '/competitions/${c.id}/registrations',
@@ -327,6 +334,7 @@ class _CompetitionsPageState
           openRegistrations: openRegistrations,
           openCategories: openCategories,
           openBoulders: openBoulders,
+          openStatistics: openStatistics,
           canWriteCategory: canWriteCategory,
           checkingPermissionCategory: checkingPermissionCategory,
           canWriteDelete: canWriteDelete,
@@ -346,6 +354,7 @@ class _CompetitionsPageState
           openRegistrations: openRegistrations,
           openCategories: openCategories,
           openBoulders: openBoulders,
+          openStatistics: openStatistics,
           canWriteCategory: canWriteCategory,
           checkingPermissionCategory: checkingPermissionCategory,
           canWriteDelete: canWriteDelete,
@@ -365,6 +374,7 @@ class _MobileListView extends StatelessWidget {
   final Function(CompetitionModel) openRegistrations;
   final Function(CompetitionModel) openCategories;
   final Function(CompetitionModel) openBoulders;
+  final Function(CompetitionModel) openStatistics;
 
   final bool canWriteCategory;
   final bool checkingPermissionCategory;
@@ -378,6 +388,7 @@ class _MobileListView extends StatelessWidget {
     required this.openRegistrations,
     required this.openCategories,
     required this.openBoulders,
+    required this.openStatistics,
     required this.canWriteCategory,
     required this.checkingPermissionCategory,
     required this.canWriteDelete,
@@ -436,6 +447,10 @@ class _MobileListView extends StatelessWidget {
                             ? null
                             : () => openBoulders(c)),
                     IconButton(
+                        icon:
+                            const Icon(Icons.query_stats),
+                        onPressed: () => openStatistics(c)),
+                    IconButton(
                       icon: const Icon(Icons.edit),
                       onPressed: (!canWriteDelete || checkingPermissionDelete)
                           ? null
@@ -480,6 +495,7 @@ class _TableView extends StatelessWidget {
   final Function(CompetitionModel) openRegistrations;
   final Function(CompetitionModel) openCategories;
   final Function(CompetitionModel) openBoulders;
+  final Function(CompetitionModel) openStatistics;
   final bool canWriteCategory;
   final bool checkingPermissionCategory;
   final bool canWriteDelete;
@@ -496,6 +512,7 @@ class _TableView extends StatelessWidget {
     required this.openRegistrations,
     required this.openCategories,
     required this.openBoulders,
+    required this.openStatistics,
     required this.canWriteCategory,
     required this.checkingPermissionCategory,
     required this.canWriteDelete,
@@ -568,6 +585,10 @@ class _TableView extends StatelessWidget {
                   onPressed: c.flGaraChiusa
                       ? null
                       : () => openBoulders(c)),
+              IconButton(
+                  icon:
+                      const Icon(Icons.query_stats),
+                  onPressed: () => openStatistics(c)),
               IconButton(
                 icon: const Icon(Icons.edit),
                 onPressed: (!canWriteDelete || checkingPermissionDelete)

@@ -2121,5 +2121,282 @@
 "categoryMessageCustom18": "Are you sure you want to delete this category?",
 "@categoryMessageCustom18": {
   "description": "Confirmation message displayed when attempting to delete a category with associated registrations"
+},
+"statisticsMessageCustom1": "Statistics - {competition}",
+"@statisticsMessageCustom1": {
+  "description": "Statistics page title",
+  "placeholders": {
+    "competition": {
+      "type": "String"
+    }
+  }
+},
+
+"statisticsMessageCustom2": "Athletes",
+"@statisticsMessageCustom2": {
+  "description": "Athletes statistics section"
+},
+
+"statisticsMessageCustom3": "Boulders",
+"@statisticsMessageCustom3": {
+  "description": "Boulders statistics section"
+},
+
+"statisticsMessageCustom4": "Categories",
+"@statisticsMessageCustom4": {
+  "description": "Categories statistics section"
+},
+
+"statisticsMessageCustom5": "Data not yet available",
+"@statisticsMessageCustom5": {
+  "description": "Message displayed when statistics data is not yet available"
+},
+
+"statisticsMessageCustom6": "Error loading statistics: {error}",
+"@statisticsMessageCustom6": {
+  "description": "Error message displayed when statistics loading fails",
+  "placeholders": {
+    "error": {
+      "type": "String"
+    }
+  }
+},
+
+"statisticsMessageCustom7": "Registrations",
+"@statisticsMessageCustom7": {
+  "description": "Registrations statistics section"
+},
+
+"statisticsMessageCustom8": "Total registered athletes",
+"@statisticsMessageCustom8": {
+  "description": "Total number of registered athletes"
+},
+
+"statisticsMessageCustom9": "Total participants",
+"@statisticsMessageCustom9": {
+  "description": "Total number of participants"
+},
+
+"statisticsMessageCustom10": "Registered males",
+"@statisticsMessageCustom10": {
+  "description": "Total number of registered male athletes"
+},
+
+"statisticsMessageCustom11": "Registered females",
+"@statisticsMessageCustom11": {
+  "description": "Total number of registered female athletes"
+},
+
+"statisticsMessageCustom12": "Male participants",
+"@statisticsMessageCustom12": {
+  "description": "Total number of male participants"
+},
+
+"statisticsMessageCustom13": "Female participants",
+"@statisticsMessageCustom13": {
+  "description": "Total number of female participants"
+},
+
+"statisticsMessageCustom14": "Registration sources",
+"@statisticsMessageCustom14": {
+  "description": "Registration source statistics section"
+},
+
+"statisticsMessageCustom15": "Administrator",
+"@statisticsMessageCustom15": {
+  "description": "Registrations created by an administrator"
+},
+
+"statisticsMessageCustom16": "Athlete",
+"@statisticsMessageCustom16": {
+  "description": "Registrations created directly by the athlete"
+},
+
+"statisticsMessageCustom17": "Import",
+"@statisticsMessageCustom17": {
+  "description": "Registrations created through data import"
+},
+
+"statisticsMessageCustom18": "Demographic records",
+"@statisticsMessageCustom18": {
+  "description": "Athlete demographic records section"
+},
+
+"statisticsMessageCustom19": "Youngest athlete (M)",
+"@statisticsMessageCustom19": {
+  "description": "Youngest male athlete"
+},
+
+"statisticsMessageCustom20": "Youngest athlete (F)",
+"@statisticsMessageCustom20": {
+  "description": "Youngest female athlete"
+},
+
+"statisticsMessageCustom21": "Oldest athlete (M)",
+"@statisticsMessageCustom21": {
+  "description": "Oldest male athlete"
+},
+
+"statisticsMessageCustom22": "Oldest athlete (F)",
+"@statisticsMessageCustom22": {
+  "description": "Oldest female athlete"
+},
+
+"statisticsMessageCustom23": "Bib number",
+"@statisticsMessageCustom23": {
+  "description": "Bib number label"
+},
+
+"statisticsMessageCustom24": "Club",
+"@statisticsMessageCustom24": {
+  "description": "Club label"
+},
+
+"statisticsMessageCustom25": "Date of birth",
+"@statisticsMessageCustom25": {
+  "description": "Date of birth label"
+},
+
+"statisticsMessageCustom26": "No data available",
+"@statisticsMessageCustom26": {
+  "description": "Message displayed when no data is available"
+},
+
+"statisticsMessageCustom27": "No statistics available for this competition",
+"@statisticsMessageCustom27": {
+  "description": "Message displayed when no statistics are available for the competition"
+},
+"statisticsMessageCustom28": "Boulder Overview",
+"@statisticsMessageCustom28": {
+  "description": "Section title with the numerical summary of boulders in the Boulder tab"
+},
+
+"statisticsMessageCustom29": "Total Boulders",
+"@statisticsMessageCustom29": {
+  "description": "Label of the card showing the total number of boulders in the competition"
+},
+
+"statisticsMessageCustom30": "Final Boulders",
+"@statisticsMessageCustom30": {
+  "description": "Label of the card showing the number of final boulders in the competition"
+},
+
+"statisticsMessageCustom31": "Boulder Details",
+"@statisticsMessageCustom31": {
+  "description": "Section title containing the detailed list of each boulder"
+},
+
+"statisticsMessageCustom32": "Boulder No. {numero}",
+"@statisticsMessageCustom32": {
+  "description": "Header of the individual boulder card displaying its number",
+  "placeholders": {
+    "numero": {
+      "type": "int"
+    }
+  }
+},
+
+"statisticsMessageCustom33": "Final",
+"@statisticsMessageCustom33": {
+  "description": "Chip displayed on the boulder card when the boulder belongs to the final round"
+},
+
+"statisticsMessageCustom34": "Qualification",
+"@statisticsMessageCustom34": {
+  "description": "Chip displayed on the boulder card when the boulder belongs to the qualification round"
+},
+
+"statisticsMessageCustom35": "Difficulty",
+"@statisticsMessageCustom35": {
+  "description": "Label for the boulder difficulty value"
+},
+
+"statisticsMessageCustom36": "Color",
+"@statisticsMessageCustom36": {
+  "description": "Label for the boulder color/hold"
+},
+
+"statisticsMessageCustom37": "Total Ascents",
+"@statisticsMessageCustom37": {
+  "description": "Label for the total number of successful ascents on the boulder"
+},
+
+"statisticsMessageCustom38": "Male Ascents",
+"@statisticsMessageCustom38": {
+  "description": "Label for the number of successful ascents on the boulder by male athletes"
+},
+
+"statisticsMessageCustom39": "Female Ascents",
+"@statisticsMessageCustom39": {
+  "description": "Label for the number of successful ascents on the boulder by female athletes"
+},
+
+"statisticsMessageCustom40": "Theoretical Value",
+"@statisticsMessageCustom40": {
+  "description": "Label for the theoretical value assigned to the boulder"
+},
+
+"statisticsMessageCustom41": "Current Value",
+"@statisticsMessageCustom41": {
+  "description": "Label for the current recalculated value of the boulder based on ascents"
+},
+
+"statisticsMessageCustom42": "Error loading boulder statistics: {error}",
+"@statisticsMessageCustom42": {
+  "description": "Error message displayed in the Boulder tab when data loading fails",
+  "placeholders": {
+    "error": {
+      "type": "String"
+    }
+  }
+},
+"statisticsMessageCustom43": "Categories Overview",
+"@statisticsMessageCustom43": {
+  "description": "Section title with the numerical summary of categories in the Categories tab"
+},
+
+"statisticsMessageCustom44": "Total Categories",
+"@statisticsMessageCustom44": {
+  "description": "Label of the card showing the total number of categories in the competition"
+},
+
+"statisticsMessageCustom45": "Total Registered Athletes",
+"@statisticsMessageCustom45": {
+  "description": "Label of the card showing the total number of registered athletes across all categories"
+},
+
+"statisticsMessageCustom46": "Total Participants",
+"@statisticsMessageCustom46": {
+  "description": "Label of the card showing the total number of participants across all categories"
+},
+
+"statisticsMessageCustom47": "Category Details",
+"@statisticsMessageCustom47": {
+  "description": "Section title containing the detailed list of each category"
+},
+
+"statisticsMessageCustom48": "Registered Athletes",
+"@statisticsMessageCustom48": {
+  "description": "Label for the number of registered athletes in a category card"
+},
+
+"statisticsMessageCustom49": "Participants",
+"@statisticsMessageCustom49": {
+  "description": "Label for the number of participating athletes in a category card"
+},
+
+"statisticsMessageCustom50": "Empty",
+"@statisticsMessageCustom50": {
+  "description": "Chip displayed on a category card when it has no registered athletes"
+},
+
+"statisticsMessageCustom51": "Error loading category statistics: {error}",
+"@statisticsMessageCustom51": {
+  "description": "Error message displayed in the Categories tab when data loading fails",
+  "placeholders": {
+    "error": {
+      "type": "String"
+    }
+  }
 }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "628026000616",
+    "project_id": "bouldercompetition",
+    "storage_bucket": "bouldercompetition.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:628026000616:android:0bd26b07cd8efd4a29f55d",
+        "android_client_info": {
+          "package_name": "com.example.boulder_competition"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFkTtyVXDMTCYIlQGE8qer2Ip22sSIL5E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

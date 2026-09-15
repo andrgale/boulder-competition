@@ -4145,6 +4145,312 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to delete this category?'**
   String get categoryMessageCustom18;
+
+  /// Statistics page title
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics - {competition}'**
+  String statisticsMessageCustom1(String competition);
+
+  /// Athletes statistics section
+  ///
+  /// In en, this message translates to:
+  /// **'Athletes'**
+  String get statisticsMessageCustom2;
+
+  /// Boulders statistics section
+  ///
+  /// In en, this message translates to:
+  /// **'Boulders'**
+  String get statisticsMessageCustom3;
+
+  /// Categories statistics section
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get statisticsMessageCustom4;
+
+  /// Message displayed when statistics data is not yet available
+  ///
+  /// In en, this message translates to:
+  /// **'Data not yet available'**
+  String get statisticsMessageCustom5;
+
+  /// Error message displayed when statistics loading fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading statistics: {error}'**
+  String statisticsMessageCustom6(String error);
+
+  /// Registrations statistics section
+  ///
+  /// In en, this message translates to:
+  /// **'Registrations'**
+  String get statisticsMessageCustom7;
+
+  /// Total number of registered athletes
+  ///
+  /// In en, this message translates to:
+  /// **'Total registered athletes'**
+  String get statisticsMessageCustom8;
+
+  /// Total number of participants
+  ///
+  /// In en, this message translates to:
+  /// **'Total participants'**
+  String get statisticsMessageCustom9;
+
+  /// Total number of registered male athletes
+  ///
+  /// In en, this message translates to:
+  /// **'Registered males'**
+  String get statisticsMessageCustom10;
+
+  /// Total number of registered female athletes
+  ///
+  /// In en, this message translates to:
+  /// **'Registered females'**
+  String get statisticsMessageCustom11;
+
+  /// Total number of male participants
+  ///
+  /// In en, this message translates to:
+  /// **'Male participants'**
+  String get statisticsMessageCustom12;
+
+  /// Total number of female participants
+  ///
+  /// In en, this message translates to:
+  /// **'Female participants'**
+  String get statisticsMessageCustom13;
+
+  /// Registration source statistics section
+  ///
+  /// In en, this message translates to:
+  /// **'Registration sources'**
+  String get statisticsMessageCustom14;
+
+  /// Registrations created by an administrator
+  ///
+  /// In en, this message translates to:
+  /// **'Administrator'**
+  String get statisticsMessageCustom15;
+
+  /// Registrations created directly by the athlete
+  ///
+  /// In en, this message translates to:
+  /// **'Athlete'**
+  String get statisticsMessageCustom16;
+
+  /// Registrations created through data import
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get statisticsMessageCustom17;
+
+  /// Athlete demographic records section
+  ///
+  /// In en, this message translates to:
+  /// **'Demographic records'**
+  String get statisticsMessageCustom18;
+
+  /// Youngest male athlete
+  ///
+  /// In en, this message translates to:
+  /// **'Youngest athlete (M)'**
+  String get statisticsMessageCustom19;
+
+  /// Youngest female athlete
+  ///
+  /// In en, this message translates to:
+  /// **'Youngest athlete (F)'**
+  String get statisticsMessageCustom20;
+
+  /// Oldest male athlete
+  ///
+  /// In en, this message translates to:
+  /// **'Oldest athlete (M)'**
+  String get statisticsMessageCustom21;
+
+  /// Oldest female athlete
+  ///
+  /// In en, this message translates to:
+  /// **'Oldest athlete (F)'**
+  String get statisticsMessageCustom22;
+
+  /// Bib number label
+  ///
+  /// In en, this message translates to:
+  /// **'Bib number'**
+  String get statisticsMessageCustom23;
+
+  /// Club label
+  ///
+  /// In en, this message translates to:
+  /// **'Club'**
+  String get statisticsMessageCustom24;
+
+  /// Date of birth label
+  ///
+  /// In en, this message translates to:
+  /// **'Date of birth'**
+  String get statisticsMessageCustom25;
+
+  /// Message displayed when no data is available
+  ///
+  /// In en, this message translates to:
+  /// **'No data available'**
+  String get statisticsMessageCustom26;
+
+  /// Message displayed when no statistics are available for the competition
+  ///
+  /// In en, this message translates to:
+  /// **'No statistics available for this competition'**
+  String get statisticsMessageCustom27;
+
+  /// Section title with the numerical summary of boulders in the Boulder tab
+  ///
+  /// In en, this message translates to:
+  /// **'Boulder Overview'**
+  String get statisticsMessageCustom28;
+
+  /// Label of the card showing the total number of boulders in the competition
+  ///
+  /// In en, this message translates to:
+  /// **'Total Boulders'**
+  String get statisticsMessageCustom29;
+
+  /// Label of the card showing the number of final boulders in the competition
+  ///
+  /// In en, this message translates to:
+  /// **'Final Boulders'**
+  String get statisticsMessageCustom30;
+
+  /// Section title containing the detailed list of each boulder
+  ///
+  /// In en, this message translates to:
+  /// **'Boulder Details'**
+  String get statisticsMessageCustom31;
+
+  /// Header of the individual boulder card displaying its number
+  ///
+  /// In en, this message translates to:
+  /// **'Boulder No. {numero}'**
+  String statisticsMessageCustom32(int numero);
+
+  /// Chip displayed on the boulder card when the boulder belongs to the final round
+  ///
+  /// In en, this message translates to:
+  /// **'Final'**
+  String get statisticsMessageCustom33;
+
+  /// Chip displayed on the boulder card when the boulder belongs to the qualification round
+  ///
+  /// In en, this message translates to:
+  /// **'Qualification'**
+  String get statisticsMessageCustom34;
+
+  /// Label for the boulder difficulty value
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty'**
+  String get statisticsMessageCustom35;
+
+  /// Label for the boulder color/hold
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get statisticsMessageCustom36;
+
+  /// Label for the total number of successful ascents on the boulder
+  ///
+  /// In en, this message translates to:
+  /// **'Total Ascents'**
+  String get statisticsMessageCustom37;
+
+  /// Label for the number of successful ascents on the boulder by male athletes
+  ///
+  /// In en, this message translates to:
+  /// **'Male Ascents'**
+  String get statisticsMessageCustom38;
+
+  /// Label for the number of successful ascents on the boulder by female athletes
+  ///
+  /// In en, this message translates to:
+  /// **'Female Ascents'**
+  String get statisticsMessageCustom39;
+
+  /// Label for the theoretical value assigned to the boulder
+  ///
+  /// In en, this message translates to:
+  /// **'Theoretical Value'**
+  String get statisticsMessageCustom40;
+
+  /// Label for the current recalculated value of the boulder based on ascents
+  ///
+  /// In en, this message translates to:
+  /// **'Current Value'**
+  String get statisticsMessageCustom41;
+
+  /// Error message displayed in the Boulder tab when data loading fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading boulder statistics: {error}'**
+  String statisticsMessageCustom42(String error);
+
+  /// Section title with the numerical summary of categories in the Categories tab
+  ///
+  /// In en, this message translates to:
+  /// **'Categories Overview'**
+  String get statisticsMessageCustom43;
+
+  /// Label of the card showing the total number of categories in the competition
+  ///
+  /// In en, this message translates to:
+  /// **'Total Categories'**
+  String get statisticsMessageCustom44;
+
+  /// Label of the card showing the total number of registered athletes across all categories
+  ///
+  /// In en, this message translates to:
+  /// **'Total Registered Athletes'**
+  String get statisticsMessageCustom45;
+
+  /// Label of the card showing the total number of participants across all categories
+  ///
+  /// In en, this message translates to:
+  /// **'Total Participants'**
+  String get statisticsMessageCustom46;
+
+  /// Section title containing the detailed list of each category
+  ///
+  /// In en, this message translates to:
+  /// **'Category Details'**
+  String get statisticsMessageCustom47;
+
+  /// Label for the number of registered athletes in a category card
+  ///
+  /// In en, this message translates to:
+  /// **'Registered Athletes'**
+  String get statisticsMessageCustom48;
+
+  /// Label for the number of participating athletes in a category card
+  ///
+  /// In en, this message translates to:
+  /// **'Participants'**
+  String get statisticsMessageCustom49;
+
+  /// Chip displayed on a category card when it has no registered athletes
+  ///
+  /// In en, this message translates to:
+  /// **'Empty'**
+  String get statisticsMessageCustom50;
+
+  /// Error message displayed in the Categories tab when data loading fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading category statistics: {error}'**
+  String statisticsMessageCustom51(String error);
 }
 
 class _AppLocalizationsDelegate

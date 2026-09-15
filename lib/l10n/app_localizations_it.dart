@@ -2266,4 +2266,168 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get categoryMessageCustom18 =>
       'Sei sicuro di voler eliminare questa categoria?';
+
+  @override
+  String statisticsMessageCustom1(String competition) {
+    return 'Statistiche - $competition';
+  }
+
+  @override
+  String get statisticsMessageCustom2 => 'Atleti';
+
+  @override
+  String get statisticsMessageCustom3 => 'Boulder';
+
+  @override
+  String get statisticsMessageCustom4 => 'Categorie';
+
+  @override
+  String get statisticsMessageCustom5 => 'Dati non ancora disponibili';
+
+  @override
+  String statisticsMessageCustom6(String error) {
+    return 'Errore caricamento statistiche: $error';
+  }
+
+  @override
+  String get statisticsMessageCustom7 => 'Iscrizioni';
+
+  @override
+  String get statisticsMessageCustom8 => 'Totale iscritti';
+
+  @override
+  String get statisticsMessageCustom9 => 'Totale partecipanti';
+
+  @override
+  String get statisticsMessageCustom10 => 'Maschi iscritti';
+
+  @override
+  String get statisticsMessageCustom11 => 'Femmine iscritte';
+
+  @override
+  String get statisticsMessageCustom12 => 'Maschi partecipanti';
+
+  @override
+  String get statisticsMessageCustom13 => 'Femmine partecipanti';
+
+  @override
+  String get statisticsMessageCustom14 => 'Provenienza iscrizioni';
+
+  @override
+  String get statisticsMessageCustom15 => 'Amministratore';
+
+  @override
+  String get statisticsMessageCustom16 => 'Atleta';
+
+  @override
+  String get statisticsMessageCustom17 => 'Importazione';
+
+  @override
+  String get statisticsMessageCustom18 => 'Record anagrafici';
+
+  @override
+  String get statisticsMessageCustom19 => 'Atleta più giovane (M)';
+
+  @override
+  String get statisticsMessageCustom20 => 'Atleta più giovane (F)';
+
+  @override
+  String get statisticsMessageCustom21 => 'Atleta più anziano (M)';
+
+  @override
+  String get statisticsMessageCustom22 => 'Atleta più anziana (F)';
+
+  @override
+  String get statisticsMessageCustom23 => 'Pettorale';
+
+  @override
+  String get statisticsMessageCustom24 => 'Società';
+
+  @override
+  String get statisticsMessageCustom25 => 'Data di nascita';
+
+  @override
+  String get statisticsMessageCustom26 => 'Nessun dato disponibile';
+
+  @override
+  String get statisticsMessageCustom27 =>
+      'Nessuna statistica disponibile per questa gara';
+
+  @override
+  String get statisticsMessageCustom28 => 'Panoramica boulder';
+
+  @override
+  String get statisticsMessageCustom29 => 'Boulder totali';
+
+  @override
+  String get statisticsMessageCustom30 => 'Boulder finale';
+
+  @override
+  String get statisticsMessageCustom31 => 'Dettaglio boulder';
+
+  @override
+  String statisticsMessageCustom32(int numero) {
+    return 'Boulder n. $numero';
+  }
+
+  @override
+  String get statisticsMessageCustom33 => 'Finale';
+
+  @override
+  String get statisticsMessageCustom34 => 'Qualifica';
+
+  @override
+  String get statisticsMessageCustom35 => 'Difficoltà';
+
+  @override
+  String get statisticsMessageCustom36 => 'Colore';
+
+  @override
+  String get statisticsMessageCustom37 => 'Salite totali';
+
+  @override
+  String get statisticsMessageCustom38 => 'Salite maschili';
+
+  @override
+  String get statisticsMessageCustom39 => 'Salite femminili';
+
+  @override
+  String get statisticsMessageCustom40 => 'Valore teorico';
+
+  @override
+  String get statisticsMessageCustom41 => 'Valore attuale';
+
+  @override
+  String statisticsMessageCustom42(String error) {
+    return 'Errore caricamento statistiche boulder: $error';
+  }
+
+  @override
+  String get statisticsMessageCustom43 => 'Panoramica categorie';
+
+  @override
+  String get statisticsMessageCustom44 => 'Categorie totali';
+
+  @override
+  String get statisticsMessageCustom45 => 'Iscritti totali';
+
+  @override
+  String get statisticsMessageCustom46 => 'Partecipanti totali';
+
+  @override
+  String get statisticsMessageCustom47 => 'Dettaglio categorie';
+
+  @override
+  String get statisticsMessageCustom48 => 'Iscritti';
+
+  @override
+  String get statisticsMessageCustom49 => 'Partecipanti';
+
+  @override
+  String get statisticsMessageCustom50 => 'Vuota';
+
+  @override
+  String statisticsMessageCustom51(String error) {
+    return 'Errore caricamento statistiche categorie: $error';
+  }
 }

@@ -9,6 +9,7 @@ import 'package:boulder_competition/features/registrations/models/registration_m
 import 'package:boulder_competition/features/security/models/menu_translation_model.dart';
 import 'package:boulder_competition/features/security/pages/menus/menu_translation_form_page.dart';
 import 'package:boulder_competition/features/security/pages/menus/menu_translations_list_page.dart';
+import 'package:boulder_competition/features/statistics/pages/statistics_competition_page.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/athlete/pages/athlete_boulder_scan_page.dart';
@@ -270,6 +271,28 @@ final GoRouter appRouter = GoRouter(
             }
 
             return BouldersPage(
+              competitionId: competitionId,
+              competitionName: competitionName,
+            );
+          },
+        ),
+
+        GoRoute(
+          path: '/competitions/:id/statistics',
+          builder: (context, state) {
+            final competitionId = state.pathParameters['id']!;
+
+            // Gestisce sia CompetitionModel (navigazione normale dall'app)
+            // sia Map<String,dynamic> (navigazione dalla ricerca globale)
+            final extra = state.extra;
+            String competitionName = '';
+            if (extra is CompetitionModel) {
+              competitionName = extra.descrizione;
+            } else if (extra is Map) {
+              competitionName = extra['competitionName'] as String? ?? '';
+            }
+
+            return StatisticsCompetitionPage(
               competitionId: competitionId,
               competitionName: competitionName,
             );
