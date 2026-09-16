@@ -10,6 +10,7 @@ import '../models/statistic_competition_registration_owner_model.dart';
 import '../models/statistic_competition_boulder_model.dart';
 import '../models/statistic_competition_boulder_detail_model.dart';
 import '../models/statistic_competition_category_model.dart';
+import 'statistics_competition_export_pdf.dart';
 import 'package:boulder_competition/l10n/app_localizations.dart';
 
 class StatisticsCompetitionPage extends StatefulWidget {
@@ -27,8 +28,7 @@ class StatisticsCompetitionPage extends StatefulWidget {
       _StatisticsCompetitionPageState();
 }
 
-class _StatisticsCompetitionPageState
-    extends State<StatisticsCompetitionPage> {
+class _StatisticsCompetitionPageState extends State<StatisticsCompetitionPage> {
   final _statsService = StatisticCompetitionRegistrationService();
   final _ownerService = StatisticCompetitionRegistrationOwnerService();
   final _boulderService = StatisticCompetitionBoulderService();
@@ -45,6 +45,7 @@ class _StatisticsCompetitionPageState
 
   bool _loading = true;
   String? _error;
+  bool _exporting = false;
 
   AppLocalizations get l10n => AppLocalizations.of(context)!;
 
@@ -81,8 +82,7 @@ class _StatisticsCompetitionPageState
         _boulderStats = results[2] as StatisticCompetitionBoulderModel?;
         _boulderDetails =
             results[3] as List<StatisticCompetitionBoulderDetailModel>;
-        _categoryStats =
-            results[4] as List<StatisticCompetitionCategoryModel>;
+        _categoryStats = results[4] as List<StatisticCompetitionCategoryModel>;
         _loading = false;
       });
     } catch (e) {
@@ -105,8 +105,29 @@ class _StatisticsCompetitionPageState
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            l10n.statisticsMessageCustom1(widget.competitionName), // 'Statistiche - {competition}'
+            l10n.statisticsMessageCustom1(
+              widget.competitionName,
+            ), // 'Statistiche - {competition}'
           ),
+          actions: [
+            _exporting
+                ? const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                : IconButton(
+                    tooltip: l10n.rankingMessageCustom2, // 'Esporta PDF'
+                    icon: const Icon(Icons.picture_as_pdf),
+                    onPressed: _exportPdf,
+                  ),
+          ],
           bottom: TabBar(
             tabs: [
               Tab(text: l10n.statisticsMessageCustom2), // 'Atleti'
@@ -137,14 +158,18 @@ class _StatisticsCompetitionPageState
 
     if (_error != null) {
       return Center(
-        child: Text(l10n.statisticsMessageCustom6(_error!)), // 'Errore caricamento statistiche: {error}'
+        child: Text(
+          l10n.statisticsMessageCustom6(_error!),
+        ), // 'Errore caricamento statistiche: {error}'
       );
     }
 
     final stats = _stats;
     if (stats == null) {
       return Center(
-        child: Text(l10n.statisticsMessageCustom27), // 'Nessuna statistica disponibile per questa gara'
+        child: Text(
+          l10n.statisticsMessageCustom27,
+        ), // 'Nessuna statistica disponibile per questa gara'
       );
     }
 
@@ -183,8 +208,10 @@ class _StatisticsCompetitionPageState
           _GenderStatTable(
             iscrittiLabel: l10n.statisticsMessageCustom10, // 'Maschi iscritti'
             iscritteLabel: l10n.statisticsMessageCustom11, // 'Femmine iscritte'
-            partecipantiLabel: l10n.statisticsMessageCustom12, // 'Maschi partecipanti'
-            partecipantiFLabel: l10n.statisticsMessageCustom13, // 'Femmine partecipanti'
+            partecipantiLabel:
+                l10n.statisticsMessageCustom12, // 'Maschi partecipanti'
+            partecipantiFLabel:
+                l10n.statisticsMessageCustom13, // 'Femmine partecipanti'
             maschiIscritti: stats.nrAtletiMaschiIscritti,
             femmineIscritte: stats.nrAtleteFemmineIscritte,
             maschiPartecipanti: stats.nrAtletiMaschiPartecipanti,
@@ -195,7 +222,9 @@ class _StatisticsCompetitionPageState
 
           // ── provenienza iscrizioni ────────────────────────
           if (_ownerStats.isNotEmpty) ...[
-            _SectionTitle(title: l10n.statisticsMessageCustom14), // 'Provenienza iscrizioni'
+            _SectionTitle(
+              title: l10n.statisticsMessageCustom14,
+            ), // 'Provenienza iscrizioni'
             _OwnerStatsCard(
               ownerStats: _ownerStats,
               totale: stats.nrAtletiIscritti,
@@ -205,7 +234,9 @@ class _StatisticsCompetitionPageState
           ],
 
           // ── record anagrafici ─────────────────────────────
-          _SectionTitle(title: l10n.statisticsMessageCustom18), // 'Record anagrafici'
+          _SectionTitle(
+            title: l10n.statisticsMessageCustom18,
+          ), // 'Record anagrafici'
           _AthleteExtremeTile(
             title: l10n.statisticsMessageCustom19, // 'Atleta più giovane (M)'
             athlete: stats.atletaMaschioPartecipantePiuGiovane,
@@ -248,6 +279,33 @@ class _StatisticsCompetitionPageState
     }
   }
 
+  Future<void> _exportPdf() async {
+    if (_exporting || _loading) return;
+    final stats = _stats;
+    final boulderStats = _boulderStats;
+    if (stats == null || boulderStats == null) return;
+
+    setState(() => _exporting = true);
+    try {
+      await StatisticsCompetitionExportPdf.exportAndShare(
+        competitionName: widget.competitionName,
+        stats: stats,
+        ownerStats: _ownerStats,
+        boulderStats: boulderStats,
+        boulderDetails: _boulderDetails,
+        categoryStats: _categoryStats,
+        l10n: l10n,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.statisticsMessageCustom6(e.toString()))),
+      );
+    } finally {
+      if (mounted) setState(() => _exporting = false);
+    }
+  }
+
   // =========================================================
   // TAB BOULDER
   // =========================================================
@@ -259,14 +317,18 @@ class _StatisticsCompetitionPageState
 
     if (_error != null) {
       return Center(
-        child: Text(l10n.statisticsMessageCustom42(_error!)), // 'Errore caricamento statistiche boulder: {error}'
+        child: Text(
+          l10n.statisticsMessageCustom42(_error!),
+        ), // 'Errore caricamento statistiche boulder: {error}'
       );
     }
 
     final boulderStats = _boulderStats;
     if (boulderStats == null) {
       return Center(
-        child: Text(l10n.statisticsMessageCustom27), // 'Nessuna statistica disponibile per questa gara'
+        child: Text(
+          l10n.statisticsMessageCustom27,
+        ), // 'Nessuna statistica disponibile per questa gara'
       );
     }
 
@@ -276,7 +338,9 @@ class _StatisticsCompetitionPageState
         padding: const EdgeInsets.all(12),
         children: [
           // ── overview ────────────────────────────────────
-          _SectionTitle(title: l10n.statisticsMessageCustom28), // 'Panoramica boulder'
+          _SectionTitle(
+            title: l10n.statisticsMessageCustom28,
+          ), // 'Panoramica boulder'
           Row(
             children: [
               Expanded(
@@ -303,10 +367,10 @@ class _StatisticsCompetitionPageState
 
           // ── dettaglio boulder ─────────────────────────────
           if (_boulderDetails.isNotEmpty) ...[
-            _SectionTitle(title: l10n.statisticsMessageCustom31), // 'Dettaglio boulder'
-            ..._boulderDetails.map(
-              (b) => _BoulderTile(boulder: b),
-            ),
+            _SectionTitle(
+              title: l10n.statisticsMessageCustom31,
+            ), // 'Dettaglio boulder'
+            ..._boulderDetails.map((b) => _BoulderTile(boulder: b)),
           ],
         ],
       ),
@@ -324,19 +388,25 @@ class _StatisticsCompetitionPageState
 
     if (_error != null) {
       return Center(
-        child: Text(l10n.statisticsMessageCustom51(_error!)), // 'Errore caricamento statistiche categorie: {error}'
+        child: Text(
+          l10n.statisticsMessageCustom51(_error!),
+        ), // 'Errore caricamento statistiche categorie: {error}'
       );
     }
 
     if (_categoryStats.isEmpty) {
       return Center(
-        child: Text(l10n.statisticsMessageCustom27), // 'Nessuna statistica disponibile per questa gara'
+        child: Text(
+          l10n.statisticsMessageCustom27,
+        ), // 'Nessuna statistica disponibile per questa gara'
       );
     }
 
     final totaleCategorie = _categoryStats.length;
-    final totaleIscritti =
-        _categoryStats.fold<int>(0, (sum, c) => sum + c.nrAtletiIscritti);
+    final totaleIscritti = _categoryStats.fold<int>(
+      0,
+      (sum, c) => sum + c.nrAtletiIscritti,
+    );
     final totalePartecipanti = _categoryStats.fold<int>(
       0,
       (sum, c) => sum + c.nrAtletiPartecipanti,
@@ -348,7 +418,9 @@ class _StatisticsCompetitionPageState
         padding: const EdgeInsets.all(12),
         children: [
           // ── overview ────────────────────────────────────
-          _SectionTitle(title: l10n.statisticsMessageCustom43), // 'Panoramica categorie'
+          _SectionTitle(
+            title: l10n.statisticsMessageCustom43,
+          ), // 'Panoramica categorie'
           Row(
             children: [
               Expanded(
@@ -371,7 +443,8 @@ class _StatisticsCompetitionPageState
               const SizedBox(width: 10),
               Expanded(
                 child: _StatCard(
-                  label: l10n.statisticsMessageCustom46, // 'Partecipanti totali'
+                  label:
+                      l10n.statisticsMessageCustom46, // 'Partecipanti totali'
                   value: totalePartecipanti,
                   icon: Icons.emoji_events,
                   color: Colors.teal,
@@ -383,10 +456,10 @@ class _StatisticsCompetitionPageState
           const SizedBox(height: 20),
 
           // ── dettaglio categorie ────────────────────────────
-          _SectionTitle(title: l10n.statisticsMessageCustom47), // 'Dettaglio categorie'
-          ..._categoryStats.map(
-            (c) => _CategoryTile(category: c),
-          ),
+          _SectionTitle(
+            title: l10n.statisticsMessageCustom47,
+          ), // 'Dettaglio categorie'
+          ..._categoryStats.map((c) => _CategoryTile(category: c)),
         ],
       ),
     );
@@ -813,8 +886,9 @@ class _BoulderTile extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final b = boulder;
     final swatch = _swatchColor(b.colore);
-    final ratio =
-        b.valoreTeorico > 0 ? (b.valoreAttuale / b.valoreTeorico).clamp(0.0, 1.0) : 0.0;
+    final ratio = b.valoreTeorico > 0
+        ? (b.valoreAttuale / b.valoreTeorico).clamp(0.0, 1.0)
+        : 0.0;
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 5),
@@ -848,7 +922,9 @@ class _BoulderTile extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    l10n.statisticsMessageCustom32(b.numero), // 'Boulder n. {numero}'
+                    l10n.statisticsMessageCustom32(
+                      b.numero,
+                    ), // 'Boulder n. {numero}'
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
@@ -856,8 +932,10 @@ class _BoulderTile extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: (b.isFinale ? Colors.purple : Colors.indigo)
                         .withValues(alpha: 0.1),
@@ -865,7 +943,8 @@ class _BoulderTile extends StatelessWidget {
                   ),
                   child: Text(
                     b.isFinale
-                        ? l10n.statisticsMessageCustom33 // 'Finale'
+                        ? l10n
+                              .statisticsMessageCustom33 // 'Finale'
                         : l10n.statisticsMessageCustom34, // 'Qualifica'
                     style: TextStyle(
                       fontSize: 11,
