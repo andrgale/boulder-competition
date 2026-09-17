@@ -144,6 +144,8 @@ class RouteGuard {
     location == '/athlete-change-password' ||
     location == '/athlete-boulder-scan' ||    
     location == '/athlete-boulders' ||
+    location == '/athlete-statistics' ||
+    location == '/athlete-statistics-detail' ||
     location == '/athlete-home' ||
     location == '/athlete-competition-registration' ||
     location == '/athlete-registration' ||

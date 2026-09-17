@@ -4451,6 +4451,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error loading category statistics: {error}'**
   String statisticsMessageCustom51(String error);
+
+  /// AppBar title of the athlete statistics page showing the list of competitions the athlete has participated in
+  ///
+  /// In en, this message translates to:
+  /// **'My Competitions'**
+  String get athleteMessageCustom111;
+
+  /// Message displayed on the athlete statistics page when no competitions are found that the athlete has participated in
+  ///
+  /// In en, this message translates to:
+  /// **'No competitions found'**
+  String get athleteMessageCustom112;
+
+  /// Chip displayed on a competition card in the athlete statistics page when the competition is still open (fl_gara_chiusa = false)
+  ///
+  /// In en, this message translates to:
+  /// **'Competition Open'**
+  String get athleteMessageCustom113;
+
+  /// Chip displayed on a competition card in the athlete statistics page when the competition is closed (fl_gara_chiusa = true)
+  ///
+  /// In en, this message translates to:
+  /// **'Competition Closed'**
+  String get athleteMessageCustom114;
+
+  /// Text displayed below the progress bar on a competition card in the athlete statistics page, indicating how many boulders the athlete has completed out of the competition total
+  ///
+  /// In en, this message translates to:
+  /// **'{completed}/{total} boulders completed'**
+  String athleteMessageCustom115(int completed, int total);
+
+  /// Tooltip of the statistics icon on a competition card in the athlete statistics page
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics Details'**
+  String get athleteMessageCustom116;
+
+  /// Fallback AppBar title of the statistics details page, used when the competition description is not available
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics Details'**
+  String get athleteMessageCustom117;
+
+  /// Message displayed on the statistics details page when the athlete's ranking data is not available
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics not available'**
+  String get athleteMessageCustom118;
+
+  /// Label of the overall ranking card on the statistics details page
+  ///
+  /// In en, this message translates to:
+  /// **'Overall Ranking'**
+  String get athleteMessageCustom119;
+
+  /// Label of the gender ranking card on the statistics details page
+  ///
+  /// In en, this message translates to:
+  /// **'Gender Ranking'**
+  String get athleteMessageCustom120;
+
+  /// Label of the category ranking card on the statistics details page
+  ///
+  /// In en, this message translates to:
+  /// **'Category Ranking'**
+  String get athleteMessageCustom121;
+
+  /// Title of the section listing completed boulders by color/difficulty on the statistics details page
+  ///
+  /// In en, this message translates to:
+  /// **'Completed Boulders'**
+  String get athleteMessageCustom122;
+
+  /// Message displayed on the statistics details page when the athlete has not completed any boulders
+  ///
+  /// In en, this message translates to:
+  /// **'No boulders completed'**
+  String get athleteMessageCustom123;
+
+  /// Badge displayed on a boulder card in the statistics details page, indicating how many boulders of that color/difficulty the athlete has completed
+  ///
+  /// In en, this message translates to:
+  /// **'{count} completed'**
+  String athleteMessageCustom124(int count);
 }
 
 class _AppLocalizationsDelegate

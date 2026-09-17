@@ -2385,6 +2385,87 @@
   "placeholders": {
     "error": { "type": "String" }
   }
+},
+"athleteMessageCustom111": "Le mie gare",
+"@athleteMessageCustom111": {
+  "description": "Titolo AppBar della pagina statistiche atleta con l'elenco delle gare a cui ha partecipato"
+},
+
+"athleteMessageCustom112": "Nessuna gara trovata",
+"@athleteMessageCustom112": {
+  "description": "Messaggio mostrato nella pagina statistiche atleta quando non risultano gare a cui l'atleta ha partecipato"
+},
+
+"athleteMessageCustom113": "Gara aperta",
+"@athleteMessageCustom113": {
+  "description": "Chip mostrato sulla card di una gara nella pagina statistiche atleta quando la gara non è ancora chiusa (fl_gara_chiusa = false)"
+},
+
+"athleteMessageCustom114": "Gara chiusa",
+"@athleteMessageCustom114": {
+  "description": "Chip mostrato sulla card di una gara nella pagina statistiche atleta quando la gara è chiusa (fl_gara_chiusa = true)"
+},
+
+"athleteMessageCustom115": "{completed}/{total} boulder completati",
+"@athleteMessageCustom115": {
+  "description": "Testo mostrato sotto la progress bar nella card di una gara nella pagina statistiche atleta, indica quanti boulder l'atleta ha completato sul totale della gara",
+  "placeholders": {
+    "completed": {
+      "type": "int"
+    },
+    "total": {
+      "type": "int"
+    }
+  }
+},
+"athleteMessageCustom116": "Dettaglio statistiche",
+"@athleteMessageCustom116": {
+  "description": "Tooltip dell'icona statistiche sulla card di una gara nella pagina statistiche atleta"
+},
+
+"athleteMessageCustom117": "Dettaglio statistiche",
+"@athleteMessageCustom117": {
+  "description": "Titolo AppBar di fallback della pagina dettaglio statistiche, usato quando non è disponibile la descrizione della gara"
+},
+
+"athleteMessageCustom118": "Statistiche non disponibili",
+"@athleteMessageCustom118": {
+  "description": "Messaggio mostrato nella pagina dettaglio statistiche quando non sono disponibili i dati di posizionamento dell'atleta"
+},
+
+"athleteMessageCustom119": "Classifica generale",
+"@athleteMessageCustom119": {
+  "description": "Etichetta della card posizione generale nella pagina dettaglio statistiche"
+},
+
+"athleteMessageCustom120": "Classifica sesso",
+"@athleteMessageCustom120": {
+  "description": "Etichetta della card posizione per sesso nella pagina dettaglio statistiche"
+},
+
+"athleteMessageCustom121": "Classifica categoria",
+"@athleteMessageCustom121": {
+  "description": "Etichetta della card posizione per categoria nella pagina dettaglio statistiche"
+},
+
+"athleteMessageCustom122": "Boulder saliti",
+"@athleteMessageCustom122": {
+  "description": "Titolo della sezione elenco boulder saliti per colore/difficoltà nella pagina dettaglio statistiche"
+},
+
+"athleteMessageCustom123": "Nessun boulder salito",
+"@athleteMessageCustom123": {
+  "description": "Messaggio mostrato nella pagina dettaglio statistiche quando l'atleta non ha salito nessun boulder"
+},
+
+"athleteMessageCustom124": "{count} saliti",
+"@athleteMessageCustom124": {
+  "description": "Badge mostrato sulla card boulder nella pagina dettaglio statistiche, indica quanti boulder di quel colore/difficoltà l'atleta ha salito",
+  "placeholders": {
+    "count": {
+      "type": "int"
+    }
+  }
 }
 
 }

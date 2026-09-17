@@ -2428,4 +2428,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String statisticsMessageCustom51(String error) {
     return 'Error loading category statistics: $error';
   }
+
+  @override
+  String get athleteMessageCustom111 => 'My Competitions';
+
+  @override
+  String get athleteMessageCustom112 => 'No competitions found';
+
+  @override
+  String get athleteMessageCustom113 => 'Competition Open';
+
+  @override
+  String get athleteMessageCustom114 => 'Competition Closed';
+
+  @override
+  String athleteMessageCustom115(int completed, int total) {
+    return '$completed/$total boulders completed';
+  }
+
+  @override
+  String get athleteMessageCustom116 => 'Statistics Details';
+
+  @override
+  String get athleteMessageCustom117 => 'Statistics Details';
+
+  @override
+  String get athleteMessageCustom118 => 'Statistics not available';
+
+  @override
+  String get athleteMessageCustom119 => 'Overall Ranking';
+
+  @override
+  String get athleteMessageCustom120 => 'Gender Ranking';
+
+  @override
+  String get athleteMessageCustom121 => 'Category Ranking';
+
+  @override
+  String get athleteMessageCustom122 => 'Completed Boulders';
+
+  @override
+  String get athleteMessageCustom123 => 'No boulders completed';
+
+  @override
+  String athleteMessageCustom124(int count) {
+    return '$count completed';
+  }
 }

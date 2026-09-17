@@ -2398,5 +2398,86 @@
       "type": "String"
     }
   }
+},
+"athleteMessageCustom111": "My Competitions",
+"@athleteMessageCustom111": {
+  "description": "AppBar title of the athlete statistics page showing the list of competitions the athlete has participated in"
+},
+
+"athleteMessageCustom112": "No competitions found",
+"@athleteMessageCustom112": {
+  "description": "Message displayed on the athlete statistics page when no competitions are found that the athlete has participated in"
+},
+
+"athleteMessageCustom113": "Competition Open",
+"@athleteMessageCustom113": {
+  "description": "Chip displayed on a competition card in the athlete statistics page when the competition is still open (fl_gara_chiusa = false)"
+},
+
+"athleteMessageCustom114": "Competition Closed",
+"@athleteMessageCustom114": {
+  "description": "Chip displayed on a competition card in the athlete statistics page when the competition is closed (fl_gara_chiusa = true)"
+},
+
+"athleteMessageCustom115": "{completed}/{total} boulders completed",
+"@athleteMessageCustom115": {
+  "description": "Text displayed below the progress bar on a competition card in the athlete statistics page, indicating how many boulders the athlete has completed out of the competition total",
+  "placeholders": {
+    "completed": {
+      "type": "int"
+    },
+    "total": {
+      "type": "int"
+    }
+  }
+},
+"athleteMessageCustom116": "Statistics Details",
+"@athleteMessageCustom116": {
+  "description": "Tooltip of the statistics icon on a competition card in the athlete statistics page"
+},
+
+"athleteMessageCustom117": "Statistics Details",
+"@athleteMessageCustom117": {
+  "description": "Fallback AppBar title of the statistics details page, used when the competition description is not available"
+},
+
+"athleteMessageCustom118": "Statistics not available",
+"@athleteMessageCustom118": {
+  "description": "Message displayed on the statistics details page when the athlete's ranking data is not available"
+},
+
+"athleteMessageCustom119": "Overall Ranking",
+"@athleteMessageCustom119": {
+  "description": "Label of the overall ranking card on the statistics details page"
+},
+
+"athleteMessageCustom120": "Gender Ranking",
+"@athleteMessageCustom120": {
+  "description": "Label of the gender ranking card on the statistics details page"
+},
+
+"athleteMessageCustom121": "Category Ranking",
+"@athleteMessageCustom121": {
+  "description": "Label of the category ranking card on the statistics details page"
+},
+
+"athleteMessageCustom122": "Completed Boulders",
+"@athleteMessageCustom122": {
+  "description": "Title of the section listing completed boulders by color/difficulty on the statistics details page"
+},
+
+"athleteMessageCustom123": "No boulders completed",
+"@athleteMessageCustom123": {
+  "description": "Message displayed on the statistics details page when the athlete has not completed any boulders"
+},
+
+"athleteMessageCustom124": "{count} completed",
+"@athleteMessageCustom124": {
+  "description": "Badge displayed on a boulder card in the statistics details page, indicating how many boulders of that color/difficulty the athlete has completed",
+  "placeholders": {
+    "count": {
+      "type": "int"
+    }
+  }
 }
 }

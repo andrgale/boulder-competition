@@ -1,4 +1,6 @@
 import 'package:boulder_competition/features/athlete/pages/athlete_check_in_scan_page.dart';
+import 'package:boulder_competition/features/athlete/pages/athlete_statistics_form_page.dart';
+import 'package:boulder_competition/features/athlete/pages/athlete_statistics_page.dart';
 import 'package:boulder_competition/features/categories/models/category_template_item_model.dart';
 import 'package:boulder_competition/features/categories/models/category_template_model.dart';
 import 'package:boulder_competition/features/category_templates/pages/category_template_items_form_page.dart';
@@ -225,7 +227,30 @@ final GoRouter appRouter = GoRouter(
             return const AthleteCheckinPage();
           },
         ),
+    // =====================================================
+    // ATHLETE STATISTICS
+    // =====================================================
 
+        GoRoute(
+          path: '/athlete-statistics',
+          name: 'athlete_statistics',
+          builder: (context, state) {
+            return const AthleteStatisticsPage();
+          },
+        ),
+
+        GoRoute(
+          path: '/athlete-statistics-detail',
+          name: 'athlete_statistics_detail',
+          builder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>;
+            return AthleteStatisticsFormPage(
+              competitionId: extra['competitionId'] as String,
+              registrationId: extra['registrationId'] as String,
+              descrizione: extra['descrizione'] as String?,
+            );
+          },
+        ),
 
     // =====================================================
     // APP SHELL

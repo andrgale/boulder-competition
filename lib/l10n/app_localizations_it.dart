@@ -2430,4 +2430,50 @@ class AppLocalizationsIt extends AppLocalizations {
   String statisticsMessageCustom51(String error) {
     return 'Errore caricamento statistiche categorie: $error';
   }
+
+  @override
+  String get athleteMessageCustom111 => 'Le mie gare';
+
+  @override
+  String get athleteMessageCustom112 => 'Nessuna gara trovata';
+
+  @override
+  String get athleteMessageCustom113 => 'Gara aperta';
+
+  @override
+  String get athleteMessageCustom114 => 'Gara chiusa';
+
+  @override
+  String athleteMessageCustom115(int completed, int total) {
+    return '$completed/$total boulder completati';
+  }
+
+  @override
+  String get athleteMessageCustom116 => 'Dettaglio statistiche';
+
+  @override
+  String get athleteMessageCustom117 => 'Dettaglio statistiche';
+
+  @override
+  String get athleteMessageCustom118 => 'Statistiche non disponibili';
+
+  @override
+  String get athleteMessageCustom119 => 'Classifica generale';
+
+  @override
+  String get athleteMessageCustom120 => 'Classifica sesso';
+
+  @override
+  String get athleteMessageCustom121 => 'Classifica categoria';
+
+  @override
+  String get athleteMessageCustom122 => 'Boulder saliti';
+
+  @override
+  String get athleteMessageCustom123 => 'Nessun boulder salito';
+
+  @override
+  String athleteMessageCustom124(int count) {
+    return '$count saliti';
+  }
 }
