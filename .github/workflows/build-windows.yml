@@ -123,12 +123,23 @@ jobs:
             throw "WiX components were not converted to x64."
           }
 
+
       - name: Create installer configuration
         shell: pwsh
         run: |
           $app = "${{ steps.appinfo.outputs.app_name }}"
           $version = "${{ steps.appinfo.outputs.msi_version }}"
+          $exe = Get-ChildItem -Path "build/windows/x64/runner/Release" -Filter "*.exe" | Select-Object -First 1
+
+          if (-not $exe) {
+            throw "No executable was found in the Flutter Windows Release folder."
+          }
+
+          $exeName = $exe.Name
+
           $xmlAppName = [System.Security.SecurityElement]::Escape($app)
+          $xmlExeName = [System.Security.SecurityElement]::Escape($exeName)
+          $xmlRegistryKey = [System.Security.SecurityElement]::Escape("Software\$app")
 
           Set-Content -Path "license.rtf" -Encoding utf8 -Value '{\rtf1\ansi\deff0 This software is provided as-is.}'
 
@@ -151,7 +162,7 @@ jobs:
 
               <MajorUpgrade
                 DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-                
+
               <MediaTemplate EmbedCab="yes" />
 
               <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
@@ -162,10 +173,31 @@ jobs:
                 <Directory Id="ProgramFiles64Folder">
                   <Directory Id="INSTALLFOLDER" Name="$xmlAppName" />
                 </Directory>
+
+                <Directory Id="DesktopFolder">
+                  <Component Id="DesktopShortcut" Guid="{2DF2DA10-282B-4BDE-879B-3F1087B11A9B}">
+                    <Shortcut
+                      Id="DesktopShortcutLink"
+                      Name="$xmlAppName"
+                      Description="$xmlAppName"
+                      Target="[INSTALLFOLDER]$xmlExeName"
+                      WorkingDirectory="INSTALLFOLDER"
+                      Advertise="no" />
+
+                    <RegistryValue
+                      Root="HKLM"
+                      Key="$xmlRegistryKey"
+                      Name="DesktopShortcut"
+                      Type="integer"
+                      Value="1"
+                      KeyPath="yes" />
+                  </Component>
+                </Directory>
               </Directory>
 
               <Feature Id="MainFeature" Title="$xmlAppName" Level="1">
                 <ComponentGroupRef Id="AppFiles" />
+                <ComponentRef Id="DesktopShortcut" />
               </Feature>
             </Product>
           </Wix>
@@ -183,7 +215,7 @@ jobs:
             -arch x64 `
             -dSourceDir="build/windows/x64/runner/Release" `
             product.wxs `
-            files.wxs 
+            files.wxs
 
           light.exe `
             -ext WixUIExtension `
@@ -195,8 +227,6 @@ jobs:
             throw "MSI creation failed: output file not found."
           }
 
-          "msi_name=$msi" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
-
       - name: Create or update GitHub Release
         shell: pwsh
         env:
@@ -206,9 +236,17 @@ jobs:
           $version = "${{ steps.appinfo.outputs.release_version }}"
           $tag = "v$version"
           $title = "Release $tag"
-          $zip = "${{ steps.zipstep.outputs.zip_name }}"
-          $msi = "${{ steps.msistep.outputs.msi_name }}"
+          $app = "${{ steps.appinfo.outputs.app_name }}"
+          $zip = "$app-$version-windows.zip"
+          $msi = "$app-$version-windows.msi"
 
+          if (-not (Test-Path $zip)) {
+            throw "ZIP package not found: $zip"
+          }
+
+          if (-not (Test-Path $msi)) {
+            throw "MSI package not found: $msi"
+          }
           gh release view $tag --repo $repository *> $null
 
           if ($LASTEXITCODE -eq 0) {
