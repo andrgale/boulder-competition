@@ -110,6 +110,7 @@ jobs:
             -dr INSTALLFOLDER `
             -srd `
             -gg `
+            -arch x64 `
             -var var.SourceDir `
             -out files.wxs
 
@@ -140,9 +141,8 @@ jobs:
                 Platform="x64" />
 
               <MajorUpgrade
-                AllowSameVersionUpgrades="yes"
                 DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-
+                
               <MediaTemplate EmbedCab="yes" />
 
               <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
