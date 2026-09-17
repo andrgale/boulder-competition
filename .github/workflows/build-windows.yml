@@ -110,9 +110,18 @@ jobs:
             -dr INSTALLFOLDER `
             -srd `
             -gg `
-            -arch x64 `
             -var var.SourceDir `
             -out files.wxs
+
+          # Heat genera componenti a 32 bit: li rendiamo esplicitamente x64.
+          $wxs = Get-Content -Path "files.wxs" -Raw
+          $wxs = $wxs -replace '(<Component\b)(?![^>]*\bWin64=)', '$1 Win64="yes"'
+
+          Set-Content -Path "files.wxs" -Value $wxs -Encoding utf8
+
+          if ($wxs -notmatch '<Component\b[^>]*\bWin64="yes"') {
+            throw "WiX components were not converted to x64."
+          }
 
       - name: Create installer configuration
         shell: pwsh
@@ -171,9 +180,10 @@ jobs:
           $msi = "$app-$version-windows.msi"
 
           candle.exe `
+            -arch x64 `
             -dSourceDir="build/windows/x64/runner/Release" `
             product.wxs `
-            files.wxs
+            files.wxs 
 
           light.exe `
             -ext WixUIExtension `
