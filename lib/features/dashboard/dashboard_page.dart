@@ -78,32 +78,43 @@ class _DashboardPageState extends State<DashboardPage> {
 
           final stats = snapshot.data ?? DashboardStats.empty();
 
-          return GridView.count(
-            crossAxisCount: 4,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            children: [
-              DashboardCard(
-                title: l10n.administrationMessageCustom162, // 'Competizioni'
-                value: stats.competitions.toString(),
-                icon: Icons.emoji_events,
-              ),
-              DashboardCard(
-                title: l10n.administrationMessageCustom163, // 'Atleti'
-                value: stats.athletes.toString(),
-                icon: Icons.groups,
-              ),
-              DashboardCard(
-                title: l10n.administrationMessageCustom164, // 'Boulder'
-                value: stats.boulders.toString(),
-                icon: Icons.terrain,
-              ),
-              DashboardCard(
-                title: l10n.administrationMessageCustom165, // 'Ascents'
-                value: stats.ascents.toString(),
-                icon: Icons.sports_score,
-              ),
-            ],
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final crossAxisCount = constraints.maxWidth >= 1000
+                  ? 4
+                  : constraints.maxWidth >= 650
+                      ? 2
+                      : 1;
+
+              return GridView.count(
+                crossAxisCount: crossAxisCount,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                childAspectRatio: 1.5,
+                children: [
+                  DashboardCard(
+                    title: l10n.administrationMessageCustom162, // 'Competizioni'
+                    value: stats.competitions.toString(),
+                    icon: Icons.emoji_events,
+                  ),
+                  DashboardCard(
+                    title: l10n.administrationMessageCustom163, // 'Atleti'
+                    value: stats.athletes.toString(),
+                    icon: Icons.groups,
+                  ),
+                  DashboardCard(
+                    title: l10n.administrationMessageCustom164, // 'Boulder'
+                    value: stats.boulders.toString(),
+                    icon: Icons.terrain,
+                  ),
+                  DashboardCard(
+                    title: l10n.administrationMessageCustom165, // 'Ascents'
+                    value: stats.ascents.toString(),
+                    icon: Icons.sports_score,
+                  ),
+                ],
+              );
+            },
           );
         },
       ),

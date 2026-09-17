@@ -2,180 +2,214 @@ name: Build Windows EXE + MSI
 
 on:
   workflow_dispatch:
-#  push:
-#    branches: [ "main" ]
 
 permissions:
-    contents: write
+  contents: write
 
 jobs:
   build-windows:
     runs-on: windows-latest
 
     steps:
-      # ✅ CHECKOUT
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      # ✅ LEGGI NOME + VERSIONE
-      - name: Get app info
+      - name: Read app information
         id: appinfo
+        shell: pwsh
         run: |
-          $name = Select-String -Path pubspec.yaml -Pattern '^name:' | % { $_.Line.Split(' ')[1] }
-          $versionRaw = Select-String -Path pubspec.yaml -Pattern '^version:' | % { $_.Line.Split(' ')[1] }
+          $pubspec = Get-Content -Path "pubspec.yaml" -Raw
 
-          # 🔥 rimuove il +build
-          $version = $versionRaw.Split('+')[0]
+          $nameMatch = [regex]::Match(
+            $pubspec,
+            '(?m)^\s*name\s*:\s*([A-Za-z][A-Za-z0-9_]*)\s*(?:#.*)?$'
+          )
 
-          echo "app_name=$name" >> $env:GITHUB_OUTPUT
-          echo "version=$version" >> $env:GITHUB_OUTPUT
+          $versionMatch = [regex]::Match(
+            $pubspec,
+            '(?m)^\s*version\s*:\s*[''"]?([0-9]+)\.([0-9]+)\.([0-9]+)(-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?[''"]?\s*(?:#.*)?$'
+          )
 
-      # ✅ SETUP FLUTTER
-      - uses: subosito/flutter-action@v2
+          if (-not $nameMatch.Success) {
+            throw "Unable to read a valid 'name:' value from pubspec.yaml."
+          }
+
+          if (-not $versionMatch.Success) {
+            throw "Unable to read a valid semantic 'version:' value from pubspec.yaml. Expected format: 1.2.3 or 1.2.3+4."
+          }
+
+          $appName = $nameMatch.Groups[1].Value
+          $major = [int]$versionMatch.Groups[1].Value
+          $minor = [int]$versionMatch.Groups[2].Value
+          $patch = [int]$versionMatch.Groups[3].Value
+          $preRelease = $versionMatch.Groups[4].Value
+
+          if ($preRelease) {
+            throw "Pre-release versions (for example 1.2.3-beta.1) are not supported for the MSI installer. Use a stable version such as 1.2.3."
+          }
+
+          if ($major -gt 255 -or $minor -gt 255 -or $patch -gt 65535) {
+            throw "The version is outside MSI limits. Use major/minor <= 255 and patch <= 65535."
+          }
+
+          # Build metadata, e.g. +4, is intentionally excluded from the release tag.
+          $releaseVersion = "$major.$minor.$patch"
+
+          "app_name=$appName" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "release_version=$releaseVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "msi_version=$releaseVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
           channel: stable
           cache: true
 
-      - run: flutter config --enable-windows-desktop
-      - run: flutter pub get
-
-      # ✅ BUILD ADMIN PROD
-      - run: flutter build windows -t lib/main.dart
-
-      # ✅ TROVA EXE
-      - name: Find EXE
-        id: findexe
+      - name: Build Windows application
+        shell: pwsh
         run: |
-          $exe = Get-ChildItem build/windows/x64/runner/Release -Filter *.exe | Select-Object -First 1
-          echo "exe_name=$($exe.Name)" >> $env:GITHUB_OUTPUT
+          flutter config --enable-windows-desktop
+          flutter pub get
+          flutter build windows -t lib/main.dart
 
-      # ✅ CREA ZIP
-      - name: Zip EXE
-        id: zipstep
+      - name: Verify executable
+        shell: pwsh
         run: |
-          $app = "${{ steps.appinfo.outputs.app_name }}"
-          $ver = "${{ steps.appinfo.outputs.version }}"
-          $zip = "$app-$ver-windows.zip"
+          $exe = Get-ChildItem -Path "build/windows/x64/runner/Release" -Filter "*.exe" | Select-Object -First 1
 
-          Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath $zip
-          echo "zip_name=$zip" >> $env:GITHUB_OUTPUT
-
-      # ✅ INSTALLA WiX
-      - run: choco install wixtoolset -y
-
-      # ✅ GENERA LISTA FILE
-      - name: Heat directory
-        run: |
-          heat dir build/windows/x64/runner/Release `
-          -cg AppFiles `
-          -dr INSTALLFOLDER `
-          -srd `
-          -gg `
-          -out files.wxs
-
-      # ✅ FILE LICENZA MINIMO RICHIESTO DA WixUI_Minimal
-      - name: Create dummy license
-        run: |
-          $app = "${{ steps.appinfo.outputs.app_name }}"
-          @"
-          {\rtf1\ansi
-          Licenza d'uso $app. Procedendo con l'installazione accetti i termini d'uso.
+          if (-not $exe) {
+            throw "No executable was found in the Flutter Windows Release folder."
           }
-          "@ > License.rtf
 
-        # ✅ CREA INSTALLER
-      - name: Create main.wxs
+          "exe_name=$($exe.Name)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+
+      - name: Create ZIP package
+        id: zipstep
+        shell: pwsh
         run: |
           $app = "${{ steps.appinfo.outputs.app_name }}"
-          $ver = "${{ steps.appinfo.outputs.version }}"
-          $exe = "${{ steps.findexe.outputs.exe_name }}"
+          $version = "${{ steps.appinfo.outputs.release_version }}"
+          $zip = "$app-$version-windows.zip"
 
-            @"
+          Compress-Archive `
+            -Path "build/windows/x64/runner/Release/*" `
+            -DestinationPath $zip `
+            -Force
+
+          "zip_name=$zip" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+
+      - name: Install WiX Toolset
+        shell: pwsh
+        run: choco install wixtoolset -y --no-progress
+
+      - name: Generate WiX file list
+        shell: pwsh
+        run: |
+          heat.exe dir "build/windows/x64/runner/Release" `
+            -cg AppFiles `
+            -dr INSTALLFOLDER `
+            -srd `
+            -gg `
+            -var var.SourceDir `
+            -out files.wxs
+
+      - name: Create installer configuration
+        shell: pwsh
+        run: |
+          $app = "${{ steps.appinfo.outputs.app_name }}"
+          $version = "${{ steps.appinfo.outputs.msi_version }}"
+          $xmlAppName = [System.Security.SecurityElement]::Escape($app)
+
+          Set-Content -Path "license.rtf" -Encoding utf8 -Value '{\rtf1\ansi\deff0 This software is provided as-is.}'
+
+          @"
           <?xml version="1.0" encoding="UTF-8"?>
-          <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:ui="http://schemas.microsoft.com/wix/UIExtension">
+          <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+            <Product
+              Id="*"
+              Name="$xmlAppName"
+              Language="1033"
+              Version="$version"
+              Manufacturer="$xmlAppName"
+              UpgradeCode="{C6CFB837-2F99-42C6-9D08-6F5B1D0AF5B1}">
 
-            <Product Id="*"
-                    Name="$app"
-                    Manufacturer="MyCompany"
-                    Version="$ver"
-                    UpgradeCode="12345678-1234-1234-1234-123456789012"
-                    Language="1033">
+              <Package
+                InstallerVersion="500"
+                Compressed="yes"
+                InstallScope="perMachine"
+                Platform="x64" />
 
-              <Package InstallerVersion="500"
-                      Compressed="yes"
-                      InstallScope="perMachine" />
+              <MajorUpgrade
+                AllowSameVersionUpgrades="yes"
+                DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 
-              <MediaTemplate EmbedCab="yes"/>
+              <MediaTemplate EmbedCab="yes" />
+
+              <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+              <WixVariable Id="WixUILicenseRtf" Value="license.rtf" />
+              <UIRef Id="WixUI_Minimal" />
 
               <Directory Id="TARGETDIR" Name="SourceDir">
-                <Directory Id="ProgramFilesFolder">
-                  <Directory Id="INSTALLFOLDER" Name="$app"/>
+                <Directory Id="ProgramFiles64Folder">
+                  <Directory Id="INSTALLFOLDER" Name="$xmlAppName" />
                 </Directory>
-                <Directory Id="DesktopFolder" />
               </Directory>
 
-              <!-- ✅ Componente collegamento sul Desktop -->
-              <DirectoryRef Id="DesktopFolder">
-                <Component Id="DesktopShortcut" Guid="*">
-                  <Shortcut Id="AppDesktopShortcut"
-                            Name="$app"
-                            Description="Avvia $app"
-                            Target="[INSTALLFOLDER]$exe"
-                            WorkingDirectory="INSTALLFOLDER" />
-                  <RemoveFolder Id="RemoveDesktopFolder" On="uninstall" />
-                  <RegistryValue Root="HKCU"
-                                 Key="Software\MyCompany\$app"
-                                 Name="DesktopShortcutInstalled"
-                                 Type="integer"
-                                 Value="1"
-                                 KeyPath="yes" />
-                </Component>
-              </DirectoryRef>
-
-              <Feature Id="MainFeature" Level="1">
-                <ComponentGroupRef Id="AppFiles"/>
-                <ComponentRef Id="DesktopShortcut"/>
+              <Feature Id="MainFeature" Title="$xmlAppName" Level="1">
+                <ComponentGroupRef Id="AppFiles" />
               </Feature>
-
-              <!-- ✅ UI standard con messaggio di completamento personalizzato -->
-              <UIRef Id="WixUI_Minimal" />
-              <WixVariable Id="WixUILicenseRtf" Value="License.rtf" Overridable="yes" />
-
-              <Property Id="WIXUI_EXITDIALOGOPTIONALTEXT"
-                         Value="Installazione completata correttamente. $app e pronto all'uso." />
-
             </Product>
-
           </Wix>
-          "@ > main.wxs
+          "@ | Set-Content -Path "product.wxs" -Encoding utf8
 
-      # ✅ BUILD MSI
-      - name: Build MSI
+      - name: Build MSI installer
         id: msistep
+        shell: pwsh
         run: |
           $app = "${{ steps.appinfo.outputs.app_name }}"
-          $ver = "${{ steps.appinfo.outputs.version }}"
-          $msi = "$app-$ver.msi"
+          $version = "${{ steps.appinfo.outputs.release_version }}"
+          $msi = "$app-$version-windows.msi"
 
-          candle main.wxs files.wxs -ext WixUIExtension
-          light main.wixobj files.wixobj -ext WixUIExtension -b build/windows/x64/runner/Release -o $msi
+          candle.exe `
+            -dSourceDir="build/windows/x64/runner/Release" `
+            product.wxs `
+            files.wxs
 
-          echo "msi_name=$msi" >> $env:GITHUB_OUTPUT
+          light.exe `
+            -ext WixUIExtension `
+            -out $msi `
+            product.wixobj `
+            files.wixobj
 
-      # ✅ UPLOAD ARTIFACT
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-build
-          path: |
-            ${{ steps.zipstep.outputs.zip_name }}
-            ${{ steps.msistep.outputs.msi_name }}
+          if (-not (Test-Path $msi)) {
+            throw "MSI creation failed: output file not found."
+          }
 
-      # ✅ RELEASE AUTOMATICA
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v${{ steps.appinfo.outputs.version }}
-          name: Release v${{ steps.appinfo.outputs.version }}
-          files: |
-            ${{ steps.zipstep.outputs.zip_name }}
-            ${{ steps.msistep.outputs.msi_name }}
+          "msi_name=$msi" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+
+      - name: Create or update GitHub Release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $repository = "${{ github.repository }}"
+          $version = "${{ steps.appinfo.outputs.release_version }}"
+          $tag = "v$version"
+          $title = "Release $tag"
+          $zip = "${{ steps.zipstep.outputs.zip_name }}"
+          $msi = "${{ steps.msistep.outputs.msi_name }}"
+
+          gh release view $tag --repo $repository *> $null
+
+          if ($LASTEXITCODE -eq 0) {
+            Write-Host "Release $tag already exists: replacing its Windows files."
+            gh release upload $tag $zip $msi --clobber --repo $repository
+            gh release edit $tag --title $title --repo $repository
+          }
+          else {
+            Write-Host "Creating release $tag."
+            gh release create $tag $zip $msi `
+              --title $title `
+              --generate-notes `
+              --repo $repository
+          }
