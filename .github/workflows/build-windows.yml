@@ -174,7 +174,7 @@ jobs:
                   <Directory Id="INSTALLFOLDER" Name="$xmlAppName" />
                 </Directory>
 
-                <Directory Id="DesktopFolder">
+                <Directory Id="CommonDesktopFolder">
                   <Component Id="DesktopShortcut" Guid="{2DF2DA10-282B-4BDE-879B-3F1087B11A9B}">
                     <Shortcut
                       Id="DesktopShortcutLink"
