@@ -2479,5 +2479,35 @@
       "type": "int"
     }
   }
+},
+"administrationMessageLastAdminBlocked": "Operation blocked: at least one administrator must exist in the system",
+"@administrationMessageLastAdminBlocked": {
+  "description": "Error message shown to the administrator when attempting to remove the ADMIN role from the last profile that has it, an operation not allowed to prevent the system from being left without administrators"
+},
+"administrationMessageCustom172": "This user cannot be deleted: it is the only administrator in the system.",
+"@administrationMessageCustom172": { "description": "Avviso: impossibile eliminare l'unico amministratore" },
+"notificationMessageCustom1": "Competition Ended",
+"@notificationMessageCustom1": {
+  "description": "Title of the banner displayed to the athlete when the competition ends."
+},
+"notificationMessageCustom2": "The competition has ended. It is no longer possible to record boulders.",
+"@notificationMessageCustom2": {
+  "description": "Message in the banner displayed to the athlete when the competition ends."
+},
+"notificationMessageCustom3": "GOT IT",
+"@notificationMessageCustom3": {
+  "description": "Button to close the competition ended banner."
+},
+"notificationMessageCustom4": "Competition Open",
+"@notificationMessageCustom4": {
+  "description": "Title of the banner displayed to the athlete when the competition opens."
+},
+"notificationMessageCustom5": "Your competition has started. You can now start recording boulders.",
+"@notificationMessageCustom5": {
+  "description": "Message in the banner displayed to the athlete when the competition opens."
+},
+"notificationMessageCustom6": "OPEN COMPETITION",
+"@notificationMessageCustom6": {
+  "description": "Button to open the boulder page after the competition opens."
 }
 }

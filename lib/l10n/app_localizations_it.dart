@@ -2476,4 +2476,32 @@ class AppLocalizationsIt extends AppLocalizations {
   String athleteMessageCustom124(int count) {
     return '$count saliti';
   }
+
+  @override
+  String get administrationMessageLastAdminBlocked =>
+      'Operazione bloccata: deve esistere almeno un amministratore nel sistema';
+
+  @override
+  String get administrationMessageCustom172 =>
+      'Impossibile eliminare questo utente: è l\'unico amministratore del sistema.';
+
+  @override
+  String get notificationMessageCustom1 => 'Gara conclusa';
+
+  @override
+  String get notificationMessageCustom2 =>
+      'La gara è terminata. Non è più possibile registrare boulder.';
+
+  @override
+  String get notificationMessageCustom3 => 'HO CAPITO';
+
+  @override
+  String get notificationMessageCustom4 => 'Gara aperta';
+
+  @override
+  String get notificationMessageCustom5 =>
+      'La tua gara è iniziata. Puoi iniziare a registrare i boulder.';
+
+  @override
+  String get notificationMessageCustom6 => 'APRI GARA';
 }

@@ -2466,6 +2466,36 @@
       "type": "int"
     }
   }
+},
+"administrationMessageLastAdminBlocked": "Operazione bloccata: deve esistere almeno un amministratore nel sistema",
+"@administrationMessageLastAdminBlocked": {
+  "description": "Messaggio di errore mostrato all'amministratore quando tenta di rimuovere il ruolo ADMIN dall'ultimo profilo che lo possiede, operazione non consentita per evitare di restare senza amministratori nel sistema"
+},
+"administrationMessageCustom172": "Impossibile eliminare questo utente: è l'unico amministratore del sistema.",
+"@administrationMessageCustom172": { "description": "Avviso: impossibile eliminare l'unico amministratore" },
+"notificationMessageCustom1": "Gara conclusa",
+"@notificationMessageCustom1": {
+  "description": "Titolo del banner mostrato all'atleta quando la gara termina."
+},
+"notificationMessageCustom2": "La gara è terminata. Non è più possibile registrare boulder.",
+"@notificationMessageCustom2": {
+  "description": "Messaggio del banner mostrato all'atleta quando la gara termina."
+},
+"notificationMessageCustom3": "HO CAPITO",
+"@notificationMessageCustom3": {
+  "description": "Pulsante per chiudere il banner di gara conclusa."
+},
+"notificationMessageCustom4": "Gara aperta",
+"@notificationMessageCustom4": {
+  "description": "Titolo del banner mostrato all'atleta quando la gara si apre."
+},
+"notificationMessageCustom5": "La tua gara è iniziata. Puoi iniziare a registrare i boulder.",
+"@notificationMessageCustom5": {
+  "description": "Messaggio del banner mostrato all'atleta quando la gara si apre."
+},
+"notificationMessageCustom6": "APRI GARA",
+"@notificationMessageCustom6": {
+  "description": "Pulsante per aprire la pagina boulder dopo l'apertura della gara."
 }
 
 }

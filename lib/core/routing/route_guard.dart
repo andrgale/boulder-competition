@@ -34,7 +34,6 @@ class RouteGuard {
     '/competitions/registrations' : 'registration.read',
     '/competitions/boulders'      : 'boulder.read',
     '/competitions/statistics'    : 'competition.read',  
-
     // =====================================================
     // REGISTRATIONS
     // =====================================================
@@ -116,6 +115,8 @@ class RouteGuard {
     '/security/categorytemplates':  'security.admin',
     '/security/categorytemplates/items': 'security.admin',
     '/security/categorytemplates/items/form': 'security.admin',
+    '/push-notification-test':      'security.admin',  // Aggiunta per test notifiche push
+
 
     '/check-in': 'checkin.read',
   };

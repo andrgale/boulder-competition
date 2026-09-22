@@ -32,6 +32,27 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
     EmailService(Supabase.instance.client),
   );
 
+  bool loading = false;
+  bool checkingAdmin = true;
+  bool isLastAdmin = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.profileId != null) {
+      _checkLastAdmin();
+    }
+  }
+
+  Future<void> _checkLastAdmin() async {
+    final result = await service.isLastAdmin(widget.profileId!);
+    if (!mounted) return;
+    setState(() {
+      isLastAdmin = result;
+      checkingAdmin = false;
+    });
+  }
+
   AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   final formKey = GlobalKey<FormState>();
@@ -39,8 +60,6 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   final cognomeCtrl = TextEditingController();
   final nomeCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
-
-  bool loading = false;
 
   bool get isDelete => widget.profileId != null;
 
@@ -188,18 +207,27 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
   // =======================================================
   // DELETE VIEW
   // =======================================================
-
   Widget _buildDeleteView(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          l10n.administrationMessageCustom117, // 'Conferma eliminazione utente'
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          l10n.administrationMessageCustom117,  // 'Conferma eliminazione utente'
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
+        const SizedBox(height: 16),
+
+        if (isLastAdmin)
+          Card(
+            color: Colors.red.shade50,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                l10n.administrationMessageCustom172, // 'Impossibile eliminare questo utente: è l'unico amministratore del sistema.'
+                style: TextStyle(color: Colors.red.shade900),
+              ),
+            ),
+          ),
 
         const SizedBox(height: 16),
 
@@ -211,10 +239,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
               children: [
                 Text(
                   '${widget.cognome ?? ''} ${widget.nome ?? ''}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 Text(widget.email ?? ''),
@@ -229,19 +254,18 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
           children: [
             OutlinedButton(
               onPressed: () => Navigator.pop(context),
-              child: Text(l10n.administrationMessageCustom118), // 'Annulla'
+              child: Text(l10n.administrationMessageCustom118),  // 'Annulla'
             ),
-
             const SizedBox(width: 12),
-
             FilledButton.icon(
-              onPressed: loading ? null : deleteUser,
+              onPressed: (loading || checkingAdmin || isLastAdmin) ? null : deleteUser,
               icon: const Icon(Icons.delete),
-              label: Text(l10n.administrationMessageCustom119), // 'Cancella'
+              label: Text(l10n.administrationMessageCustom119),  // 'Cancella'
             ),
           ],
         ),
       ],
     );
   }
+
 }

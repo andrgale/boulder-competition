@@ -2474,4 +2474,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String athleteMessageCustom124(int count) {
     return '$count completed';
   }
+
+  @override
+  String get administrationMessageLastAdminBlocked =>
+      'Operation blocked: at least one administrator must exist in the system';
+
+  @override
+  String get administrationMessageCustom172 =>
+      'This user cannot be deleted: it is the only administrator in the system.';
+
+  @override
+  String get notificationMessageCustom1 => 'Competition Ended';
+
+  @override
+  String get notificationMessageCustom2 =>
+      'The competition has ended. It is no longer possible to record boulders.';
+
+  @override
+  String get notificationMessageCustom3 => 'GOT IT';
+
+  @override
+  String get notificationMessageCustom4 => 'Competition Open';
+
+  @override
+  String get notificationMessageCustom5 =>
+      'Your competition has started. You can now start recording boulders.';
+
+  @override
+  String get notificationMessageCustom6 => 'OPEN COMPETITION';
 }

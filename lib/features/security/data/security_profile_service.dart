@@ -82,33 +82,34 @@ class SecurityProfileService {
     }
   }
 
+  Future<bool> isLastAdmin(String profileId) async {
+    final adminRole = await _supabase
+        .from('roles')
+        .select('id')
+        .eq('code', 'admin')
+        .single();
+
+    final adminRoleId = adminRole['id'];
+
+    final myRoles = await _supabase
+        .from('user_roles')
+        .select('role_id')
+        .eq('profile_id', profileId);
+
+    final isAdmin = myRoles.any((r) => r['role_id'] == adminRoleId);
+    if (!isAdmin) return false;
+
+    final allAdmins = await _supabase
+        .from('user_roles')
+        .select('profile_id')
+        .eq('role_id', adminRoleId);
+
+    return allAdmins.length <= 1;
+  }
+
   // =====================================================
   // CREATE ATHLETE USER
   // =====================================================
-
-  // Future<String?> createAthleteUser({
-  //   required String email,
-  //   required String nome,
-  //   required String cognome,
-  // }) async {
-  //   try {
-  //     final response = await _supabase.functions.invoke(
-  //       'create-athlete-user',
-  //       body: {
-  //         'email': email,
-  //         'nome': nome,
-  //         'cognome': cognome,
-  //       },
-  //     );
-
-  //     return response.data['profile_id'];
-  //   } on FunctionException catch (e) {
-  //     final message = (e.details is Map)
-  //         ? (e.details['error'] ?? e.toString())
-  //         : e.toString();
-  //     throw Exception(message);
-  //   }
-  // }
 
   Future<String?> registerAthlete({
     required String email,
@@ -163,17 +164,13 @@ class SecurityProfileService {
     required String profileId,
     required List<String> roleIds,
   }) async {
-    await _supabase
-        .from('user_roles')
-        .delete()
-        .eq('profile_id', profileId);
-
-    if (roleIds.isEmpty) return;
-
-    await _supabase.from('user_roles').insert(
-      roleIds
-          .map((rid) => {'profile_id': profileId, 'role_id': rid})
-          .toList(),
-    );
+    try {
+      await _supabase.rpc('set_profile_roles', params: {
+        'p_profile_id': profileId,
+        'p_role_ids': roleIds,
+      });
+    } on PostgrestException catch (e) {
+      throw Exception(e.message);
+    }
   }
 }

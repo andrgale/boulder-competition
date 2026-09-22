@@ -7,6 +7,7 @@ import 'package:boulder_competition/features/category_templates/pages/category_t
 import 'package:boulder_competition/features/category_templates/pages/category_template_items_page.dart';
 import 'package:boulder_competition/features/category_templates/pages/category_template_page.dart';
 import 'package:boulder_competition/features/email/pages/email_templates_page.dart';
+import 'package:boulder_competition/features/notifications/pages/push_notification_test_page.dart';
 import 'package:boulder_competition/features/registrations/models/registration_model.dart';
 import 'package:boulder_competition/features/security/models/menu_translation_model.dart';
 import 'package:boulder_competition/features/security/pages/menus/menu_translation_form_page.dart';
@@ -322,6 +323,12 @@ final GoRouter appRouter = GoRouter(
               competitionName: competitionName,
             );
           },
+        ),
+
+        GoRoute(
+          path: '/push-notification-test',
+          name: 'push-notification-test',
+          builder: (context, state) => const PushNotificationTestPage(),
         ),
 
         GoRoute(

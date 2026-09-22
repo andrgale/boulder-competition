@@ -4535,6 +4535,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} completed'**
   String athleteMessageCustom124(int count);
+
+  /// Error message shown to the administrator when attempting to remove the ADMIN role from the last profile that has it, an operation not allowed to prevent the system from being left without administrators
+  ///
+  /// In en, this message translates to:
+  /// **'Operation blocked: at least one administrator must exist in the system'**
+  String get administrationMessageLastAdminBlocked;
+
+  /// Avviso: impossibile eliminare l'unico amministratore
+  ///
+  /// In en, this message translates to:
+  /// **'This user cannot be deleted: it is the only administrator in the system.'**
+  String get administrationMessageCustom172;
+
+  /// Title of the banner displayed to the athlete when the competition ends.
+  ///
+  /// In en, this message translates to:
+  /// **'Competition Ended'**
+  String get notificationMessageCustom1;
+
+  /// Message in the banner displayed to the athlete when the competition ends.
+  ///
+  /// In en, this message translates to:
+  /// **'The competition has ended. It is no longer possible to record boulders.'**
+  String get notificationMessageCustom2;
+
+  /// Button to close the competition ended banner.
+  ///
+  /// In en, this message translates to:
+  /// **'GOT IT'**
+  String get notificationMessageCustom3;
+
+  /// Title of the banner displayed to the athlete when the competition opens.
+  ///
+  /// In en, this message translates to:
+  /// **'Competition Open'**
+  String get notificationMessageCustom4;
+
+  /// Message in the banner displayed to the athlete when the competition opens.
+  ///
+  /// In en, this message translates to:
+  /// **'Your competition has started. You can now start recording boulders.'**
+  String get notificationMessageCustom5;
+
+  /// Button to open the boulder page after the competition opens.
+  ///
+  /// In en, this message translates to:
+  /// **'OPEN COMPETITION'**
+  String get notificationMessageCustom6;
 }
 
 class _AppLocalizationsDelegate

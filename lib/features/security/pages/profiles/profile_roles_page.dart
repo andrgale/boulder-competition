@@ -64,10 +64,13 @@ class _ProfileRolesPageState extends State<ProfileRolesPage> {
       );
       if (!mounted) return;
       AppSnackbar.success(context, l10n.administrationMessageCustom120); // 'Ruoli aggiornati'
-      Navigator.pop(context, true);
+          Navigator.pop(context, true);
     } catch (e) {
       if (!mounted) return;
-      AppSnackbar.error(context, l10n.administrationMessageCustom27(e.toString())); // 'Errore: $e'
+      final msg = e.toString().contains('almeno un amministratore')
+          ? l10n.administrationMessageLastAdminBlocked // nuova chiave da aggiungere
+          : l10n.administrationMessageCustom27(e.toString());
+      AppSnackbar.error(context, msg);
     } finally {
       if (mounted) setState(() => saving = false);
     }

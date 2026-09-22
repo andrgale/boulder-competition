@@ -4,12 +4,15 @@ import 'package:boulder_competition/core/models/client_config.dart';
 import 'package:boulder_competition/core/pages/activation_screen.dart';
 import 'package:boulder_competition/core/services/central_config_service.dart';
 import 'package:boulder_competition/core/services/client_config_store.dart';
+import 'package:boulder_competition/features/notifications/pages/foreground_push_banner.dart';
 import 'package:boulder_competition/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/services/locale_override_controller.dart';
-
+import 'core/services/push_notification_service.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 import 'config/app_mode.dart';
 import 'core/routing/app_router.dart';
@@ -18,6 +21,7 @@ import 'core/routing/app_router.dart';
 // (es. da una eventuale pagina impostazioni/admin lato atleta) senza
 // passare callback attraverso tutto l'albero.
 final bootstrapAppKey = GlobalKey<BootstrapAppState>();
+final rootScaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,11 +64,18 @@ class BootstrapAppState extends State<BootstrapApp> {
     }
   }
 
+
   Future<void> _initSupabase(ClientConfig cfg) async {
     await Supabase.initialize(
       url: cfg.supabaseUrl,
       anonKey: cfg.supabaseAnonKey,
     );
+
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    await PushNotificationService.instance.start();
   }
 
   Future<void> _onActivate(String clientId, String password) async {
@@ -144,11 +155,11 @@ class AthleteApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // NEW: la Locale forzata (se presente) guida l'intero MaterialApp.router
     return ValueListenableBuilder<Locale?>(
       valueListenable: localeOverrideNotifier,
       builder: (context, overrideLocale, _) {
         return MaterialApp.router(
+          scaffoldMessengerKey: rootScaffoldMessengerKey,
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
@@ -167,6 +178,12 @@ class AthleteApp extends StatelessWidget {
             useMaterial3: true,
             colorSchemeSeed: Colors.green,
           ),
+          builder: (context, child) {
+            return ForegroundPushBanner(
+              scaffoldMessengerKey: rootScaffoldMessengerKey,
+              child: child ?? const SizedBox.shrink(),
+            );
+          },
         );
       },
     );
