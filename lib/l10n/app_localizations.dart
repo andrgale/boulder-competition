@@ -4583,6 +4583,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OPEN COMPETITION'**
   String get notificationMessageCustom6;
+
+  /// Default title for the competition open notification.
+  ///
+  /// In en, this message translates to:
+  /// **'Competition open'**
+  String get notificationMessageCustom7;
+
+  /// Default message for the competition open notification.
+  ///
+  /// In en, this message translates to:
+  /// **'The competition is open. You can record boulders.'**
+  String get notificationMessageCustom8;
+
+  /// Default title for the competition closed notification.
+  ///
+  /// In en, this message translates to:
+  /// **'Competition closed'**
+  String get notificationMessageCustom9;
+
+  /// Default message for the competition closed notification.
+  ///
+  /// In en, this message translates to:
+  /// **'The competition has ended. Boulders can no longer be recorded.'**
+  String get notificationMessageCustom10;
+
+  /// Default title for the finalist notification.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualified athlete'**
+  String get notificationMessageCustom11;
+
+  /// Default message for the finalist notification.
+  ///
+  /// In en, this message translates to:
+  /// **'You qualified for the final.'**
+  String get notificationMessageCustom12;
+
+  /// Error shown when no open competition exists.
+  ///
+  /// In en, this message translates to:
+  /// **'No open competition found.'**
+  String get notificationMessageCustom13;
+
+  /// Message shown when a notification has no recipients.
+  ///
+  /// In en, this message translates to:
+  /// **'There are no recipients for this notification.'**
+  String get notificationMessageCustom14;
+
+  /// Title of the notification send confirmation dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm sending'**
+  String get notificationMessageCustom15;
+
+  /// Question in the notification send confirmation dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Send the notification to {count} athletes?'**
+  String notificationMessageCustom16(Object count);
+
+  /// Button to send a notification.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get notificationMessageCustom17;
+
+  /// Notification sending result.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent: {count}.'**
+  String notificationMessageCustom18(Object count);
+
+  /// Error returned while sending the notification.
+  ///
+  /// In en, this message translates to:
+  /// **'Error while sending: {error}'**
+  String notificationMessageCustom19(Object error);
+
+  /// Title of the administrative notifications page.
+  ///
+  /// In en, this message translates to:
+  /// **'Athlete notifications'**
+  String get notificationMessageCustom20;
+
+  /// Number of athletes registered for the competition.
+  ///
+  /// In en, this message translates to:
+  /// **'Registered athletes'**
+  String get notificationMessageCustom21;
+
+  /// Number of finalist athletes.
+  ///
+  /// In en, this message translates to:
+  /// **'Finalists'**
+  String get notificationMessageCustom22;
+
+  /// Title of the competition open notification section.
+  ///
+  /// In en, this message translates to:
+  /// **'Competition open'**
+  String get notificationMessageCustom23;
+
+  /// Title of the competition closed notification section.
+  ///
+  /// In en, this message translates to:
+  /// **'Competition closed'**
+  String get notificationMessageCustom24;
+
+  /// Title of the finalist notification section.
+  ///
+  /// In en, this message translates to:
+  /// **'Finalist athletes'**
+  String get notificationMessageCustom25;
+
+  /// Notification title field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get notificationMessageCustom26;
+
+  /// Notification message field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get notificationMessageCustom27;
+
+  /// Notification recipient count.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipients: {count}'**
+  String notificationMessageCustom28(Object count);
+
+  /// Title of the banner shown to a qualified athlete.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualified for the final'**
+  String get notificationMessageCustom29;
+
+  /// Message of the banner shown to a qualified athlete.
+  ///
+  /// In en, this message translates to:
+  /// **'You qualified for the final.'**
+  String get notificationMessageCustom30;
+
+  /// Error shown when no competition turn has been selected.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a turn.'**
+  String get notificationMessageCustom31;
+
+  /// Label for the first competition turn.
+  ///
+  /// In en, this message translates to:
+  /// **'First turn'**
+  String get notificationMessageCustom32;
+
+  /// Label for the second competition turn.
+  ///
+  /// In en, this message translates to:
+  /// **'Second turn'**
+  String get notificationMessageCustom33;
 }
 
 class _AppLocalizationsDelegate

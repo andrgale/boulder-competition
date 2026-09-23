@@ -2509,5 +2509,125 @@
 "notificationMessageCustom6": "OPEN COMPETITION",
 "@notificationMessageCustom6": {
   "description": "Button to open the boulder page after the competition opens."
+},
+"notificationMessageCustom7": "Competition open",
+"@notificationMessageCustom7": {
+  "description": "Default title for the competition open notification."
+},
+"notificationMessageCustom8": "The competition is open. You can record boulders.",
+"@notificationMessageCustom8": {
+  "description": "Default message for the competition open notification."
+},
+"notificationMessageCustom9": "Competition closed",
+"@notificationMessageCustom9": {
+  "description": "Default title for the competition closed notification."
+},
+"notificationMessageCustom10": "The competition has ended. Boulders can no longer be recorded.",
+"@notificationMessageCustom10": {
+  "description": "Default message for the competition closed notification."
+},
+"notificationMessageCustom11": "Qualified athlete",
+"@notificationMessageCustom11": {
+  "description": "Default title for the finalist notification."
+},
+"notificationMessageCustom12": "You qualified for the final.",
+"@notificationMessageCustom12": {
+  "description": "Default message for the finalist notification."
+},
+"notificationMessageCustom13": "No open competition found.",
+"@notificationMessageCustom13": {
+  "description": "Error shown when no open competition exists."
+},
+"notificationMessageCustom14": "There are no recipients for this notification.",
+"@notificationMessageCustom14": {
+  "description": "Message shown when a notification has no recipients."
+},
+"notificationMessageCustom15": "Confirm sending",
+"@notificationMessageCustom15": {
+  "description": "Title of the notification send confirmation dialog."
+},
+"notificationMessageCustom16": "Send the notification to {count} athletes?",
+"@notificationMessageCustom16": {
+  "description": "Question in the notification send confirmation dialog.",
+  "placeholders": {
+    "count": {}
+  }
+},
+"notificationMessageCustom17": "Send",
+"@notificationMessageCustom17": {
+  "description": "Button to send a notification."
+},
+"notificationMessageCustom18": "Sent: {count}.",
+"@notificationMessageCustom18": {
+  "description": "Notification sending result.",
+  "placeholders": {
+    "count": {}
+  }
+},
+"notificationMessageCustom19": "Error while sending: {error}",
+"@notificationMessageCustom19": {
+  "description": "Error returned while sending the notification.",
+  "placeholders": {
+    "error": {}
+  }
+},
+"notificationMessageCustom20": "Athlete notifications",
+"@notificationMessageCustom20": {
+  "description": "Title of the administrative notifications page."
+},
+"notificationMessageCustom21": "Registered athletes",
+"@notificationMessageCustom21": {
+  "description": "Number of athletes registered for the competition."
+},
+"notificationMessageCustom22": "Finalists",
+"@notificationMessageCustom22": {
+  "description": "Number of finalist athletes."
+},
+"notificationMessageCustom23": "Competition open",
+"@notificationMessageCustom23": {
+  "description": "Title of the competition open notification section."
+},
+"notificationMessageCustom24": "Competition closed",
+"@notificationMessageCustom24": {
+  "description": "Title of the competition closed notification section."
+},
+"notificationMessageCustom25": "Finalist athletes",
+"@notificationMessageCustom25": {
+  "description": "Title of the finalist notification section."
+},
+"notificationMessageCustom26": "Title",
+"@notificationMessageCustom26": {
+  "description": "Notification title field label."
+},
+"notificationMessageCustom27": "Message",
+"@notificationMessageCustom27": {
+  "description": "Notification message field label."
+},
+"notificationMessageCustom28": "Recipients: {count}",
+"@notificationMessageCustom28": {
+  "description": "Notification recipient count.",
+  "placeholders": {
+    "count": {}
+  }
+},
+"notificationMessageCustom29": "Qualified for the final",
+"@notificationMessageCustom29": {
+  "description": "Title of the banner shown to a qualified athlete."
+},
+"notificationMessageCustom30": "You qualified for the final.",
+"@notificationMessageCustom30": {
+  "description": "Message of the banner shown to a qualified athlete."
+},
+"notificationMessageCustom31": "Select a turn.",
+"@notificationMessageCustom31": {
+  "description": "Error shown when no competition turn has been selected."
+},
+"notificationMessageCustom32": "First turn",
+"@notificationMessageCustom32": {
+  "description": "Label for the first competition turn."
+},
+"notificationMessageCustom33": "Second turn",
+"@notificationMessageCustom33": {
+  "description": "Label for the second competition turn."
 }
 }

@@ -2504,4 +2504,96 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get notificationMessageCustom6 => 'APRI GARA';
+
+  @override
+  String get notificationMessageCustom7 => 'Gara aperta';
+
+  @override
+  String get notificationMessageCustom8 =>
+      'La gara è stata aperta. Puoi registrare i boulder.';
+
+  @override
+  String get notificationMessageCustom9 => 'Gara chiusa';
+
+  @override
+  String get notificationMessageCustom10 =>
+      'La gara è terminata. Non è più possibile registrare boulder.';
+
+  @override
+  String get notificationMessageCustom11 => 'Atleta qualificato';
+
+  @override
+  String get notificationMessageCustom12 => 'Ti sei qualificato per la finale.';
+
+  @override
+  String get notificationMessageCustom13 => 'Nessuna gara aperta trovata.';
+
+  @override
+  String get notificationMessageCustom14 =>
+      'Non ci sono destinatari per questa notifica.';
+
+  @override
+  String get notificationMessageCustom15 => 'Conferma invio';
+
+  @override
+  String notificationMessageCustom16(Object count) {
+    return 'Inviare la notifica a $count atleti?';
+  }
+
+  @override
+  String get notificationMessageCustom17 => 'Invia';
+
+  @override
+  String notificationMessageCustom18(Object count) {
+    return 'Inviate: $count.';
+  }
+
+  @override
+  String notificationMessageCustom19(Object error) {
+    return 'Errore durante l\'invio: $error';
+  }
+
+  @override
+  String get notificationMessageCustom20 => 'Notifiche agli atleti';
+
+  @override
+  String get notificationMessageCustom21 => 'Iscritti';
+
+  @override
+  String get notificationMessageCustom22 => 'Finalisti';
+
+  @override
+  String get notificationMessageCustom23 => 'Gara aperta';
+
+  @override
+  String get notificationMessageCustom24 => 'Gara chiusa';
+
+  @override
+  String get notificationMessageCustom25 => 'Atleti finalisti';
+
+  @override
+  String get notificationMessageCustom26 => 'Titolo';
+
+  @override
+  String get notificationMessageCustom27 => 'Messaggio';
+
+  @override
+  String notificationMessageCustom28(Object count) {
+    return 'Destinatari: $count';
+  }
+
+  @override
+  String get notificationMessageCustom29 => 'Qualificato per la finale';
+
+  @override
+  String get notificationMessageCustom30 => 'Ti sei qualificato per la finale.';
+
+  @override
+  String get notificationMessageCustom31 => 'Seleziona un turno.';
+
+  @override
+  String get notificationMessageCustom32 => 'Primo turno';
+
+  @override
+  String get notificationMessageCustom33 => 'Secondo turno';
 }

@@ -115,7 +115,7 @@ class RouteGuard {
     '/security/categorytemplates':  'security.admin',
     '/security/categorytemplates/items': 'security.admin',
     '/security/categorytemplates/items/form': 'security.admin',
-    '/push-notification-test':      'security.admin',  // Aggiunta per test notifiche push
+    '/push-notification':      'security.admin',  // Aggiunta per test notifiche push
 
 
     '/check-in': 'checkin.read',

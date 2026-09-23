@@ -2496,6 +2496,126 @@
 "notificationMessageCustom6": "APRI GARA",
 "@notificationMessageCustom6": {
   "description": "Pulsante per aprire la pagina boulder dopo l'apertura della gara."
+},
+"notificationMessageCustom7": "Gara aperta",
+"@notificationMessageCustom7": {
+  "description": "Titolo predefinito della notifica di apertura gara."
+},
+"notificationMessageCustom8": "La gara è stata aperta. Puoi registrare i boulder.",
+"@notificationMessageCustom8": {
+  "description": "Messaggio predefinito della notifica di apertura gara."
+},
+"notificationMessageCustom9": "Gara chiusa",
+"@notificationMessageCustom9": {
+  "description": "Titolo predefinito della notifica di chiusura gara."
+},
+"notificationMessageCustom10": "La gara è terminata. Non è più possibile registrare boulder.",
+"@notificationMessageCustom10": {
+  "description": "Messaggio predefinito della notifica di chiusura gara."
+},
+"notificationMessageCustom11": "Atleta qualificato",
+"@notificationMessageCustom11": {
+  "description": "Titolo predefinito della notifica agli atleti finalisti."
+},
+"notificationMessageCustom12": "Ti sei qualificato per la finale.",
+"@notificationMessageCustom12": {
+  "description": "Messaggio predefinito della notifica agli atleti finalisti."
+},
+"notificationMessageCustom13": "Nessuna gara aperta trovata.",
+"@notificationMessageCustom13": {
+  "description": "Errore mostrato quando non esiste una gara aperta."
+},
+"notificationMessageCustom14": "Non ci sono destinatari per questa notifica.",
+"@notificationMessageCustom14": {
+  "description": "Messaggio mostrato quando una notifica non ha destinatari."
+},
+"notificationMessageCustom15": "Conferma invio",
+"@notificationMessageCustom15": {
+  "description": "Titolo del dialog di conferma invio notifica."
+},
+"notificationMessageCustom16": "Inviare la notifica a {count} atleti?",
+"@notificationMessageCustom16": {
+  "description": "Domanda del dialog di conferma invio notifica.",
+  "placeholders": {
+    "count": {}
+  }
+},
+"notificationMessageCustom17": "Invia",
+"@notificationMessageCustom17": {
+  "description": "Pulsante per inviare una notifica."
+},
+"notificationMessageCustom18": "Inviate: {count}.",
+"@notificationMessageCustom18": {
+  "description": "Risultato dell'invio notifiche.",
+  "placeholders": {
+    "count": {}
+  }
+},
+"notificationMessageCustom19": "Errore durante l'invio: {error}",
+"@notificationMessageCustom19": {
+  "description": "Errore restituito durante l'invio della notifica.",
+  "placeholders": {
+    "error": {}
+  }
+},
+"notificationMessageCustom20": "Notifiche agli atleti",
+"@notificationMessageCustom20": {
+  "description": "Titolo della pagina amministrativa delle notifiche."
+},
+"notificationMessageCustom21": "Iscritti",
+"@notificationMessageCustom21": {
+  "description": "Numero degli atleti iscritti alla gara."
+},
+"notificationMessageCustom22": "Finalisti",
+"@notificationMessageCustom22": {
+  "description": "Numero degli atleti finalisti."
+},
+"notificationMessageCustom23": "Gara aperta",
+"@notificationMessageCustom23": {
+  "description": "Titolo della sezione di notifica gara aperta."
+},
+"notificationMessageCustom24": "Gara chiusa",
+"@notificationMessageCustom24": {
+  "description": "Titolo della sezione di notifica gara chiusa."
+},
+"notificationMessageCustom25": "Atleti finalisti",
+"@notificationMessageCustom25": {
+  "description": "Titolo della sezione di notifica finalisti."
+},
+"notificationMessageCustom26": "Titolo",
+"@notificationMessageCustom26": {
+  "description": "Etichetta del campo titolo notifica."
+},
+"notificationMessageCustom27": "Messaggio",
+"@notificationMessageCustom27": {
+  "description": "Etichetta del campo messaggio notifica."
+},
+"notificationMessageCustom28": "Destinatari: {count}",
+"@notificationMessageCustom28": {
+  "description": "Numero destinatari della notifica.",
+  "placeholders": {
+    "count": {}
+  }
+},
+"notificationMessageCustom29": "Qualificato per la finale",
+"@notificationMessageCustom29": {
+  "description": "Titolo del banner mostrato all'atleta qualificato."
+},
+"notificationMessageCustom30": "Ti sei qualificato per la finale.",
+"@notificationMessageCustom30": {
+  "description": "Messaggio del banner mostrato all'atleta qualificato."
+},
+"notificationMessageCustom31": "Seleziona un turno.",
+"@notificationMessageCustom31": {
+  "description": "Errore mostrato quando non è stato selezionato un turno."
+},
+"notificationMessageCustom32": "Primo turno",
+"@notificationMessageCustom32": {
+  "description": "Etichetta del primo turno di gara."
+},
+"notificationMessageCustom33": "Secondo turno",
+"@notificationMessageCustom33": {
+  "description": "Etichetta del secondo turno di gara."
 }
 
 }

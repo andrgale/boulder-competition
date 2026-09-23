@@ -172,6 +172,7 @@ class PushNotificationService {
         'fcm_token': token,
         'platform':
             defaultTargetPlatform == TargetPlatform.iOS ? 'ios' : 'android',
+        'language_code': _languageCode,    
         'last_seen_at': DateTime.now().toUtc().toIso8601String(),
       },
       onConflict: 'fcm_token',
@@ -191,6 +192,12 @@ class PushNotificationService {
 
     _started = false;
     _messaging = null;
+  }
+
+  String get _languageCode {
+    final locale = WidgetsBinding.instance.platformDispatcher.locale;
+
+    return locale.languageCode.toLowerCase() == 'it' ? 'IT' : 'EN';
   }
 
   bool get _supportsPushPlatform =>
