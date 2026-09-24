@@ -84,4 +84,17 @@ class CheckinCompetitionService {
       'updated_at': DateTime.now().toIso8601String(),
     }).eq('id', id);
   }
+  // =========================================================
+  // TOGGLE FL_GARA_CHIUSA
+  // =========================================================
+
+  Future<void> toggleGaraChiusa({
+    required String id,
+    required bool currentValue,
+  }) async {
+    await supabase.from('competitions').update({
+      'fl_gara_chiusa': !currentValue,
+      'updated_at': DateTime.now().toIso8601String(),
+    }).eq('id', id);
+  }
 }

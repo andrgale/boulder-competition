@@ -78,6 +78,7 @@ class _PermissionFormPageState extends State<PermissionFormPage> {
   @override
   Widget build(BuildContext context) {
     return BasePage(
+      showBackButton: true,
       title: isEdit ? l10n.administrationMessageCustom87 : l10n.administrationMessaggeCustom75, // 'Modifica Permesso' / 'Nuovo Permesso'
       subtitle: l10n.administrationMessageCustom88, // 'Definizione del codice permesso'
       actions: [

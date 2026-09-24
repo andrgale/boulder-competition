@@ -20,8 +20,10 @@ type NotificationType =
 
 type RequestBody = {
   type: NotificationType;
-  title: string;
-  body: string;
+  titleIt: string;
+  bodyIt: string;
+  titleEn: string;
+  bodyEn: string;
   turn?: "first" | "second";
 };
 
@@ -92,13 +94,15 @@ Deno.serve(async (request) => {
     );
     if (roleError || isAdmin !== true) throw new Error("Forbidden");
 
-    const { type, title, body, turn } = await request.json() as RequestBody;
+    const { type, titleIt, bodyIt, titleEn, bodyEn, turn } =
+      await request.json() as RequestBody;
+
     if (
       !["competition_open", "competition_closed", "competition_qualificated"].includes(type) ||
-      !title?.trim() ||
-      !body?.trim()
+      !titleIt?.trim() || !bodyIt?.trim() ||
+      !titleEn?.trim() || !bodyEn?.trim()
     ) {
-      throw new Error("type, title and body are required");
+      throw new Error("type, titleIt, bodyIt, titleEn and bodyEn are required");
     }
     const { data: competition, error: competitionError } = await adminClient
       .from("competitions")
@@ -169,12 +173,16 @@ Deno.serve(async (request) => {
     const authUserIds = (profiles ?? []).map((profile) => profile.auth_user_id);
     const { data: devices, error: deviceError } = await adminClient
       .from("user_devices")
-      .select("fcm_token")
+      .select("fcm_token, language_code")
       .in("auth_user_id", authUserIds);
     if (deviceError) throw deviceError;
-
     const accessToken = await createAccessToken();
     const results = await Promise.all((devices ?? []).map(async (device) => {
+      const isItalian = device.language_code?.toUpperCase() === "IT";
+      const notification = isItalian
+        ? { title: titleIt, body: bodyIt }
+        : { title: titleEn, body: bodyEn };
+
       const response = await fetch(
         `https://fcm.googleapis.com/v1/projects/${firebaseProjectId}/messages:send`,
         {
@@ -186,12 +194,28 @@ Deno.serve(async (request) => {
           body: JSON.stringify({
             message: {
               token: device.fcm_token,
-              notification: { title, body },
+              notification,
               data: { type },
             },
           }),
         },
       );
+
+      if (!response.ok) {
+        console.error("FCM error:", response.status, await response.text());
+
+        // Token non più registrato (app disinstallata, ecc.): lo rimuovo
+        if (response.status === 404) {
+          const { error: deleteError } = await adminClient
+            .from("user_devices")
+            .delete()
+            .eq("fcm_token", device.fcm_token);
+          if (deleteError) {
+            console.error("Token cleanup failed:", deleteError);
+          }
+        }
+      }
+
       return { ok: response.ok };
     }));
 

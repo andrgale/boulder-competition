@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../models/email_template_model.dart';
 import 'email_template_editor_page.dart';
+import 'package:go_router/go_router.dart';
 
 /// Pagina da aprire dalla tua amministrazione con Navigator.push(...).
 class EmailTemplatesPage extends StatefulWidget {
@@ -99,6 +100,17 @@ class _EmailTemplatesPageState extends State<EmailTemplatesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();            // aperta con push: torna indietro
+            } else {
+              context.go('/security');  // aperta con go: torna alla dashboard sicurezza
+            }
+          },
+        ),
         title: Text(l10n.emailMessageCustom1), // 'Template email'
         actions: [
           IconButton(

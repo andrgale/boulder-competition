@@ -76,6 +76,7 @@ class _RoleFormPageState extends State<RoleFormPage> {
   @override
   Widget build(BuildContext context) {
     return BasePage(
+      showBackButton: true,
       title: isEdit ? l10n.administrationMessageCustom137 : l10n.administrationMessageCustom138, // 'Modifica Ruolo' / 'Nuovo Ruolo'
       subtitle: l10n.administrationMessageCustom139, // 'Dati del ruolo applicativo'
       actions: [

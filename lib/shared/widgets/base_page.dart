@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class BasePage extends StatelessWidget {
   final String title;
@@ -17,6 +18,10 @@ class BasePage extends StatelessWidget {
 
   final Widget? floatingActionButton;
 
+  final bool showBackButton;
+
+  final String? backRoute;
+
   const BasePage({
     super.key,
     required this.title,
@@ -28,6 +33,8 @@ class BasePage extends StatelessWidget {
     this.emptyMessage =
         'Nessun dato disponibile',
     this.floatingActionButton,
+    this.showBackButton = false,
+    this.backRoute,
   });
 
   @override
@@ -54,6 +61,8 @@ class BasePage extends StatelessWidget {
             title: title,
             subtitle: subtitle,
             actions: actions,
+            showBackButton: showBackButton,
+            backRoute: backRoute,
           ),
 
           // =================================================
@@ -109,10 +118,16 @@ class _PageHeader extends StatelessWidget {
 
   final List<Widget>? actions;
 
+  final bool showBackButton;
+
+  final String? backRoute;
+
   const _PageHeader({
     required this.title,
     this.subtitle,
     this.actions,
+    this.showBackButton = false,
+    this.backRoute,
   });
 
   @override
@@ -127,6 +142,25 @@ class _PageHeader extends StatelessWidget {
             CrossAxisAlignment.start,
 
         children: [
+          // ── pulsante indietro ──
+          if (showBackButton) ...[
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                onPressed: () {
+                  if (context.canPop()) {
+                    context.pop();              // pagina aperta con push: torna indietro
+                  } else if (backRoute != null) {
+                    context.go(backRoute!);     // pagina aperta con go: vai alla destinazione
+                  }
+                },
+              ),
+            ),
+            const SizedBox(width: 8),
+          ],
+
           // ===============================================
           // TITLES
           // ===============================================

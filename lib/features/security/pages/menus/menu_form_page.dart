@@ -140,6 +140,7 @@ class _MenuFormPageState extends State<MenuFormPage> {
   @override
   Widget build(BuildContext context) {
     return BasePage(
+      showBackButton: true,
       title: isEdit ? l10n.administrationMessaggeCustom37 : l10n.administrationMessaggeCustom38, // 'Modifica Voce Menu' / 'Nuova Voce Menu'
       subtitle: l10n.administrationMessaggeCustom39, // 'Configurazione voce di navigazione'
       actions: [

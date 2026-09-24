@@ -55,6 +55,7 @@ class CheckinCompetitionModel {
     bool? flGestionePresenze,
     bool? flGestionePagamenti,
     bool? flGestioneOmaggi,
+    bool? flGaraChiusa,
   }) {
     return CheckinCompetitionModel(
       id: id,
@@ -64,7 +65,7 @@ class CheckinCompetitionModel {
       quotaIscrizione: quotaIscrizione, // ← propagato
       nrFinalisti: nrFinalisti,
       flIscrizioniChiuse: flIscrizioniChiuse,
-      flGaraChiusa: flGaraChiusa,
+      flGaraChiusa: flGaraChiusa ?? this.flGaraChiusa,
       flGestionePresenze: flGestionePresenze ?? this.flGestionePresenze,
       flGestionePagamenti: flGestionePagamenti ?? this.flGestionePagamenti,
       flGestioneOmaggi: flGestioneOmaggi ?? this.flGestioneOmaggi,

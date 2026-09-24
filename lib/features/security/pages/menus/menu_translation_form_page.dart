@@ -90,6 +90,7 @@ class _MenuTranslationFormPageState extends State<MenuTranslationFormPage> {
   @override
   Widget build(BuildContext context) {
     return BasePage(
+      showBackButton: true,
       title: isEdit ? l10n.administrationMessaggeCustom61 : l10n.administrationMessaggeCustom62, // 'Modifica Traduzione' / 'Nuova Traduzione'
       subtitle: l10n.administrationMessaggeCustom63(widget.menu.label, widget.menu.route), // '"${widget.menu.label}" — ${widget.menu.route}'
       actions: [

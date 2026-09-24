@@ -84,17 +84,21 @@ class NotificationService {
 
   Future<NotificationSendResult> send({
     required String type,
-    required String title,
-    required String body,
+    required String titleIt,
+    required String bodyIt,
+    required String titleEn,
+    required String bodyEn,
     String? turn,
   }) async {
     final response = await _client.functions.invoke(
       'send-push-notification',
       body: {
         'type': type,
-        'title': title,
-        'body': body,
-        if (turn != null) 'turn': turn,
+        'titleIt': titleIt,
+        'bodyIt': bodyIt,
+        'titleEn': titleEn,
+        'bodyEn': bodyEn,
+        'turn': ?turn,
       },
     );
     final data = response.data;

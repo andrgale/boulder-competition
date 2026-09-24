@@ -123,6 +123,8 @@ class _MenusListPageState extends State<MenusListPage> {
     final l10n = AppLocalizations.of(context)!;
 
     return BasePage(
+      showBackButton: true,
+      backRoute: '/security',
       title: l10n.administrationMessaggeCustom5, // 'Menu'
       subtitle: l10n.administrationMessaggeCustom36, // 'Struttura di navigazione'
       loading: loading,

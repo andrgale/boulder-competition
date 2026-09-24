@@ -90,6 +90,8 @@ class _PermissionsListPageState extends State<PermissionsListPage> {
   @override
   Widget build(BuildContext context) {
     return BasePage(
+      showBackButton: true,
+      backRoute: '/security',
       title: l10n.administrationMessaggeCustom76, // 'Permessi'
       subtitle: l10n.administrationMessaggeCustom77, // 'Codici permesso e attività associate'
       loading: loading,

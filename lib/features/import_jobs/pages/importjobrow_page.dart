@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../data/import_job_row_service.dart';
@@ -8,19 +10,15 @@ import 'package:boulder_competition/l10n/app_localizations.dart';
 class ImportJobRowsPage extends StatefulWidget {
   final ImportJobModel job;
 
-  const ImportJobRowsPage({
-    super.key,
-    required this.job,
-  });
+  const ImportJobRowsPage({super.key, required this.job});
 
   @override
-  State<ImportJobRowsPage> createState() =>
-      _ImportJobRowsPageState();
+  State<ImportJobRowsPage> createState() => _ImportJobRowsPageState();
 }
 
-class _ImportJobRowsPageState
-    extends State<ImportJobRowsPage> {
+class _ImportJobRowsPageState extends State<ImportJobRowsPage> {
   final service = ImportJobRowService();
+  StreamSubscription<List<ImportJobRowModel>>? _realtimeSubscription;
 
   List<ImportJobRowModel> rows = [];
   bool loading = true;
@@ -32,6 +30,12 @@ class _ImportJobRowsPageState
   void initState() {
     super.initState();
     loadRealtime();
+  }
+
+  @override
+  void dispose() {
+    _realtimeSubscription?.cancel();
+    super.dispose();
   }
 
   Future<void> refreshData() async {
@@ -46,12 +50,12 @@ class _ImportJobRowsPageState
   }
 
   void loadRealtime() {
-    service.watchImportJobRows(widget.job.id).listen((data) {
+    _realtimeSubscription = service.watchImportJobRows(widget.job.id).listen((
+      data,
+    ) {
       if (!mounted) return;
 
-      data.sort(
-        (a, b) => a.rowNumber.compareTo(b.rowNumber),
-      );
+      data.sort((a, b) => a.rowNumber.compareTo(b.rowNumber));
 
       setState(() {
         rows = data;
@@ -63,9 +67,7 @@ class _ImportJobRowsPageState
   List<ImportJobRowModel> get filteredRows {
     if (!onlyDiscarded) return rows;
 
-    return rows
-        .where((e) => e.status == 'DISCARDED')
-        .toList();
+    return rows.where((e) => e.status == 'DISCARDED').toList();
   }
 
   Color getRowColor(String status) {
@@ -92,8 +94,7 @@ class _ImportJobRowsPageState
 
   @override
   Widget build(BuildContext context) {
-    final competitionName =
-        widget.job.competitionDescription ?? '-';
+    final competitionName = widget.job.competitionDescription ?? '-';
 
     return Scaffold(
       appBar: AppBar(
@@ -123,17 +124,23 @@ class _ImportJobRowsPageState
                           children: [
                             Chip(
                               label: Text(
-                                l10n.importMessageCustom3(widget.job.totalRows.toString()), // 'Totali {total}'
+                                l10n.importMessageCustom3(
+                                  widget.job.totalRows.toString(),
+                                ), // 'Totali {total}'
                               ),
                             ),
                             Chip(
                               label: Text(
-                                l10n.importMessageCustom4(widget.job.insertedRows.toString()), // 'Inseriti {inserted}'
+                                l10n.importMessageCustom4(
+                                  widget.job.insertedRows.toString(),
+                                ), // 'Inseriti {inserted}'
                               ),
                             ),
                             Chip(
                               label: Text(
-                                l10n.importMessageCustom5(widget.job.discardedRows.toString()), // 'Scartati {discarded}'
+                                l10n.importMessageCustom5(
+                                  widget.job.discardedRows.toString(),
+                                ), // 'Scartati {discarded}'
                               ),
                             ),
                           ],
@@ -143,7 +150,9 @@ class _ImportJobRowsPageState
                   ),
                 ),
                 SwitchListTile(
-                  title: Text(l10n.importMessageCustom6), // 'Mostra solo gli scarti'
+                  title: Text(
+                    l10n.importMessageCustom6,
+                  ), // 'Mostra solo gli scarti'
                   value: onlyDiscarded,
                   onChanged: (v) {
                     setState(() {
@@ -155,7 +164,9 @@ class _ImportJobRowsPageState
                 Expanded(
                   child: filteredRows.isEmpty
                       ? Center(
-                          child: Text(l10n.importMessageCustom7), // 'Nessuna riga trovata'
+                          child: Text(
+                            l10n.importMessageCustom7,
+                          ), // 'Nessuna riga trovata'
                         )
                       : ListView.builder(
                           itemCount: filteredRows.length,
@@ -178,17 +189,21 @@ class _ImportJobRowsPageState
                                 ),
                                 title: Text(
                                   row.status == 'INSERTED'
-                                      ? l10n.importMessageCustom8 // 'Importata'
+                                      ? l10n
+                                            .importMessageCustom8 // 'Importata'
                                       : l10n.importMessageCustom9, // 'Scartata'
                                 ),
                                 subtitle: Text(
-                                  l10n.importMessageCustom10(row.rowNumber.toString()), // 'Riga {number}'
+                                  l10n.importMessageCustom10(
+                                    row.rowNumber.toString(),
+                                  ), // 'Riga {number}'
                                 ),
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.all(16),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           l10n.importMessageCustom11, // 'Riga CSV'

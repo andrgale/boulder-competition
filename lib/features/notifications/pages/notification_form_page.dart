@@ -33,24 +33,30 @@ class _NotificationFormPageState extends State<NotificationFormPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (_notifications.isEmpty) {
+      final it = lookupAppLocalizations(const Locale('it'));
+      final en = lookupAppLocalizations(const Locale('en'));
+
       _notifications.addAll([
         _NotificationDraft(
           type: 'competition_open',
-          title: l10n.notificationMessageCustom7, // Gara aperta
-          body: l10n
-              .notificationMessageCustom8, // La gara è stata aperta. Puoi registrare i boulder.
+          titleIt: it.notificationMessageCustom7,
+          bodyIt: it.notificationMessageCustom8,
+          titleEn: en.notificationMessageCustom7,
+          bodyEn: en.notificationMessageCustom8,
         ),
         _NotificationDraft(
           type: 'competition_closed',
-          title: l10n.notificationMessageCustom9, // Gara chiusa
-          body: l10n
-              .notificationMessageCustom10, // La gara è terminata. Non è più possibile registrare boulder.
+          titleIt: it.notificationMessageCustom9,
+          bodyIt: it.notificationMessageCustom10,
+          titleEn: en.notificationMessageCustom9,
+          bodyEn: en.notificationMessageCustom10,
         ),
         _NotificationDraft(
           type: 'competition_qualificated',
-          title: l10n.notificationMessageCustom11, // Atleta qualificato
-          body: l10n
-              .notificationMessageCustom12, // Ti sei qualificato per la finale.
+          titleIt: it.notificationMessageCustom11,
+          bodyIt: it.notificationMessageCustom12,
+          titleEn: en.notificationMessageCustom11,
+          bodyEn: en.notificationMessageCustom12,
         ),
       ]);
     }
@@ -136,8 +142,10 @@ class _NotificationFormPageState extends State<NotificationFormPage> {
     try {
       final result = await _notificationService.send(
         type: notification.type,
-        title: notification.title.text.trim(),
-        body: notification.body.text.trim(),
+        titleIt: notification.titleIt.text.trim(),
+        bodyIt: notification.bodyIt.text.trim(),
+        titleEn: notification.titleEn.text.trim(),
+        bodyEn: notification.bodyEn.text.trim(),
         turn: notification.turn,
       );
       if (!mounted) return;
@@ -237,24 +245,31 @@ class _NotificationFormPageState extends State<NotificationFormPage> {
 class _NotificationDraft {
   _NotificationDraft({
     required this.type,
-    required String title,
-    required String body,
-  }) : title = TextEditingController(text: title),
-       body = TextEditingController(text: body);
+    required String titleIt,
+    required String bodyIt,
+    required String titleEn,
+    required String bodyEn,
+  }) : titleIt = TextEditingController(text: titleIt),
+       bodyIt = TextEditingController(text: bodyIt),
+       titleEn = TextEditingController(text: titleEn),
+       bodyEn = TextEditingController(text: bodyEn);
 
   final String type;
-  final TextEditingController title;
-  final TextEditingController body;
+  final TextEditingController titleIt;
+  final TextEditingController bodyIt;
+  final TextEditingController titleEn;
+  final TextEditingController bodyEn;
   String? turn;
   bool isSending = false;
   String? result;
 
   void dispose() {
-    title.dispose();
-    body.dispose();
+    titleIt.dispose();
+    bodyIt.dispose();
+    titleEn.dispose();
+    bodyEn.dispose();
   }
 }
-
 class _InfoCard extends StatelessWidget {
   const _InfoCard({
     required this.icon,
@@ -314,15 +329,7 @@ class _NotificationCard extends StatelessWidget {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 16),
-          TextFormField(
-            controller: notification.title,
-            decoration: InputDecoration(
-              labelText: l10n.notificationMessageCustom26, // Titolo
-              border: const OutlineInputBorder(),
-            ),
-          ),
-          const SizedBox(height: 12),
-          if (isTurn && notification.type != 'competition_qualificated')
+          if (isTurn && notification.type != 'competition_qualificated') ...[
             SegmentedButton<String>(
               segments: [
                 ButtonSegment(
@@ -344,17 +351,49 @@ class _NotificationCard extends StatelessWidget {
                 }
               },
             ),
-          if (isTurn && notification.type != 'competition_qualificated')
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
+          ],
+
+          // --- Italiano ---
           TextFormField(
-            controller: notification.body,
-            minLines: 2,
-            maxLines: 4,
+            controller: notification.titleIt,
             decoration: InputDecoration(
-              labelText: l10n.notificationMessageCustom27, // Messaggio
+              labelText: '${l10n.notificationMessageCustom26} (IT)', // Titolo (IT)
               border: const OutlineInputBorder(),
             ),
           ),
+          const SizedBox(height: 12),
+          TextFormField(
+            controller: notification.bodyIt,
+            minLines: 2,
+            maxLines: 4,
+            decoration: InputDecoration(
+              labelText: '${l10n.notificationMessageCustom27} (IT)', // Messaggio (IT)
+              border: const OutlineInputBorder(),
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          // --- Inglese ---
+          TextFormField(
+            controller: notification.titleEn,
+            decoration: InputDecoration(
+              labelText: '${l10n.notificationMessageCustom26} (EN)', // Titolo (EN)
+              border: const OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 12),
+          TextFormField(
+            controller: notification.bodyEn,
+            minLines: 2,
+            maxLines: 4,
+            decoration: InputDecoration(
+              labelText: '${l10n.notificationMessageCustom27} (EN)', // Messaggio (EN)
+              border: const OutlineInputBorder(),
+            ),
+          ),
+
           const SizedBox(height: 12),
           Text(
             l10n.notificationMessageCustom28(recipients),

@@ -129,6 +129,8 @@ class _ProfilesListPageState extends State<ProfilesListPage> {
     final screen = context.responsive;
 
     return BasePage(
+      showBackButton: true,
+      backRoute: '/security',
       title: l10n.administrationMessageCustom93, // 'Utenti'
       subtitle: l10n.administrationMessageCustom94, // 'Assegnazione ruoli agli utenti registrati'
       loading: loading,

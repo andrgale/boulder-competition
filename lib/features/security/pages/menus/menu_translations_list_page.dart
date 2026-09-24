@@ -78,6 +78,7 @@ class _MenuTranslationsListPageState extends State<MenuTranslationsListPage> {
     final canAdd = _availableLocales.isNotEmpty;
 
     return BasePage(
+      showBackButton: true,
       title: l10n.administrationMessaggeCustom71, // 'Traduzioni'
       subtitle: l10n.administrationMessaggeCustom63(widget.menu.label, widget.menu.route), // '"${widget.menu.label}" — ${widget.menu.route}'
       loading: loading,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../shared/app_snackbar.dart';
 import '../../data/role_service.dart';
@@ -125,6 +126,19 @@ class _RoleManagePageState extends State<RoleManagePage>
             padding: const EdgeInsets.fromLTRB(32, 32, 32, 0),
             child: Row(
               children: [
+                // ── pulsante indietro ──
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                  onPressed: () {
+                    if (context.canPop()) {
+                      context.pop();                 // aperta con push: torna indietro
+                    } else {
+                      context.go('/security/roles'); // aperta con go: vai alla lista ruoli
+                    }
+                  },
+                ),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

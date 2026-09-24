@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:boulder_competition/core/services/permission_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -22,6 +24,7 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
   final searchController = TextEditingController();
   final _verticalController = ScrollController(); // ← nuovo
   final _horizontalController = ScrollController(); // ← nuovo
+  StreamSubscription<List<RankingCompetitionModel>>? _realtimeSubscription;
 
   List<RankingCompetitionModel> allCompetitions = [];
   List<RankingCompetitionModel> competitions = [];
@@ -35,7 +38,7 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
   bool canWriteOpenClose = false;
   bool checkingPermissionOpenClose = true;
 
-   // ── true se esiste almeno una gara aperta ──────────────────
+  // ── true se esiste almeno una gara aperta ──────────────────
   // Calcolato sui dati già in memoria (allCompetitions), che
   // sono sempre sincronizzati via realtime: non serve una
   // query separata, basta filtrare la lista che abbiamo già.
@@ -51,6 +54,7 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
 
   @override
   void dispose() {
+    _realtimeSubscription?.cancel();
     searchController.dispose();
     _verticalController.dispose(); // ← nuovo
     _horizontalController.dispose(); // keep consistent variable name
@@ -62,7 +66,7 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
   // =========================================================
 
   void loadRealtime() {
-    service.watchCompetitions().listen((rows) {
+    _realtimeSubscription = service.watchCompetitions().listen((rows) {
       if (!mounted) return;
       allCompetitions = rows;
       applyFilters();
@@ -119,14 +123,11 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
     });
   }
 
-// =====================================================
-// CONTROLLO PERMESSI OPEN/CLOSE GARA
-// =====================================================
+  // =====================================================
+  // CONTROLLO PERMESSI OPEN/CLOSE GARA
+  // =====================================================
   Future<void> checkPermissionWrite() async {
-    final allowed =
-        await PermissionService.hasPermission(
-      'competition.write',
-    );
+    final allowed = await PermissionService.hasPermission('competition.write');
 
     if (!mounted) return;
 
@@ -135,7 +136,6 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
       checkingPermissionOpenClose = false;
     });
   }
-
 
   // =========================================================
   // TOGGLE FL_GARA_CHIUSA — aggiornamento ottimistico
@@ -190,26 +190,32 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
   // =========================================================
 
   void _goToQualifications(RankingCompetitionModel c) {
-    context.push('/rankings/${c.id}/qualifications', extra: {
-      'competitionId': c.id,
-      'competitionName': c.descrizione,
-      'nrFinalisti': c.nrFinalisti,
-    });
+    context.push(
+      '/rankings/${c.id}/qualifications',
+      extra: {
+        'competitionId': c.id,
+        'competitionName': c.descrizione,
+        'nrFinalisti': c.nrFinalisti,
+      },
+    );
   }
 
   void _goToFinal(RankingCompetitionModel c) {
-    context.push('/rankings/${c.id}/final', extra: {
-      'competitionId': c.id,
-      'competitionName': c.descrizione,
-    });
+    context.push(
+      '/rankings/${c.id}/final',
+      extra: {'competitionId': c.id, 'competitionName': c.descrizione},
+    );
   }
 
   void _goToTopZone(RankingCompetitionModel c) {
-    context.push('/rankings/${c.id}/top-zone', extra: {
-      'competitionId': c.id,
-      'competitionName': c.descrizione,
-      'nrFinalisti': c.nrFinalisti,
-    });
+    context.push(
+      '/rankings/${c.id}/top-zone',
+      extra: {
+        'competitionId': c.id,
+        'competitionName': c.descrizione,
+        'nrFinalisti': c.nrFinalisti,
+      },
+    );
   }
 
   // =========================================================
@@ -237,7 +243,8 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
                 child: TextField(
                   controller: searchController,
                   decoration: InputDecoration(
-                    hintText: l10n.rankingMessageCustom15, // 'Cerca competizione'
+                    hintText:
+                        l10n.rankingMessageCustom15, // 'Cerca competizione'
                     prefixIcon: const Icon(Icons.search),
                   ),
                   onChanged: (_) => applyFilters(),
@@ -274,7 +281,9 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
   Widget _buildTable() {
     if (competitions.isEmpty) {
       return Center(
-        child: Text(l10n.rankingMessageCustom17), // 'Nessuna competizione trovata'
+        child: Text(
+          l10n.rankingMessageCustom17,
+        ), // 'Nessuna competizione trovata'
       );
     }
 
@@ -317,8 +326,8 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
                 _StatusChip(
                   chiusa: c.flGaraChiusa,
                   onTap: (canWriteOpenClose && !checkingPermissionOpenClose)
-                  ? () => _toggleGaraChiusa(c)
-                  : null,
+                      ? () => _toggleGaraChiusa(c)
+                      : null,
                 ),
                 const Divider(height: 24),
                 // ── bottoni classifiche ─────────────────────
@@ -327,7 +336,8 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
                   runSpacing: 8,
                   children: [
                     _RankingButton(
-                      label: l10n.rankingMessageCustom18, // 'Classifica qualificazioni'
+                      label: l10n
+                          .rankingMessageCustom18, // 'Classifica qualificazioni'
                       icon: Icons.format_list_numbered,
                       color: Colors.indigo,
                       onTap: () => _goToQualifications(c),
@@ -339,7 +349,8 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
                       onTap: () => _goToFinal(c),
                     ),
                     _RankingButton(
-                      label: l10n.rankingMessageCustom20, // 'Classifica Top e Zone'
+                      label: l10n
+                          .rankingMessageCustom20, // 'Classifica Top e Zone'
                       icon: Icons.terrain,
                       color: Colors.teal,
                       onTap: () => _goToTopZone(c),
@@ -400,17 +411,29 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
                       sortAscending: sortAsc,
                       columns: [
                         DataColumn(
-                          label: Text(l10n.rankingMessageCustom21), // 'Descrizione'
+                          label: Text(
+                            l10n.rankingMessageCustom21,
+                          ), // 'Descrizione'
                           onSort: (_, _) => updateSort('descrizione'),
                         ),
                         DataColumn(
-                          label: Text(l10n.rankingMessageCustom22), // 'Data Gara'
+                          label: Text(
+                            l10n.rankingMessageCustom22,
+                          ), // 'Data Gara'
                           onSort: (_, _) => updateSort('dt_gara'),
                         ),
-                        DataColumn(label: Text(l10n.rankingMessageCustom23)), // 'Stato'
-                        DataColumn(label: Text(l10n.rankingMessageCustom24)), // 'Qualificazioni'
-                        DataColumn(label: Text(l10n.rankingMessageCustom25)), // 'Finale'
-                        DataColumn(label: Text(l10n.rankingMessageCustom26)), // 'Top e Zone'
+                        DataColumn(
+                          label: Text(l10n.rankingMessageCustom23),
+                        ), // 'Stato'
+                        DataColumn(
+                          label: Text(l10n.rankingMessageCustom24),
+                        ), // 'Qualificazioni'
+                        DataColumn(
+                          label: Text(l10n.rankingMessageCustom25),
+                        ), // 'Finale'
+                        DataColumn(
+                          label: Text(l10n.rankingMessageCustom26),
+                        ), // 'Top e Zone'
                       ],
                       rows: competitions.map((c) => _buildRow(c)).toList(),
                     ),
@@ -447,15 +470,16 @@ class _RankingsCompetitionsPageState extends State<RankingsCompetitionsPage> {
           _StatusChip(
             chiusa: c.flGaraChiusa,
             onTap: (canWriteOpenClose && !checkingPermissionOpenClose)
-              ? () => _toggleGaraChiusa(c)
-              : null,
+                ? () => _toggleGaraChiusa(c)
+                : null,
           ),
         ),
 
         // classifica qualificazioni
         DataCell(
           _RankingButton(
-            label: l10n.rankingMessageCustom18, // 'Qualificazioni' / reuse mobile label
+            label: l10n
+                .rankingMessageCustom18, // 'Qualificazioni' / reuse mobile label
             icon: Icons.format_list_numbered,
             color: Colors.indigo,
             onTap: () => _goToQualifications(c),
@@ -517,9 +541,7 @@ class _RankingButton extends StatelessWidget {
         side: BorderSide(color: color.withValues(alpha: 0.4)),
         backgroundColor: color.withValues(alpha: 0.06),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     );
   }
@@ -542,12 +564,16 @@ class _StatusChip extends StatelessWidget {
 
     return Tooltip(
       message: !enabled
-          ? l10n.rankingMessageCustom61 // es. 'Non hai i permessi per modificare lo stato'
-          : (chiusa ? l10n.rankingMessageCustom27 : l10n.rankingMessageCustom28),
+          ? l10n
+                .rankingMessageCustom61 // es. 'Non hai i permessi per modificare lo stato'
+          : (chiusa
+                ? l10n.rankingMessageCustom27
+                : l10n.rankingMessageCustom28),
       child: Opacity(
         opacity: enabled ? 1.0 : 0.6,
         child: InkWell(
-          onTap: onTap, // null = automaticamente disabilitato, nessun effetto ripple
+          onTap:
+              onTap, // null = automaticamente disabilitato, nessun effetto ripple
           borderRadius: BorderRadius.circular(20),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -568,11 +594,15 @@ class _StatusChip extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  chiusa ? l10n.rankingMessageCustom29 : l10n.rankingMessageCustom30,
+                  chiusa
+                      ? l10n.rankingMessageCustom29
+                      : l10n.rankingMessageCustom30,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: chiusa ? Colors.grey.shade600 : Colors.green.shade700,
+                    color: chiusa
+                        ? Colors.grey.shade600
+                        : Colors.green.shade700,
                   ),
                 ),
               ],

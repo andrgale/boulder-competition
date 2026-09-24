@@ -180,6 +180,17 @@ class _CategoryTemplatePageState extends State<CategoryTemplatePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();            // aperta con push: torna indietro
+            } else {
+              context.go('/security');  // aperta con go: torna alla dashboard sicurezza
+            }
+          },
+        ),        
         title: Text(l10n.categoryTemplateMessageCustom1), // 'Template categorie' / 'Category templates'
         actions: [
           IconButton(

@@ -1,4 +1,6 @@
 import 'package:boulder_competition/shared/app_snackbar.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -17,12 +19,12 @@ class CategoriesPage extends StatefulWidget {
   });
 
   @override
-  State<CategoriesPage> createState() =>
-      _CategoriesPageState();
+  State<CategoriesPage> createState() => _CategoriesPageState();
 }
 
 class _CategoriesPageState extends State<CategoriesPage> {
   final service = CategoryService();
+  StreamSubscription<List<CategoryModel>>? _realtimeSubscription;
   AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   List<CategoryModel> categories = [];
@@ -32,6 +34,12 @@ class _CategoriesPageState extends State<CategoriesPage> {
   void initState() {
     super.initState();
     loadRealtime();
+  }
+
+  @override
+  void dispose() {
+    _realtimeSubscription?.cancel();
+    super.dispose();
   }
 
   Future<void> refreshData() async {
@@ -44,20 +52,21 @@ class _CategoriesPageState extends State<CategoriesPage> {
       loading = false;
     });
   }
+
   // =====================================================
   // REALTIME
   // =====================================================
   void loadRealtime() {
-    service
+    _realtimeSubscription = service
         .watchCategories(widget.competitionId)
         .listen((rows) {
-      if (!mounted) return;
+          if (!mounted) return;
 
-      setState(() {
-        categories = rows;
-        loading = false;
-      });
-    });
+          setState(() {
+            categories = rows;
+            loading = false;
+          });
+        });
   }
 
   // =====================================================
@@ -73,10 +82,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
       if (hasRegistrations) {
         if (!mounted) return;
 
-      AppSnackbar.error(
-        context,
-        l10n.categoryMessageCustom16, // 'Impossibile eliminare: sono presenti ascese registrate...
-      );
+        AppSnackbar.error(
+          context,
+          l10n.categoryMessageCustom16, // 'Impossibile eliminare: sono presenti ascese registrate...
+        );
         return;
       }
     } catch (e) {
@@ -162,16 +171,14 @@ class _CategoriesPageState extends State<CategoriesPage> {
       refreshData();
     }
   }
+
   // =====================================================
   // NAV EDIT
   // =====================================================
   Future<void> openEdit(CategoryModel c) async {
     final res = await context.push(
       '/categories/edit',
-      extra: {
-        'competitionId': widget.competitionId,
-        'category': c,
-      },
+      extra: {'competitionId': widget.competitionId, 'category': c},
     );
 
     if (res == true) {
@@ -189,13 +196,12 @@ class _CategoriesPageState extends State<CategoriesPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          l10n.categoryMessageCustom3(widget.competitionName), // 'Categorie - ${widget.competitionName}'
+          l10n.categoryMessageCustom3(
+            widget.competitionName,
+          ), // 'Categorie - ${widget.competitionName}'
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: openCreate,
-          ),
+          IconButton(icon: const Icon(Icons.add), onPressed: openCreate),
         ],
       ),
 
@@ -209,37 +215,37 @@ class _CategoriesPageState extends State<CategoriesPage> {
       body: loading
           ? const Center(child: CircularProgressIndicator())
           : categories.isEmpty
-              ? Center(
-                  child: Text(
-                    l10n.categoryMessageCustom4, // 'Nessuna categoria'
-                  ),
-                )
-              : ListView.builder(
-                  itemCount: categories.length,
-                  itemBuilder: (context, i) {
-                    final c = categories[i];
+          ? Center(
+              child: Text(
+                l10n.categoryMessageCustom4, // 'Nessuna categoria'
+              ),
+            )
+          : ListView.builder(
+              itemCount: categories.length,
+              itemBuilder: (context, i) {
+                final c = categories[i];
 
-                    return ListTile(
-                      title: Text(c.nome),
-                      subtitle: Text(
-                        '${c.sesso ?? "-"} | ${c.etaMin ?? "-"} - ${c.etaMax ?? "-"}',
+                return ListTile(
+                  title: Text(c.nome),
+                  subtitle: Text(
+                    '${c.sesso ?? "-"} | ${c.etaMin ?? "-"} - ${c.etaMax ?? "-"}',
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () => openEdit(c),
                       ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: () => openEdit(c),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () => deleteCategory(c.id),
-                          ),
-                        ],
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () => deleteCategory(c.id),
                       ),
-                    );
-                  },
-                ),
+                    ],
+                  ),
+                );
+              },
+            ),
     );
   }
 }

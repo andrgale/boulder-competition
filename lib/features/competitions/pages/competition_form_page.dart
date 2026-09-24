@@ -368,6 +368,7 @@ class _CompetitionFormPageState
     //  final l10n = AppLocalizations.of(context)!;
 
           return BasePage(
+            showBackButton: true,
             title: isEdit
                 ? l10n.competitionMessageCustom1 // Modifica Gara
                 : l10n.competitionMessageCustom2, // Nuova Gara

@@ -76,6 +76,8 @@ class _RolesListPageState extends State<RolesListPage> {
   @override
   Widget build(BuildContext context) {
     return BasePage(
+      showBackButton: true,
+      backRoute: '/security',
       title: l10n.administrationMessageCustom123, // 'Ruoli'
       subtitle: l10n.administrationMessageCustom124, // 'Gestione ruoli applicativi'
       loading: loading,

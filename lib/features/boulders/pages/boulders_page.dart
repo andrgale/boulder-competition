@@ -1,4 +1,6 @@
 import 'package:boulder_competition/core/services/permission_service.dart';
+import 'dart:async';
+
 import 'package:boulder_competition/shared/app_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -18,20 +20,18 @@ class BouldersPage extends StatefulWidget {
   });
 
   @override
-  State<BouldersPage> createState() =>
-      _BouldersPageState();
+  State<BouldersPage> createState() => _BouldersPageState();
 }
 
-class _BouldersPageState
-    extends State<BouldersPage> {
+class _BouldersPageState extends State<BouldersPage> {
   final service = BoulderService();
+  StreamSubscription<List<BoulderModel>>? _realtimeSubscription;
 
   List<BoulderModel> boulders = [];
 
   bool showOnlyFinals = false;
   bool canWriteDelete = false;
   bool checkingPermissionDelete = true;
-  
 
   bool loading = true;
   AppLocalizations get l10n => AppLocalizations.of(context)!;
@@ -44,32 +44,32 @@ class _BouldersPageState
     checkPermissionDelete();
   }
 
+  @override
+  void dispose() {
+    _realtimeSubscription?.cancel();
+    super.dispose();
+  }
+
   // =====================================================
   // CONTROLLO PERMESSI CANCELLATION
   // =====================================================
-    Future<void> checkPermissionDelete() async {
-      final allowed =
-          await PermissionService.hasPermission(
-        'boulder.write',
-      );
+  Future<void> checkPermissionDelete() async {
+    final allowed = await PermissionService.hasPermission('boulder.write');
 
-      if (!mounted) return;
+    if (!mounted) return;
 
-      setState(() {
-        canWriteDelete = allowed;
-        checkingPermissionDelete = false;
-      });
-    }
-
+    setState(() {
+      canWriteDelete = allowed;
+      checkingPermissionDelete = false;
+    });
+  }
 
   // =====================================================
   // REFRESH
   // =====================================================
 
   Future<void> refreshData() async {
-    final rows = await service.getBoulders(
-      widget.competitionId,
-    );
+    final rows = await service.getBoulders(widget.competitionId);
 
     if (!mounted) return;
 
@@ -84,11 +84,9 @@ class _BouldersPageState
   // =====================================================
 
   void loadRealtime() {
-    service
-        .watchBoulders(
-          widget.competitionId,
-        )
-        .listen((rows) {
+    _realtimeSubscription = service.watchBoulders(widget.competitionId).listen((
+      rows,
+    ) {
       if (!mounted) return;
 
       setState(() {
@@ -102,9 +100,7 @@ class _BouldersPageState
   // DELETE
   // =====================================================
 
-  Future<void> deleteBoulder(
-    BoulderModel boulder,
-  ) async {
+  Future<void> deleteBoulder(BoulderModel boulder) async {
     // =====================================================
     // CONTROLLO ASCESE COLLEGATE
     // =====================================================
@@ -139,7 +135,8 @@ class _BouldersPageState
     if (!mounted) return;
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (dialogContext) => AlertDialog(        title: Text(
+      builder: (dialogContext) => AlertDialog(
+        title: Text(
           l10n.boulderMessageCustom37, // 'Elimina boulder'
         ),
         content: Text(
@@ -214,16 +211,10 @@ class _BouldersPageState
   // NAV EDIT
   // =====================================================
 
-  Future<void> openEdit(
-    BoulderModel boulder,
-  ) async {
+  Future<void> openEdit(BoulderModel boulder) async {
     final res = await context.push(
       '/boulders/edit',
-      extra: {
-        'competitionId':
-            widget.competitionId,
-        'boulder': boulder,
-      },
+      extra: {'competitionId': widget.competitionId, 'boulder': boulder},
     );
 
     if (res == true) {
@@ -236,7 +227,6 @@ class _BouldersPageState
   // =====================================================
   @override
   Widget build(BuildContext context) {
-
     final filteredBoulders = showOnlyFinals
         ? boulders.where((b) => b.isFinale).toList()
         : boulders;
@@ -246,13 +236,12 @@ class _BouldersPageState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          l10n.boulderMessageCustom3(widget.competitionName), // 'Boulders - ${widget.competitionName}'
+          l10n.boulderMessageCustom3(
+            widget.competitionName,
+          ), // 'Boulders - ${widget.competitionName}'
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: openCreate,
-          ),
+          IconButton(icon: const Icon(Icons.add), onPressed: openCreate),
         ],
       ),
 
@@ -264,9 +253,7 @@ class _BouldersPageState
           : null,
 
       body: loading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
+          ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
                 Padding(
@@ -305,29 +292,25 @@ class _BouldersPageState
 
                             return ListTile(
                               leading: CircleAvatar(
-                                child: Text(
-                                  b.numero.toString(),
-                                ),
+                                child: Text(b.numero.toString()),
                               ),
                               title: Row(
                                 children: [
                                   Text(
-                                    l10n.boulderMessageCustom6(b.numero.toString()), // 'Boulder ${b.numero}'
+                                    l10n.boulderMessageCustom6(
+                                      b.numero.toString(),
+                                    ), // 'Boulder ${b.numero}'
                                   ),
                                   if (b.isFinale)
                                     Container(
-                                      margin: const EdgeInsets.only(
-                                        left: 8,
-                                      ),
+                                      margin: const EdgeInsets.only(left: 8),
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 8,
                                         vertical: 2,
                                       ),
                                       decoration: BoxDecoration(
                                         color: Colors.orange.shade100,
-                                        borderRadius: BorderRadius.circular(
-                                          12,
-                                        ),
+                                        borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Text(
                                         l10n.boulderMessageCustom7, // 'FINALE'
@@ -343,23 +326,23 @@ class _BouldersPageState
                                 l10n.boulderMessageCustom8(
                                   b.difficolta.toString(), // difficulty
                                   b.colore ?? '-', // color
-                                  b.valoreTeorico.toStringAsFixed(2), // value (formatted)
+                                  b.valoreTeorico.toStringAsFixed(
+                                    2,
+                                  ), // value (formatted)
                                 ), // 'Diff: ${b.difficolta} | Colore: ${b.colore ?? "-"} | Valore: ${b.valoreTeorico.toStringAsFixed(2)}'
                               ),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
-                                    icon: const Icon(
-                                      Icons.edit,
-                                    ),
+                                    icon: const Icon(Icons.edit),
                                     onPressed: () => openEdit(b),
                                   ),
                                   IconButton(
-                                    icon: const Icon(
-                                      Icons.delete,
-                                    ),
-                                    onPressed: (!canWriteDelete || checkingPermissionDelete)
+                                    icon: const Icon(Icons.delete),
+                                    onPressed:
+                                        (!canWriteDelete ||
+                                            checkingPermissionDelete)
                                         ? null
                                         : () => deleteBoulder(b),
                                   ),
@@ -374,4 +357,3 @@ class _BouldersPageState
     );
   }
 }
- 

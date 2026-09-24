@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:boulder_competition/core/services/permission_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -16,15 +18,14 @@ class CompetitionsPage extends StatefulWidget {
   const CompetitionsPage({super.key});
 
   @override
-  State<CompetitionsPage> createState() =>
-      _CompetitionsPageState();
+  State<CompetitionsPage> createState() => _CompetitionsPageState();
 }
 
-class _CompetitionsPageState
-    extends State<CompetitionsPage> {
+class _CompetitionsPageState extends State<CompetitionsPage> {
   final service = CompetitionService();
   final searchController = TextEditingController();
   final scrollController = ScrollController();
+  StreamSubscription<List<CompetitionModel>>? _realtimeSubscription;
 
   List<CompetitionModel> allCompetitions = [];
   List<CompetitionModel> competitions = [];
@@ -37,7 +38,7 @@ class _CompetitionsPageState
   bool checkingPermissionCategory = true;
   bool canWriteDelete = false;
   bool checkingPermissionDelete = true;
-   AppLocalizations get l10n => AppLocalizations.of(context)!;
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   // ── true se esiste almeno una gara aperta ──────────────────
   // Calcolato sui dati già in memoria (allCompetitions), che
@@ -54,8 +55,16 @@ class _CompetitionsPageState
     checkPermissionDelete();
   }
 
+  @override
+  void dispose() {
+    _realtimeSubscription?.cancel();
+    searchController.dispose();
+    scrollController.dispose();
+    super.dispose();
+  }
+
   void loadRealtime() {
-    service.watchCompetitions().listen((rows) {
+    _realtimeSubscription = service.watchCompetitions().listen((rows) {
       if (!mounted) return;
       allCompetitions = rows;
       applyFilters();
@@ -66,11 +75,9 @@ class _CompetitionsPageState
     final query = searchController.text.trim().toLowerCase();
 
     var filtered = allCompetitions.where((c) {
-      final matchSearch =
-          c.descrizione.toLowerCase().contains(query);
+      final matchSearch = c.descrizione.toLowerCase().contains(query);
 
-      final matchOpen =
-          !showOnlyOpen || c.flGaraChiusa == false;
+      final matchOpen = !showOnlyOpen || c.flGaraChiusa == false;
 
       return matchSearch && matchOpen;
     }).toList();
@@ -103,48 +110,44 @@ class _CompetitionsPageState
     });
   }
 
-  Future<void> deleteCompetition(
-      CompetitionModel c) async {
-        final confirm = await showDialog<bool>(
-          context: context,
-          builder: (dialogContext) => AlertDialog(
-            title: Text(
-              l10n.competitionMessageCustom26, // Elimina competizione
+  Future<void> deleteCompetition(CompetitionModel c) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(
+          l10n.competitionMessageCustom26, // Elimina competizione
+        ),
+        content: Text(
+          '${l10n.competitionMessageCustom27} "${c.descrizione}"?', // Eliminare
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(
+              l10n.commonCancel, // Annulla
             ),
-            content: Text(
-              '${l10n.competitionMessageCustom27} "${c.descrizione}"?', // Eliminare
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(dialogContext, false),
-                child: Text(
-                  l10n.commonCancel, // Annulla
-                ),
-              ),
-              FilledButton(
-                onPressed: () => Navigator.pop(dialogContext, true),
-                child: Text(
-                  l10n.commonDelete, // Elimina
-                ),
-              ),
-            ],
           ),
-        );
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(
+              l10n.commonDelete, // Elimina
+            ),
+          ),
+        ],
+      ),
+    );
 
     if (confirm != true) return;
 
     await service.deleteCompetition(c.id);
     await refreshData();
   }
-  
-// =====================================================
-// CONTROLLO PERMESSI CATEGORIA
-// =====================================================
+
+  // =====================================================
+  // CONTROLLO PERMESSI CATEGORIA
+  // =====================================================
   Future<void> checkPermissionCategory() async {
-    final allowed =
-        await PermissionService.hasPermission(
-      'category.write',
-    );
+    final allowed = await PermissionService.hasPermission('category.write');
 
     if (!mounted) return;
 
@@ -154,14 +157,11 @@ class _CompetitionsPageState
     });
   }
 
-// =====================================================
-// CONTROLLO PERMESSI CANCELLATION
-// =====================================================
+  // =====================================================
+  // CONTROLLO PERMESSI CANCELLATION
+  // =====================================================
   Future<void> checkPermissionDelete() async {
-    final allowed =
-        await PermissionService.hasPermission(
-      'competition.write',
-    );
+    final allowed = await PermissionService.hasPermission('competition.write');
 
     if (!mounted) return;
 
@@ -170,7 +170,6 @@ class _CompetitionsPageState
       checkingPermissionDelete = false;
     });
   }
-
 
   Future<void> refreshData() async {
     final rows = await service.getCompetitions();
@@ -194,50 +193,37 @@ class _CompetitionsPageState
   // ✅ AZIONI RIPRISTINATE
 
   Future<void> openCategories(CompetitionModel c) async {
-    await context.push(
-      '/competitions/${c.id}/categories',
-      extra: c,
-    );
+    await context.push('/competitions/${c.id}/categories', extra: c);
   }
 
   Future<void> openBoulders(CompetitionModel c) async {
-    await context.push(
-      '/competitions/${c.id}/boulders',
-      extra: c,
-    );
+    await context.push('/competitions/${c.id}/boulders', extra: c);
   }
 
   Future<void> openStatistics(CompetitionModel c) async {
-    await context.push(
-      '/competitions/${c.id}/statistics',
-      extra: c,
-    );
+    await context.push('/competitions/${c.id}/statistics', extra: c);
   }
 
   Future<void> openRegistrations(CompetitionModel c) async {
-    await context.push(
-      '/competitions/${c.id}/registrations',
-      extra: c,
-    );
+    await context.push('/competitions/${c.id}/registrations', extra: c);
   }
 
   void _createNew() async {
     // ── guardia di sicurezza: non crea se esiste già una gara
     // aperta, anche se per qualche motivo il bottone fosse
     // stato chiamato comunque (es. tasto Invio, automazione test)
-  if (hasOpenCompetition) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          l10n.competitionMessageCustom28, // Esiste già una gara aperta: chiudila prima di crearne una nuova.
+    if (hasOpenCompetition) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            l10n.competitionMessageCustom28, // Esiste già una gara aperta: chiudila prima di crearne una nuova.
+          ),
         ),
-      ),
-    );
-    return;
-  }
+      );
+      return;
+    }
 
-    final result =
-        await context.push('/competitions/new');
+    final result = await context.push('/competitions/new');
     if (result == true) await refreshData();
   }
 
@@ -259,7 +245,8 @@ class _CompetitionsPageState
       actions: [
         Tooltip(
           message: hasOpenCompetition
-              ? l10n.competitionMessageCustom30 // Chiudi la gara aperta prima di crearne una nuova
+              ? l10n
+                    .competitionMessageCustom30 // Chiudi la gara aperta prima di crearne una nuova
               : l10n.competitionMessageCustom2, // Nuova Gara
           child: FilledButton.icon(
             onPressed: hasOpenCompetition ? null : _createNew,
@@ -313,8 +300,7 @@ class _CompetitionsPageState
 
   Widget _buildContent(Responsive screen) {
     if (loading) {
-      return const Center(
-          child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (competitions.isEmpty) {
@@ -400,8 +386,7 @@ class _MobileListView extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return ListView.separated(
       itemCount: competitions.length,
-      separatorBuilder: (_, _) =>
-          const SizedBox(height: 12),
+      separatorBuilder: (_, _) => const SizedBox(height: 12),
       itemBuilder: (_, i) {
         final c = competitions[i];
 
@@ -409,68 +394,67 @@ class _MobileListView extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(c.descrizione),
                 const SizedBox(height: 8),
-                Text(DateFormat('dd/MM/yyyy')
-                    .format(c.dtGara)),
+                Text(DateFormat('dd/MM/yyyy').format(c.dtGara)),
                 const SizedBox(height: 8),
                 Chip(
                   label: Text(
                     c.flGaraChiusa
-                        ? l10n.competitionMessageCustom34 // Chiusa
+                        ? l10n
+                              .competitionMessageCustom34 // Chiusa
                         : l10n.competitionMessageCustom35, // Aperta
                   ),
                 ),
                 Row(
                   children: [
                     IconButton(
-                        icon:
-                            const Icon(Icons.how_to_reg),
-                        onPressed: c.flGaraChiusa
-                            ? null
-                            : () => openRegistrations(c)),
+                      icon: const Icon(Icons.how_to_reg),
+                      onPressed: c.flGaraChiusa
+                          ? null
+                          : () => openRegistrations(c),
+                    ),
                     IconButton(
-                        icon:
-                            const Icon(Icons.category),
-                        onPressed: (c.flGaraChiusa ||
-                                !canWriteCategory ||
-                                checkingPermissionCategory)
-                            ? null
-                            : () => openCategories(c)),
+                      icon: const Icon(Icons.category),
+                      onPressed:
+                          (c.flGaraChiusa ||
+                              !canWriteCategory ||
+                              checkingPermissionCategory)
+                          ? null
+                          : () => openCategories(c),
+                    ),
                     IconButton(
-                        icon:
-                            const Icon(Icons.terrain),
-                        onPressed: c.flGaraChiusa
-                            ? null
-                            : () => openBoulders(c)),
+                      icon: const Icon(Icons.terrain),
+                      onPressed: c.flGaraChiusa ? null : () => openBoulders(c),
+                    ),
                     IconButton(
-                        icon:
-                            const Icon(Icons.query_stats),
-                        onPressed: () => openStatistics(c)),
+                      icon: const Icon(Icons.query_stats),
+                      onPressed: () => openStatistics(c),
+                    ),
                     IconButton(
                       icon: const Icon(Icons.edit),
                       onPressed: (!canWriteDelete || checkingPermissionDelete)
                           ? null
                           : () async {
-                              final r =
-                                  await context.push(
-                                      '/competitions/edit/${c.id}');
+                              final r = await context.push(
+                                '/competitions/edit/${c.id}',
+                              );
                               if (r == true) refresh();
                             },
                     ),
                     IconButton(
                       icon: const Icon(Icons.delete),
-                      onPressed: (c.flGaraChiusa ||
-                                !canWriteDelete ||
-                                checkingPermissionDelete)
+                      onPressed:
+                          (c.flGaraChiusa ||
+                              !canWriteDelete ||
+                              checkingPermissionDelete)
                           ? null
                           : () => onDelete(c),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),
@@ -546,68 +530,77 @@ class _TableView extends StatelessWidget {
           ),
         ),
       ],
-        rows: competitions.map((c) {
-        return DataRow(cells: [
-          DataCell(SizedBox(
-            width: 600,
-            child: Text(
-              c.descrizione,
-              overflow: TextOverflow.ellipsis,
+      rows: competitions.map((c) {
+        return DataRow(
+          cells: [
+            DataCell(
+              SizedBox(
+                width: 600,
+                child: Text(c.descrizione, overflow: TextOverflow.ellipsis),
+              ),
             ),
-          )),
-          DataCell(Text(
-              DateFormat('dd/MM/yyyy')
-                  .format(c.dtGara))),
-          DataCell(
-            Chip(
-              label: Text(c.flGaraChiusa
-                   ? l10n.competitionMessageCustom34 // Chiusa
-                   : l10n.competitionMessageCustom35, // Aperta
-                  )
-                )
+            DataCell(Text(DateFormat('dd/MM/yyyy').format(c.dtGara))),
+            DataCell(
+              Chip(
+                label: Text(
+                  c.flGaraChiusa
+                      ? l10n
+                            .competitionMessageCustom34 // Chiusa
+                      : l10n.competitionMessageCustom35, // Aperta
+                ),
               ),
-          DataCell(Row(
-            children: [
-              IconButton(
-                  icon:
-                      const Icon(Icons.how_to_reg),
-                  onPressed: c.flGaraChiusa
-                      ? null
-                      : () => openRegistrations(c)),
-              IconButton(
-                  icon: const Icon(Icons.category),
-                  onPressed: (c.flGaraChiusa || !canWriteCategory || checkingPermissionCategory)
-                      ? null
-                      : () => openCategories(c)),
-              IconButton(
-                  icon:
-                      const Icon(Icons.terrain),
-                  onPressed: c.flGaraChiusa
-                      ? null
-                      : () => openBoulders(c)),
-              IconButton(
-                  icon:
-                      const Icon(Icons.query_stats),
-                  onPressed: () => openStatistics(c)),
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: (!canWriteDelete || checkingPermissionDelete)
-                    ? null
-                    : () async {
-                        final r =
-                            await context.push(
-                                '/competitions/edit/${c.id}');
-                        if (r == true) refresh();
-                      },
+            ),
+            DataCell(
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.how_to_reg),
+                    onPressed: c.flGaraChiusa
+                        ? null
+                        : () => openRegistrations(c),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.category),
+                    onPressed:
+                        (c.flGaraChiusa ||
+                            !canWriteCategory ||
+                            checkingPermissionCategory)
+                        ? null
+                        : () => openCategories(c),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.terrain),
+                    onPressed: c.flGaraChiusa ? null : () => openBoulders(c),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.query_stats),
+                    onPressed: () => openStatistics(c),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: (!canWriteDelete || checkingPermissionDelete)
+                        ? null
+                        : () async {
+                            final r = await context.push(
+                              '/competitions/edit/${c.id}',
+                            );
+                            if (r == true) refresh();
+                          },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed:
+                        (c.flGaraChiusa ||
+                            !canWriteDelete ||
+                            checkingPermissionDelete)
+                        ? null
+                        : () => onDelete(c),
+                  ),
+                ],
               ),
-              IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: (c.flGaraChiusa|| !canWriteDelete || checkingPermissionDelete)
-                      ? null
-                      : () => onDelete(c)),
-            ],
-          )),
-        ]);
+            ),
+          ],
+        );
       }).toList(),
     );
   }

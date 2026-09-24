@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../data/checkin_registration_service.dart';
@@ -30,11 +32,11 @@ class CheckinRegistrationsPage extends StatefulWidget {
       _CheckinRegistrationsPageState();
 }
 
-class _CheckinRegistrationsPageState
-    extends State<CheckinRegistrationsPage> {
+class _CheckinRegistrationsPageState extends State<CheckinRegistrationsPage> {
   final service = CheckinRegistrationService();
   final searchController = TextEditingController();
   final _horizontalController = ScrollController();
+  StreamSubscription<List<CheckinRegistrationModel>>? _realtimeSubscription;
 
   AppLocalizations get l10n => AppLocalizations.of(context)!;
 
@@ -44,16 +46,12 @@ class _CheckinRegistrationsPageState
 
   // ── statistiche calcolate in tempo reale ──────────────────
   int get totaleIscritti => registrations.length;
-  int get totalePresenti =>
-      registrations.where((r) => r.flPresente).length;
-  int get totalePagati =>
-      registrations.where((r) => r.flPagato).length;
-  int get totaleOmaggi =>
-      registrations.where((r) => r.flOmaggio).length;
+  int get totalePresenti => registrations.where((r) => r.flPresente).length;
+  int get totalePagati => registrations.where((r) => r.flPagato).length;
+  int get totaleOmaggi => registrations.where((r) => r.flOmaggio).length;
 
   /// Importo incassato = n° pagati × quota iscrizione
-  double get importoIncassato =>
-      totalePagati * widget.quotaIscrizione;
+  double get importoIncassato => totalePagati * widget.quotaIscrizione;
 
   @override
   void initState() {
@@ -63,6 +61,7 @@ class _CheckinRegistrationsPageState
 
   @override
   void dispose() {
+    _realtimeSubscription?.cancel();
     searchController.dispose();
     _horizontalController.dispose();
     super.dispose();
@@ -73,15 +72,15 @@ class _CheckinRegistrationsPageState
   // =========================================================
 
   void loadRealtime() {
-    service
+    _realtimeSubscription = service
         .watchRegistrations(widget.competitionId)
         .listen((rows) {
-      if (!mounted) return;
-      setState(() {
-        registrations = rows;
-        loading = false;
-      });
-    });
+          if (!mounted) return;
+          setState(() {
+            registrations = rows;
+            loading = false;
+          });
+        });
   }
 
   // =========================================================
@@ -114,9 +113,9 @@ class _CheckinRegistrationsPageState
 
     final updated = switch (flag) {
       'presente' => reg.copyWith(flPresente: !reg.flPresente),
-      'pagato'   => reg.copyWith(flPagato: !reg.flPagato),
-      'omaggio'  => reg.copyWith(flOmaggio: !reg.flOmaggio),
-      _          => reg,
+      'pagato' => reg.copyWith(flPagato: !reg.flPagato),
+      'omaggio' => reg.copyWith(flOmaggio: !reg.flOmaggio),
+      _ => reg,
     };
 
     setState(() => registrations[idx] = updated);
@@ -125,13 +124,13 @@ class _CheckinRegistrationsPageState
       switch (flag) {
         case 'presente':
           await service.togglePresente(
-            id: reg.id, currentValue: reg.flPresente);
+            id: reg.id,
+            currentValue: reg.flPresente,
+          );
         case 'pagato':
-          await service.togglePagato(
-            id: reg.id, currentValue: reg.flPagato);
+          await service.togglePagato(id: reg.id, currentValue: reg.flPagato);
         case 'omaggio':
-          await service.toggleOmaggio(
-            id: reg.id, currentValue: reg.flOmaggio);
+          await service.toggleOmaggio(id: reg.id, currentValue: reg.flOmaggio);
       }
     } catch (e) {
       setState(() => registrations[idx] = reg);
@@ -166,9 +165,9 @@ class _CheckinRegistrationsPageState
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Errore esportazione PDF: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Errore esportazione PDF: $e')));
     } finally {
       if (mounted) setState(() => _exporting = false);
     }
@@ -197,11 +196,11 @@ class _CheckinRegistrationsPageState
                       ),
                     ),
                   )
-          :IconButton(
-            tooltip: l10n.checkinMessageCustom1, // 'Esporta PDF'
-            icon: const Icon(Icons.picture_as_pdf),
-            onPressed: _exportPdf,
-          ),
+                : IconButton(
+                    tooltip: l10n.checkinMessageCustom1, // 'Esporta PDF'
+                    icon: const Icon(Icons.picture_as_pdf),
+                    onPressed: _exportPdf,
+                  ),
         ],
       ),
       body: loading
@@ -224,7 +223,8 @@ class _CheckinRegistrationsPageState
                   child: TextField(
                     controller: searchController,
                     decoration: InputDecoration(
-                      hintText: l10n.checkinMessageCustom2, // 'Cerca pettorale, cognome, nome...'
+                      hintText: l10n
+                          .checkinMessageCustom2, // 'Cerca pettorale, cognome, nome...'
                       prefixIcon: const Icon(Icons.search),
                       suffixIcon: searchController.text.isNotEmpty
                           ? IconButton(
@@ -248,7 +248,7 @@ class _CheckinRegistrationsPageState
                   showPagato: widget.flGestionePagamenti,
                   showOmaggio: widget.flGestioneOmaggi,
                 ),
-              // ── lista ─────────────────────────────────
+                // ── lista ─────────────────────────────────
                 Expanded(
                   child: filtered.isEmpty
                       ? Center(
@@ -261,8 +261,8 @@ class _CheckinRegistrationsPageState
                             const minContentWidth = 720.0;
                             final contentWidth =
                                 constraints.maxWidth > minContentWidth
-                                    ? constraints.maxWidth
-                                    : minContentWidth;
+                                ? constraints.maxWidth
+                                : minContentWidth;
 
                             return Scrollbar(
                               controller: _horizontalController,
@@ -280,13 +280,10 @@ class _CheckinRegistrationsPageState
                                     itemBuilder: (_, i) => _RegistrationTile(
                                       registration: filtered[i],
                                       onToggle: _toggleFlag,
-                                      enablePresente:
-                                          widget.flGestionePresenze,
-                                      enablePagato:
-                                          widget.flGestionePagamenti,
-                                      enableOmaggio:
-                                          widget.flGestioneOmaggi,
-                                      l10n: l10n,    
+                                      enablePresente: widget.flGestionePresenze,
+                                      enablePagato: widget.flGestionePagamenti,
+                                      enableOmaggio: widget.flGestioneOmaggi,
+                                      l10n: l10n,
                                     ),
                                   ),
                                 ),
@@ -436,10 +433,7 @@ class _StatItem extends StatelessWidget {
           ),
         Text(
           label,
-          style: TextStyle(
-            fontSize: 12,
-            color: color.withValues(alpha: 0.8),
-          ),
+          style: TextStyle(fontSize: 12, color: color.withValues(alpha: 0.8)),
         ),
       ],
     );
@@ -486,27 +480,37 @@ class _CheckinLegend extends StatelessWidget {
           const SizedBox(width: 4),
           Text(
             hasAny
-                ? l10n.checkinMessageCustom8 // 'Tocca le icone per aggiornare: '
+                ? l10n
+                      .checkinMessageCustom8 // 'Tocca le icone per aggiornare: '
                 : l10n.checkinMessageCustom9, // 'Gestione check-in disabilitata per questa gara'
             style: const TextStyle(fontSize: 12, color: Colors.grey),
           ),
           if (showPresente) ...[
             const SizedBox(width: 8),
-            _LegendDot(color: Colors.green.shade600, label: l10n.registrationMessageCustom37), // 'Presente'
+            _LegendDot(
+              color: Colors.green.shade600,
+              label: l10n.registrationMessageCustom37,
+            ), // 'Presente'
           ],
           if (showPagato) ...[
             const SizedBox(width: 8),
-            _LegendDot(color: Colors.teal.shade600, label: l10n.registrationMessageCustom38), // 'Pagato'
+            _LegendDot(
+              color: Colors.teal.shade600,
+              label: l10n.registrationMessageCustom38,
+            ), // 'Pagato'
           ],
           if (showOmaggio) ...[
             const SizedBox(width: 8),
-            _LegendDot(color: Colors.orange.shade600, label: l10n.registrationMessageCustom39), // 'Omaggio'
+            _LegendDot(
+              color: Colors.orange.shade600,
+              label: l10n.registrationMessageCustom39,
+            ), // 'Omaggio'
           ],
         ],
       ),
     );
   }
- }
+}
 
 class _LegendDot extends StatelessWidget {
   final Color color;
@@ -540,7 +544,8 @@ class _RegistrationTile extends StatelessWidget {
   final Future<void> Function({
     required CheckinRegistrationModel reg,
     required String flag,
-  }) onToggle;
+  })
+  onToggle;
 
   // ── flag abilitazione dalla competition ───────────────────
   final bool enablePresente;
@@ -567,9 +572,7 @@ class _RegistrationTile extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: r.flPresente
-              ? Colors.green.shade200
-              : const Color(0xFFE5E7EB),
+          color: r.flPresente ? Colors.green.shade200 : const Color(0xFFE5E7EB),
           width: r.flPresente ? 1.5 : 1,
         ),
       ),
@@ -634,9 +637,13 @@ class _RegistrationTile extends StatelessWidget {
               inactiveIcon: Icons.person_pin_outlined,
               activeColor: Colors.green,
               tooltip: enablePresente
-                  ? (r.flPresente ? l10n.checkinMessageCustom10 : l10n.checkinMessageCustom11) // 'Rimuovi presenza' / 'Segna presente'
+                  ? (r.flPresente
+                        ? l10n.checkinMessageCustom10
+                        : l10n.checkinMessageCustom11) // 'Rimuovi presenza' / 'Segna presente'
                   : l10n.checkinMessageCustom12, // 'Gestione presenze non abilitata'
-              onTap: enablePresente ? () => onToggle(reg: r, flag: 'presente') : null,
+              onTap: enablePresente
+                  ? () => onToggle(reg: r, flag: 'presente')
+                  : null,
             ),
 
             const SizedBox(width: 4),
@@ -648,9 +655,13 @@ class _RegistrationTile extends StatelessWidget {
               inactiveIcon: Icons.payments_outlined,
               activeColor: Colors.teal,
               tooltip: enablePagato
-                  ? (r.flPagato ? l10n.checkinMessageCustom13 : l10n.checkinMessageCustom14) // 'Annulla pagamento' / 'Segna pagato'
+                  ? (r.flPagato
+                        ? l10n.checkinMessageCustom13
+                        : l10n.checkinMessageCustom14) // 'Annulla pagamento' / 'Segna pagato'
                   : l10n.checkinMessageCustom15, // 'Gestione pagamenti non abilitata'
-              onTap: enablePagato ? () => onToggle(reg: r, flag: 'pagato') : null,
+              onTap: enablePagato
+                  ? () => onToggle(reg: r, flag: 'pagato')
+                  : null,
             ),
 
             const SizedBox(width: 4),
@@ -662,9 +673,13 @@ class _RegistrationTile extends StatelessWidget {
               inactiveIcon: Icons.card_giftcard_outlined,
               activeColor: Colors.orange,
               tooltip: enableOmaggio
-                  ? (r.flOmaggio ? l10n.checkinMessageCustom16 : l10n.checkinMessageCustom17) // 'Annulla omaggio' / 'Segna omaggio'
+                  ? (r.flOmaggio
+                        ? l10n.checkinMessageCustom16
+                        : l10n.checkinMessageCustom17) // 'Annulla omaggio' / 'Segna omaggio'
                   : l10n.checkinMessageCustom18, // 'Gestione omaggi non abilitata'
-              onTap: enableOmaggio ? () => onToggle(reg: r, flag: 'omaggio') : null,
+              onTap: enableOmaggio
+                  ? () => onToggle(reg: r, flag: 'omaggio')
+                  : null,
             ),
           ],
         ),
@@ -679,12 +694,12 @@ class _RegistrationTile extends StatelessWidget {
 
 class _CheckinToggle extends StatelessWidget {
   final bool value;
-  final bool enabled;          // ← nuovo: false = sola lettura
+  final bool enabled; // ← nuovo: false = sola lettura
   final IconData activeIcon;
   final IconData inactiveIcon;
   final Color activeColor;
   final String tooltip;
-  final VoidCallback? onTap;  // ← nullable: null se disabilitato
+  final VoidCallback? onTap; // ← nullable: null se disabilitato
 
   const _CheckinToggle({
     required this.value,
@@ -701,14 +716,10 @@ class _CheckinToggle extends StatelessWidget {
     // Colori dimmerizzati quando disabilitato
     final effectiveColor = enabled ? activeColor : Colors.grey.shade400;
     final effectiveBg = enabled
-        ? (value
-            ? activeColor.withValues(alpha: 0.12)
-            : Colors.grey.shade50)
+        ? (value ? activeColor.withValues(alpha: 0.12) : Colors.grey.shade50)
         : Colors.grey.shade100;
     final effectiveBorder = enabled
-        ? (value
-            ? activeColor.withValues(alpha: 0.5)
-            : Colors.grey.shade300)
+        ? (value ? activeColor.withValues(alpha: 0.5) : Colors.grey.shade300)
         : Colors.grey.shade200;
 
     return Tooltip(
