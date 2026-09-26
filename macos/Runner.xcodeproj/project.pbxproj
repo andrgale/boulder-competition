@@ -368,7 +368,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export PATH=\"$PROJECT_DIR/../tool/xcode27-lipo:$PATH\"\n\"$FLUTTER_ROOT\"/packages/flutter_tools/bin/macos_assemble.sh && touch Flutter/ephemeral/tripwire";
+			shellScript = "chmod +x \"$PROJECT_DIR/../tool/xcode27-lipo/lipo\"\nexport PATH=\"$PROJECT_DIR/../tool/xcode27-lipo:$PATH\"\n\"$FLUTTER_ROOT\"/packages/flutter_tools/bin/macos_assemble.sh && touch Flutter/ephemeral/tripwire";
 		};
 		6B9C396D483CB8F81809DC2D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
