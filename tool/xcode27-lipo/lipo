@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eu
+
+real_lipo=$(/usr/bin/xcrun --find lipo)
+
+# Xcode 27's lipo accepts only one architecture per -verify_arch invocation.
+if [ "$#" -ge 4 ] && [ "$2" = "-verify_arch" ]; then
+  binary=$1
+  shift 2
+  for arch in "$@"; do
+    "$real_lipo" "$binary" -verify_arch "$arch"
+  done
+else
+  exec "$real_lipo" "$@"
+fi
