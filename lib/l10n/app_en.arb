@@ -2629,5 +2629,24 @@
 "notificationMessageCustom33": "Second turn",
 "@notificationMessageCustom33": {
   "description": "Label for the second competition turn."
+},
+"rankingMessageCustom62": "Start auto-refresh (TV mode)",
+"@rankingMessageCustom62": { "description": "Start auto-refresh (TV mode)" },
+
+"rankingMessageCustom63": "Stop auto-refresh",
+"@rankingMessageCustom63": { "description": "Stop auto-refresh" },
+
+"rankingMessageCustom64": "LIVE",
+"@rankingMessageCustom64": { "description": "LIVE" },
+
+"rankingMessageCustom65": "Refresh interval",
+"@rankingMessageCustom65": { "description": "Refresh interval" },
+
+"rankingMessageCustom67": "{seconds} seconds",
+"@rankingMessageCustom67": {
+  "description": "{seconds} seconds",
+  "placeholders": {
+    "seconds": { "type": "int" }
+  }
 }
 }

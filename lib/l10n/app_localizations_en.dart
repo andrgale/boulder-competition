@@ -2594,4 +2594,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notificationMessageCustom33 => 'Second turn';
+
+  @override
+  String get rankingMessageCustom62 => 'Start auto-refresh (TV mode)';
+
+  @override
+  String get rankingMessageCustom63 => 'Stop auto-refresh';
+
+  @override
+  String get rankingMessageCustom64 => 'LIVE';
+
+  @override
+  String get rankingMessageCustom65 => 'Refresh interval';
+
+  @override
+  String rankingMessageCustom67(int seconds) {
+    return '$seconds seconds';
+  }
 }

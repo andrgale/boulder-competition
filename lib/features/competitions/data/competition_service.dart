@@ -89,18 +89,13 @@ class CompetitionService {
     required bool isTurn,
     required int nrMaxFirstTurn,
     required int nrMaxSecondTurn,
+    bool flGaraChiusa = false,
   }) async {
     final user = supabase.auth.currentUser;
 
     if (user == null) {
-      throw Exception(
-        'Utente non autenticato',
-      );
+      throw Exception('Utente non autenticato');
     }
-
-    // ===============================================
-    // PROFILE
-    // ===============================================
 
     final profile = await supabase
         .from('profiles')
@@ -108,36 +103,33 @@ class CompetitionService {
         .eq('auth_user_id', user.id)
         .single();
 
-    final data = await supabase
-        .from('competitions')
-        .insert({
-          'descrizione': descrizione,
+    try {
+      final data = await supabase
+          .from('competitions')
+          .insert({
+            'descrizione': descrizione,
+            'dt_gara': dtGara.toIso8601String(),
+            'nr_boulder': nrBoulder,
+            'quota_iscrizione': quotaIscrizione,
+            'nr_finalisti': nrFinalisti,
+            'note': note,
+            'nr_max_registrations': nrMaxRegistrations,
+            'is_turn': isTurn,
+            'nr_max_first_turn': nrMaxFirstTurn,
+            'nr_max_second_turn': nrMaxSecondTurn,
+            'created_by': profile['id'],
+          })
+          .select()
+          .single();
 
-          'dt_gara': dtGara.toIso8601String(),
-
-          'nr_boulder': nrBoulder,
-
-          'quota_iscrizione': quotaIscrizione,
-
-          'nr_finalisti': nrFinalisti,
-
-          'note': note,
-
-          'nr_max_registrations': nrMaxRegistrations,
-
-          'is_turn': isTurn,
-
-          'nr_max_first_turn': nrMaxFirstTurn,
-
-          'nr_max_second_turn': nrMaxSecondTurn,
-
-          'created_by': profile['id'],
-        })
-        .select()
-        .single();
-
-    return CompetitionModel.fromJson(data);
-  } 
+      return CompetitionModel.fromJson(data);
+    } on PostgrestException catch (e) {
+      if (e.code == '23505') {
+        throw Exception('OPEN_COMPETITION_CONFLICT');
+      }
+      rethrow;
+    }
+  }
   // =======================================================
   // UPDATE
   // =======================================================
@@ -158,58 +150,33 @@ class CompetitionService {
     required int nrMaxRegistrations,
     required bool isTurn,
     required int nrMaxFirstTurn,
-    required int nrMaxSecondTurn,    
+    required int nrMaxSecondTurn,
   }) async {
-    await supabase
-        .from('competitions')
-        .update({
-      'descrizione': descrizione,
-
-      'dt_gara':
-          dtGara.toIso8601String(),
-
-      'nr_boulder': nrBoulder,
-
-      'quota_iscrizione':
-          quotaIscrizione,
-
-      'nr_finalisti': nrFinalisti,
-
-      'note': note,
-
-      'fl_iscrizioni_chiuse':
-          flIscrizioniChiuse,
-
-      'fl_gara_chiusa':
-          flGaraChiusa,
-
-      'fl_gestione_presenze':
-          flGestionePresenze,
-
-      'fl_gestione_pagamenti':
-          flGestionePagamenti,
-
-      'fl_gestione_omaggi':
-          flGestioneOmaggi,
-
-      'updated_at':
-          DateTime.now()
-              .toIso8601String(),
-
-      'nr_max_registrations':
-        nrMaxRegistrations,
-
-      'is_turn':
-        isTurn,
-
-      'nr_max_first_turn':
-        nrMaxFirstTurn,
-
-      'nr_max_second_turn':
-        nrMaxSecondTurn,
-
-    })
-        .eq('id', id);
+    try {
+      await supabase.from('competitions').update({
+        'descrizione': descrizione,
+        'dt_gara': dtGara.toIso8601String(),
+        'nr_boulder': nrBoulder,
+        'quota_iscrizione': quotaIscrizione,
+        'nr_finalisti': nrFinalisti,
+        'note': note,
+        'fl_iscrizioni_chiuse': flIscrizioniChiuse,
+        'fl_gara_chiusa': flGaraChiusa,
+        'fl_gestione_presenze': flGestionePresenze,
+        'fl_gestione_pagamenti': flGestionePagamenti,
+        'fl_gestione_omaggi': flGestioneOmaggi,
+        'updated_at': DateTime.now().toIso8601String(),
+        'nr_max_registrations': nrMaxRegistrations,
+        'is_turn': isTurn,
+        'nr_max_first_turn': nrMaxFirstTurn,
+        'nr_max_second_turn': nrMaxSecondTurn,
+      }).eq('id', id);
+    } on PostgrestException catch (e) {
+      if (e.code == '23505') {
+        throw Exception('OPEN_COMPETITION_CONFLICT');
+      }
+      rethrow;
+    }
   }
 
   // =======================================================
@@ -237,6 +204,27 @@ class CompetitionService {
         .update({
       'fl_gara_chiusa': true,
     }).eq('id', id);
+  }
+
+  // =======================================================
+  // CHECK OPEN COMPETITION
+  // =======================================================
+
+  /// Verifica se esiste già una gara aperta (fl_gara_chiusa = false),
+  /// escludendo opzionalmente una gara specifica (utile in modifica,
+  /// per non confrontare la gara con se stessa).
+  Future<bool> hasOpenCompetition({String? excludeId}) async {
+    var query = supabase
+        .from('competitions')
+        .select('id')
+        .eq('fl_gara_chiusa', false);
+
+    if (excludeId != null) {
+      query = query.neq('id', excludeId);
+    }
+
+    final result = await query;
+    return (result as List).isNotEmpty;
   }
 
   // =======================================================

@@ -2616,6 +2616,24 @@
 "notificationMessageCustom33": "Secondo turno",
 "@notificationMessageCustom33": {
   "description": "Etichetta del secondo turno di gara."
-}
+},
+"rankingMessageCustom62": "Avvia aggiornamento automatico (modalità TV)",
+"@rankingMessageCustom62": { "description": "Avvia aggiornamento automatico (modalità TV)" },
 
+"rankingMessageCustom63": "Ferma aggiornamento automatico",
+"@rankingMessageCustom63": { "description": "Ferma aggiornamento automatico" },
+
+"rankingMessageCustom64": "LIVE",
+"@rankingMessageCustom64": { "description": "LIVE" },
+
+"rankingMessageCustom65": "Intervallo aggiornamento",
+"@rankingMessageCustom65": { "description": "Intervallo aggiornamento" },
+
+"rankingMessageCustom67": "{seconds} secondi",
+"@rankingMessageCustom67": {
+  "description": "{seconds} secondi",
+  "placeholders": {
+    "seconds": { "type": "int" }
+  }
+}
 }

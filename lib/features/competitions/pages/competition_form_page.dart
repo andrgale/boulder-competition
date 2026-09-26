@@ -285,6 +285,20 @@ class _CompetitionFormPageState
       }
     }
 
+    // ── NUOVO CONTROLLO: unicità gara aperta ────────────────────
+    if (!flGaraChiusa) {
+      final hasOpen = await service.hasOpenCompetition(
+        excludeId: isEdit ? widget.competition!.id : null,
+      );
+
+      if (hasOpen) {
+        showError(
+          l10n.competitionMessageCustom28, // Esiste già una gara aperta: chiudila prima di crearne una nuova.
+        );
+        return;
+      }
+    }
+
     setState(() => saving = true);
 
     try {
@@ -321,6 +335,7 @@ class _CompetitionFormPageState
             isTurn: isTurn,
             nrMaxFirstTurn: nrMaxFirstTurn,
             nrMaxSecondTurn: nrMaxSecondTurn,
+            flGaraChiusa: flGaraChiusa,
           );
 
           if (createCategoriesFromTemplate &&
@@ -346,7 +361,11 @@ class _CompetitionFormPageState
 
       Navigator.pop(context, true);
     } catch (e) {
-      showError(e.toString());
+      if (e.toString().contains('OPEN_COMPETITION_CONFLICT')) {
+        showError(l10n.competitionMessageCustom28);
+      } else {
+        showError(e.toString());
+      }
     } finally {
       if (!mounted) return;
       setState(() => saving = false);

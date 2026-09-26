@@ -1,6 +1,6 @@
 import 'package:boulder_competition/features/rankings/models/ranking_sex_model_l10n.dart';
 import 'package:flutter/material.dart';
-
+import 'dart:async';
 import '../data/ranking_qualification_service.dart';
 import '../models/ranking_qualification_model.dart';
 import 'ranking_qualification_export_pdf.dart';
@@ -27,7 +27,8 @@ class RankingQualificationPage extends StatefulWidget {
 }
 
 class _RankingQualificazionePageState
-    extends State<RankingQualificationPage> {
+    extends State<RankingQualificationPage> 
+  with SingleTickerProviderStateMixin {    
   final service = RankingQualificazioneService();
   final searchController = TextEditingController();
   final _horizontalController = ScrollController();
@@ -44,6 +45,17 @@ class _RankingQualificazionePageState
   // ── NUOVO: true se almeno un atleta ha una categoria ───────
   bool get hasCategories => rankings.any((r) => r.categoryId != null);
 
+ Timer? _autoRefreshTimer;
+  bool _autoRefreshActive = false;
+  Duration _autoRefreshInterval = const Duration(seconds: 8);
+
+  static const _autoRefreshOptions = [5, 8, 10, 15, 30]; // secondi
+
+  late final AnimationController _liveBlinkController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 900),
+  )..repeat(reverse: true);
+
   @override
   void initState() {
     super.initState();
@@ -52,16 +64,17 @@ class _RankingQualificazionePageState
 
   @override
   void dispose() {
+    _autoRefreshTimer?.cancel();
+    _liveBlinkController.dispose();
     searchController.dispose();
     _horizontalController.dispose();
     super.dispose();
   }
-
   // =========================================================
   // LOAD
   // =========================================================
 
-  Future<void> loadRankings() async {
+  Future<void> loadRankings({bool silent = false}) async {
     try {
       final data = await service.getRankings(widget.competitionId);
       if (!mounted) return;
@@ -72,9 +85,11 @@ class _RankingQualificazionePageState
     } catch (e) {
       if (!mounted) return;
       setState(() => loading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.rankingMessageCustom10(e.toString()))), // 'Errore caricamento classifica: {error}'
-      );
+      if (!silent) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.rankingMessageCustom10(e.toString()))),
+        );
+      }
     }
   }
 
@@ -100,6 +115,52 @@ class _RankingQualificazionePageState
           r.nome.toLowerCase().contains(q) ||
           (r.pettorale?.toString() ?? '').contains(q);
     }).toList();
+  }
+
+  void _toggleAutoRefresh() {
+    setState(() => _autoRefreshActive = !_autoRefreshActive);
+    _restartAutoRefreshTimer();
+  }
+
+  void _restartAutoRefreshTimer() {
+    _autoRefreshTimer?.cancel();
+    _autoRefreshTimer = null;
+    if (_autoRefreshActive) {
+      _autoRefreshTimer = Timer.periodic(_autoRefreshInterval, (_) {
+        loadRankings(silent: true);
+      });
+    }
+  }
+
+  Future<void> _showIntervalPicker() async {
+    final selected = await showDialog<int>(
+      context: context,
+      builder: (ctx) => SimpleDialog(
+        title: Text(l10n.rankingMessageCustom65), // 'Intervallo aggiornamento'
+        children: _autoRefreshOptions.map((seconds) {
+          final isSelected = _autoRefreshInterval.inSeconds == seconds;
+          return SimpleDialogOption(
+            onPressed: () => Navigator.pop(ctx, seconds),
+            child: Row(
+              children: [
+                Icon(
+                  isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                  size: 20,
+                  color: isSelected ? Colors.indigo : Colors.grey,
+                ),
+                const SizedBox(width: 12),
+                Text(l10n.rankingMessageCustom67(seconds)), // '{seconds} secondi'
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
+
+    if (selected != null && mounted) {
+      setState(() => _autoRefreshInterval = Duration(seconds: selected));
+      if (_autoRefreshActive) _restartAutoRefreshTimer();
+    }
   }
 
   // =========================================================
@@ -158,20 +219,37 @@ class _RankingQualificazionePageState
             l10n.rankingMessageCustom31(widget.competitionName), // 'Classifica qualificazioni - {competition}'
           ),
           actions: [
+            if (_autoRefreshActive)
+              _LiveBadge(
+                animation: _liveBlinkController,
+                label: l10n.rankingMessageCustom64, // 'LIVE'
+              ),
+            IconButton(
+              tooltip: l10n.rankingMessageCustom65, // 'Intervallo aggiornamento'
+              icon: const Icon(Icons.timer_outlined),
+              onPressed: _showIntervalPicker,
+            ),
+            IconButton(
+              tooltip: _autoRefreshActive
+                  ? l10n.rankingMessageCustom63 // 'Ferma aggiornamento automatico'
+                  : l10n.rankingMessageCustom62, // 'Avvia aggiornamento automatico (modalità TV)'
+              icon: Icon(
+                _autoRefreshActive ? Icons.sync : Icons.sync_disabled,
+                color: _autoRefreshActive ? Colors.greenAccent : Colors.black,
+              ),
+              onPressed: _toggleAutoRefresh,
+            ),
             _exporting
                 ? const Padding(
                     padding: EdgeInsets.all(16),
                     child: SizedBox(
                       width: 20,
                       height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
+                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                     ),
                   )
                 : IconButton(
-                    tooltip: l10n.rankingMessageCustom2, // 'Esporta PDF'
+                    tooltip: l10n.rankingMessageCustom2,  // 'Esporta PDF'
                     icon: const Icon(Icons.picture_as_pdf),
                     onPressed: _exportPdf,
                   ),
@@ -661,6 +739,45 @@ class _CategoryHeader extends StatelessWidget {
   }
 }
 
+class _LiveBadge extends StatelessWidget {
+  final Animation<double> animation;
+  final String label;
+
+  const _LiveBadge({required this.animation, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: Tween(begin: 0.35, end: 1.0).animate(
+        CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+      ),
+      child: Container(
+        margin: const EdgeInsets.only(right: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+          color: Colors.red.shade600,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.circle, size: 8, color: Colors.white),
+            const SizedBox(width: 5),
+            Text(
+              label,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 class _CategoryRankingTile extends StatelessWidget {
   final RankingCategoryModel ranking;
 

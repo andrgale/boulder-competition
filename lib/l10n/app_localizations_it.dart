@@ -2596,4 +2596,22 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get notificationMessageCustom33 => 'Secondo turno';
+
+  @override
+  String get rankingMessageCustom62 =>
+      'Avvia aggiornamento automatico (modalità TV)';
+
+  @override
+  String get rankingMessageCustom63 => 'Ferma aggiornamento automatico';
+
+  @override
+  String get rankingMessageCustom64 => 'LIVE';
+
+  @override
+  String get rankingMessageCustom65 => 'Intervallo aggiornamento';
+
+  @override
+  String rankingMessageCustom67(int seconds) {
+    return '$seconds secondi';
+  }
 }

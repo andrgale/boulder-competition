@@ -4745,6 +4745,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Second turn'**
   String get notificationMessageCustom33;
+
+  /// Start auto-refresh (TV mode)
+  ///
+  /// In en, this message translates to:
+  /// **'Start auto-refresh (TV mode)'**
+  String get rankingMessageCustom62;
+
+  /// Stop auto-refresh
+  ///
+  /// In en, this message translates to:
+  /// **'Stop auto-refresh'**
+  String get rankingMessageCustom63;
+
+  /// LIVE
+  ///
+  /// In en, this message translates to:
+  /// **'LIVE'**
+  String get rankingMessageCustom64;
+
+  /// Refresh interval
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh interval'**
+  String get rankingMessageCustom65;
+
+  /// {seconds} seconds
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds} seconds'**
+  String rankingMessageCustom67(int seconds);
 }
 
 class _AppLocalizationsDelegate
