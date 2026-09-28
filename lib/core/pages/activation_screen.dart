@@ -1,4 +1,6 @@
+import 'package:boulder_competition/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+
 
 class ActivationScreen extends StatefulWidget {
   final Future<void> Function(String clientId, String password) onSubmit;
@@ -30,6 +32,8 @@ class _ActivationScreenState extends State<ActivationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: Center(
         child: Padding(
@@ -39,11 +43,11 @@ class _ActivationScreenState extends State<ActivationScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('Attivazione dispositivo', style: TextStyle(fontSize: 20)),
+                Text(l10n.loginMessageCustom17, style: const TextStyle(fontSize: 20)), // Attivazione dispositivo
                 const SizedBox(height: 16),
                 TextField(
                   controller: _clientIdController,
-                  decoration: const InputDecoration(labelText: 'Codice cliente'),
+                  decoration: InputDecoration(labelText: l10n.loginMessageCustom18), // Codice cliente
                   textCapitalization: TextCapitalization.characters,
                 ),
                 const SizedBox(height: 12),
@@ -51,7 +55,7 @@ class _ActivationScreenState extends State<ActivationScreen> {
                   controller: _passwordController,
                   obscureText: _obscure,
                   decoration: InputDecoration(
-                    labelText: 'Password',
+                    labelText: l10n.loginMessageCustom3, // Password
                     suffixIcon: IconButton(
                       icon: Icon(_obscure ? Icons.visibility : Icons.visibility_off),
                       onPressed: () => setState(() => _obscure = !_obscure),
@@ -69,7 +73,7 @@ class _ActivationScreenState extends State<ActivationScreen> {
                       ? const SizedBox(
                           width: 20, height: 20,
                           child: CircularProgressIndicator(strokeWidth: 2))
-                      : const Text('Attiva'),
+                      : Text(l10n.loginMessageCustom19), // Attiva
                 ),
               ],
             ),

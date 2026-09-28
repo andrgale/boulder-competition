@@ -2682,5 +2682,13 @@
 "@loginMessageCustom15": { "description": "Conferma password" },
 
 "loginMessageCustom16": "SALVA PASSWORD",
-"@loginMessageCustom16": { "description": "SALVA PASSWORD" }
+"@loginMessageCustom16": { "description": "SALVA PASSWORD" },
+"loginMessageCustom17": "Attivazione dispositivo",
+"@loginMessageCustom17": { "description": "Attivazione dispositivo" },
+
+"loginMessageCustom18": "Codice cliente",
+"@loginMessageCustom18": { "description": "Codice cliente" },
+
+"loginMessageCustom19": "Attiva",
+"@loginMessageCustom19": { "description": "Attiva" }
 }

@@ -2660,4 +2660,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loginMessageCustom16 => 'SAVE PASSWORD';
+
+  @override
+  String get loginMessageCustom17 => 'Device activation';
+
+  @override
+  String get loginMessageCustom18 => 'Client code';
+
+  @override
+  String get loginMessageCustom19 => 'Activate';
 }

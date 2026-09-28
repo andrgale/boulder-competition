@@ -4871,6 +4871,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'SAVE PASSWORD'**
   String get loginMessageCustom16;
+
+  /// Attivazione dispositivo
+  ///
+  /// In en, this message translates to:
+  /// **'Device activation'**
+  String get loginMessageCustom17;
+
+  /// Codice cliente
+  ///
+  /// In en, this message translates to:
+  /// **'Client code'**
+  String get loginMessageCustom18;
+
+  /// Attiva
+  ///
+  /// In en, this message translates to:
+  /// **'Activate'**
+  String get loginMessageCustom19;
 }
 
 class _AppLocalizationsDelegate

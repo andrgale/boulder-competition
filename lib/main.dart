@@ -104,6 +104,16 @@ class BootstrapAppState extends State<BootstrapApp> {
 
     if (!_ready) {
       return MaterialApp(
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('it'),
+          Locale('en'),
+        ],
         home: ActivationScreen(onSubmit: _onActivate, error: _error),
       );
     }

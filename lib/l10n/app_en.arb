@@ -2695,5 +2695,13 @@
 "@loginMessageCustom15": { "description": "Confirm password" },
 
 "loginMessageCustom16": "SAVE PASSWORD",
-"@loginMessageCustom16": { "description": "SAVE PASSWORD" }
+"@loginMessageCustom16": { "description": "SAVE PASSWORD" },
+"loginMessageCustom17": "Device activation",
+"@loginMessageCustom17": { "description": "Attivazione dispositivo" },
+
+"loginMessageCustom18": "Client code",
+"@loginMessageCustom18": { "description": "Codice cliente" },
+
+"loginMessageCustom19": "Activate",
+"@loginMessageCustom19": { "description": "Attiva" }
 }
