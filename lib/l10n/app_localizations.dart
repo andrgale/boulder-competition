@@ -4775,6 +4775,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{seconds} seconds'**
   String rankingMessageCustom67(int seconds);
+
+  /// Boulder Competition
+  ///
+  /// In en, this message translates to:
+  /// **'Boulder Competition'**
+  String get loginMessageCustom1;
+
+  /// Email
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get loginMessageCustom2;
+
+  /// Password
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get loginMessageCustom3;
+
+  /// LOGIN
+  ///
+  /// In en, this message translates to:
+  /// **'LOGIN'**
+  String get loginMessageCustom4;
+
+  /// Change password
+  ///
+  /// In en, this message translates to:
+  /// **'Change password'**
+  String get loginMessageCustom5;
+
+  /// Enter your current password
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your current password'**
+  String get loginMessageCustom6;
+
+  /// The new password must be at least 8 characters long
+  ///
+  /// In en, this message translates to:
+  /// **'The new password must be at least 8 characters long'**
+  String get loginMessageCustom7;
+
+  /// Passwords do not match
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get loginMessageCustom8;
+
+  /// User not authenticated
+  ///
+  /// In en, this message translates to:
+  /// **'User not authenticated'**
+  String get loginMessageCustom9;
+
+  /// Password changed successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Password changed successfully'**
+  String get loginMessageCustom10;
+
+  /// Set a new password
+  ///
+  /// In en, this message translates to:
+  /// **'Set a new password'**
+  String get loginMessageCustom11;
+
+  /// Current password
+  ///
+  /// In en, this message translates to:
+  /// **'Current password'**
+  String get loginMessageCustom12;
+
+  /// New password
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get loginMessageCustom13;
+
+  /// Minimum 8 characters
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum 8 characters'**
+  String get loginMessageCustom14;
+
+  /// Confirm password
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get loginMessageCustom15;
+
+  /// SAVE PASSWORD
+  ///
+  /// In en, this message translates to:
+  /// **'SAVE PASSWORD'**
+  String get loginMessageCustom16;
 }
 
 class _AppLocalizationsDelegate

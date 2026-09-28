@@ -2648,5 +2648,52 @@
   "placeholders": {
     "seconds": { "type": "int" }
   }
-}
+},
+"loginMessageCustom1": "Boulder Competition",
+"@loginMessageCustom1": { "description": "Boulder Competition" },
+
+"loginMessageCustom2": "Email",
+"@loginMessageCustom2": { "description": "Email" },
+
+"loginMessageCustom3": "Password",
+"@loginMessageCustom3": { "description": "Password" },
+
+"loginMessageCustom4": "LOGIN",
+"@loginMessageCustom4": { "description": "LOGIN" },
+
+"loginMessageCustom5": "Change password",
+"@loginMessageCustom5": { "description": "Change password" },
+
+"loginMessageCustom6": "Enter your current password",
+"@loginMessageCustom6": { "description": "Enter your current password" },
+
+"loginMessageCustom7": "The new password must be at least 8 characters long",
+"@loginMessageCustom7": { "description": "The new password must be at least 8 characters long" },
+
+"loginMessageCustom8": "Passwords do not match",
+"@loginMessageCustom8": { "description": "Passwords do not match" },
+
+"loginMessageCustom9": "User not authenticated",
+"@loginMessageCustom9": { "description": "User not authenticated" },
+
+"loginMessageCustom10": "Password changed successfully",
+"@loginMessageCustom10": { "description": "Password changed successfully" },
+
+"loginMessageCustom11": "Set a new password",
+"@loginMessageCustom11": { "description": "Set a new password" },
+
+"loginMessageCustom12": "Current password",
+"@loginMessageCustom12": { "description": "Current password" },
+
+"loginMessageCustom13": "New password",
+"@loginMessageCustom13": { "description": "New password" },
+
+"loginMessageCustom14": "Minimum 8 characters",
+"@loginMessageCustom14": { "description": "Minimum 8 characters" },
+
+"loginMessageCustom15": "Confirm password",
+"@loginMessageCustom15": { "description": "Confirm password" },
+
+"loginMessageCustom16": "SAVE PASSWORD",
+"@loginMessageCustom16": { "description": "SAVE PASSWORD" }
 }

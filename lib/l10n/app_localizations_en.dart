@@ -2611,4 +2611,53 @@ class AppLocalizationsEn extends AppLocalizations {
   String rankingMessageCustom67(int seconds) {
     return '$seconds seconds';
   }
+
+  @override
+  String get loginMessageCustom1 => 'Boulder Competition';
+
+  @override
+  String get loginMessageCustom2 => 'Email';
+
+  @override
+  String get loginMessageCustom3 => 'Password';
+
+  @override
+  String get loginMessageCustom4 => 'LOGIN';
+
+  @override
+  String get loginMessageCustom5 => 'Change password';
+
+  @override
+  String get loginMessageCustom6 => 'Enter your current password';
+
+  @override
+  String get loginMessageCustom7 =>
+      'The new password must be at least 8 characters long';
+
+  @override
+  String get loginMessageCustom8 => 'Passwords do not match';
+
+  @override
+  String get loginMessageCustom9 => 'User not authenticated';
+
+  @override
+  String get loginMessageCustom10 => 'Password changed successfully';
+
+  @override
+  String get loginMessageCustom11 => 'Set a new password';
+
+  @override
+  String get loginMessageCustom12 => 'Current password';
+
+  @override
+  String get loginMessageCustom13 => 'New password';
+
+  @override
+  String get loginMessageCustom14 => 'Minimum 8 characters';
+
+  @override
+  String get loginMessageCustom15 => 'Confirm password';
+
+  @override
+  String get loginMessageCustom16 => 'SAVE PASSWORD';
 }

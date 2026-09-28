@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+// Adatta il percorso al tuo progetto (o usa flutter_gen se lo preferisci).
+import '../../l10n/app_localizations.dart';
+
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key});
 
@@ -30,20 +33,22 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   }
 
   Future<void> changePassword() async {
+    final l10n = AppLocalizations.of(context)!;
+
     final currentPassword = currentPasswordController.text.trim();
     final newPassword = newPasswordController.text.trim();
     final confirmPassword = confirmPasswordController.text.trim();
 
     if (currentPassword.isEmpty) {
-      _showError('Inserire la password attuale');
+      _showError(l10n.loginMessageCustom6); // Inserire la password attuale
       return;
     }
     if (newPassword.length < 8) {
-      _showError('La nuova password deve contenere almeno 8 caratteri');
+      _showError(l10n.loginMessageCustom7); // La nuova password deve contenere almeno 8 caratteri
       return;
     }
     if (newPassword != confirmPassword) {
-      _showError('Le password non coincidono');
+      _showError(l10n.loginMessageCustom8); // Le password non coincidono
       return;
     }
 
@@ -64,7 +69,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       );
 
       final user = supabase.auth.currentUser;
-      if (user == null) throw Exception('Utente non autenticato');
+      if (user == null) throw Exception(l10n.loginMessageCustom9); // Utente non autenticato
 
       // Segna password_changed = true nel profilo.
       await supabase
@@ -75,7 +80,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Password modificata correttamente')),
+        SnackBar(content: Text(l10n.loginMessageCustom10)), // Password modificata correttamente
       );
 
       context.go('/dashboard');
@@ -83,8 +88,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       if (!mounted) return;
       _showError(e.toString());
     } finally {
-      if (!mounted) return;
-      setState(() => loading = false);
+      if (mounted) setState(() => loading = false);
     }
   }
 
@@ -96,6 +100,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: Center(
         child: SizedBox(
@@ -108,10 +114,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Titolo — stesso stile della LoginPage
-                  const Center(
+                  Center(
                     child: Text(
-                      'Boulder Competition',
-                      style: TextStyle(
+                      l10n.loginMessageCustom1, // Boulder Competition
+                      style: const TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                       ),
@@ -120,10 +126,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
                   const SizedBox(height: 8),
 
-                  const Center(
+                  Center(
                     child: Text(
-                      'Imposta una nuova password',
-                      style: TextStyle(
+                      l10n.loginMessageCustom11, // Imposta una nuova password
+                      style: const TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
                       ),
@@ -137,7 +143,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     controller: currentPasswordController,
                     obscureText: obscureCurrent,
                     decoration: InputDecoration(
-                      labelText: 'Password attuale',
+                      labelText: l10n.loginMessageCustom12, // Password attuale
                       suffixIcon: IconButton(
                         icon: Icon(
                           obscureCurrent
@@ -158,13 +164,11 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     controller: newPasswordController,
                     obscureText: obscureNew,
                     decoration: InputDecoration(
-                      labelText: 'Nuova password',
-                      helperText: 'Minimo 8 caratteri',
+                      labelText: l10n.loginMessageCustom13, // Nuova password
+                      helperText: l10n.loginMessageCustom14, // Minimo 8 caratteri
                       suffixIcon: IconButton(
                         icon: Icon(
-                          obscureNew
-                              ? Icons.visibility_off
-                              : Icons.visibility,
+                          obscureNew ? Icons.visibility_off : Icons.visibility,
                         ),
                         onPressed: () => setState(
                           () => obscureNew = !obscureNew,
@@ -181,7 +185,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     obscureText: obscureConfirm,
                     onSubmitted: (_) => loading ? null : changePassword(),
                     decoration: InputDecoration(
-                      labelText: 'Conferma password',
+                      labelText: l10n.loginMessageCustom15, // Conferma password
                       suffixIcon: IconButton(
                         icon: Icon(
                           obscureConfirm
@@ -209,7 +213,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                               height: 20,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : const Text('SALVA PASSWORD'),
+                          : Text(l10n.loginMessageCustom16), // SALVA PASSWORD
                     ),
                   ),
                 ],

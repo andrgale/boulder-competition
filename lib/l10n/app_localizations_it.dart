@@ -2614,4 +2614,53 @@ class AppLocalizationsIt extends AppLocalizations {
   String rankingMessageCustom67(int seconds) {
     return '$seconds secondi';
   }
+
+  @override
+  String get loginMessageCustom1 => 'Boulder Competition';
+
+  @override
+  String get loginMessageCustom2 => 'Email';
+
+  @override
+  String get loginMessageCustom3 => 'Password';
+
+  @override
+  String get loginMessageCustom4 => 'LOGIN';
+
+  @override
+  String get loginMessageCustom5 => 'Cambia password';
+
+  @override
+  String get loginMessageCustom6 => 'Inserire la password attuale';
+
+  @override
+  String get loginMessageCustom7 =>
+      'La nuova password deve contenere almeno 8 caratteri';
+
+  @override
+  String get loginMessageCustom8 => 'Le password non coincidono';
+
+  @override
+  String get loginMessageCustom9 => 'Utente non autenticato';
+
+  @override
+  String get loginMessageCustom10 => 'Password modificata correttamente';
+
+  @override
+  String get loginMessageCustom11 => 'Imposta una nuova password';
+
+  @override
+  String get loginMessageCustom12 => 'Password attuale';
+
+  @override
+  String get loginMessageCustom13 => 'Nuova password';
+
+  @override
+  String get loginMessageCustom14 => 'Minimo 8 caratteri';
+
+  @override
+  String get loginMessageCustom15 => 'Conferma password';
+
+  @override
+  String get loginMessageCustom16 => 'SALVA PASSWORD';
 }

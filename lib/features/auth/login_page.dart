@@ -7,6 +7,9 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 //import '../../../core/services/permission_service.dart';
 
+// Adatta il percorso al tuo progetto (o usa flutter_gen se lo preferisci).
+import '../../l10n/app_localizations.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -22,7 +25,16 @@ class _LoginPageState extends State<LoginPage> {
 
   bool loading = false;
 
-  Future<void> login() async {
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  /// [forceChangePassword] = true: dopo l'autenticazione porta sempre
+  /// alla pagina di cambio password (cambio volontario).
+  Future<void> login({bool forceChangePassword = false}) async {
     try {
       setState(() {
         loading = true;
@@ -35,32 +47,21 @@ class _LoginPageState extends State<LoginPage> {
 
 //      PermissionService.clearCache();
 
-      final user =
-          Supabase.instance.client.auth.currentUser!;
+      final user = Supabase.instance.client.auth.currentUser!;
 
-      final profile =
-          await Supabase.instance.client
-              .from('profiles')
-              .select('password_changed')
-              .eq('auth_user_id', user.id)
-              .single();
-
+      final profile = await Supabase.instance.client
+          .from('profiles')
+          .select('password_changed')
+          .eq('auth_user_id', user.id)
+          .single();
 
       if (!mounted) return;
 
-      if (profile['password_changed'] == false) {
+      if (forceChangePassword || profile['password_changed'] == false) {
         context.go('/change-password');
       } else {
         context.go('/dashboard');
       }
-
-
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(
-      //    builder: (_) => const HomePage(),
-      //   ),
-      // );
     } catch (e) {
       if (!mounted) return;
 
@@ -68,14 +69,18 @@ class _LoginPageState extends State<LoginPage> {
         SnackBar(content: Text(e.toString())),
       );
     } finally {
-      setState(() {
-        loading = false;
-      });
+      if (mounted) {
+        setState(() {
+          loading = false;
+        });
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: Center(
         child: SizedBox(
@@ -86,9 +91,9 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
-                    'Boulder Competition',
-                    style: TextStyle(
+                  Text(
+                    l10n.loginMessageCustom1, // Boulder Competition
+                    style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                     ),
@@ -96,16 +101,17 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 24),
                   TextField(
                     controller: emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
+                    decoration: InputDecoration(
+                      labelText: l10n.loginMessageCustom2, // Email
                     ),
                   ),
                   const SizedBox(height: 16),
                   TextField(
                     controller: passwordController,
                     obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
+                    onSubmitted: (_) => loading ? null : login(),
+                    decoration: InputDecoration(
+                      labelText: l10n.loginMessageCustom3, // Password
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -113,12 +119,19 @@ class _LoginPageState extends State<LoginPage> {
                     width: double.infinity,
                     height: 48,
                     child: ElevatedButton(
-                      onPressed: loading ? null : login,
+                      onPressed: loading ? null : () => login(),
                       child: loading
                           ? const CircularProgressIndicator()
-                          : const Text('LOGIN'),
+                          : Text(l10n.loginMessageCustom4), // LOGIN
                     ),
-                  )
+                  ),
+                  const SizedBox(height: 8),
+                  TextButton(
+                    onPressed: loading
+                        ? null
+                        : () => login(forceChangePassword: true),
+                    child: Text(l10n.loginMessageCustom5), // Cambia password
+                  ),
                 ],
               ),
             ),

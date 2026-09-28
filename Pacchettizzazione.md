@@ -35,7 +35,7 @@ create-dmg \
   --icon "boulder_competition.app" 150 200 \
   --hide-extension "boulder_competition.app" \
   --background "./background_600x400.png" \
-  "BoulderAdmin-1.0.2.dmg" \
+  "BoulderAdmin-1.0.4.dmg" \
   "build/macos/Build/Products/Release/boulder_competition.app"
 
  ## build Mac Console Clienti
