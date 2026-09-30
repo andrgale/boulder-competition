@@ -415,14 +415,16 @@ class _RegistrationsPageState extends State<RegistrationsPage> {
     final blocked = closed || full;
 
     String tooltipMessage(String actionLabel) {
-      if (closed)
+      if (closed) {
         return l10n.registrationMessageCustom3(
           actionLabel,
         ); // 'Iscrizioni chiuse: $actionLabel non disponibile'
-      if (full)
+      }
+      if (full) {
         return l10n.registrationMessageCustom4(
           actionLabel,
         ); // 'Numero massimo iscritti raggiunto: $actionLabel non disponibile'
+      }
       return actionLabel;
     }
 

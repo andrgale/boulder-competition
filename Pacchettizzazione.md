@@ -135,7 +135,7 @@ build/ios/ipa/bouldercompetition.ipa
 
 Per caricare su App Store Connect usa Transporter (app gratuita sul Mac App Store) o xcrun altool.
 
-Non avendo un account di sviluppatore Apple a pagamento non crea l'ipa, posso solo installarlo sul mio Iphone con questo comando:
+### Non avendo un account di sviluppatore Apple a pagamento non crea l'ipa, posso solo installarlo sul mio Iphone con questo comando:
 fvm flutter run \
   --release \
   -t lib/main_smartphone.dart
