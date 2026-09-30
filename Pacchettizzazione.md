@@ -73,6 +73,13 @@ gh workflow run build-windows.yml
 ### comando per creare la build windows della console clienti
 gh workflow run build-windows-clienti.yml
 
+### comando per trigger e impedire la inattivazione del DB Clienti
+gh workflow run supabase-keep-alive.yml
+### comando per trigger e impedire la inattivazione del DB di sviluppo di Boulder Competition
+gh workflow run supabase-prod-keep-alive.yml
+### comando per trigger e impedire la inattivazione del DB di produzione di Boulder Competition
+gh workflow run supabase-svil-keep-alive.yml
+
 gh run view 28184095736
 
 su browser al link dato da gh
