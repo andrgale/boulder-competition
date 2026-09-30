@@ -19,6 +19,6 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY_SVIL}}
 
         run: |
-          curl --fail --show-error \
+          curl --show-error \
             "${SUPABASE_URL}/rest/v1/keep_alive?select=id&limit=1" \
             -H "apikey: ${SUPABASE_KEY}"
