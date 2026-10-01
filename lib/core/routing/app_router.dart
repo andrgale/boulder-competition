@@ -139,9 +139,11 @@ final GoRouter appRouter = GoRouter(
 
     GoRoute(
       path: '/athlete-login',
-      name: 'athlete_login',
       builder: (context, state) {
-        return const AthleteLoginPage();
+        final extra = state.extra as Map<String, dynamic>?;
+        return AthleteLoginPage(
+          initialEmail: extra?['email'] as String?,
+        );
       },
     ),
 
@@ -151,13 +153,16 @@ final GoRouter appRouter = GoRouter(
 
     GoRoute(
       path: '/athlete-change-password',
-      name: 'athlete_change_password',
       builder: (context, state) {
-        return const AthleteChangePasswordPage();
+        final extra = state.extra as Map<String, dynamic>?;
+        return AthleteChangePasswordPage(
+          initialEmail: extra?['email'] as String?,
+          initialPassword: extra?['password'] as String?,
+        );
       },
     ),
 
-// =====================================================
+    // =====================================================
     // ATHLETE REGISTRATION
     // =====================================================
 

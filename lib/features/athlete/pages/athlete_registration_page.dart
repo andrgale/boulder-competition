@@ -85,7 +85,10 @@ class _AthleteRegistrationPageState extends State<AthleteRegistrationPage> {
       );
 
       if (!mounted) return;
-      context.go('/athlete-login');
+      context.go(
+        '/athlete-login',
+        extra: {'email': email},
+      );
     } catch (e) {
       if (!mounted) return;
       AppSnackbar.error(context, l10n.athleteMessageCustom26(e.toString())); // 'Errore registrazione: {error}'

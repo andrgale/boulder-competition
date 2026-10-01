@@ -6,7 +6,10 @@ import 'package:boulder_competition/l10n/app_localizations.dart';
 import '../../../core/services/auth_service.dart';
 
 class AthleteLoginPage extends StatefulWidget {
-  const AthleteLoginPage({super.key});
+  /// Email pre-valorizzata (es. dopo registrazione o cambio password)
+  final String? initialEmail;
+
+  const AthleteLoginPage({super.key, this.initialEmail});
 
   @override
   State<AthleteLoginPage> createState() => _AthleteLoginPageState();
@@ -19,6 +22,15 @@ class _AthleteLoginPageState extends State<AthleteLoginPage> {
     AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   bool loading = false;
+  bool obscurePassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialEmail != null) {
+      emailController.text = widget.initialEmail!;
+    }
+  }
 
   Future<void> login() async {
     try {
@@ -26,9 +38,12 @@ class _AthleteLoginPageState extends State<AthleteLoginPage> {
         loading = true;
       });
 
+      final email = emailController.text.trim();
+      final password = passwordController.text.trim();
+
       await authService.signIn(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
+        email: email,
+        password: password,
       );
 
       final user = Supabase.instance.client.auth.currentUser!;
@@ -42,7 +57,13 @@ class _AthleteLoginPageState extends State<AthleteLoginPage> {
       if (!mounted) return;
 
       if (profile['password_changed'] == false) {
-        context.go('/athlete-change-password');
+        context.go(
+          '/athlete-change-password',
+          extra: {
+            'email': email,
+            'password': password,
+          },
+        );
       } else {
         context.go('/athlete-home');
       }
@@ -122,10 +143,22 @@ class _AthleteLoginPageState extends State<AthleteLoginPage> {
                       const SizedBox(height: 16),
                       TextField(
                         controller: passwordController,
-                        obscureText: true,
+                        obscureText: obscurePassword,
                         decoration: InputDecoration(
                           labelText: l10n.athleteMessageCustom30, // 'Password'
                           prefixIcon: const Icon(Icons.lock),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              obscurePassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                obscurePassword = !obscurePassword;
+                              });
+                            },
+                          ),
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -148,7 +181,13 @@ class _AthleteLoginPageState extends State<AthleteLoginPage> {
                       const SizedBox(height: 12),
                       TextButton(
                         onPressed: () {
-                          context.go('/athlete-change-password');
+                          context.go(
+                            '/athlete-change-password',
+                            extra: {
+                              'email': emailController.text.trim(),
+                              'password': passwordController.text,
+                            },
+                          );
                         },
                         child: Text(l10n.athleteMessageCustom32), // 'Cambia password'
                       ),

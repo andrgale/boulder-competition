@@ -5,8 +5,14 @@ import 'package:boulder_competition/l10n/app_localizations.dart';
 import 'athlete_login_page.dart';
 
 class AthleteChangePasswordPage extends StatefulWidget {
+  /// Email e password attuale pre-valorizzate (passate dalla pagina di login)
+  final String? initialEmail;
+  final String? initialPassword;
+
   const AthleteChangePasswordPage({
     super.key,
+    this.initialEmail,
+    this.initialPassword,
   });
 
   @override
@@ -24,7 +30,25 @@ class _AthleteChangePasswordPageState extends State<AthleteChangePasswordPage> {
 
   bool loading = false;
 
+  bool obscureCurrent = true;
+  bool obscureNew = true;
+  bool obscureConfirm = true;
+
   final supabase = Supabase.instance.client;
+
+  @override
+  void initState() {
+    super.initState();
+    emailController.text = widget.initialEmail ?? '';
+    currentPasswordController.text = widget.initialPassword ?? '';
+  }
+
+  Widget _visibilityButton(bool obscured, VoidCallback onToggle) {
+    return IconButton(
+      icon: Icon(obscured ? Icons.visibility : Icons.visibility_off),
+      onPressed: onToggle,
+    );
+  }
 
   Future<void> changePassword() async {
     try {
@@ -98,7 +122,9 @@ class _AthleteChangePasswordPageState extends State<AthleteChangePasswordPage> {
 
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => const AthleteLoginPage()),
+        MaterialPageRoute(
+          builder: (_) => AthleteLoginPage(initialEmail: email),
+        ),
         (route) => false,
       );
     } catch (e) {
@@ -167,28 +193,40 @@ class _AthleteChangePasswordPageState extends State<AthleteChangePasswordPage> {
                       const SizedBox(height: 16),
                       TextField(
                         controller: currentPasswordController,
-                        obscureText: true,
+                        obscureText: obscureCurrent,
                         decoration: InputDecoration(
                           labelText: l10n.athleteMessageCustom37, // 'Password attuale'
                           prefixIcon: const Icon(Icons.lock_outline),
+                          suffixIcon: _visibilityButton(
+                            obscureCurrent,
+                            () => setState(() => obscureCurrent = !obscureCurrent),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
                       TextField(
                         controller: newPasswordController,
-                        obscureText: true,
+                        obscureText: obscureNew,
                         decoration: InputDecoration(
                           labelText: l10n.athleteMessageCustom38, // 'Nuova password'
                           prefixIcon: const Icon(Icons.lock),
+                          suffixIcon: _visibilityButton(
+                            obscureNew,
+                            () => setState(() => obscureNew = !obscureNew),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
                       TextField(
                         controller: confirmPasswordController,
-                        obscureText: true,
+                        obscureText: obscureConfirm,
                         decoration: InputDecoration(
                           labelText: l10n.athleteMessageCustom39, // 'Conferma password'
                           prefixIcon: const Icon(Icons.lock),
+                          suffixIcon: _visibilityButton(
+                            obscureConfirm,
+                            () => setState(() => obscureConfirm = !obscureConfirm),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 24),
