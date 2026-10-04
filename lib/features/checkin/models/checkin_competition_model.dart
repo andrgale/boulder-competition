@@ -1,15 +1,18 @@
+import 'package:boulder_competition/features/liberatoria/models/liberatoria_mode.dart';
+
 class CheckinCompetitionModel {
   final String id;
   final String descrizione;
   final DateTime dtGara;
   final int nrBoulder;
-  final double quotaIscrizione; // ← aggiunto
+  final double quotaIscrizione;
   final int nrFinalisti;
   final bool flIscrizioniChiuse;
   final bool flGaraChiusa;
   final bool flGestionePresenze;
   final bool flGestionePagamenti;
   final bool flGestioneOmaggi;
+  final LiberatoriaMode modalitaLiberatoria; // ← nuovo
   final String? note;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -19,13 +22,14 @@ class CheckinCompetitionModel {
     required this.descrizione,
     required this.dtGara,
     required this.nrBoulder,
-    required this.quotaIscrizione, // ← aggiunto
+    required this.quotaIscrizione,
     required this.nrFinalisti,
     required this.flIscrizioniChiuse,
     required this.flGaraChiusa,
     required this.flGestionePresenze,
     required this.flGestionePagamenti,
     required this.flGestioneOmaggi,
+    this.modalitaLiberatoria = LiberatoriaMode.nessuna, // ← nuovo
     this.note,
     required this.createdAt,
     required this.updatedAt,
@@ -37,7 +41,6 @@ class CheckinCompetitionModel {
       descrizione: map['descrizione'] as String,
       dtGara: DateTime.parse(map['dt_gara'] as String),
       nrBoulder: map['nr_boulder'] as int? ?? 0,
-      // ← aggiunto: gestisce sia int che double restituiti da Supabase
       quotaIscrizione: (map['quota_iscrizione'] as num?)?.toDouble() ?? 0.0,
       nrFinalisti: map['nr_finalisti'] as int? ?? 0,
       flIscrizioniChiuse: map['fl_iscrizioni_chiuse'] as bool? ?? false,
@@ -45,6 +48,9 @@ class CheckinCompetitionModel {
       flGestionePresenze: map['fl_gestione_presenze'] as bool? ?? false,
       flGestionePagamenti: map['fl_gestione_pagamenti'] as bool? ?? false,
       flGestioneOmaggi: map['fl_gestione_omaggi'] as bool? ?? false,
+      modalitaLiberatoria: LiberatoriaMode.fromDb(
+        map['modalita_liberatoria'] as String?,
+      ), // ← nuovo
       note: map['note'] as String?,
       createdAt: DateTime.parse(map['created_at'] as String),
       updatedAt: DateTime.parse(map['updated_at'] as String),
@@ -62,13 +68,14 @@ class CheckinCompetitionModel {
       descrizione: descrizione,
       dtGara: dtGara,
       nrBoulder: nrBoulder,
-      quotaIscrizione: quotaIscrizione, // ← propagato
+      quotaIscrizione: quotaIscrizione,
       nrFinalisti: nrFinalisti,
       flIscrizioniChiuse: flIscrizioniChiuse,
       flGaraChiusa: flGaraChiusa ?? this.flGaraChiusa,
       flGestionePresenze: flGestionePresenze ?? this.flGestionePresenze,
       flGestionePagamenti: flGestionePagamenti ?? this.flGestionePagamenti,
       flGestioneOmaggi: flGestioneOmaggi ?? this.flGestioneOmaggi,
+      modalitaLiberatoria: modalitaLiberatoria, // ← propagato
       note: note,
       createdAt: createdAt,
       updatedAt: updatedAt,

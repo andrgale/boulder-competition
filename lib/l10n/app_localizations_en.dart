@@ -2669,4 +2669,129 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loginMessageCustom19 => 'Activate';
+
+  @override
+  String get liberatoriaMode => 'Modalità liberatoria';
+
+  @override
+  String get liberatoriaModeNone => 'Nessuna';
+
+  @override
+  String get liberatoriaModePaper => 'Cartacea (stampa e archivio fisico)';
+
+  @override
+  String get liberatoriaModeDigital => 'Digitale (firma su tablet)';
+
+  @override
+  String get liberatoriaText => 'Testo della liberatoria';
+
+  @override
+  String get liberatoriaImportTxt => 'Importa da .txt';
+
+  @override
+  String get liberatoriaPreview => 'Anteprima';
+
+  @override
+  String get liberatoriaTextRequired => 'Inserisci il testo della liberatoria';
+
+  @override
+  String get liberatoriaUnknownPlaceholders => 'Segnaposto non riconosciuti:';
+
+  @override
+  String get commonClose => 'Close';
+
+  @override
+  String get liberatoriaLogos => 'Logos (max 4, PNG or JPG, 1 MB each)';
+
+  @override
+  String get liberatoriaAddLogo => 'Add logo';
+
+  @override
+  String get liberatoriaLogoMax => 'You can add up to 4 logos';
+
+  @override
+  String get liberatoriaLogoTooBig => 'The file exceeds 1 MB';
+
+  @override
+  String get liberatoriaLogoInvalid => 'Invalid format: use PNG or JPG';
+
+  @override
+  String get liberatoriaLegend => 'Waiver';
+
+  @override
+  String get liberatoriaTooltipNone =>
+      'No waiver required for this competition';
+
+  @override
+  String get liberatoriaTooltipNoTemplate => 'Waiver template missing';
+
+  @override
+  String get liberatoriaTooltipNoPermission =>
+      'You don\'t have permission to manage waivers';
+
+  @override
+  String get liberatoriaTooltipToDo => 'Waiver to be signed';
+
+  @override
+  String get liberatoriaTooltipPrinted => 'Waiver printed, awaiting delivery';
+
+  @override
+  String get liberatoriaTooltipDone => 'Waiver received';
+
+  @override
+  String get liberatoriaPaperHint =>
+      'Print the waiver, have the athlete sign it, and mark it as delivered when received.';
+
+  @override
+  String get liberatoriaPaperDelivered => 'Paper waiver delivered.';
+
+  @override
+  String get liberatoriaPrint => 'Print';
+
+  @override
+  String get liberatoriaMarkDelivered => 'Mark as delivered';
+
+  @override
+  String get liberatoriaUndoDelivered => 'Undo delivery';
+
+  @override
+  String get liberatoriaSignTitle => 'Waiver';
+
+  @override
+  String get liberatoriaSignHere => 'Sign below';
+
+  @override
+  String get liberatoriaClearSignature => 'Clear signature';
+
+  @override
+  String get liberatoriaConfirmSign => 'Confirm and save';
+
+  @override
+  String get liberatoriaTutoreLabel => 'Parent/guardian\'s full name';
+
+  @override
+  String get liberatoriaTutoreRequired =>
+      'Minor athlete: enter the parent/guardian\'s name';
+
+  @override
+  String get liberatoriaSignatureRequired => 'Signature is required';
+
+  @override
+  String get liberatoriaSignerAthlete => 'Athlete\'s signature';
+
+  @override
+  String get liberatoriaSignerTutore => 'Parent/guardian\'s signature';
+
+  @override
+  String get liberatoriaSigned => 'Waiver signed and archived';
+
+  @override
+  String get liberatoriaError => 'Waiver error';
+
+  @override
+  String get liberatoriaBirthDateMissing =>
+      'Date of birth missing: complete the registration before signing the waiver';
+
+  @override
+  String get liberatoriaStats => 'Waivers';
 }

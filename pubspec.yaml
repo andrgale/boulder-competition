@@ -53,6 +53,8 @@ dependencies:
   vsc_quill_delta_to_html: 1.0.5
 
   html: ^0.15.6
+  signature: ^6.4.0
+  crypto: ^3.0.7
 
 dev_dependencies:
   flutter_test:

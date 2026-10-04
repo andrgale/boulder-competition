@@ -1,3 +1,4 @@
+import '../../liberatoria/models/liberatoria_mode.dart';
 class CompetitionModel {
   final String id;
 
@@ -37,6 +38,8 @@ class CompetitionModel {
 
   final int nrMaxSecondTurn;
 
+  final LiberatoriaMode modalitaLiberatoria;
+
   CompetitionModel({
     required this.id,
     required this.descrizione,
@@ -57,6 +60,7 @@ class CompetitionModel {
     required this.nrMaxFirstTurn,
     required this.nrMaxSecondTurn,
     this.note,
+    this.modalitaLiberatoria = LiberatoriaMode.nessuna,
   });
 
   factory CompetitionModel.fromJson(
@@ -111,6 +115,10 @@ class CompetitionModel {
               false,
 
       note: map['note'],
+
+      modalitaLiberatoria: LiberatoriaMode.fromDb(
+        map['modalita_liberatoria'] as String?,
+      ),
 
       createdBy: map['created_by'],
 

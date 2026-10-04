@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/competition_model.dart';
+import '../../liberatoria/models/liberatoria_mode.dart';
 
 class CompetitionService {
   final supabase = Supabase.instance.client;
@@ -90,6 +91,7 @@ class CompetitionService {
     required int nrMaxFirstTurn,
     required int nrMaxSecondTurn,
     bool flGaraChiusa = false,
+    LiberatoriaMode modalitaLiberatoria = LiberatoriaMode.nessuna,
   }) async {
     final user = supabase.auth.currentUser;
 
@@ -117,6 +119,8 @@ class CompetitionService {
             'is_turn': isTurn,
             'nr_max_first_turn': nrMaxFirstTurn,
             'nr_max_second_turn': nrMaxSecondTurn,
+            'fl_gara_chiusa': flGaraChiusa,
+            'modalita_liberatoria': modalitaLiberatoria.dbValue,
             'created_by': profile['id'],
           })
           .select()
@@ -151,6 +155,7 @@ class CompetitionService {
     required bool isTurn,
     required int nrMaxFirstTurn,
     required int nrMaxSecondTurn,
+    required LiberatoriaMode modalitaLiberatoria,
   }) async {
     try {
       await supabase.from('competitions').update({
@@ -170,6 +175,7 @@ class CompetitionService {
         'is_turn': isTurn,
         'nr_max_first_turn': nrMaxFirstTurn,
         'nr_max_second_turn': nrMaxSecondTurn,
+        'modalita_liberatoria': modalitaLiberatoria.dbValue,
       }).eq('id', id);
     } on PostgrestException catch (e) {
       if (e.code == '23505') {

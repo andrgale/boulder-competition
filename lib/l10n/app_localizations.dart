@@ -4889,6 +4889,246 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Activate'**
   String get loginMessageCustom19;
+
+  /// Modalità liberatoria
+  ///
+  /// In en, this message translates to:
+  /// **'Modalità liberatoria'**
+  String get liberatoriaMode;
+
+  /// Nessuna
+  ///
+  /// In en, this message translates to:
+  /// **'Nessuna'**
+  String get liberatoriaModeNone;
+
+  /// Cartacea (stampa e archivio fisico)
+  ///
+  /// In en, this message translates to:
+  /// **'Cartacea (stampa e archivio fisico)'**
+  String get liberatoriaModePaper;
+
+  /// Digitale (firma su tablet)
+  ///
+  /// In en, this message translates to:
+  /// **'Digitale (firma su tablet)'**
+  String get liberatoriaModeDigital;
+
+  /// Testo della liberatoria
+  ///
+  /// In en, this message translates to:
+  /// **'Testo della liberatoria'**
+  String get liberatoriaText;
+
+  /// Importa da .txt
+  ///
+  /// In en, this message translates to:
+  /// **'Importa da .txt'**
+  String get liberatoriaImportTxt;
+
+  /// Anteprima
+  ///
+  /// In en, this message translates to:
+  /// **'Anteprima'**
+  String get liberatoriaPreview;
+
+  /// Inserisci il testo della liberatoria
+  ///
+  /// In en, this message translates to:
+  /// **'Inserisci il testo della liberatoria'**
+  String get liberatoriaTextRequired;
+
+  /// Segnaposto non riconosciuti:
+  ///
+  /// In en, this message translates to:
+  /// **'Segnaposto non riconosciuti:'**
+  String get liberatoriaUnknownPlaceholders;
+
+  /// Close
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get commonClose;
+
+  /// Logos (max 4, PNG or JPG, 1 MB each)
+  ///
+  /// In en, this message translates to:
+  /// **'Logos (max 4, PNG or JPG, 1 MB each)'**
+  String get liberatoriaLogos;
+
+  /// Add logo
+  ///
+  /// In en, this message translates to:
+  /// **'Add logo'**
+  String get liberatoriaAddLogo;
+
+  /// You can add up to 4 logos
+  ///
+  /// In en, this message translates to:
+  /// **'You can add up to 4 logos'**
+  String get liberatoriaLogoMax;
+
+  /// The file exceeds 1 MB
+  ///
+  /// In en, this message translates to:
+  /// **'The file exceeds 1 MB'**
+  String get liberatoriaLogoTooBig;
+
+  /// Invalid format: use PNG or JPG
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid format: use PNG or JPG'**
+  String get liberatoriaLogoInvalid;
+
+  /// Waiver
+  ///
+  /// In en, this message translates to:
+  /// **'Waiver'**
+  String get liberatoriaLegend;
+
+  /// No waiver required for this competition
+  ///
+  /// In en, this message translates to:
+  /// **'No waiver required for this competition'**
+  String get liberatoriaTooltipNone;
+
+  /// Waiver template missing
+  ///
+  /// In en, this message translates to:
+  /// **'Waiver template missing'**
+  String get liberatoriaTooltipNoTemplate;
+
+  /// You don't have permission to manage waivers
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have permission to manage waivers'**
+  String get liberatoriaTooltipNoPermission;
+
+  /// Waiver to be signed
+  ///
+  /// In en, this message translates to:
+  /// **'Waiver to be signed'**
+  String get liberatoriaTooltipToDo;
+
+  /// Waiver printed, awaiting delivery
+  ///
+  /// In en, this message translates to:
+  /// **'Waiver printed, awaiting delivery'**
+  String get liberatoriaTooltipPrinted;
+
+  /// Waiver received
+  ///
+  /// In en, this message translates to:
+  /// **'Waiver received'**
+  String get liberatoriaTooltipDone;
+
+  /// Print the waiver, have the athlete sign it, and mark it as delivered when received.
+  ///
+  /// In en, this message translates to:
+  /// **'Print the waiver, have the athlete sign it, and mark it as delivered when received.'**
+  String get liberatoriaPaperHint;
+
+  /// Paper waiver delivered.
+  ///
+  /// In en, this message translates to:
+  /// **'Paper waiver delivered.'**
+  String get liberatoriaPaperDelivered;
+
+  /// Print
+  ///
+  /// In en, this message translates to:
+  /// **'Print'**
+  String get liberatoriaPrint;
+
+  /// Mark as delivered
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as delivered'**
+  String get liberatoriaMarkDelivered;
+
+  /// Undo delivery
+  ///
+  /// In en, this message translates to:
+  /// **'Undo delivery'**
+  String get liberatoriaUndoDelivered;
+
+  /// Waiver
+  ///
+  /// In en, this message translates to:
+  /// **'Waiver'**
+  String get liberatoriaSignTitle;
+
+  /// Sign below
+  ///
+  /// In en, this message translates to:
+  /// **'Sign below'**
+  String get liberatoriaSignHere;
+
+  /// Clear signature
+  ///
+  /// In en, this message translates to:
+  /// **'Clear signature'**
+  String get liberatoriaClearSignature;
+
+  /// Confirm and save
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm and save'**
+  String get liberatoriaConfirmSign;
+
+  /// Parent/guardian's full name
+  ///
+  /// In en, this message translates to:
+  /// **'Parent/guardian\'s full name'**
+  String get liberatoriaTutoreLabel;
+
+  /// Minor athlete: enter the parent/guardian's name
+  ///
+  /// In en, this message translates to:
+  /// **'Minor athlete: enter the parent/guardian\'s name'**
+  String get liberatoriaTutoreRequired;
+
+  /// Signature is required
+  ///
+  /// In en, this message translates to:
+  /// **'Signature is required'**
+  String get liberatoriaSignatureRequired;
+
+  /// Athlete's signature
+  ///
+  /// In en, this message translates to:
+  /// **'Athlete\'s signature'**
+  String get liberatoriaSignerAthlete;
+
+  /// Parent/guardian's signature
+  ///
+  /// In en, this message translates to:
+  /// **'Parent/guardian\'s signature'**
+  String get liberatoriaSignerTutore;
+
+  /// Waiver signed and archived
+  ///
+  /// In en, this message translates to:
+  /// **'Waiver signed and archived'**
+  String get liberatoriaSigned;
+
+  /// Waiver error
+  ///
+  /// In en, this message translates to:
+  /// **'Waiver error'**
+  String get liberatoriaError;
+
+  /// Date of birth missing: complete the registration before signing the waiver
+  ///
+  /// In en, this message translates to:
+  /// **'Date of birth missing: complete the registration before signing the waiver'**
+  String get liberatoriaBirthDateMissing;
+
+  /// Waivers
+  ///
+  /// In en, this message translates to:
+  /// **'Waivers'**
+  String get liberatoriaStats;
 }
 
 class _AppLocalizationsDelegate

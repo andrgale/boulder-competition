@@ -17,6 +17,12 @@ import 'package:currency_text_input_formatter/currency_text_input_formatter.dart
 import '../../../core/services/permission_service.dart';
 
 import 'package:boulder_competition/l10n/app_localizations.dart';
+import 'dart:convert';
+import 'package:file_picker/file_picker.dart';
+import '../../liberatoria/data/liberatoria_service.dart';
+import '../../liberatoria/models/liberatoria_mode.dart';
+import '../../liberatoria/utils/liberatoria_placeholders.dart';
+import '../../liberatoria/models/liberatoria_logo_item.dart';
 
 
 
@@ -58,6 +64,9 @@ class _CompetitionFormPageState
   final nrMaxRegistrationsController = TextEditingController();
   final nrMaxFirstTurnController = TextEditingController();
   final nrMaxSecondTurnController = TextEditingController();
+  final liberatoriaService = LiberatoriaService();
+  final testoLiberatoriaController = TextEditingController();
+  LiberatoriaMode modalitaLiberatoria = LiberatoriaMode.nessuna;
 
   bool isTurn = false;
   bool createCategoriesFromTemplate = false;
@@ -94,10 +103,15 @@ class _CompetitionFormPageState
   bool get isEdit => widget.competition != null;
   bool _exportingCartellino = false; 
 
+  List<LiberatoriaLogoItem> logos = [];
+  static const int _maxLogos = 4;
+  static const int _maxLogoBytes = 1024 * 1024;
+
   @override
   void initState() {
     super.initState();
     loadData();
+    if (isEdit) loadLiberatoriaTemplate();
 
     if (!isEdit) {
       loadCategoryTemplates();
@@ -105,7 +119,21 @@ class _CompetitionFormPageState
 
     checkPermission();
   }
-
+  
+  @override
+  void dispose() {
+    descrizioneController.dispose();
+    dtGaraController.dispose();
+    nrBoulderController.dispose();
+    quotaController.dispose();
+    nrFinalistiController.dispose();
+    noteController.dispose();
+    nrMaxRegistrationsController.dispose();
+    nrMaxFirstTurnController.dispose();
+    nrMaxSecondTurnController.dispose();
+    testoLiberatoriaController.dispose();
+    super.dispose();
+  }
   // =======================================================
   // LOAD DATA
   // =======================================================
@@ -144,6 +172,166 @@ class _CompetitionFormPageState
     flGestionePresenze = c.flGestionePresenze;
     flGestionePagamenti = c.flGestionePagamenti;
     flGestioneOmaggi = c.flGestioneOmaggi;
+    modalitaLiberatoria = c.modalitaLiberatoria;
+  }
+
+  // =======================================================
+  // LIBERATORIA
+  // =======================================================
+
+  Future<void> loadLiberatoriaTemplate() async {
+    try {
+      final t = await liberatoriaService
+          .getLatestTemplate(widget.competition!.id);
+      if (!mounted || t == null) return;
+
+      setState(() => testoLiberatoriaController.text = t.testo);
+
+      final items = <LiberatoriaLogoItem>[];
+      for (final p in t.logoPaths) {
+        final bytes = await liberatoriaService.downloadLogo(p);
+        items.add(LiberatoriaLogoItem(
+          path: p,
+          bytes: bytes,
+          extension: p.toLowerCase().endsWith('.png') ? 'png' : 'jpg',
+        ));
+      }
+
+      if (!mounted) return;
+      setState(() => logos = items);
+    } catch (e) {
+      if (mounted) showError(e.toString());
+    }
+  }
+
+  String _liberatoriaModeLabel(LiberatoriaMode m) {
+    switch (m) {
+      case LiberatoriaMode.nessuna:
+        return l10n.liberatoriaModeNone;
+      case LiberatoriaMode.cartacea:
+        return l10n.liberatoriaModePaper;
+      case LiberatoriaMode.digitale:
+        return l10n.liberatoriaModeDigital;
+    }
+  }
+
+  void insertPlaceholder(String key) {
+    final c = testoLiberatoriaController;
+    final token = '{{$key}}';
+    final sel = c.selection;
+    final start = sel.isValid ? sel.start : c.text.length;
+    final end = sel.isValid ? sel.end : c.text.length;
+
+    c.value = c.value.copyWith(
+      text: c.text.replaceRange(start, end, token),
+      selection: TextSelection.collapsed(offset: start + token.length),
+    );
+  }
+
+  Future<void> importLiberatoriaTxt() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['txt'],
+      withData: true,
+    );
+
+    final bytes = result?.files.single.bytes;
+    if (bytes == null) return;
+
+    setState(() {
+      testoLiberatoriaController.text = utf8.decode(bytes, allowMalformed: true);
+    });
+  }
+
+  Future<void> pickLogo() async {
+    if (logos.length >= _maxLogos) {
+      showError(l10n.liberatoriaLogoMax);
+      return;
+    }
+
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['png', 'jpg', 'jpeg'],
+      withData: true,
+    );
+
+    final file = result?.files.single;
+    final bytes = file?.bytes;
+    if (file == null || bytes == null) return;
+
+    if (bytes.length > _maxLogoBytes) {
+      showError(l10n.liberatoriaLogoTooBig);
+      return;
+    }
+
+    final ext = (file.extension ?? '').toLowerCase();
+    if (!['png', 'jpg', 'jpeg'].contains(ext)) {
+      showError(l10n.liberatoriaLogoInvalid);
+      return;
+    }
+
+    setState(() {
+      logos.add(LiberatoriaLogoItem(
+        bytes: bytes,
+        extension: ext == 'png' ? 'png' : 'jpg',
+      ));
+    });
+  }
+
+  void removeLogo(int index) {
+    setState(() => logos.removeAt(index));
+  }
+
+  void previewLiberatoria() {
+    final sample = {
+      'cognome': 'ROSSI',
+      'nome': 'Mario',
+      'data_nascita': '01/01/2000',
+      'societa': 'ASD Esempio',
+      'nome_gara': descrizioneController.text.trim(),
+      'data_gara': dtGara != null ? formatDate(dtGara!) : '--/--/----',
+      'data': formatDate(DateTime.now()),
+      'tutore': 'Giuseppe Rossi',
+    };
+
+    final text = LiberatoriaPlaceholders.render(
+      testoLiberatoriaController.text,
+      sample,
+    );
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.liberatoriaPreview),
+        content: SizedBox(
+          width: 600,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (logos.isNotEmpty) ...[
+                  Wrap(
+                    spacing: 16,
+                    runSpacing: 8,
+                    children: logos
+                        .map((l) => Image.memory(l.bytes, height: 60))
+                        .toList(),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+                SelectableText(text),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(l10n.commonClose),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> loadCategoryTemplates() async {
@@ -285,6 +473,21 @@ class _CompetitionFormPageState
       }
     }
 
+    if (modalitaLiberatoria != LiberatoriaMode.nessuna) {
+      final testo = testoLiberatoriaController.text.trim();
+
+      if (testo.isEmpty) {
+        showError(l10n.liberatoriaTextRequired);
+        return;
+      }
+
+      final unknown = LiberatoriaPlaceholders.unknownKeys(testo);
+      if (unknown.isNotEmpty) {
+        showError('${l10n.liberatoriaUnknownPlaceholders} ${unknown.join(', ')}');
+        return;
+      }
+    }
+
     // ── NUOVO CONTROLLO: unicità gara aperta ────────────────────
     if (!flGaraChiusa) {
       final hasOpen = await service.hasOpenCompetition(
@@ -321,7 +524,15 @@ class _CompetitionFormPageState
           isTurn: isTurn,
           nrMaxFirstTurn: nrMaxFirstTurn,
           nrMaxSecondTurn: nrMaxSecondTurn,
+          modalitaLiberatoria: modalitaLiberatoria,
         );
+          if (modalitaLiberatoria != LiberatoriaMode.nessuna) {
+            await liberatoriaService.saveTemplateIfChanged(
+            competitionId: widget.competition!.id,
+            testo: testoLiberatoriaController.text,
+            logos: logos,
+            );
+        }
         } else {
           final createdCompetition = await service.createCompetition(
             descrizione: descrizioneController.text.trim(),
@@ -336,6 +547,7 @@ class _CompetitionFormPageState
             nrMaxFirstTurn: nrMaxFirstTurn,
             nrMaxSecondTurn: nrMaxSecondTurn,
             flGaraChiusa: flGaraChiusa,
+            modalitaLiberatoria: modalitaLiberatoria,
           );
 
           if (createCategoriesFromTemplate &&
@@ -343,6 +555,13 @@ class _CompetitionFormPageState
             await categoryService.createCategoriesFromTemplate(
               competitionId: createdCompetition.id,
               templateId: selectedCategoryTemplateId!,
+            );
+          }
+                    if (modalitaLiberatoria != LiberatoriaMode.nessuna) {
+            await liberatoriaService.saveTemplateIfChanged(
+              competitionId: createdCompetition.id,
+              testo: testoLiberatoriaController.text,
+              logos: logos,
             );
           }
         }
@@ -630,6 +849,125 @@ class _CompetitionFormPageState
                   ),
 
                   const SizedBox(height: 32),
+
+                  DropdownButtonFormField<LiberatoriaMode>(
+                    initialValue: modalitaLiberatoria,
+                    isExpanded: true,
+                    decoration: InputDecoration(
+                      labelText: l10n.liberatoriaMode,
+                    ),
+                    items: LiberatoriaMode.values
+                        .map((m) => DropdownMenuItem(
+                              value: m,
+                              child: Text(_liberatoriaModeLabel(m)),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      if (value == null) return;
+                      setState(() => modalitaLiberatoria = value);
+                    },
+                  ),
+
+                  if (modalitaLiberatoria != LiberatoriaMode.nessuna) ...[
+                    const SizedBox(height: 16),
+
+                    Text(
+                      l10n.liberatoriaLogos,
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        for (var i = 0; i < logos.length; i++)
+                          Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey.shade400),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Image.memory(
+                                  logos[i].bytes,
+                                  height: 64,
+                                ),
+                              ),
+                              Positioned(
+                                top: -10,
+                                right: -10,
+                                child: IconButton.filledTonal(
+                                  iconSize: 14,
+                                  visualDensity: VisualDensity.compact,
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () => removeLogo(i),
+                                ),
+                              ),
+                            ],
+                          ),
+                        if (logos.length < _maxLogos)
+                          OutlinedButton.icon(
+                            onPressed: pickLogo,
+                            icon: const Icon(Icons.add_photo_alternate),
+                            label: Text(l10n.liberatoriaAddLogo),
+                          ),
+                      ],
+                    ),
+                   
+                    const SizedBox(height: 16),
+
+                    TextFormField(
+                      controller: testoLiberatoriaController,
+                      onChanged: (_) => setState(() {}),
+                      minLines: 10,
+                      maxLines: 20,
+                      decoration: InputDecoration(
+                        labelText: l10n.liberatoriaText,
+                        alignLabelWithHint: true,
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: LiberatoriaPlaceholders.keys
+                          .map((k) => ActionChip(
+                                label: Text('{{$k}}'),
+                                onPressed: () => insertPlaceholder(k),
+                              ))
+                          .toList(),
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    Row(
+                      children: [
+                        OutlinedButton.icon(
+                          onPressed: importLiberatoriaTxt,
+                          icon: const Icon(Icons.upload_file),
+                          label: Text(l10n.liberatoriaImportTxt),
+                        ),
+                        const SizedBox(width: 12),
+                        OutlinedButton.icon(
+                          onPressed: testoLiberatoriaController.text.trim().isEmpty
+                              ? null
+                              : previewLiberatoria,
+                          icon: const Icon(Icons.visibility),
+                          label: Text(l10n.liberatoriaPreview),
+                        ),
+                      ],
+                    ),
+                  ],
+
+                  const SizedBox(height: 24),
 
                   SwitchListTile(
                     value: flIscrizioniChiuse,

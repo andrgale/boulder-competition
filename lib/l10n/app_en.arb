@@ -2703,5 +2703,121 @@
 "@loginMessageCustom18": { "description": "Codice cliente" },
 
 "loginMessageCustom19": "Activate",
-"@loginMessageCustom19": { "description": "Attiva" }
+"@loginMessageCustom19": { "description": "Attiva" },
+"liberatoriaMode": "Modalità liberatoria",
+"@liberatoriaMode": { "description": "Modalità liberatoria" },
+
+"liberatoriaModeNone": "Nessuna",
+"@liberatoriaModeNone": { "description": "Nessuna" },
+
+"liberatoriaModePaper": "Cartacea (stampa e archivio fisico)",
+"@liberatoriaModePaper": { "description": "Cartacea (stampa e archivio fisico)" },
+
+"liberatoriaModeDigital": "Digitale (firma su tablet)",
+"@liberatoriaModeDigital": { "description": "Digitale (firma su tablet)" },
+
+"liberatoriaText": "Testo della liberatoria",
+"@liberatoriaText": { "description": "Testo della liberatoria" },
+
+"liberatoriaImportTxt": "Importa da .txt",
+"@liberatoriaImportTxt": { "description": "Importa da .txt" },
+
+"liberatoriaPreview": "Anteprima",
+"@liberatoriaPreview": { "description": "Anteprima" },
+
+"liberatoriaTextRequired": "Inserisci il testo della liberatoria",
+"@liberatoriaTextRequired": { "description": "Inserisci il testo della liberatoria" },
+
+"liberatoriaUnknownPlaceholders": "Segnaposto non riconosciuti:",
+"@liberatoriaUnknownPlaceholders": { "description": "Segnaposto non riconosciuti:" },
+
+"commonClose": "Close",
+"@commonClose": { "description": "Close" },
+"liberatoriaLogos": "Logos (max 4, PNG or JPG, 1 MB each)",
+"@liberatoriaLogos": { "description": "Logos (max 4, PNG or JPG, 1 MB each)" },
+
+"liberatoriaAddLogo": "Add logo",
+"@liberatoriaAddLogo": { "description": "Add logo" },
+
+"liberatoriaLogoMax": "You can add up to 4 logos",
+"@liberatoriaLogoMax": { "description": "You can add up to 4 logos" },
+
+"liberatoriaLogoTooBig": "The file exceeds 1 MB",
+"@liberatoriaLogoTooBig": { "description": "The file exceeds 1 MB" },
+
+"liberatoriaLogoInvalid": "Invalid format: use PNG or JPG",
+"@liberatoriaLogoInvalid": { "description": "Invalid format: use PNG or JPG" },
+"liberatoriaLegend": "Waiver",
+"@liberatoriaLegend": { "description": "Waiver" },
+
+"liberatoriaTooltipNone": "No waiver required for this competition",
+"@liberatoriaTooltipNone": { "description": "No waiver required for this competition" },
+
+"liberatoriaTooltipNoTemplate": "Waiver template missing",
+"@liberatoriaTooltipNoTemplate": { "description": "Waiver template missing" },
+
+"liberatoriaTooltipNoPermission": "You don't have permission to manage waivers",
+"@liberatoriaTooltipNoPermission": { "description": "You don't have permission to manage waivers" },
+
+"liberatoriaTooltipToDo": "Waiver to be signed",
+"@liberatoriaTooltipToDo": { "description": "Waiver to be signed" },
+
+"liberatoriaTooltipPrinted": "Waiver printed, awaiting delivery",
+"@liberatoriaTooltipPrinted": { "description": "Waiver printed, awaiting delivery" },
+
+"liberatoriaTooltipDone": "Waiver received",
+"@liberatoriaTooltipDone": { "description": "Waiver received" },
+
+"liberatoriaPaperHint": "Print the waiver, have the athlete sign it, and mark it as delivered when received.",
+"@liberatoriaPaperHint": { "description": "Print the waiver, have the athlete sign it, and mark it as delivered when received." },
+
+"liberatoriaPaperDelivered": "Paper waiver delivered.",
+"@liberatoriaPaperDelivered": { "description": "Paper waiver delivered." },
+
+"liberatoriaPrint": "Print",
+"@liberatoriaPrint": { "description": "Print" },
+
+"liberatoriaMarkDelivered": "Mark as delivered",
+"@liberatoriaMarkDelivered": { "description": "Mark as delivered" },
+
+"liberatoriaUndoDelivered": "Undo delivery",
+"@liberatoriaUndoDelivered": { "description": "Undo delivery" },
+
+"liberatoriaSignTitle": "Waiver",
+"@liberatoriaSignTitle": { "description": "Waiver" },
+
+"liberatoriaSignHere": "Sign below",
+"@liberatoriaSignHere": { "description": "Sign below" },
+
+"liberatoriaClearSignature": "Clear signature",
+"@liberatoriaClearSignature": { "description": "Clear signature" },
+
+"liberatoriaConfirmSign": "Confirm and save",
+"@liberatoriaConfirmSign": { "description": "Confirm and save" },
+
+"liberatoriaTutoreLabel": "Parent/guardian's full name",
+"@liberatoriaTutoreLabel": { "description": "Parent/guardian's full name" },
+
+"liberatoriaTutoreRequired": "Minor athlete: enter the parent/guardian's name",
+"@liberatoriaTutoreRequired": { "description": "Minor athlete: enter the parent/guardian's name" },
+
+"liberatoriaSignatureRequired": "Signature is required",
+"@liberatoriaSignatureRequired": { "description": "Signature is required" },
+
+"liberatoriaSignerAthlete": "Athlete's signature",
+"@liberatoriaSignerAthlete": { "description": "Athlete's signature" },
+
+"liberatoriaSignerTutore": "Parent/guardian's signature",
+"@liberatoriaSignerTutore": { "description": "Parent/guardian's signature" },
+
+"liberatoriaSigned": "Waiver signed and archived",
+"@liberatoriaSigned": { "description": "Waiver signed and archived" },
+
+"liberatoriaError": "Waiver error",
+"@liberatoriaError": { "description": "Waiver error" },
+
+"liberatoriaBirthDateMissing": "Date of birth missing: complete the registration before signing the waiver",
+"@liberatoriaBirthDateMissing": { "description": "Date of birth missing: complete the registration before signing the waiver" },
+"liberatoriaStats": "Waivers",
+"@liberatoriaStats": { "description": "Waivers" }
 }

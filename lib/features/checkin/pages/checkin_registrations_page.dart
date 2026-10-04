@@ -6,6 +6,13 @@ import '../data/checkin_registration_service.dart';
 import '../models/checkin_registration_model.dart';
 import 'checkin_pdf_export.dart';
 import 'package:boulder_competition/l10n/app_localizations.dart';
+import 'dart:typed_data';
+import '../../../core/services/permission_service.dart';
+import '../../liberatoria/data/liberatoria_service.dart';
+import '../../liberatoria/models/liberatoria_atleta_model.dart';
+import '../../liberatoria/models/liberatoria_mode.dart';
+import '../../liberatoria/models/liberatoria_template_model.dart';
+import '../../liberatoria/utils/liberatoria_checkin_actions.dart';
 
 class CheckinRegistrationsPage extends StatefulWidget {
   final String competitionId;
@@ -17,6 +24,9 @@ class CheckinRegistrationsPage extends StatefulWidget {
   final bool flGestionePagamenti;
   final bool flGestioneOmaggi;
 
+  final LiberatoriaMode modalitaLiberatoria;
+  final DateTime? dtGara;
+
   const CheckinRegistrationsPage({
     super.key,
     required this.competitionId,
@@ -25,6 +35,8 @@ class CheckinRegistrationsPage extends StatefulWidget {
     this.flGestionePresenze = false,
     this.flGestionePagamenti = false,
     this.flGestioneOmaggi = false,
+    this.modalitaLiberatoria = LiberatoriaMode.nessuna,
+    this.dtGara,
   });
 
   @override
@@ -49,14 +61,29 @@ class _CheckinRegistrationsPageState extends State<CheckinRegistrationsPage> {
   int get totalePresenti => registrations.where((r) => r.flPresente).length;
   int get totalePagati => registrations.where((r) => r.flPagato).length;
   int get totaleOmaggi => registrations.where((r) => r.flOmaggio).length;
+    /// Liberatorie acquisite (consegnata/firmata) per gli iscritti di questa gara
+  int get totaleLiberatorie {
+    final ids = registrations.map((r) => r.id).toSet();
+    return liberatorie.values
+        .where((l) => l.isDone && ids.contains(l.registrationId))
+        .length;
+  }
 
   /// Importo incassato = n° pagati × quota iscrizione
   double get importoIncassato => totalePagati * widget.quotaIscrizione;
+
+  final liberatoriaService = LiberatoriaService();
+  StreamSubscription<List<LiberatoriaAtletaModel>>? _liberatorieSub;
+  Map<String, LiberatoriaAtletaModel> liberatorie = {}; // registrationId → record
+  LiberatoriaTemplateModel? _template;
+  List<Uint8List> _logos = [];
+  bool _canLiberatoria = false;
 
   @override
   void initState() {
     super.initState();
     loadRealtime();
+    _initLiberatoria();
   }
 
   @override
@@ -64,6 +91,7 @@ class _CheckinRegistrationsPageState extends State<CheckinRegistrationsPage> {
     _realtimeSubscription?.cancel();
     searchController.dispose();
     _horizontalController.dispose();
+    _liberatorieSub?.cancel();
     super.dispose();
   }
 
@@ -99,6 +127,78 @@ class _CheckinRegistrationsPageState extends State<CheckinRegistrationsPage> {
           r.email.toLowerCase().contains(q);
     }).toList();
   }
+
+  bool get liberatoriaEnabled =>
+      widget.modalitaLiberatoria != LiberatoriaMode.nessuna &&
+      _canLiberatoria &&
+      _template != null;
+
+  Future<void> _initLiberatoria() async {
+    if (widget.modalitaLiberatoria == LiberatoriaMode.nessuna) return;
+
+    try {
+      final allowed =
+          await PermissionService.hasPermission('checkin.liberatoria');
+      final t = await liberatoriaService.getLatestTemplate(widget.competitionId);
+
+      final logos = <Uint8List>[];
+      if (t != null) {
+        for (final p in t.logoPaths) {
+          logos.add(await liberatoriaService.downloadLogo(p));
+        }
+      }
+
+      if (!mounted) return;
+      setState(() {
+        _canLiberatoria = allowed;
+        _template = t;
+        _logos = logos;
+      });
+
+      if (allowed) {
+        _liberatorieSub = liberatoriaService
+            .watchByCompetition(widget.competitionId)
+            .listen((rows) {
+          if (!mounted) return;
+          setState(() {
+            liberatorie = {for (final r in rows) r.registrationId: r};
+          });
+        });
+      }
+    } catch (e) {
+      debugPrint('Init liberatoria: $e');
+    }
+  }
+
+  Future<void> _onLiberatoria(CheckinRegistrationModel reg) async {
+    final t = _template;
+    if (t == null) return;
+
+    await LiberatoriaCheckinActions.handle(
+      context: context,
+      service: liberatoriaService,
+      reg: reg,
+      mode: widget.modalitaLiberatoria,
+      competitionId: widget.competitionId,
+      competitionName: widget.competitionName,
+      dtGara: widget.dtGara ?? DateTime.now(),
+      template: t,
+      logos: _logos,
+      existing: liberatorie[reg.id],
+    );
+  }
+
+  String _liberatoriaTooltip(LiberatoriaAtletaModel? lib) {
+    if (widget.modalitaLiberatoria == LiberatoriaMode.nessuna) {
+      return l10n.liberatoriaTooltipNone;
+    }
+    if (_template == null) return l10n.liberatoriaTooltipNoTemplate;
+    if (!_canLiberatoria) return l10n.liberatoriaTooltipNoPermission;
+    if (lib == null) return l10n.liberatoriaTooltipToDo;
+    if (lib.stato == 'stampata') return l10n.liberatoriaTooltipPrinted;
+    return l10n.liberatoriaTooltipDone;
+  }
+
 
   // =========================================================
   // TOGGLE FLAG — ottimistico
@@ -155,7 +255,7 @@ class _CheckinRegistrationsPageState extends State<CheckinRegistrationsPage> {
     try {
       await CheckinPdfExport.exportAndShare(
         competitionName: widget.competitionName,
-        dtGara: DateTime.now(), // sostituisci con c.dtGara se disponibile
+        dtGara: widget.dtGara ?? DateTime.now(),
         registrations: registrations,
         quotaIscrizione: widget.quotaIscrizione,
         showPresente: widget.flGestionePresenze,
@@ -214,6 +314,8 @@ class _CheckinRegistrationsPageState extends State<CheckinRegistrationsPage> {
                   pagati: totalePagati,
                   omaggi: totaleOmaggi,
                   importoIncassato: importoIncassato,
+                  showLiberatorie: liberatoriaEnabled,
+                  liberatorie: totaleLiberatorie,
                   l10n: l10n,
                 ),
 
@@ -247,8 +349,8 @@ class _CheckinRegistrationsPageState extends State<CheckinRegistrationsPage> {
                   showPresente: widget.flGestionePresenze,
                   showPagato: widget.flGestionePagamenti,
                   showOmaggio: widget.flGestioneOmaggi,
-                ),
-                // ── lista ─────────────────────────────────
+                  showLiberatoria: widget.modalitaLiberatoria != LiberatoriaMode.nessuna,
+                ),                // ── lista ─────────────────────────────────
                 Expanded(
                   child: filtered.isEmpty
                       ? Center(
@@ -283,6 +385,14 @@ class _CheckinRegistrationsPageState extends State<CheckinRegistrationsPage> {
                                       enablePresente: widget.flGestionePresenze,
                                       enablePagato: widget.flGestionePagamenti,
                                       enableOmaggio: widget.flGestioneOmaggi,
+                                      showLiberatoria:
+                                      widget.modalitaLiberatoria != LiberatoriaMode.nessuna,
+                                      liberatoria: liberatorie[filtered[i].id],
+                                      enableLiberatoria: liberatoriaEnabled,
+                                      liberatoriaTooltip: _liberatoriaTooltip(
+                                          liberatorie[filtered[i].id]),
+                                      onLiberatoria: () =>
+                                          _onLiberatoria(filtered[i]),
                                       l10n: l10n,
                                     ),
                                   ),
@@ -308,6 +418,8 @@ class _StatsBar extends StatelessWidget {
   final int pagati;
   final int omaggi;
   final double importoIncassato;
+  final bool showLiberatorie;
+  final int liberatorie;
   final AppLocalizations l10n;
 
   const _StatsBar({
@@ -316,12 +428,13 @@ class _StatsBar extends StatelessWidget {
     required this.pagati,
     required this.omaggi,
     required this.importoIncassato,
+    required this.showLiberatorie,
+    required this.liberatorie,
     required this.l10n,
   });
 
   /// Formatta il doppio come valuta italiana: € 1.250,00
   String _formatEuro(double value) {
-    // Separiamo interi e decimali manualmente per non richiedere intl.
     final intPart = value.truncate();
     final decPart = ((value - intPart) * 100).round().abs();
     final intStr = intPart.toString().replaceAllMapped(
@@ -335,11 +448,11 @@ class _StatsBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.all(12),
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+      margin: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
       decoration: BoxDecoration(
         color: Colors.blue.shade50,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.blue.shade100),
       ),
       child: Row(
@@ -365,7 +478,6 @@ class _StatsBar extends StatelessWidget {
             ),
           ),
           _VerticalDivider(),
-          // ── Pagati + importo incassato ───────────────────
           Expanded(
             child: _StatItem(
               label: l10n.checkinMessageCustom6, // 'Pagati'
@@ -386,11 +498,25 @@ class _StatsBar extends StatelessWidget {
               icon: Icons.card_giftcard,
             ),
           ),
+          if (showLiberatorie) ...[
+            _VerticalDivider(),
+            Expanded(
+              child: _StatItem(
+                label: l10n.liberatoriaStats, // 'Liberatorie'
+                value: liberatorie,
+                color: Colors.indigo.shade700,
+                icon: Icons.assignment_turned_in,
+                suffix: totale > 0
+                    ? '${(liberatorie / totale * 100).toStringAsFixed(0)}%'
+                    : '0%',
+              ),
+            ),
+          ],
         ],
       ),
     );
   }
-}
+  }
 
 class _StatItem extends StatelessWidget {
   final String label;
@@ -412,12 +538,12 @@ class _StatItem extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(height: 4),
+        Icon(icon, color: color, size: 16),
+        const SizedBox(height: 2),
         Text(
           '$value',
           style: TextStyle(
-            fontSize: 22,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
             color: color,
           ),
@@ -426,32 +552,30 @@ class _StatItem extends StatelessWidget {
           Text(
             suffix!,
             style: TextStyle(
-              fontSize: 11,
+              fontSize: 10,
               fontWeight: FontWeight.w600,
               color: color.withValues(alpha: 0.8),
             ),
           ),
         Text(
           label,
-          style: TextStyle(fontSize: 12, color: color.withValues(alpha: 0.8)),
+          style: TextStyle(fontSize: 11, color: color.withValues(alpha: 0.8)),
         ),
       ],
     );
   }
 }
-
 class _VerticalDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 1,
-      height: 48,
+      height: 36,
       color: Colors.blue.shade200,
       margin: const EdgeInsets.symmetric(horizontal: 4),
     );
   }
 }
-
 // ──────────────────────────────────────────────────────────────
 // LEGENDA — mostra solo le icone abilitate dalla competition
 // ──────────────────────────────────────────────────────────────
@@ -460,17 +584,19 @@ class _CheckinLegend extends StatelessWidget {
   final bool showPresente;
   final bool showPagato;
   final bool showOmaggio;
+  final bool showLiberatoria;
 
   const _CheckinLegend({
     required this.showPresente,
     required this.showPagato,
     required this.showOmaggio,
+    required this.showLiberatoria,
   });
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final hasAny = showPresente || showPagato || showOmaggio;
+    final hasAny = showPresente || showPagato || showOmaggio || showLiberatoria;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
@@ -505,6 +631,13 @@ class _CheckinLegend extends StatelessWidget {
               color: Colors.orange.shade600,
               label: l10n.registrationMessageCustom39,
             ), // 'Omaggio'
+          ],
+          if (showLiberatoria) ...[
+            const SizedBox(width: 8),
+            _LegendDot(
+              color: Colors.indigo.shade600,
+              label: l10n.liberatoriaLegend,
+            ), // 'Liberatoria'
           ],
         ],
       ),
@@ -552,6 +685,11 @@ class _RegistrationTile extends StatelessWidget {
   final bool enablePagato;
   final bool enableOmaggio;
   final AppLocalizations l10n;
+  final LiberatoriaAtletaModel? liberatoria;
+  final bool enableLiberatoria;
+  final String liberatoriaTooltip;
+  final VoidCallback onLiberatoria;
+  final bool showLiberatoria;
 
   const _RegistrationTile({
     required this.registration,
@@ -560,6 +698,11 @@ class _RegistrationTile extends StatelessWidget {
     required this.enablePagato,
     required this.enableOmaggio,
     required this.l10n,
+    required this.liberatoria,
+    required this.enableLiberatoria,
+    required this.liberatoriaTooltip,
+    required this.onLiberatoria,
+    required this.showLiberatoria,
   });
 
   @override
@@ -681,6 +824,20 @@ class _RegistrationTile extends StatelessWidget {
                   ? () => onToggle(reg: r, flag: 'omaggio')
                   : null,
             ),
+
+            if (showLiberatoria) ...[
+              const SizedBox(width: 4),
+              _CheckinToggle(
+                value: liberatoria?.isDone ?? false,
+                enabled: enableLiberatoria,
+                activeIcon: Icons.assignment_turned_in,
+                inactiveIcon: Icons.assignment_outlined,
+                activeColor: Colors.indigo,
+                idleColor: Colors.indigo.shade300,   
+                tooltip: liberatoriaTooltip,
+                onTap: enableLiberatoria ? onLiberatoria : null,
+              ),
+            ] ,
           ],
         ),
       ),
@@ -694,12 +851,13 @@ class _RegistrationTile extends StatelessWidget {
 
 class _CheckinToggle extends StatelessWidget {
   final bool value;
-  final bool enabled; // ← nuovo: false = sola lettura
+  final bool enabled; 
   final IconData activeIcon;
   final IconData inactiveIcon;
   final Color activeColor;
   final String tooltip;
-  final VoidCallback? onTap; // ← nullable: null se disabilitato
+  final VoidCallback? onTap;
+  final Color? idleColor; 
 
   const _CheckinToggle({
     required this.value,
@@ -709,6 +867,7 @@ class _CheckinToggle extends StatelessWidget {
     required this.activeColor,
     required this.tooltip,
     required this.onTap,
+    this.idleColor, 
   });
 
   @override
@@ -719,9 +878,10 @@ class _CheckinToggle extends StatelessWidget {
         ? (value ? activeColor.withValues(alpha: 0.12) : Colors.grey.shade50)
         : Colors.grey.shade100;
     final effectiveBorder = enabled
-        ? (value ? activeColor.withValues(alpha: 0.5) : Colors.grey.shade300)
+        ? (value
+            ? activeColor.withValues(alpha: 0.5)
+            : (idleColor?.withValues(alpha: 0.6) ?? Colors.grey.shade300))
         : Colors.grey.shade200;
-
     return Tooltip(
       message: tooltip,
       child: InkWell(
@@ -738,7 +898,11 @@ class _CheckinToggle extends StatelessWidget {
           child: Icon(
             value ? activeIcon : inactiveIcon,
             size: 22,
-            color: value && enabled ? effectiveColor : Colors.grey.shade400,
+            color: value && enabled
+                ? effectiveColor
+                : (enabled && idleColor != null
+                    ? idleColor
+                    : Colors.grey.shade400),
           ),
         ),
       ),

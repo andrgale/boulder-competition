@@ -76,6 +76,8 @@ class _CheckinCompetitionsPageState extends State<CheckinCompetitionsPage> {
           flGestionePresenze: c.flGestionePresenze,
           flGestionePagamenti: c.flGestionePagamenti,
           flGestioneOmaggi: c.flGestioneOmaggi,
+          modalitaLiberatoria: c.modalitaLiberatoria,
+          dtGara: c.dtGara,
         ),
       ),
     );

@@ -2690,5 +2690,124 @@
 "@loginMessageCustom18": { "description": "Codice cliente" },
 
 "loginMessageCustom19": "Attiva",
-"@loginMessageCustom19": { "description": "Attiva" }
+"@loginMessageCustom19": { "description": "Attiva" },
+
+"liberatoriaMode": "Modalità liberatoria",
+"@liberatoriaMode": { "description": "Modalità liberatoria" },
+
+"liberatoriaModeNone": "Nessuna",
+"@liberatoriaModeNone": { "description": "Nessuna" },
+
+"liberatoriaModePaper": "Cartacea (stampa e archivio fisico)",
+"@liberatoriaModePaper": { "description": "Cartacea (stampa e archivio fisico)" },
+
+"liberatoriaModeDigital": "Digitale (firma su tablet)",
+"@liberatoriaModeDigital": { "description": "Digitale (firma su tablet)" },
+
+"liberatoriaText": "Testo della liberatoria",
+"@liberatoriaText": { "description": "Testo della liberatoria" },
+
+"liberatoriaImportTxt": "Importa da .txt",
+"@liberatoriaImportTxt": { "description": "Importa da .txt" },
+
+"liberatoriaPreview": "Anteprima",
+"@liberatoriaPreview": { "description": "Anteprima" },
+
+"liberatoriaTextRequired": "Inserisci il testo della liberatoria",
+"@liberatoriaTextRequired": { "description": "Inserisci il testo della liberatoria" },
+
+"liberatoriaUnknownPlaceholders": "Segnaposto non riconosciuti:",
+"@liberatoriaUnknownPlaceholders": { "description": "Segnaposto non riconosciuti:" },
+
+"commonClose": "Chiudi",
+"@commonClose": { "description": "Chiudi" },
+"liberatoriaLogos": "Loghi (max 4, PNG o JPG, 1 MB ciascuno)",
+"@liberatoriaLogos": { "description": "Loghi (max 4, PNG o JPG, 1 MB ciascuno)" },
+
+"liberatoriaAddLogo": "Aggiungi logo",
+"@liberatoriaAddLogo": { "description": "Aggiungi logo" },
+
+"liberatoriaLogoMax": "Puoi aggiungere al massimo 4 loghi",
+"@liberatoriaLogoMax": { "description": "Puoi aggiungere al massimo 4 loghi" },
+
+"liberatoriaLogoTooBig": "Il file supera 1 MB",
+"@liberatoriaLogoTooBig": { "description": "Il file supera 1 MB" },
+
+"liberatoriaLogoInvalid": "Formato non valido: usa PNG o JPG",
+"@liberatoriaLogoInvalid": { "description": "Formato non valido: usa PNG o JPG" },
+"liberatoriaLegend": "Liberatoria",
+"@liberatoriaLegend": { "description": "Liberatoria" },
+
+"liberatoriaTooltipNone": "Liberatoria non prevista per questa gara",
+"@liberatoriaTooltipNone": { "description": "Liberatoria non prevista per questa gara" },
+
+"liberatoriaTooltipNoTemplate": "Template liberatoria mancante",
+"@liberatoriaTooltipNoTemplate": { "description": "Template liberatoria mancante" },
+
+"liberatoriaTooltipNoPermission": "Non hai il permesso di gestire le liberatorie",
+"@liberatoriaTooltipNoPermission": { "description": "Non hai il permesso di gestire le liberatorie" },
+
+"liberatoriaTooltipToDo": "Liberatoria da firmare",
+"@liberatoriaTooltipToDo": { "description": "Liberatoria da firmare" },
+
+"liberatoriaTooltipPrinted": "Liberatoria stampata, in attesa di consegna",
+"@liberatoriaTooltipPrinted": { "description": "Liberatoria stampata, in attesa di consegna" },
+
+"liberatoriaTooltipDone": "Liberatoria acquisita",
+"@liberatoriaTooltipDone": { "description": "Liberatoria acquisita" },
+
+"liberatoriaPaperHint": "Stampa la liberatoria, fai firmare l'atleta e segnala quando viene consegnata.",
+"@liberatoriaPaperHint": { "description": "Stampa la liberatoria, fai firmare l'atleta e segnala quando viene consegnata." },
+
+"liberatoriaPaperDelivered": "Liberatoria cartacea consegnata.",
+"@liberatoriaPaperDelivered": { "description": "Liberatoria cartacea consegnata." },
+
+"liberatoriaPrint": "Stampa",
+"@liberatoriaPrint": { "description": "Stampa" },
+
+"liberatoriaMarkDelivered": "Segna come consegnata",
+"@liberatoriaMarkDelivered": { "description": "Segna come consegnata" },
+
+"liberatoriaUndoDelivered": "Annulla consegna",
+"@liberatoriaUndoDelivered": { "description": "Annulla consegna" },
+
+"liberatoriaSignTitle": "Liberatoria",
+"@liberatoriaSignTitle": { "description": "Liberatoria" },
+
+"liberatoriaSignHere": "Firma qui sotto",
+"@liberatoriaSignHere": { "description": "Firma qui sotto" },
+
+"liberatoriaClearSignature": "Cancella firma",
+"@liberatoriaClearSignature": { "description": "Cancella firma" },
+
+"liberatoriaConfirmSign": "Conferma e salva",
+"@liberatoriaConfirmSign": { "description": "Conferma e salva" },
+
+"liberatoriaTutoreLabel": "Nome e cognome del genitore/tutore",
+"@liberatoriaTutoreLabel": { "description": "Nome e cognome del genitore/tutore" },
+
+"liberatoriaTutoreRequired": "Atleta minorenne: inserisci il nome del genitore/tutore",
+"@liberatoriaTutoreRequired": { "description": "Atleta minorenne: inserisci il nome del genitore/tutore" },
+
+"liberatoriaSignatureRequired": "La firma è obbligatoria",
+"@liberatoriaSignatureRequired": { "description": "La firma è obbligatoria" },
+
+"liberatoriaSignerAthlete": "Firma dell'atleta",
+"@liberatoriaSignerAthlete": { "description": "Firma dell'atleta" },
+
+"liberatoriaSignerTutore": "Firma del genitore/tutore",
+"@liberatoriaSignerTutore": { "description": "Firma del genitore/tutore" },
+
+"liberatoriaSigned": "Liberatoria firmata e archiviata",
+"@liberatoriaSigned": { "description": "Liberatoria firmata e archiviata" },
+
+"liberatoriaError": "Errore liberatoria",
+"@liberatoriaError": { "description": "Errore liberatoria" },
+
+"liberatoriaBirthDateMissing": "Data di nascita mancante: completa l'iscrizione prima di far firmare la liberatoria",
+"@liberatoriaBirthDateMissing": { "description": "Data di nascita mancante: completa l'iscrizione prima di far firmare la liberatoria"},
+
+"liberatoriaStats": "Liberatorie",
+"@liberatoriaStats": { "description": "Liberatorie" }
+
 }

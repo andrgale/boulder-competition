@@ -2672,4 +2672,130 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get loginMessageCustom19 => 'Attiva';
+
+  @override
+  String get liberatoriaMode => 'Modalità liberatoria';
+
+  @override
+  String get liberatoriaModeNone => 'Nessuna';
+
+  @override
+  String get liberatoriaModePaper => 'Cartacea (stampa e archivio fisico)';
+
+  @override
+  String get liberatoriaModeDigital => 'Digitale (firma su tablet)';
+
+  @override
+  String get liberatoriaText => 'Testo della liberatoria';
+
+  @override
+  String get liberatoriaImportTxt => 'Importa da .txt';
+
+  @override
+  String get liberatoriaPreview => 'Anteprima';
+
+  @override
+  String get liberatoriaTextRequired => 'Inserisci il testo della liberatoria';
+
+  @override
+  String get liberatoriaUnknownPlaceholders => 'Segnaposto non riconosciuti:';
+
+  @override
+  String get commonClose => 'Chiudi';
+
+  @override
+  String get liberatoriaLogos => 'Loghi (max 4, PNG o JPG, 1 MB ciascuno)';
+
+  @override
+  String get liberatoriaAddLogo => 'Aggiungi logo';
+
+  @override
+  String get liberatoriaLogoMax => 'Puoi aggiungere al massimo 4 loghi';
+
+  @override
+  String get liberatoriaLogoTooBig => 'Il file supera 1 MB';
+
+  @override
+  String get liberatoriaLogoInvalid => 'Formato non valido: usa PNG o JPG';
+
+  @override
+  String get liberatoriaLegend => 'Liberatoria';
+
+  @override
+  String get liberatoriaTooltipNone =>
+      'Liberatoria non prevista per questa gara';
+
+  @override
+  String get liberatoriaTooltipNoTemplate => 'Template liberatoria mancante';
+
+  @override
+  String get liberatoriaTooltipNoPermission =>
+      'Non hai il permesso di gestire le liberatorie';
+
+  @override
+  String get liberatoriaTooltipToDo => 'Liberatoria da firmare';
+
+  @override
+  String get liberatoriaTooltipPrinted =>
+      'Liberatoria stampata, in attesa di consegna';
+
+  @override
+  String get liberatoriaTooltipDone => 'Liberatoria acquisita';
+
+  @override
+  String get liberatoriaPaperHint =>
+      'Stampa la liberatoria, fai firmare l\'atleta e segnala quando viene consegnata.';
+
+  @override
+  String get liberatoriaPaperDelivered => 'Liberatoria cartacea consegnata.';
+
+  @override
+  String get liberatoriaPrint => 'Stampa';
+
+  @override
+  String get liberatoriaMarkDelivered => 'Segna come consegnata';
+
+  @override
+  String get liberatoriaUndoDelivered => 'Annulla consegna';
+
+  @override
+  String get liberatoriaSignTitle => 'Liberatoria';
+
+  @override
+  String get liberatoriaSignHere => 'Firma qui sotto';
+
+  @override
+  String get liberatoriaClearSignature => 'Cancella firma';
+
+  @override
+  String get liberatoriaConfirmSign => 'Conferma e salva';
+
+  @override
+  String get liberatoriaTutoreLabel => 'Nome e cognome del genitore/tutore';
+
+  @override
+  String get liberatoriaTutoreRequired =>
+      'Atleta minorenne: inserisci il nome del genitore/tutore';
+
+  @override
+  String get liberatoriaSignatureRequired => 'La firma è obbligatoria';
+
+  @override
+  String get liberatoriaSignerAthlete => 'Firma dell\'atleta';
+
+  @override
+  String get liberatoriaSignerTutore => 'Firma del genitore/tutore';
+
+  @override
+  String get liberatoriaSigned => 'Liberatoria firmata e archiviata';
+
+  @override
+  String get liberatoriaError => 'Errore liberatoria';
+
+  @override
+  String get liberatoriaBirthDateMissing =>
+      'Data di nascita mancante: completa l\'iscrizione prima di far firmare la liberatoria';
+
+  @override
+  String get liberatoriaStats => 'Liberatorie';
 }
