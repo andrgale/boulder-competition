@@ -2819,5 +2819,17 @@
 "liberatoriaBirthDateMissing": "Date of birth missing: complete the registration before signing the waiver",
 "@liberatoriaBirthDateMissing": { "description": "Date of birth missing: complete the registration before signing the waiver" },
 "liberatoriaStats": "Waivers",
-"@liberatoriaStats": { "description": "Waivers" }
+"@liberatoriaStats": { "description": "Waivers" },
+"boulderMessageCustom40": "Maximum number of boulders reached ({max})",
+"@boulderMessageCustom40": {
+  "placeholders": { "max": { "type": "String" } }
+},
+"boulderMessageCustom41": "The limit of {max} boulders has been exceeded: {esistenti} already exist, you can create {disponibili} more.",
+"@boulderMessageCustom41": {
+  "placeholders": {
+    "max": { "type": "String" },
+    "esistenti": { "type": "String" },
+    "disponibili": { "type": "String" }
+  }
+}
 }

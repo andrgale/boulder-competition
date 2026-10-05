@@ -2798,4 +2798,18 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get liberatoriaStats => 'Liberatorie';
+
+  @override
+  String boulderMessageCustom40(String max) {
+    return 'Numero massimo di boulder raggiunto ($max)';
+  }
+
+  @override
+  String boulderMessageCustom41(
+    String max,
+    String esistenti,
+    String disponibili,
+  ) {
+    return 'Limite di $max boulder superato: ne esistono già $esistenti, puoi crearne ancora $disponibili.';
+  }
 }

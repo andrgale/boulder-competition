@@ -12,11 +12,13 @@ import 'package:boulder_competition/l10n/app_localizations.dart';
 class BouldersPage extends StatefulWidget {
   final String competitionId;
   final String competitionName;
+  final int nrBoulder;
 
   const BouldersPage({
     super.key,
     required this.competitionId,
     required this.competitionName,
+    this.nrBoulder = 0,
   });
 
   @override
@@ -35,6 +37,14 @@ class _BouldersPageState extends State<BouldersPage> {
 
   bool loading = true;
   AppLocalizations get l10n => AppLocalizations.of(context)!;
+  // nrBoulder <= 0 = limite non configurato → nessun vincolo
+  // bool get canCreateBoulder {
+  //   if (widget.nrBoulder <= 0) return true;
+
+  //   final nonFinali = boulders.where((b) => !b.isFinale).length;
+  //   return nonFinali < widget.nrBoulder;
+  // }
+  bool get canCreateBoulder => true;
 
   @override
   void initState() {
@@ -197,16 +207,20 @@ class _BouldersPageState extends State<BouldersPage> {
   // =====================================================
 
   Future<void> openCreate() async {
+    if (!canCreateBoulder) return; // guardia di sicurezza
+
     final res = await context.push(
       '/boulders/new',
-      extra: widget.competitionId,
+      extra: {
+        'competitionId': widget.competitionId,
+        'nrBoulder': widget.nrBoulder,
+      },
     );
 
     if (res == true) {
       await refreshData();
     }
   }
-
   // =====================================================
   // NAV EDIT
   // =====================================================
@@ -241,13 +255,22 @@ class _BouldersPageState extends State<BouldersPage> {
           ), // 'Boulders - ${widget.competitionName}'
         ),
         actions: [
-          IconButton(icon: const Icon(Icons.add), onPressed: openCreate),
+          IconButton(
+            tooltip: canCreateBoulder
+                ? null
+                : l10n.boulderMessageCustom40(widget.nrBoulder.toString()),
+            icon: const Icon(Icons.add),
+            onPressed: canCreateBoulder ? openCreate : null,
+          ),
         ],
       ),
 
       floatingActionButton: isMobile
           ? FloatingActionButton(
-              onPressed: openCreate,
+              onPressed: canCreateBoulder ? openCreate : null,
+              backgroundColor: canCreateBoulder
+                  ? null
+                  : Theme.of(context).disabledColor,
               child: const Icon(Icons.add),
             )
           : null,

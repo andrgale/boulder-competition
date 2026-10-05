@@ -2808,6 +2808,19 @@
 "@liberatoriaBirthDateMissing": { "description": "Data di nascita mancante: completa l'iscrizione prima di far firmare la liberatoria"},
 
 "liberatoriaStats": "Liberatorie",
-"@liberatoriaStats": { "description": "Liberatorie" }
+"@liberatoriaStats": { "description": "Liberatorie" },
+
+"boulderMessageCustom40": "Numero massimo di boulder raggiunto ({max})",
+"@boulderMessageCustom40": {
+  "placeholders": { "max": { "type": "String" } }
+},
+"boulderMessageCustom41": "Limite di {max} boulder superato: ne esistono già {esistenti}, puoi crearne ancora {disponibili}.",
+"@boulderMessageCustom41": {
+  "placeholders": {
+    "max": { "type": "String" },
+    "esistenti": { "type": "String" },
+    "disponibili": { "type": "String" }
+  }
+}
 
 }

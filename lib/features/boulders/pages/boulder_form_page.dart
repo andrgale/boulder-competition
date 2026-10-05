@@ -8,11 +8,13 @@ import 'package:boulder_competition/l10n/app_localizations.dart';
 class BoulderFormPage extends StatefulWidget {
   final String competitionId;
   final BoulderModel? boulder;
+  final int nrBoulder;
 
   const BoulderFormPage({
     super.key,
     required this.competitionId,
     this.boulder,
+    this.nrBoulder = 0,
   });
 
   @override
@@ -132,27 +134,42 @@ class _BoulderFormPageState
           isfinale: isFinale,
         );
       } else {
-        final totale =
-            int.parse(
-          boulderDaCreareCtrl.text,
-        );
+        final totale = int.parse(boulderDaCreareCtrl.text);
 
-        for (int i = 0;
-            i < totale;
-            i++) {
+        // ── controllo limite: vale solo per i boulder NON finali ──
+        if (widget.nrBoulder > 0 && !isFinale) {
+          final tutti = await service.getBoulders(widget.competitionId);
+
+          final esistenti = tutti.where((b) => !b.isFinale).length;
+
+          if (esistenti + totale > widget.nrBoulder) {
+            if (!mounted) return;
+
+            final disponibili =
+                (widget.nrBoulder - esistenti).clamp(0, widget.nrBoulder);
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  l10n.boulderMessageCustom41(
+                    widget.nrBoulder.toString(),
+                    esistenti.toString(),
+                    disponibili.toString(),
+                  ),
+                ),
+              ),
+            );
+            return;
+          }
+        }
+
+        for (int i = 0; i < totale; i++) {
           await service.createBoulder(
-            competitionId:
-                widget.competitionId,
-
+            competitionId: widget.competitionId,
             numero: numero + i,
-
-            difficolta:
-                difficolta.toInt(),
-
+            difficolta: difficolta.toInt(),
             colore: colore,
-
             valoreTeorico: valore,
-
             isfinale: isFinale,
           );
         }

@@ -5129,6 +5129,22 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Waivers'**
   String get liberatoriaStats;
+
+  /// No description provided for @boulderMessageCustom40.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum number of boulders reached ({max})'**
+  String boulderMessageCustom40(String max);
+
+  /// No description provided for @boulderMessageCustom41.
+  ///
+  /// In en, this message translates to:
+  /// **'The limit of {max} boulders has been exceeded: {esistenti} already exist, you can create {disponibili} more.'**
+  String boulderMessageCustom41(
+    String max,
+    String esistenti,
+    String disponibili,
+  );
 }
 
 class _AppLocalizationsDelegate

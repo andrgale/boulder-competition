@@ -296,19 +296,22 @@ final GoRouter appRouter = GoRouter(
           builder: (context, state) {
             final competitionId = state.pathParameters['id']!;
 
-            // Gestisce sia CompetitionModel (navigazione normale dall'app)
-            // sia Map<String,dynamic> (navigazione dalla ricerca globale)
             final extra = state.extra;
             String competitionName = '';
+            int nrBoulder = 0;
+
             if (extra is CompetitionModel) {
               competitionName = extra.descrizione;
+              nrBoulder = extra.nrBoulder;
             } else if (extra is Map) {
               competitionName = extra['competitionName'] as String? ?? '';
+              nrBoulder = extra['nrBoulder'] as int? ?? 0;
             }
 
             return BouldersPage(
               competitionId: competitionId,
               competitionName: competitionName,
+              nrBoulder: nrBoulder,
             );
           },
         ),
@@ -490,10 +493,11 @@ final GoRouter appRouter = GoRouter(
           path: '/boulders/new',
           name: 'boulder_create',
           builder: (context, state) {
-            final competitionId = state.extra as String;
+            final data = state.extra as Map;
 
             return BoulderFormPage(
-              competitionId: competitionId,
+              competitionId: data['competitionId'] as String,
+              nrBoulder: data['nrBoulder'] as int? ?? 0,
             );
           },
         ),
