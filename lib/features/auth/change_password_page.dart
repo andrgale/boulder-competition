@@ -6,7 +6,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../l10n/app_localizations.dart';
 
 class ChangePasswordPage extends StatefulWidget {
-  const ChangePasswordPage({super.key});
+  /// Password attuale pre-valorizzata (passata dalla pagina di login)
+  final String? initialPassword;
+
+  const ChangePasswordPage({super.key, this.initialPassword});
 
   @override
   State<ChangePasswordPage> createState() => _ChangePasswordPageState();
@@ -23,6 +26,12 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   bool obscureConfirm = true;
 
   final supabase = Supabase.instance.client;
+
+  @override
+  void initState() {
+    super.initState();
+    currentPasswordController.text = widget.initialPassword ?? '';
+  }
 
   @override
   void dispose() {

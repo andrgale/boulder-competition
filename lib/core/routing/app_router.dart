@@ -119,7 +119,12 @@ final GoRouter appRouter = GoRouter(
 
     GoRoute(
       path: '/change-password',
-      builder: (context, state) => const ChangePasswordPage(),
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        return ChangePasswordPage(
+          initialPassword: extra?['password'] as String?,
+        );
+      },
     ),
     // =====================================================
     // FORBIDDEN

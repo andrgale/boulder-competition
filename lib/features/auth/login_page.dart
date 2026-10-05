@@ -24,6 +24,7 @@ class _LoginPageState extends State<LoginPage> {
   final authService = AuthService();
 
   bool loading = false;
+  bool obscurePassword = true;
 
   @override
   void dispose() {
@@ -40,9 +41,11 @@ class _LoginPageState extends State<LoginPage> {
         loading = true;
       });
 
+      final password = passwordController.text.trim();
+
       await authService.signIn(
         email: emailController.text.trim(),
-        password: passwordController.text.trim(),
+        password: password,
       );
 
 //      PermissionService.clearCache();
@@ -58,7 +61,12 @@ class _LoginPageState extends State<LoginPage> {
       if (!mounted) return;
 
       if (forceChangePassword || profile['password_changed'] == false) {
-        context.go('/change-password');
+        // Passo la password attuale (già digitata) alla pagina di cambio
+        // password tramite extra: non compare nell'URL.
+        context.go(
+          '/change-password',
+          extra: {'password': password},
+        );
       } else {
         context.go('/dashboard');
       }
@@ -108,10 +116,20 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 16),
                   TextField(
                     controller: passwordController,
-                    obscureText: true,
+                    obscureText: obscurePassword,
                     onSubmitted: (_) => loading ? null : login(),
                     decoration: InputDecoration(
                       labelText: l10n.loginMessageCustom3, // Password
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          obscurePassword
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: () => setState(
+                          () => obscurePassword = !obscurePassword,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 24),
