@@ -20,14 +20,15 @@ jobs:
         run: |
           $pubspec = Get-Content -Path "pubspec.yaml" -Raw
 
+          # Ancorate a inizio riga: ignorano eventuali chiavi indentate/annidate.
           $nameMatch = [regex]::Match(
             $pubspec,
-            '(?m)^\s*name\s*:\s*([A-Za-z][A-Za-z0-9_]*)\s*(?:#.*)?$'
+            '(?m)^name\s*:\s*([A-Za-z][A-Za-z0-9_]*)\s*(?:#.*)?$'
           )
 
           $versionMatch = [regex]::Match(
             $pubspec,
-            '(?m)^\s*version\s*:\s*[''"]?([0-9]+)\.([0-9]+)\.([0-9]+)(-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?[''"]?\s*(?:#.*)?$'
+            '(?m)^version\s*:\s*[''"]?([0-9]+)\.([0-9]+)\.([0-9]+)(-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?[''"]?\s*(?:#.*)?$'
           )
 
           if (-not $nameMatch.Success) {
@@ -105,11 +106,14 @@ jobs:
       - name: Generate WiX file list
         shell: pwsh
         run: |
+          # -ag: GUID dei componenti stabili tra una build e l'altra
+          # (con -gg cambiavano a ogni esecuzione, causando comportamenti
+          # incoerenti in upgrade/repair).
           heat.exe dir "build/windows/x64/runner/Release" `
             -cg AppFiles `
             -dr INSTALLFOLDER `
             -srd `
-            -gg `
+            -ag `
             -var var.SourceDir `
             -out files.wxs
 
@@ -122,7 +126,6 @@ jobs:
           if ($wxs -notmatch '<Component\b[^>]*\bWin64="yes"') {
             throw "WiX components were not converted to x64."
           }
-
 
       - name: Create installer configuration
         shell: pwsh
@@ -160,7 +163,11 @@ jobs:
                 InstallScope="perMachine"
                 Platform="x64" />
 
+              <!-- Il prodotto precedente viene rimosso PRIMA di installare il nuovo,
+                   cosi' il collegamento sul desktop viene sempre ricreato. -->
               <MajorUpgrade
+                Schedule="afterInstallInitialize"
+                AllowSameVersionUpgrades="yes"
                 DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 
               <MediaTemplate EmbedCab="yes" />
@@ -175,7 +182,7 @@ jobs:
                 </Directory>
 
                 <Directory Id="CommonDesktopFolder">
-                  <Component Id="DesktopShortcut" Guid="{2DF2DA10-282B-4BDE-879B-3F1087B11A9B}">
+                  <Component Id="DesktopShortcut" Guid="{2DF2DA10-282B-4BDE-879B-3F1087B11A9B}" Win64="yes">
                     <Shortcut
                       Id="DesktopShortcutLink"
                       Name="$xmlAppName"
@@ -247,6 +254,7 @@ jobs:
           if (-not (Test-Path $msi)) {
             throw "MSI package not found: $msi"
           }
+
           gh release view $tag --repo $repository *> $null
 
           if ($LASTEXITCODE -eq 0) {
