@@ -71,6 +71,12 @@ insert into public.permissions (permission_code, activity)
                  set activity = excluded.activity;
 
 insert into public.permissions (permission_code, activity)
+                 values ('checkin.liberatoria', 'Gestione liberatoria')
+                 on conflict (permission_code)
+                 do update
+                 set activity = excluded.activity;
+
+insert into public.permissions (permission_code, activity)
                  values ('checkin.read', 'Lettura ed esecuzione check-in')
                  on conflict (permission_code)
                  do update
@@ -114,6 +120,12 @@ insert into public.permissions (permission_code, activity)
 
 insert into public.permissions (permission_code, activity)
                  values ('ranking.read', 'Visualizzazione classifiche')
+                 on conflict (permission_code)
+                 do update
+                 set activity = excluded.activity;
+
+insert into public.permissions (permission_code, activity)
+                 values ('registration.delete', 'Consente di eliminare una registrazione')
                  on conflict (permission_code)
                  do update
                  set activity = excluded.activity;
@@ -434,6 +446,37 @@ insert into public.menus (
                     desktop
                 )
                 values (
+                    'Notifiche',
+                    '/push-notification',
+                    'groups',
+                    115,
+                    null,
+                    't',
+                    'f',
+                    't'
+                )
+                on conflict (route)
+                do update
+                set
+                    label = excluded.label,
+                    icon = excluded.icon,
+                    display_order = excluded.display_order,
+                    parent_id = excluded.parent_id,
+                    visible = excluded.visible,
+                    mobile = excluded.mobile,
+                    desktop = excluded.desktop;
+
+insert into public.menus (
+                    label,
+                    route,
+                    icon,
+                    display_order,
+                    parent_id,
+                    visible,
+                    mobile,
+                    desktop
+                )
+                values (
                     'Disconetti',
                     '/login',
                     'person',
@@ -442,6 +485,37 @@ insert into public.menus (
                     't',
                     'f',
                     't'
+                )
+                on conflict (route)
+                do update
+                set
+                    label = excluded.label,
+                    icon = excluded.icon,
+                    display_order = excluded.display_order,
+                    parent_id = excluded.parent_id,
+                    visible = excluded.visible,
+                    mobile = excluded.mobile,
+                    desktop = excluded.desktop;
+
+insert into public.menus (
+                    label,
+                    route,
+                    icon,
+                    display_order,
+                    parent_id,
+                    visible,
+                    mobile,
+                    desktop
+                )
+                values (
+                    'Statistiche',
+                    '/athlete-statistics',
+                    'sports_score',
+                    200,
+                    null,
+                    't',
+                    't',
+                    'f'
                 )
                 on conflict (route)
                 do update
@@ -559,6 +633,24 @@ insert into public.menu_translations (
                     ),
                     'it',
                     'Iscrizione gara'
+                )
+                on conflict (menu_id, locale)
+                do update
+                set label = excluded.label;
+
+insert into public.menu_translations (
+                    menu_id,
+                    locale,
+                    label
+                )
+                values (
+                    (
+                        select id
+                        from public.menus
+                        where route = '/athlete-statistics'
+                    ),
+                    'en',
+                    'Statistics'
                 )
                 on conflict (menu_id, locale)
                 do update
@@ -739,6 +831,24 @@ insert into public.menu_translations (
                     ),
                     'it',
                     'Disconetti'
+                )
+                on conflict (menu_id, locale)
+                do update
+                set label = excluded.label;
+
+insert into public.menu_translations (
+                    menu_id,
+                    locale,
+                    label
+                )
+                values (
+                    (
+                        select id
+                        from public.menus
+                        where route = '/push-notification'
+                    ),
+                    'en',
+                    'Notifications'
                 )
                 on conflict (menu_id, locale)
                 do update
@@ -957,6 +1067,24 @@ insert into public.role_permissions (
                     (
                         select id
                         from public.permissions
+                        where permission_code = 'checkin.liberatoria'
+                    )
+                )
+                on conflict do nothing;
+
+insert into public.role_permissions (
+                    role_id,
+                    permission_id
+                )
+                values (
+                    (
+                        select id
+                        from public.roles
+                        where code = 'admin'
+                    ),
+                    (
+                        select id
+                        from public.permissions
                         where permission_code = 'checkin.read'
                     )
                 )
@@ -1084,6 +1212,24 @@ insert into public.role_permissions (
                         select id
                         from public.permissions
                         where permission_code = 'ranking.read'
+                    )
+                )
+                on conflict do nothing;
+
+insert into public.role_permissions (
+                    role_id,
+                    permission_id
+                )
+                values (
+                    (
+                        select id
+                        from public.roles
+                        where code = 'admin'
+                    ),
+                    (
+                        select id
+                        from public.permissions
+                        where permission_code = 'registration.delete'
                     )
                 )
                 on conflict do nothing;
@@ -1607,6 +1753,24 @@ insert into public.role_menus (
                     (
                         select id
                         from public.menus
+                        where route = '/push-notification'
+                    )
+                )
+                on conflict do nothing;
+
+insert into public.role_menus (
+                    role_id,
+                    menu_id
+                )
+                values (
+                    (
+                        select id
+                        from public.roles
+                        where code = 'admin'
+                    ),
+                    (
+                        select id
+                        from public.menus
                         where route = '/rankings'
                     )
                 )
@@ -1680,6 +1844,24 @@ insert into public.role_menus (
                         select id
                         from public.menus
                         where route = '/athlete-competition-registration'
+                    )
+                )
+                on conflict do nothing;
+
+insert into public.role_menus (
+                    role_id,
+                    menu_id
+                )
+                values (
+                    (
+                        select id
+                        from public.roles
+                        where code = 'athlete'
+                    ),
+                    (
+                        select id
+                        from public.menus
+                        where route = '/athlete-statistics'
                     )
                 )
                 on conflict do nothing;
