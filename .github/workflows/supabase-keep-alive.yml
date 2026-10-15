@@ -1,24 +1,88 @@
-name: Supabase Keep Alive
+name: Keep Supabase Alive
 
 on:
   schedule:
-    # Ogni 3 giorni alle 07:17 UTC
-    - cron: '17 7 */2 * *'
-
-    # Permette di lanciarlo manualmente per fare un test
+    # Esecuzione giornaliera (UTC); GitHub può ritardare gli schedule.
+    - cron: '23 7 * * *'
   workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: supabase-keep-alive
+  cancel-in-progress: false
 
 jobs:
   keep-alive:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 15
     steps:
-      - name: Ping Supabase
+      - name: Validate configuration
+        shell: bash
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
-
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
         run: |
-          curl --fail --show-error \
-            "${SUPABASE_URL}/rest/v1/keep_alive?select=id&limit=1" \
-            -H "apikey: ${SUPABASE_KEY}"
+          set -euo pipefail
+          : "${SUPABASE_URL:?Missing GitHub Secret SUPABASE_URL}"
+          : "${SUPABASE_PUBLISHABLE_KEY:?Missing GitHub Secret SUPABASE_PUBLISHABLE_KEY}"
+          : "${SUPABASE_ACCESS_TOKEN:?Missing GitHub Secret SUPABASE_ACCESS_TOKEN}"
+          : "${SUPABASE_PROJECT_REF:?Missing GitHub Secret SUPABASE_PROJECT_REF}"
+          [[ "$SUPABASE_URL" =~ ^https://[a-z0-9]+\.supabase\.co/?$ ]] || { echo 'SUPABASE_URL must be the project URL https://<project-ref>.supabase.co'; exit 1; }
+          [[ "$SUPABASE_PROJECT_REF" =~ ^[a-z]{20}$ ]] || { echo 'SUPABASE_PROJECT_REF must be the 20-character project ref'; exit 1; }
+          url_ref="$(printf '%s' "$SUPABASE_URL" | sed -E 's#^https://([a-z0-9]+)\.supabase\.co/?$#\1#')"
+          [[ "$url_ref" == "$SUPABASE_PROJECT_REF" ]] || { echo 'SUPABASE_URL and SUPABASE_PROJECT_REF do not match'; exit 1; }
+
+      - name: Restore project if inactive
+        shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: |
+          set -euo pipefail
+          api="https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_REF}"
+          status="$(curl --fail --silent --show-error --retry 2 --retry-all-errors --max-time 20 \
+            -H "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+            -H 'Accept: application/json' "$api" | jq -r '.status // empty')"
+          [[ -n "$status" ]] || { echo 'Could not read project status from the Management API'; exit 1; }
+          echo "Current project status: $status"
+          if [[ "$status" == 'INACTIVE' ]]; then
+            echo 'Project is inactive; requesting restoration.'
+            curl --fail --silent --show-error --max-time 30 -X POST \
+              -H "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+              -H 'Content-Type: application/json' \
+              -d '{}' "${api}/restore"
+            echo 'Restore request accepted; waiting for project readiness.'
+            ready=false
+            for attempt in {1..24}; do
+              sleep 20
+              status="$(curl --fail --silent --show-error --retry 2 --retry-all-errors --max-time 20 \
+                -H "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+                -H 'Accept: application/json' "$api" | jq -r '.status // empty')"
+              echo "Restore check ${attempt}/24: ${status:-unknown}"
+              if [[ "$status" == 'ACTIVE_HEALTHY' ]]; then ready=true; break; fi
+              if [[ "$status" != 'INACTIVE' && "$status" != 'COMING_UP' && "$status" != 'RESTORING' && "$status" != 'UNKNOWN' && -n "$status" ]]; then
+                echo "Project entered unexpected status '$status'; stopping."; exit 1
+              fi
+            done
+            [[ "$ready" == true ]] || { echo 'Project did not become ACTIVE_HEALTHY within 8 minutes'; exit 1; }
+          elif [[ "$status" != 'ACTIVE_HEALTHY' ]]; then
+            echo "Project is not ready (status '$status'); refusing to ping."; exit 1
+          fi
+
+      - name: Ping keep_alive table
+        shell: bash
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --retry 2 --retry-all-errors \
+            --connect-timeout 10 --max-time 30 \
+            "${SUPABASE_URL%/}/rest/v1/keep_alive?select=id&limit=1" \
+            -H "apikey: ${SUPABASE_PUBLISHABLE_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_PUBLISHABLE_KEY}" \
+            -H 'Accept: application/json'
+          echo 'keep_alive table ping succeeded.'
