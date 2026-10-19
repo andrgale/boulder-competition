@@ -1,11 +1,13 @@
 {
-	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"path": "../cycling_administration"
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "../cycling_administration"
+    }
+  ],
+  "settings": {
+    "dart.flutterSdkPath": ".fvm/versions/3.47.7"
+  }
 }
